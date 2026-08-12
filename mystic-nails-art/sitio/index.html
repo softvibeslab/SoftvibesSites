@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mystic Nails Art · Diseños únicos en Playa del Carmen</title>
+  <meta name="description" content="Arte efímero especializado. Acrílicas, Polygel, Softgel, Builder. Diseños artísticos únicos en Playa del Carmen.">
+  <meta name="theme-color" content="#9933CC">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' font-family='Arial'>🔮</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --color-primary: #9933CC;
+      --color-secondary: #00D9FF;
+      --color-accent: #FFD700;
+      --color-dark: #0F0F1F;
+      --color-light: #FFFFFF;
+      --color-text: #E5E5E5;
+      --color-muted: #A0A0A0;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--color-dark);
+      color: var(--color-text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 15, 31, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(153, 51, 204, 0.2);
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-emoji { font-size: 28px; }
+    nav { display: flex; gap: 30px; align-items: center; }
+    nav a { color: var(--color-text); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+    nav a:hover { color: var(--color-secondary); }
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-whatsapp:hover {
+      background: #20BA58;
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 100px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(153, 51, 204, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .eyebrow {
+      color: var(--color-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(36px, 8vw, 64px);
+      color: var(--color-light);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    h1 em {
+      background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+    }
+    .hero-tagline {
+      font-size: 18px;
+      color: var(--color-muted);
+      margin-bottom: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-video {
+      width: 100%;
+      max-width: 500px;
+      height: 300px;
+      background: linear-gradient(135deg, rgba(153, 51, 204, 0.3), rgba(0, 217, 255, 0.2));
+      border-radius: 20px;
+      margin: 40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(153, 51, 204, 0.3);
+      font-size: 64px;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .btn {
+      padding: 14px 32px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s;
+      display: inline-block;
+      border: 2px solid transparent;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(153, 51, 204, 0.4);
+    }
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--color-text);
+      color: var(--color-text);
+    }
+    .btn-secondary:hover {
+      border-color: var(--color-secondary);
+      color: var(--color-secondary);
+    }
+
+    /* Servicios */
+    .section {
+      padding: 80px 20px;
+      border-top: 1px solid rgba(153, 51, 204, 0.1);
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(36px, 6vw, 48px);
+      margin-bottom: 15px;
+      color: var(--color-light);
+    }
+    .section-desc {
+      font-size: 16px;
+      color: var(--color-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .servicios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    .service-card {
+      background: linear-gradient(135deg, rgba(153, 51, 204, 0.1), rgba(0, 217, 255, 0.05));
+      border: 1px solid rgba(153, 51, 204, 0.2);
+      padding: 40px 30px;
+      border-radius: 15px;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(0, 217, 255, 0.1), transparent);
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--color-secondary);
+      background: linear-gradient(135deg, rgba(153, 51, 204, 0.15), rgba(0, 217, 255, 0.1));
+    }
+    .service-card:hover::before {
+      top: 10%;
+      right: 10%;
+    }
+    .service-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+    }
+    .service-card h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 20px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .service-card p {
+      font-size: 14px;
+      color: var(--color-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Portafolio */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 50px;
+    }
+    .portfolio-item {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #9933CC, #00D9FF);
+      border-radius: 15px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      background-size: cover;
+      background-position: center;
+    }
+    .portfolio-item:hover {
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 0 20px 60px rgba(153, 51, 204, 0.4);
+    }
+    .portfolio-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .portfolio-item:hover .portfolio-label {
+      opacity: 1;
+    }
+
+    /* Sobre la artista */
+    .about-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .about-image {
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, rgba(153, 51, 204, 0.3), rgba(0, 217, 255, 0.2));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 120px;
+      border: 2px solid rgba(153, 51, 204, 0.3);
+    }
+    .about-content h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: var(--color-light);
+    }
+    .about-content p {
+      margin-bottom: 15px;
+      color: var(--color-muted);
+      font-size: 16px;
+    }
+    .about-highlights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .highlight {
+      background: rgba(153, 51, 204, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 3px solid var(--color-secondary);
+    }
+    .highlight-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-secondary);
+    }
+    .highlight-text {
+      font-size: 13px;
+      color: var(--color-muted);
+      margin-top: 5px;
+    }
+
+    /* Testimonios */
+    .testimonios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    .testimonio-card {
+      background: rgba(153, 51, 204, 0.05);
+      border: 1px solid rgba(153, 51, 204, 0.2);
+      padding: 30px;
+      border-radius: 15px;
+    }
+    .testimonio-stars {
+      color: var(--color-accent);
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .testimonio-text {
+      margin-bottom: 20px;
+      color: var(--color-muted);
+      font-style: italic;
+    }
+    .testimonio-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonio-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .testimonio-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .testimonio-info p {
+      font-size: 12px;
+      color: var(--color-muted);
+    }
+
+    /* Instagram Feed */
+    .instagram-section {
+      text-align: center;
+    }
+    .insta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .insta-item {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #9933CC, #00D9FF);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .insta-item:hover {
+      transform: scale(1.05);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(153, 51, 204, 0.2), rgba(0, 217, 255, 0.1));
+      padding: 60px 20px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+    .cta-section h2 {
+      margin-bottom: 20px;
+    }
+    .cta-section p {
+      font-size: 18px;
+      color: var(--color-muted);
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(0, 0, 0, 0.5);
+      border-top: 1px solid rgba(153, 51, 204, 0.1);
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--color-muted);
+    }
+    footer a {
+      color: var(--color-secondary);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .about-section { grid-template-columns: 1fr; }
+      h1 { font-size: 36px; }
+      h2 { font-size: 28px; }
+      .cta-buttons { flex-direction: column; }
+      .servicios-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="#" class="logo">
+          <span class="logo-emoji">🔮</span>
+          <span>Mystic Nails</span>
+        </a>
+        <nav>
+          <a href="#servicios">Servicios</a>
+          <a href="#portafolio">Portafolio</a>
+          <a href="#sobre">Sobre mí</a>
+          <a href="https://www.instagram.com/mysticnailsart/?hl=es" target="_blank">Instagram</a>
+          <a href="https://wa.me/529843108186" class="btn-whatsapp">
+            💬 Reservar
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">🔮 Arte Efímero en Playa del Carmen</p>
+      <h1>Uñas que cuentan <em>historias únicas.</em></h1>
+      <p class="hero-tagline">Diseños artísticos especializados en acrílicas, polygel, softgel y técnicas premium. Cada diseño es efímero, cada diseño es arte.</p>
+      <div class="hero-video">✨💅✨</div>
+      <div class="cta-buttons">
+        <a href="https://wa.me/529843108186" class="btn btn-primary">Reservar ahora en WhatsApp</a>
+        <a href="#portafolio" class="btn btn-secondary">Ver portafolio</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="section" id="servicios">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Especialización técnica</p>
+        <h2>Técnicas premium para cada estilo</h2>
+        <p class="section-desc">Dominio completo de múltiples técnicas con enfoque artístico y detalle profesional.</p>
+      </div>
+      <div class="servicios-grid">
+        <div class="service-card">
+          <div class="service-icon">💅</div>
+          <h3>Acrílicas Artísticas</h3>
+          <p>Extensiones duraderas con diseños personalizados, desde cat eye hasta XL temáticas.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">✨</div>
+          <h3>Polygel</h3>
+          <p>Técnica moderna, menos invasiva que acrílicas, con acabado impecable y flexibilidad.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🎨</div>
+          <h3>Softgel</h3>
+          <p>Extensión con aspecto natural, perfecta para quien busca durabilidad sin peso.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔧</div>
+          <h3>Builder</h3>
+          <p>Técnica especializada de construcción de estructura. Base perfecta para cualquier diseño.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">💎</div>
+          <h3>Rubber & Kapping</h3>
+          <p>Acabados especiales que potencian la durabilidad y el impacto visual de tus uñas.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">👁️</div>
+          <h3>Extensión Cejas</h3>
+          <p>Servicio complementario para completar tu transformación estética.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portafolio -->
+  <section class="section" id="portafolio">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Galería de diseños</p>
+        <h2>Cada uña es un lienzo</h2>
+        <p class="section-desc">Explora nuestros diseños más destacados y encuentra inspiración para tu próxima transformación.</p>
+      </div>
+      <div class="portfolio-grid">
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop')"><span class="portfolio-label">Cat Eye</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop')"><span class="portfolio-label">XL Classic</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1620332759599-d9f7f68b6cf3?w=400&h=400&fit=crop')"><span class="portfolio-label">Mistico</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1582000868575-44fac6d6d95e?w=400&h=400&fit=crop')"><span class="portfolio-label">Dorado</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop')"><span class="portfolio-label">Tropical</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop')"><span class="portfolio-label">Gradual</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1620332759599-d9f7f68b6cf3?w=400&h=400&fit=crop')"><span class="portfolio-label">Efimero</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1582000868575-44fac6d6d95e?w=400&h=400&fit=crop')"><span class="portfolio-label">Sparkle</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop')"><span class="portfolio-label">Ombre</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop')"><span class="portfolio-label">Temático</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1620332759599-d9f7f68b6cf3?w=400&h=400&fit=crop')"><span class="portfolio-label">Delicado</span></div>
+        <div class="portfolio-item" style="background-image: url('https://images.unsplash.com/photo-1582000868575-44fac6d6d95e?w=400&h=400&fit=crop')"><span class="portfolio-label">Neon</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre la artista -->
+  <section class="section" id="sobre">
+    <div class="container">
+      <div class="about-section">
+        <div class="about-image" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop'); background-size: cover; background-position: center; display: block;"></div>
+        <div class="about-content">
+          <p class="eyebrow" style="color: var(--color-secondary);">Sobre la artista</p>
+          <h3>Artista colombiana especializada en arte de uñas</h3>
+          <p>Originaria de Colombia, radicada en Playa del Carmen, dedicada a transformar uñas en obras de arte. Cada diseño refleja años de especialización técnica y una pasión genuina por la creatividad.</p>
+          <p>Mi filosofía es simple: <strong>"Arte Efímero"</strong>. Cada diseño que creo es único, efímero, y pensado para ser una experiencia memorable que trascienda lo simplemente estético.</p>
+          <p>Certificada en múltiples técnicas modernas y comprometida con la calidad de cada trabajo.</p>
+
+          <div class="about-highlights">
+            <div class="highlight">
+              <div class="highlight-number">5+</div>
+              <div class="highlight-text">Años de especialización</div>
+            </div>
+            <div class="highlight">
+              <div class="highlight-number">1.4K</div>
+              <div class="highlight-text">Seguidores en Instagram</div>
+            </div>
+            <div class="highlight">
+              <div class="highlight-number">∞</div>
+              <div class="highlight-text">Diseños personalizados</div>
+            </div>
+            <div class="highlight">
+              <div class="highlight-number">💯</div>
+              <div class="highlight-text">Satisfacción garantizada</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonios -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Lo que dicen nuestras clientes</p>
+        <h2>Testimonios reales</h2>
+      </div>
+      <div class="testimonios-grid">
+        <div class="testimonio-card">
+          <div class="testimonio-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonio-text">"Las uñas quedaron perfectas. El detalle y la calidad son excepcionales. Definitivamente vuelvo a reservar."</p>
+          <div class="testimonio-author">
+            <div class="testimonio-avatar">👩</div>
+            <div class="testimonio-info">
+              <h4>María López</h4>
+              <p>Turista, Cancún</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonio-card">
+          <div class="testimonio-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonio-text">"Artista muy profesional. Escucha tus ideas y las convierte en realidad. Recomendadísimo."</p>
+          <div class="testimonio-author">
+            <div class="testimonio-avatar">👩‍🦰</div>
+            <div class="testimonio-info">
+              <h4>Sofía Martínez</h4>
+              <p>Residente, Playa del Carmen</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonio-card">
+          <div class="testimonio-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonio-text">"Los diseños duran mucho tiempo y se ven increíbles. Cada visita es una experiencia diferente."</p>
+          <div class="testimonio-author">
+            <div class="testimonio-avatar">💅</div>
+            <div class="testimonio-info">
+              <h4>Daniela Pérez</h4>
+              <p>Influencer de belleza</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instagram -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Sígueme en redes</p>
+        <h2>@mysticnailsart</h2>
+        <p class="section-desc">Nuevos diseños cada semana. Tutoriales, tendencias y contenido exclusivo.</p>
+      </div>
+      <div class="insta-grid">
+        <div class="insta-item" style="background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371?w=300&h=300&fit=crop'); background-size: cover;"></div>
+        <div class="insta-item" style="background-image: url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop'); background-size: cover;"></div>
+        <div class="insta-item" style="background-image: url('https://images.unsplash.com/photo-1620332759599-d9f7f68b6cf3?w=300&h=300&fit=crop'); background-size: cover;"></div>
+        <div class="insta-item" style="background-image: url('https://images.unsplash.com/photo-1582000868575-44fac6d6d95e?w=300&h=300&fit=crop'); background-size: cover;"></div>
+        <div class="insta-item" style="background-image: url('https://images.unsplash.com/photo-1604654894610-df63bc536371?w=300&h=300&fit=crop'); background-size: cover;"></div>
+        <div class="insta-item" style="background-image: url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop'); background-size: cover;"></div>
+      </div>
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="https://www.instagram.com/mysticnailsart/?hl=es" target="_blank" class="btn btn-secondary">Ver más en Instagram →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="cta-section">
+    <div class="container">
+      <p class="eyebrow" style="color: var(--color-secondary);">Próxima cita</p>
+      <h2>¿Listo para tu transformación?</h2>
+      <p>Reserva tu cita directamente por WhatsApp. Consulta diseños, precios y disponibilidad al instante.</p>
+      <a href="https://wa.me/529843108186" class="btn btn-primary">💬 Reservar en WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>🔮 <strong>Mystic Nails Art</strong> · Diseños artísticos en Playa del Carmen</p>
+      <p style="margin-top: 20px; font-size: 14px;">
+        <a href="https://www.instagram.com/mysticnailsart/?hl=es" target="_blank">Instagram</a> ·
+        <a href="https://wa.me/529843108186" target="_blank">WhatsApp</a> ·
+        Playa del Carmen, Quintana Roo
+      </p>
+      <p style="margin-top: 20px; font-size: 12px; color: var(--color-dark);">Diseño por Softvibes · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll behavior for buttons
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
+    });
+
+    // Add animation to elements on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in-up');
+        }
+      });
+    });
+
+    document.querySelectorAll('.service-card, .portfolio-item, .testimonio-card').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

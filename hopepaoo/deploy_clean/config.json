@@ -1,0 +1,73 @@
+{
+  "profile": {
+    "name": "Paola Elizabeth",
+    "username": "@hopepaoo",
+    "bio": "*lux in tenebris*",
+    "roles": ["Cantante", "Terapeuta"],
+    "followers": 2257,
+    "following": 4126,
+    "profileImage": "profile.jpg"
+  },
+  "brand": {
+    "primaryColor": "#ff385c",
+    "secondaryColor": "#8a2be2",
+    "accentColor": "#ffd700",
+    "tagline": "Lux in Tenebris - Luz en la Oscuridad"
+  },
+  "services": [
+    {
+      "id": 1,
+      "name": "Mini Sesión",
+      "duration": 30,
+      "price": 35,
+      "description": "Introducción a la terapia vocal"
+    },
+    {
+      "id": 2,
+      "name": "Sesión Completa",
+      "duration": 50,
+      "price": 75,
+      "description": "Sesión terapéutica integral",
+      "featured": true
+    },
+    {
+      "id": 3,
+      "name": "Sesión Profunda",
+      "duration": 90,
+      "price": 120,
+      "description": "Transformación intensiva"
+    },
+    {
+      "id": 4,
+      "name": "Paquete 5 Sesiones",
+      "duration": 250,
+      "price": 300,
+      "description": "Plan estructurado de transformación"
+    },
+    {
+      "id": 5,
+      "name": "Taller Online",
+      "duration": 120,
+      "price": 45,
+      "description": "Aprendizaje grupal (máx 10 personas)"
+    },
+    {
+      "id": 6,
+      "name": "Show Privado",
+      "duration": null,
+      "price": null,
+      "description": "Evento personalizado - Consultar"
+    }
+  ],
+  "contact": {
+    "email": "paola@hopepaoo.com",
+    "whatsapp": "+52 998 762 7884",
+    "instagram": "https://www.instagram.com/hopepaoo",
+    "threads": "https://www.threads.com/@hopepaoo"
+  },
+  "pages": {
+    "landing": "landing.html",
+    "analysis": "analisis/index.html",
+    "cms": "cms/index.html"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "Colegios 875 - Asesor de Ventas",
+  "firstMessage": "Hola, gracias por llamar a Colegios 875. Soy el asistente de Aura Residences. ¿Te interesa conocer departamentos, garden houses o agendar un recorrido VR en oficinas?",
+  "model": {
+    "provider": "openai",
+    "model": "gpt-4o",
+    "temperature": 0.2,
+    "messages": [
+      {
+        "role": "system",
+        "content": "PEGAR_AQUI_EL_CONTENIDO_DE_vapi/assistant-prompt.md"
+      }
+    ],
+    "tools": [
+      {
+        "type": "query",
+        "function": {
+          "name": "colegios-875-search"
+        },
+        "knowledgeBases": [
+          {
+            "provider": "google",
+            "name": "colegios-875-sales-kb",
+            "description": "Información oficial de ventas de Colegios 875: proyecto, tipologías, inclusión, accesibilidad, recorrido 360, realidad aumentada, recorrido VR y contacto.",
+            "fileIds": [
+              "REEMPLAZAR_CON_FILE_ID_DE_VAPI"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "transferCall",
+        "destinations": [
+          {
+            "type": "number",
+            "number": "+529981234567",
+            "description": "Equipo comercial de Colegios 875"
+          }
+        ]
+      },
+      {
+        "type": "endCall"
+      }
+    ]
+  },
+  "transcriber": {
+    "provider": "deepgram",
+    "model": "nova-3",
+    "language": "es"
+  },
+  "voice": {
+    "provider": "vapi",
+    "voiceId": "REEMPLAZAR_CON_VOZ_DISPONIBLE_EN_TU_CUENTA"
+  },
+  "recordingEnabled": true,
+  "silenceTimeoutSeconds": 20,
+  "maxDurationSeconds": 900,
+  "backgroundSound": "office",
+  "endCallMessage": "Gracias por llamar a Colegios 875. Un asesor te contactará por WhatsApp si nos compartiste tus datos. Que tengas excelente día.",
+  "serverUrl": "REEMPLAZAR_CON_WEBHOOK_DE_LEADS_OPCIONAL"
+}

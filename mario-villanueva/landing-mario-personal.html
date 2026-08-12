@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mario Villanueva | Sales Trainer & Método BEAT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2d3436;
+            --accent: #ff6b6b;
+            --gold: #d4af37;
+            --light: #f8f9fa;
+            --text: #2d3436;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: white;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 100;
+            padding: 16px 20px;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* HERO */
+        .hero {
+            margin-top: 60px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 8vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .hero .accent {
+            color: var(--accent);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 48px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            border-color: white;
+            color: white;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ABOUT */
+        .about {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .section-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-image img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* BEAT METHOD */
+        .beat-section {
+            padding: 100px 20px;
+            background: var(--light);
+        }
+
+        .beat-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--primary);
+        }
+
+        .beat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .beat-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .beat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .beat-letter {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .beat-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .beat-desc {
+            color: #666;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* STORY */
+        .story-section {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .story-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--primary);
+        }
+
+        .story-timeline {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+            padding: 30px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-label {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .timeline-content p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* TESTIMONIALS */
+        .testimonials-section {
+            padding: 100px 20px;
+            background: var(--light);
+        }
+
+        .testimonials-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--primary);
+        }
+
+        .testimonials-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 3px;
+        }
+
+        .testimonial-role {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* OFFER */
+        .offer-section {
+            padding: 100px 20px;
+            background: white;
+        }
+
+        .offer-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            padding: 60px 40px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        .offer-container h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        .offer-container p {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .price-tag {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 30px 0;
+        }
+
+        .what-included {
+            text-align: left;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 40px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .what-included h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .what-included ul {
+            list-style: none;
+        }
+
+        .what-included li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .what-included li::before {
+            content: "✓ ";
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .guarantee-box {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--gold);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        /* CTA SECTION */
+        .final-cta {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--accent) 0%, #ff4757 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+        }
+
+        .final-cta p {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 20px;
+            }
+
+            .hero {
+                margin-top: 50px;
+                padding: 40px 20px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .about-text h2,
+            .beat-section h2,
+            .story-section h2,
+            .testimonials-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .offer-container {
+                padding: 40px 20px;
+            }
+
+            .price-tag {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-inner">
+            <div class="logo">Mario Villanueva</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#about">Quién soy</a></li>
+                    <li><a href="#beat">Método BEAT</a></li>
+                    <li><a href="#testimonios">Testimonios</a></li>
+                    <li><a href="#oferta">Oferta</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Aprendí a vender.<br><span class="accent">Ahora enseño cómo.</span></h1>
+            <p class="hero-subtitle">El método BEAT: 15 años vendiendo destilados en un sistema que funciona.</p>
+            <div>
+                <a href="#oferta" class="cta-button">Ver BEAT Express →</a>
+                <a href="#beat" class="cta-button cta-secondary">¿Cómo funciona?</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>Quién soy Mario</h2>
+                    <p><strong>Vendedor, empresario, trainer.</strong></p>
+                    <p>Empecé sin método. Presionaba. Perdía clientes. Luego aprendí que vender no es convencer, es alinear.</p>
+                    <p>Durante 15 años apliqué esta verdad en diferentes industrias: turismo, hotelería, expediciones. Construí 3 empresas con la misma filosofía.</p>
+                    <p>Hoy ese método tiene nombre: <strong>BEAT</strong>.</p>
+                    <p>Y lo enseño porque funciona. No solo para mí. Para cualquiera que venda.</p>
+
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label">años vendiendo</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">empresas operando</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">18K+</div>
+                            <div class="stat-label">seguidores totales</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1000+</div>
+                            <div class="stat-label">estudiantes BEAT</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='300' height='300' fill='%23ff6b6b' opacity='0.1'/%3E%3Ctext x='50%' y='50%' text-anchor='middle' dy='.3em' fill='%23fff' font-size='18' font-weight='bold'%3E[Foto Mario]%3C/text%3E%3C/svg%3E" alt="Mario Villanueva">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEAT METHOD -->
+    <section class="beat-section" id="beat">
+        <h2>El Método BEAT</h2>
+        <div class="beat-grid">
+            <div class="beat-card">
+                <div class="beat-letter">B</div>
+                <div class="beat-title">Alínea El Ser</div>
+                <div class="beat-desc">No vendes productos. Alineas personas con sus objetivos. La venta empieza contigo, no con el cliente.</div>
+            </div>
+            <div class="beat-card">
+                <div class="beat-letter">E</div>
+                <div class="beat-title">Genera Confianza</div>
+                <div class="beat-desc">La gente compra a quien confía. Confianza viene de vulnerabilidad + resultados comprobados.</div>
+            </div>
+            <div class="beat-card">
+                <div class="beat-letter">A</div>
+                <div class="beat-title">Descubre Necesidad</div>
+                <div class="beat-desc">No preguntes "¿te interesa?". Escucha realmente. La necesidad real es diferente a lo que dicen.</div>
+            </div>
+            <div class="beat-card">
+                <div class="beat-letter">T</div>
+                <div class="beat-title">Guía Decisión</div>
+                <div class="beat-desc">No presiones. Guía. Hay diferencia. Decisión clara = cliente satisfecho = referencia automática.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STORY -->
+    <section class="story-section">
+        <div class="section-container">
+            <h2>Mi Historia</h2>
+            <div class="story-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-label">Fase 1</div>
+                    <div class="timeline-content">
+                        <h3>Aprender Vendiendo</h3>
+                        <p>Empecé sin método. Trabajé en turismo, hotelería, diferentes industrias. Cada una me enseñó algo sobre venta. Cometí todos los errores. Presionaba. Perdía clientes. Luego conecté los puntos.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">Fase 2</div>
+                    <div class="timeline-content">
+                        <h3>Descubrir El Patrón</h3>
+                        <p>Descubrí que la mejor venta ocurre cuando: el vendedor está alineado, hay confianza genuina, se descubre una necesidad real, la decisión es clara. Eso es BEAT. No inventé nada. Puse nombre a lo que funciona.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">Fase 3</div>
+                    <div class="timeline-content">
+                        <h3>Ejecutar Con BEAT</h3>
+                        <p>Apliqué BEAT en mis propios negocios. Hotel boutique lleno sin marketing. Red de expediciones con comunidad leal. Sistema de advisors con crecimiento viral. Si funciona en mi negocio, puedo enseñarlo.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">Hoy</div>
+                    <div class="timeline-content">
+                        <h3>Enseñar BEAT</h3>
+                        <p>Hoy Mario = BEAT. Cuando me presentan, la gente piensa en vendedores que no presionan. Empresarios que construyen. Un método claro que funciona. Eso es lo que vendo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section" id="testimonios">
+        <h2>Dicen Mis Estudiantes</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-text">"Vendía 1 cliente al mes. Apliqué BEAT en mes 2 eran 5. El método es simple pero genera resultados reales."</div>
+                <div class="testimonial-author">Juan López</div>
+                <div class="testimonial-role">Coach de Ventas, CDMX</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">"No sabía explicar mi valor sin parecer arrogante. BEAT me enseñó a alinearme primero. Ahora vendo con confianza."</div>
+                <div class="testimonial-author">María García</div>
+                <div class="testimonial-role">Consultora, Guadalajara</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">"Tenía miedo a vender. BEAT convirtió el miedo en confianza. Hoy 20 clientes nuevos y referencias cada mes."</div>
+                <div class="testimonial-author">Carlos Rodríguez</div>
+                <div class="testimonial-role">Freelancer, Buenos Aires</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OFFER -->
+    <section class="offer-section" id="oferta">
+        <div class="offer-container">
+            <h2>BEAT Express</h2>
+            <p>60 minutos que cambian tu forma de vender</p>
+
+            <div class="price-tag">$27 USD</div>
+            <p style="font-size: 0.95rem; opacity: 0.8; margin: 10px 0 40px;">Acceso de por vida • Sin suscripción</p>
+
+            <div class="what-included">
+                <h3>Incluye:</h3>
+                <ul>
+                    <li>4 módulos de 15 minutos (60 min total)</li>
+                    <li>Método BEAT desglosado paso a paso</li>
+                    <li>3 casos reales aplicados</li>
+                    <li>Microherramientas BEAT (templates)</li>
+                    <li>Bonus: Audio BEAT en 1 minuto</li>
+                    <li>Acceso a comunidad privada</li>
+                    <li>Actualizaciones futuras gratis</li>
+                </ul>
+            </div>
+
+            <div class="guarantee-box">
+                <strong>✓ Garantía 100% sin riesgo</strong><br>
+                Si en 7 días no te encanta, devolvemos tu dinero. Sin preguntas. Garantizado por Hotmart.
+            </div>
+
+            <a href="https://checkout.hotmart.com/..." class="cta-button" style="background: white; color: var(--accent); border-color: white; display: inline-block; margin-top: 20px;">
+                Acceso Ahora • $27 USD →
+            </a>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <h2>Tu turno</h2>
+        <p>60 minutos. $27. Acceso de por vida. Sin riesgo.</p>
+        <a href="https://checkout.hotmart.com/..." class="cta-button">
+            Empezar Ahora
+        </a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p><strong>Mario Villanueva</strong> | Sales Trainer & Entrepreneur</p>
+        <p>Instagram: <a href="https://instagram.com/mariovillanueva.mx">@mariovillanueva.mx</a> | LinkedIn: <a href="#">Mario Villanueva</a></p>
+        <p style="margin-top: 30px; font-size: 0.85rem;">© 2026 Mario Villanueva. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>

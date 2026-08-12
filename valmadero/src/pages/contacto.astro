@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout titulo={`Contacto | ${SITE.nombre}`} descripcion={`Contacta a ${SITE.nombre} por formulario, WhatsApp o agenda.`}>
+  <section class="encabezado-pagina"><div class="contenedor"><span class="kicker">Hablemos</span><h1>Cuéntame qué quieres resolver</h1><p>Vivir, invertir, rentar o entender tu crédito: empieza con tu objetivo y una idea de presupuesto.</p></div></section>
+  <LeadForm />
+  <section class="seccion seccion--arena"><div class="contenedor contenedor--texto centrado"><span class="kicker">Canal directo</span><h2>¿Prefieres escribir ahora?</h2><p>WhatsApp es el canal público enlazado desde el perfil de Instagram.</p><a class="boton boton--oscuro" href={SITE.agenda} target="_blank" rel="noopener">Abrir WhatsApp</a></div></section>
+</BaseLayout>

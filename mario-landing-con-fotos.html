@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mario Villanueva - Del Ser al Vender | BEAT EXPRESS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #d97706;
+            --primary-light: #f59e0b;
+            --primary-dark: #92400e;
+            --secondary: #1f2937;
+            --accent: #ec4899;
+            --bg-light: #fafaf9;
+            --text-dark: #111827;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: white;
+        }
+
+        /* Header/Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 5rem;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #fafaf9 0%, #f3f4f6 100%);
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .hero-content h1 .highlight {
+            color: var(--primary);
+        }
+
+        .hero-question {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .hero-promise {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .trust-badges {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .badge-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .cta-primary {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+            margin-right: 1rem;
+        }
+
+        .cta-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .cta-secondary {
+            display: inline-block;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.9rem 1.9rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .cta-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .subtext {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .hero-image {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            border-radius: 1rem;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: 700;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 1rem;
+        }
+
+        .hero-image svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Proof Section */
+        .proof-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .proof-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .proof-image {
+            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+            border-radius: 1rem;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        .proof-image svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .proof-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .proof-content p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .ecosystem {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .ecosystem-item {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            flex: 1;
+        }
+
+        .ecosystem-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ecosystem-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .ecosystem-desc {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Product Section */
+        .product-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #fafaf9 0%, #f3f4f6 100%);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .product-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .product-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .product-currency {
+            font-size: 1.5rem;
+        }
+
+        .product-duration {
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .product-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .product-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .product-features li:last-child {
+            border-bottom: none;
+        }
+
+        .check {
+            color: #22c55e;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .guarantee {
+            background: #f0fdf4;
+            border: 1px solid #dcfce7;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #166534;
+            font-size: 0.95rem;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .testimonial {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stars {
+            color: #f59e0b;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .avatar-juan {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+
+        .avatar-sofia {
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+        }
+
+        .avatar-carlos {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        }
+
+        .testimonial-role {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .result {
+            background: #fef3c7;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #fafaf9 0%, #f3f4f6 100%);
+        }
+
+        .faq-grid {
+            max-width: 700px;
+            margin: 2rem auto 0;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: var(--bg-light);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-item.open .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 300px;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-section .cta-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .cta-section .cta-primary:hover {
+            background: var(--bg-light);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-grid, .proof-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .trust-badges {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .ecosystem {
+                flex-direction: column;
+            }
+
+            .hero-image, .proof-image {
+                height: 300px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Mario <span>Villanueva</span></a>
+                <nav>
+                    <a href="#beat">BEAT Express</a>
+                    <a href="#testimonios">Testimonios</a>
+                    <a href="#faq">Preguntas</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-question">¿Te sientes falso al vender?</div>
+                    <h1>Del <span class="highlight">Ser</span> al Vender</h1>
+                    <p class="hero-promise">Aprende el framework que usé para construir 3 empresas. Vende desde tu verdad en 60 minutos.</p>
+
+                    <div class="trust-badges">
+                        <div class="badge">
+                            <div class="badge-number">11K+</div>
+                            <div class="badge-label">Seguidores Instagram</div>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-number">3</div>
+                            <div class="badge-label">Empresas Fundadas</div>
+                        </div>
+                        <div class="badge">
+                            <div class="badge-number">10+</div>
+                            <div class="badge-label">Años Experiencia</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <a href="#beat" class="cta-primary">Acceder a BEAT EXPRESS</a>
+                        <a href="#beat" class="cta-secondary">Descargar Guía Gratuita</a>
+                    </div>
+                    <p class="subtext">✓ 7 días para probar | Dinero de vuelta si no aplicas</p>
+                </div>
+                <div class="hero-image"><img src="mario-hero.jpg" alt="Mario Villanueva" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: 1rem;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proof Section -->
+    <section class="proof-section">
+        <div class="container">
+            <div class="proof-grid">
+                <div class="proof-image"><img src="casa-xtao.jpg" alt="Casa Xtao" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: 1rem;"></div>
+                <div class="proof-content">
+                    <h2>Construí un ecosistema usando BEAT</h2>
+                    <p>No vendo "magia" ni "secretos". Todo lo que enseño viene de construir negocios reales donde apliqué esta metodología desde el día uno.</p>
+
+                    <div class="ecosystem">
+                        <div class="ecosystem-item">
+                            <div class="ecosystem-icon">🏨</div>
+                            <div class="ecosystem-title">Casa Xtao</div>
+                            <div class="ecosystem-desc">Hotel boutique con propuesta diferenciada</div>
+                        </div>
+                        <div class="ecosystem-item">
+                            <div class="ecosystem-icon">🎵</div>
+                            <div class="ecosystem-title">XTAO Sounds</div>
+                            <div class="ecosystem-desc">Label de música y eventos</div>
+                        </div>
+                        <div class="ecosystem-item">
+                            <div class="ecosystem-icon">🌍</div>
+                            <div class="ecosystem-title">XTAO Expeditions</div>
+                            <div class="ecosystem-desc">Club de viajes y experiencias</div>
+                        </div>
+                    </div>
+
+                    <p><strong>El mindset es el mismo en los 3:</strong> Claridad sobre lo que ofrecemos → Conversación genuina → Cliente que dice sí porque realmente lo quiere.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section class="product-section" id="beat">
+        <div class="container">
+            <h2 class="section-title">BEAT EXPRESS</h2>
+            <p class="section-subtitle">El framework conversacional que construyó mis 3 empresas</p>
+
+            <div class="product-card">
+                <div class="product-header">
+                    <div class="product-name">BEAT EXPRESS</div>
+                    <div class="product-price"><span class="product-currency">$</span>27</div>
+                    <div class="product-duration">USD | Acceso de por vida</div>
+                </div>
+
+                <ul class="product-features">
+                    <li><span class="check">✓</span> 4 módulos de 15 minutos</li>
+                    <li><span class="check">✓</span> Framework BEAT completo</li>
+                    <li><span class="check">✓</span> 3 ejemplos reales aplicados</li>
+                    <li><span class="check">✓</span> Guía de conversación (PDF)</li>
+                    <li><span class="check">✓</span> Acceso permanente</li>
+                    <li><span class="check">✓</span> Actualizaciones incluidas</li>
+                </ul>
+
+                <div class="guarantee">
+                    <strong>7 días dinero de vuelta</strong><br>
+                    Pruébalo sin riesgo. Si no lo aplicas, te devolvemos tu dinero.
+                </div>
+
+                <a href="#" class="cta-primary" style="display: block; text-align: center;">Acceder Ahora</a>
+                <p class="subtext" style="text-align: center; margin-top: 1rem;">⏱️ 60 minutos para transformar tu forma de vender</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" id="testimonios">
+        <div class="container">
+            <h2 class="section-title">Lo que dicen sobre BEAT</h2>
+            <p class="section-subtitle">Resultados reales de personas que aplicaron el framework</p>
+
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <div class="stars">★★★★★</div>
+                    <div class="testimonial-text">"Vendía $0/mes como consultor. Implementé BEAT en mis llamadas de venta y en 30 días facturé $5,000. Todo cambió cuando dejé de perseguir y empecé a escuchar genuinamente."</div>
+                    <div class="testimonial-author">
+                        <img src="testimonial-juan.jpg" alt="Juan M." class="avatar avatar-testimonial" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <div>Juan M.</div>
+                    </div>
+                    <div class="testimonial-role">Consultor de Marketing Digital</div>
+                    <div class="result">$0 → $5K/mes en 30 días</div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="stars">★★★★★</div>
+                    <div class="testimonial-text">"Como coach de vida, siempre sentía que "vender" era sucio. BEAT me mostró que vender es ayudar. Duplicé mis clientes en 2 meses siendo 100% auténtica."</div>
+                    <div class="testimonial-author">
+                        <img src="testimonial-sofia.jpg" alt="Sofia L." class="avatar avatar-testimonial" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <div>Sofia L.</div>
+                    </div>
+                    <div class="testimonial-role">Life Coach</div>
+                    <div class="result">2 clientes → 4 clientes en 2 meses</div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="stars">★★★★★</div>
+                    <div class="testimonial-text">"He tomado 5 cursos de ventas. BEAT es el único que realmente funciona porque NO enseña técnicas manipuladoras. Es conversación genuina. Mi tasa de cierre subió del 20% al 55%."</div>
+                    <div class="testimonial-author">
+                        <img src="testimonial-carlos.jpg" alt="Carlos R." class="avatar avatar-testimonial" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <div>Carlos R.</div>
+                    </div>
+                    <div class="testimonial-role">B2B Sales Manager</div>
+                    <div class="result">20% → 55% tasa de cierre</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <p class="section-subtitle">Respuestas a lo que todos preguntan</p>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        ¿Cómo exactamente funciona el framework BEAT?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>BEAT</strong> es un acrónimo que representa las 4 fases de una conversación de venta genuina:</p>
+                        <p style="margin-top: 1rem;"><strong>B = Building Trust (Construir Confianza)</strong><br>Antes de hablar de lo que vendes, conecta humanamente. Muestra que te importa realmente.</p>
+                        <p style="margin-top: 1rem;"><strong>E = Exploring Needs (Explorar Necesidades)</strong><br>Haz preguntas. Escucha más de lo que hablas. Entiende la situación real del prospecto.</p>
+                        <p style="margin-top: 1rem;"><strong>A = Articulating Help (Articular Cómo Ayudas)</strong><br>Solo aquí presentas tu solución. Ahora sabe que la entiendes y que te importa.</p>
+                        <p style="margin-top: 1rem;"><strong>T = Timing for the Ask (Tiempo para Pedir)</strong><br>Si los 3 pasos anteriores fueron genuinos, pedir es natural. El prospecto dice sí porque realmente lo quiere.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        ¿A quién va dirigido BEAT EXPRESS?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>BEAT funciona perfectamente para:</strong></p>
+                        <p style="margin-top: 1rem;">• Coaches y consultores independientes<br>
+                        • Emprendedores sin equipo de ventas formal<br>
+                        • Personas que venden pero sienten que "fuerzan" las conversaciones<br>
+                        • Profesionales que buscan integridad en sus ventas<br>
+                        • Cualquiera que quiera vender más siendo 100% auténtico</p>
+                        <p style="margin-top: 1rem;"><strong>NO es para:</strong> Personas que buscan técnicas manipuladoras o tácticas agresivas. BEAT es lo opuesto.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        ¿Cuánto tiempo me toma hacer BEAT EXPRESS?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>BEAT EXPRESS son 4 módulos de 15 minutos cada uno. Puedes hacerlo todo en un día o distribuirlo en la semana.</p>
+                        <p style="margin-top: 1rem;"><strong>Tiempo total: 60 minutos</strong> para aprender el framework + ejemplos.</p>
+                        <p style="margin-top: 1rem;">Luego puedes aplicarlo inmediatamente en tus próximas conversaciones de venta (WhatsApp, calls, reuniones).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        ¿Qué pasa si no me gusta o no funciona?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ofrece una garantía de 7 días dinero de vuelta, sin preguntas. Si compras BEAT EXPRESS y decides que no es para ti, simplemente solicita un reembolso en los primeros 7 días.</p>
+                        <p style="margin-top: 1rem;">Pero aquí está la verdad: Si realmente aplicas lo que enseño, los resultados llegan. La mayoría de personas que usan BEAT ven cambios en su siguiente semana de ventas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        ¿Esto incluye acceso a grupo privado/comunidad?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>BEAT EXPRESS es un curso auto-dirigido con acceso de por vida al contenido.</p>
+                        <p style="margin-top: 1rem;">Si buscas coaching uno-a-uno o acceso a comunidad privada, también ofrezco <strong>BEAT Intensive (mentoring grupal)</strong> a un precio diferente.</p>
+                        <p style="margin-top: 1rem;">Puedes empezar con EXPRESS ($27) y decidir después si quieres ir más profundo.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        ¿Cómo aplicar BEAT en diferentes contextos? (WhatsApp, calls, etc)
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>BEAT funciona en CUALQUIER contexto porque es conversación genuina:</p>
+                        <p style="margin-top: 1rem;"><strong>WhatsApp:</strong> Cada mensaje respeta las 4 fases. Construye confianza → Explora → Ayuda → Pide.</p>
+                        <p style="margin-top: 1rem;"><strong>Llamadas telefónicas:</strong> Más rápido pero mismo flujo. 15-20 min es suficiente.</p>
+                        <p style="margin-top: 1rem;"><strong>Reuniones presenciales:</strong> Timing más relajado. Puedes profundizar en cada fase.</p>
+                        <p style="margin-top: 1rem;"><strong>Email:</strong> Multi-mensaje. Cada correo respeta una fase de BEAT.</p>
+                        <p style="margin-top: 1rem;">El curso incluye ejemplos en cada contexto.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Listo para vender desde tu verdad?</h2>
+            <p>Los próximos 60 minutos pueden cambiar tu forma de vender para siempre.</p>
+            <a href="#" class="cta-primary">Acceder a BEAT EXPRESS - $27</a>
+            <p class="subtext" style="color: rgba(255,255,255,0.8); margin-top: 1rem;">7 días dinero de vuelta | Sin preguntas</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Mario Villanueva | <a href="#">Instagram</a> | <a href="#">LinkTree</a> | <a href="#">Del Ser Al Vender</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">Construyendo empresas desde la integridad. Casa Xtao | XTAO Sounds | XTAO Expeditions</p>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('open');
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

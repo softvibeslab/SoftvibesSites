@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { SITE } from '../../config/site';
+
+const propiedades = (await getCollection('propiedades')).sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada));
+const tipos = [...new Set(propiedades.map((p) => p.data.tipo))];
+const zonas = [...new Set(propiedades.map((p) => p.data.zona))];
+---
+
+<BaseLayout titulo={`Propiedades | ${SITE.nombre}`} descripcion="Catálogo inmobiliario demostrativo con filtros por tipo, zona y presupuesto.">
+  <section class="encabezado-pagina">
+    <div class="contenedor"><span class="kicker">Catálogo</span><h1>Propiedades</h1><p>Actualiza este inventario únicamente con información vigente y autorizada.</p></div>
+  </section>
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="filtros" aria-label="Filtros del catálogo">
+        <label>Tipo<select id="filtro-tipo"><option value="">Todos</option>{tipos.map((tipo) => <option value={tipo}>{tipo}</option>)}</select></label>
+        <label>Zona<select id="filtro-zona"><option value="">Todas</option>{zonas.map((zona) => <option value={zona}>{zona}</option>)}</select></label>
+        <label>Precio máximo<select id="filtro-precio"><option value="">Sin límite</option><option value="1000000">$1,000,000</option><option value="3000000">$3,000,000</option><option value="8000000">$8,000,000</option></select></label>
+      </div>
+      <p id="contador" class="contador" aria-live="polite"></p>
+      <div id="catalogo" class="grid-propiedades">{propiedades.map((propiedad) => <PropertyCard propiedad={propiedad} />)}</div>
+      <div id="sin-resultados" class="vacio" hidden>No encontramos propiedades con esos filtros. Prueba otra combinación.</div>
+    </div>
+  </section>
+  <LeadForm titulo="¿Buscas algo diferente?" />
+  <script>
+    const cards = [...document.querySelectorAll<HTMLElement>('#catalogo .propiedad-card')];
+    const selects = [...document.querySelectorAll<HTMLSelectElement>('.filtros select')];
+    const counter = document.querySelector<HTMLElement>('#contador');
+    const empty = document.querySelector<HTMLElement>('#sin-resultados');
+    function filter() {
+      const tipo = (document.querySelector('#filtro-tipo') as HTMLSelectElement).value;
+      const zona = (document.querySelector('#filtro-zona') as HTMLSelectElement).value;
+      const max = Number((document.querySelector('#filtro-precio') as HTMLSelectElement).value || Infinity);
+      let visibles = 0;
+      for (const card of cards) {
+        const show = (!tipo || card.dataset.tipo === tipo) && (!zona || card.dataset.zona === zona) && Number(card.dataset.precio) <= max;
+        card.hidden = !show;
+        if (show) visibles++;
+      }
+      if (counter) counter.textContent = `${visibles} ${visibles === 1 ? 'propiedad' : 'propiedades'}`;
+      if (empty) empty.hidden = visibles !== 0;
+    }
+    selects.forEach((select) => select.addEventListener('change', filter));
+    filter();
+  </script>
+</BaseLayout>

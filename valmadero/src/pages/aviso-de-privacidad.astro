@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout titulo={`Aviso de privacidad | ${SITE.nombre}`} descripcion="Borrador técnico pendiente de revisión y datos del responsable.">
+  <article class="seccion"><div class="contenedor contenedor--texto prosa"><span class="kicker">Borrador pendiente</span><h1>Aviso de privacidad</h1><aside class="aviso"><strong>No publicar todavía.</strong> Debe completarse con identidad, domicilio, finalidades, transferencias, proveedores y mecanismo real para ejercer derechos.</aside><h2>Responsable</h2><p>La identidad y el domicilio del responsable del tratamiento están pendientes de confirmación.</p><h2>Datos y finalidades</h2><p>El prototipo solicita nombre, teléfono, correo opcional, interés y mensaje para responder una consulta inmobiliaria.</p><h2>Derechos</h2><p>El procedimiento para ejercer derechos de acceso, rectificación, cancelación u oposición debe ser revisado para la operación y jurisdicción aplicables.</p><h2>Contacto</h2><p>Hasta completar el documento, usa el <a href={SITE.agenda} target="_blank" rel="noopener">canal público de WhatsApp</a>.</p></div></article>
+</BaseLayout>

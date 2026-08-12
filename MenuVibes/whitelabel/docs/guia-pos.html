@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía del POS MenuVibes — cómo usarlo por perfil</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ══ MenuVibes Design System v1 — "Hospitalidad cálida" (ver DESIGN.md) ══ */
+  :root{--y:#ff385c;--ya:#e00b41;--ysoft:#fff0f3;--b:#ffffff;--soft:#f7f7f7;--strong:#f2f2f2;
+        --w:#222222;--body:#3f3f3f;--m:#6a6a6a;--hair:#dddddd;--hair2:#ebebeb;
+        --g:#008a05;--gsoft:#e8f5e9;--warn:#c25e00;--warnsoft:#fff3e6;--r:#c13515;--bl:#428bff;
+        --shc:rgba(0,0,0,.05) 0 2px 8px;--shl:rgba(0,0,0,.08) 0 6px 20px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--b);color:var(--w);font-family:'Nunito Sans',system-ui,-apple-system,sans-serif;line-height:1.5;}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 18px 60px;}
+
+  /* hero */
+  .hero{text-align:center;padding:34px 16px 26px;}
+  .hero .brand{color:var(--y);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:13px;}
+  .hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.15;margin:10px 0 12px;}
+  .hero h1 em{color:var(--y);font-style:normal;}
+  .hero p{color:var(--m);max-width:560px;margin:0 auto;font-size:15px;}
+  .url-chip{display:inline-flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--hair);border-radius:9999px;padding:10px 18px;margin-top:16px;font-weight:700;font-size:14px;color:var(--w);flex-wrap:wrap;justify-content:center;}
+  .url-chip code{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--ya);}
+
+  h2.sec{font-size:clamp(20px,3.5vw,28px);font-weight:800;margin:44px 0 6px;display:flex;align-items:center;gap:10px;}
+  h2.sec .n{background:var(--y);color:#fff;border-radius:50%;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  p.sub{color:var(--m);font-size:14px;margin-bottom:18px;}
+
+  /* perfiles */
+  .perfiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+  .perfil{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:16px 14px;border-top:4px solid var(--y);box-shadow:var(--shc);}
+  .perfil.duenyo{border-top-color:var(--y);}  .perfil.cajero{border-top-color:var(--g);}
+  .perfil.mesero{border-top-color:var(--bl);} .perfil.cocina{border-top-color:#ff9d4d;} .perfil.manager{border-top-color:#9b59d0;}
+  .perfil .ico{font-size:30px;}
+  .perfil h3{font-size:16px;font-weight:800;margin:6px 0 2px;}
+  .perfil .rol{font-size:11px;color:var(--m);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;font-weight:700;}
+  .perfil ul{list-style:none;display:grid;gap:5px;}
+  .perfil li{font-size:12.5px;padding-left:20px;position:relative;color:var(--body);}
+  .perfil li::before{content:"✓";position:absolute;left:0;color:var(--g);font-weight:800;}
+  .perfil li.no{color:#b0b0b0;}
+  .perfil li.no::before{content:"✕";color:var(--r);}
+
+  /* matriz */
+  .matriz{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;font-size:13px;margin-top:14px;border:1px solid var(--hair);box-shadow:var(--shc);}
+  .matriz th,.matriz td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--hair2);}
+  .matriz th{background:var(--soft);color:var(--w);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;}
+  .matriz td:first-child,.matriz th:first-child{text-align:left;padding-left:14px;font-weight:700;}
+  .si{color:var(--g);font-weight:800;} .no{color:#c9c9c9;font-weight:800;}
+  .nota-td{font-size:10px;color:var(--m);display:block;font-weight:400;}
+
+  /* flujos */
+  .flujo{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:18px 16px;margin-bottom:14px;box-shadow:var(--shc);}
+  .flujo h3{font-size:17px;font-weight:800;margin-bottom:3px;}
+  .flujo .quien{font-size:12px;color:var(--m);margin-bottom:14px;}
+  .quien b{color:var(--ya);}
+  .pasos{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;counter-reset:paso;}
+  .paso{background:var(--soft);border-radius:12px;padding:14px 11px 12px;position:relative;counter-increment:paso;}
+  .paso::before{content:counter(paso);position:absolute;top:-10px;left:10px;background:var(--y);color:#fff;font-weight:800;font-size:12px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .paso .pi{font-size:20px;margin-bottom:4px;}
+  .paso b{display:block;font-size:12.5px;margin-bottom:2px;}
+  .paso span{font-size:11.5px;color:var(--m);display:block;}
+  .flujo .resultado{margin-top:12px;background:var(--gsoft);border-radius:12px;padding:9px 12px;font-size:12.5px;color:var(--body);}
+  .flujo .resultado b{color:var(--g);}
+
+  /* checklist prueba */
+  .kit{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:760px){.kit{grid-template-columns:1fr;}}
+  .kit-card{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:18px 16px;box-shadow:var(--shc);}
+  .kit-card h3{font-size:15px;font-weight:800;color:var(--w);margin-bottom:10px;}
+  .kit-card ol{padding-left:20px;display:grid;gap:8px;font-size:13.5px;color:var(--body);}
+  .kit-card ol li::marker{color:var(--y);font-weight:800;}
+  .kit-card ul{list-style:none;display:grid;gap:8px;font-size:13.5px;color:var(--body);}
+  .kit-card ul li{padding-left:24px;position:relative;}
+  .kit-card ul li::before{content:"→";position:absolute;left:0;color:var(--y);font-weight:800;}
+  .kit-card code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--soft);border:1px solid var(--hair2);border-radius:6px;padding:2px 6px;color:var(--ya);overflow-wrap:anywhere;}
+  .kit-card b{color:var(--w);}
+  .aviso{background:var(--warnsoft);border:1px solid #f0d4b5;border-radius:12px;padding:10px 12px;font-size:12.5px;margin-top:10px;color:#8a5a1a;}
+  .aviso b{color:var(--warn);}
+
+  footer{text-align:center;color:var(--m);font-size:12px;margin-top:50px;}
+  footer b{color:var(--y);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="brand">MenuVibes · Guía visual</div>
+    <h1>El <em>POS</em>: una caja en cualquier<br>celular, tablet o compu</h1>
+    <p>Cobra en mostrador, manda comandas a cocina y controla los pedidos del QR — todo cae solo en el corte de caja y en los números del dueño.</p>
+    <div class="url-chip">🔗 <code>menu.rovicrm.com/pos.html?n=<b>tu-negocio</b></code></div>
+  </div>
+
+  <!-- 1 PERFILES -->
+  <h2 class="sec"><span class="n">1</span> Quién entra y qué puede hacer</h2>
+  <p class="sub">Se entra con email y contraseña. El sistema detecta solo tu perfil — no hay que configurar nada al entrar.</p>
+  <div class="perfiles">
+    <div class="perfil duenyo">
+      <div class="ico">👑</div><h3>Dueño</h3><div class="rol">login del negocio</div>
+      <ul>
+        <li>Vender y cobrar</li>
+        <li>Abrir corte</li>
+        <li>Cancelar pedidos</li>
+        <li>Dashboard completo (KPIs, cerrar corte)</li>
+      </ul>
+    </div>
+    <div class="perfil manager">
+      <div class="ico">🧭</div><h3>Manager</h3><div class="rol">staff · rol manager/owner</div>
+      <ul>
+        <li>Vender y cobrar</li>
+        <li>Abrir corte</li>
+        <li>Cancelar pedidos</li>
+        <li class="no">Dashboard del dueño</li>
+      </ul>
+    </div>
+    <div class="perfil cajero">
+      <div class="ico">💵</div><h3>Cajero</h3><div class="rol">staff · rol cajero</div>
+      <ul>
+        <li>Vender y cobrar</li>
+        <li>Abrir corte</li>
+        <li>Avanzar pedidos</li>
+        <li class="no">Dashboard del dueño</li>
+      </ul>
+    </div>
+    <div class="perfil mesero">
+      <div class="ico">🤵</div><h3>Mesero</h3><div class="rol">staff · rol mesero</div>
+      <ul>
+        <li>Levantar pedido y mandarlo a cocina</li>
+        <li>Cobrar en mesa</li>
+        <li>Confirmar QR del cliente (mesero.html)</li>
+        <li class="no">Abrir corte</li>
+      </ul>
+    </div>
+    <div class="perfil cocina">
+      <div class="ico">👨‍🍳</div><h3>Cocina</h3><div class="rol">staff · rol cocina</div>
+      <ul>
+        <li>Ver pedidos activos</li>
+        <li>Marcar "en preparación" y "listo"</li>
+        <li class="no">Cobrar</li>
+        <li class="no">Abrir corte</li>
+      </ul>
+    </div>
+  </div>
+
+  <table class="matriz">
+    <tr><th>Acción</th><th>Dueño</th><th>Manager</th><th>Cajero</th><th>Mesero</th><th>Cocina</th></tr>
+    <tr><td>Armar ticket y cobrar 💵</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="no">✕</td></tr>
+    <tr><td>Enviar a cocina 🍳</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="no">✕</td></tr>
+    <tr><td>Avanzar estados de pedidos</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td></tr>
+    <tr><td>Cancelar pedido</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td></tr>
+    <tr><td>Abrir corte de caja</td><td class="si">✓</td><td class="si">✓</td><td class="si">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
+    <tr><td>Cerrar corte y ver totales <span class="nota-td">(en el dashboard)</span></td><td class="si">✓</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td></tr>
+    <tr><td>KPIs, reputación y tendencias <span class="nota-td">(dashboard)</span></td><td class="si">✓</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td><td class="no">✕</td></tr>
+  </table>
+
+  <!-- 2 FLUJOS -->
+  <h2 class="sec"><span class="n">2</span> Los 4 flujos del día a día</h2>
+  <p class="sub">Cada flujo termina igual: la venta registrada con su método de pago, lista para el corte.</p>
+
+  <div class="flujo">
+    <h3>💵 Cobro directo en mostrador</h3>
+    <div class="quien">Lo usa: <b>cajero</b> · dueño · manager · mesero</div>
+    <div class="pasos">
+      <div class="paso"><div class="pi">👆</div><b>Toca productos</b><span>Se van sumando al ticket con cantidades.</span></div>
+      <div class="paso"><div class="pi">🧾</div><b>Ajusta el ticket</b><span>Cantidades +/−, % descuento, mesa o para llevar.</span></div>
+      <div class="paso"><div class="pi">💰</div><b>"Cobrar"</b><span>Elige efectivo, tarjeta o transferencia.</span></div>
+      <div class="paso"><div class="pi">🪙</div><b>Cambio automático</b><span>Escribe cuánto te dieron y el POS calcula el cambio.</span></div>
+    </div>
+    <div class="resultado"><b>Resultado:</b> pedido entregado con método de pago → suma a "Ventas hoy" y al corte.</div>
+  </div>
+
+  <div class="flujo">
+    <h3>🍳 Comanda a cocina</h3>
+    <div class="quien">Lo usa: <b>mesero</b> · cajero · dueño</div>
+    <div class="pasos">
+      <div class="paso"><div class="pi">👆</div><b>Arma el ticket</b><span>Igual que en mostrador, con # de mesa.</span></div>
+      <div class="paso"><div class="pi">📤</div><b>"A cocina"</b><span>El pedido nace confirmado y aparece en activos.</span></div>
+      <div class="paso"><div class="pi">🔥</div><b>Cocina lo trabaja</b><span>Lo marca "en preparación" y luego "listo".</span></div>
+      <div class="paso"><div class="pi">💰</div><b>Cobra al final</b><span>Botón "Cobrar" en el pedido activo cuando pidan la cuenta.</span></div>
+    </div>
+    <div class="resultado"><b>Resultado:</b> la mesa completa viaja por estados hasta cobrarse — sin papelitos.</div>
+  </div>
+
+  <div class="flujo">
+    <h3>📱 Pedido QR del cliente</h3>
+    <div class="quien">Lo usa: <b>el cliente</b> desde el menú digital → lo opera el staff</div>
+    <div class="pasos">
+      <div class="paso"><div class="pi">📲</div><b>Cliente ordena</b><span>Escanea el QR del menú y arma su pedido solo.</span></div>
+      <div class="paso"><div class="pi">🛎️</div><b>Aparece en el POS</b><span>Entra a "Pedidos activos" (se refresca solo).</span></div>
+      <div class="paso"><div class="pi">✅</div><b>Confirmar</b><span>El staff lo confirma y sigue el flujo de cocina.</span></div>
+      <div class="paso"><div class="pi">💰</div><b>Cobrar</b><span>Mismo botón, mismo corte.</span></div>
+    </div>
+    <div class="resultado"><b>Resultado:</b> autoservicio del cliente + control total del staff en una sola pantalla.</div>
+  </div>
+
+  <div class="flujo">
+    <h3>🗃️ El corte de caja (día completo)</h3>
+    <div class="quien">Abre: <b>cajero/manager/dueño</b> en el POS · Cierra: <b>dueño</b> en el dashboard</div>
+    <div class="pasos">
+      <div class="paso"><div class="pi">🔓</div><b>Abrir corte</b><span>Botón arriba del POS al iniciar el turno.</span></div>
+      <div class="paso"><div class="pi">💵</div><b>Vender todo el día</b><span>Cada cobro queda ligado al turno.</span></div>
+      <div class="paso"><div class="pi">🔒</div><b>Cerrar corte</b><span>Dashboard → Ventas → "Cerrar corte" con notas.</span></div>
+      <div class="paso"><div class="pi">📊</div><b>Totales solos</b><span>Efectivo, tarjeta y transferencia separados, más historial.</span></div>
+    </div>
+    <div class="resultado"><b>Resultado:</b> arqueo sin sumar tickets a mano — el POS ya lo hizo.</div>
+  </div>
+
+  <!-- 3 KIT DE PRUEBA -->
+  <h2 class="sec"><span class="n">3</span> Todo para probarlo hoy</h2>
+  <p class="sub">Con el negocio demo no tocas datos de ningún cliente real.</p>
+  <div class="kit">
+    <div class="kit-card">
+      <h3>🧪 Prueba end-to-end (10 min)</h3>
+      <ol>
+        <li>Abre <code>pos.html?n=demo-premium</code> y entra con tu cuenta de administrador.</li>
+        <li>Toca <b>"Abrir corte"</b> (pill arriba pasa a verde).</li>
+        <li>Arma un ticket de 3 productos → <b>"Cobrar"</b> → efectivo → escribe de más y mira el cambio.</li>
+        <li>Arma otro → <b>"A cocina"</b> → avánzalo: A preparación → Listo → Cobrar (tarjeta).</li>
+        <li>Abre el menú del demo desde otro celular, ordena como cliente y confírmalo en el POS.</li>
+        <li>Ve al <b>dashboard → Inicio</b>: "Ventas hoy" ya cambió. En <b>Ventas</b>: gráfica, top productos y el corte con sus totales → ciérralo.</li>
+      </ol>
+    </div>
+    <div class="kit-card">
+      <h3>🔑 Lo que necesitas tener listo</h3>
+      <ul>
+        <li><b>URL del POS:</b> <code>menu.rovicrm.com/pos.html?n=&lt;slug&gt;</code> — guárdala en la pantalla de inicio del celular/tablet de caja.</li>
+        <li><b>Cuenta del dueño:</b> la misma del dashboard. Entra directo, sin configurar nada.</li>
+        <li><b>Cuentas de staff:</b> se vinculan en <b>Dashboard → Ventas → Staff operativo</b> (email + rol + nombre). El email debe existir como usuario de la plataforma.</li>
+        <li><b>Negocio publicado:</b> requisito para crear pedidos (los 23 ya lo están).</li>
+        <li><b>Productos activos:</b> lo "agotado" no aparece en el POS ni en el menú.</li>
+      </ul>
+      <div class="aviso"><b>Tip de venta:</b> el POS con <code>?n=demo-premium</code> también sirve para demos con prospectos — cóbrales un "aguachile" imaginario en 20 segundos y se les cae la mandíbula.</div>
+    </div>
+  </div>
+
+  <footer>Hecho con <b>MenuVibes</b> · menú digital + reputación + POS · 0% comisiones</footer>
+</div>
+</body>
+</html>

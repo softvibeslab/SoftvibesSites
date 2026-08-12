@@ -1,0 +1,282 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE, waLink } from '../data/site';
+
+const propiedades = await getCollection('propiedades');
+const inventarioReal = propiedades
+  .filter((p) => !p.data.ejemplo)
+  .sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada));
+
+const inversionDesde = Math.min(...inventarioReal.map((p) => p.data.precio));
+const precioDesde = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+  maximumFractionDigits: 0,
+}).format(inversionDesde);
+
+const rutas = [
+  {
+    titulo: 'Entrada inteligente',
+    texto:
+      'Lotes escriturados cerca de Playa del Carmen para construir patrimonio con un ticket accesible.',
+    dato: precioDesde,
+    enlace: '/propiedades/lotes-selva-serena-guadalupe-victoria',
+  },
+  {
+    titulo: 'Activo patrimonial',
+    texto:
+      'Propiedades frente al mar para conservar valor, disfrutar el Caribe y diversificar inversión.',
+    dato: 'Frente al mar',
+    enlace: '/propiedades/penthouse-corasol-playa-del-carmen',
+  },
+  {
+    titulo: 'Renta vacacional',
+    texto:
+      'Análisis de zonas, ocupación esperada y administración antes de elegir una unidad para renta.',
+    dato: 'Números claros',
+    enlace: '/contacto',
+  },
+];
+---
+
+<BaseLayout
+  titulo="Vive Mar · Real Estate | Invierte con certeza en la Riviera Maya"
+  descripcion="Asesoría inmobiliaria en Cancún, Playa del Carmen y Tulum. Lotes escriturados, propiedades frente al mar y acompañamiento legal hasta la escritura."
+>
+  <section class="alt-hero">
+    <img
+      src="/img/hero-vivemar.jpg"
+      alt=""
+      class="alt-hero__media"
+      fetchpriority="high"
+      aria-hidden="true"
+    />
+    <div class="alt-hero__overlay"></div>
+    <div class="alt-hero__inner">
+      <div class="alt-hero__copy">
+        <span class="etiqueta anim" style="color: var(--laton-claro); --d: 100ms;">
+          Riviera Maya · Inversión inmobiliaria
+        </span>
+        <h1 class="anim" style="--d: 240ms;">
+          Compra en el Caribe con números claros y certeza legal.
+        </h1>
+        <p class="anim" style="--d: 380ms;">
+          Seleccionamos oportunidades en Cancún, Playa del Carmen y Tulum para que inviertas
+          con acompañamiento de principio a escritura: ubicación, documentación, forma de pago y
+          salida de renta o plusvalía.
+        </p>
+        <div class="alt-hero__cta anim" style="--d: 520ms;">
+          <a
+            href={waLink('Hola Viridiana, quiero evaluar una inversión inmobiliaria en la Riviera Maya.')}
+            class="boton boton--whatsapp"
+            target="_blank"
+            rel="noopener"
+          >
+            WhatsApp inmediato
+          </a>
+          <a href="#diagnostico" class="boton boton--claro">Ver rutas de inversión</a>
+        </div>
+        <div class="alt-hero__metrics anim" style="--d: 680ms;">
+          <div>
+            <strong>{precioDesde}</strong>
+            <span>Entrada publicada</span>
+          </div>
+          <div>
+            <strong>No ejidal</strong>
+            <span>Propiedad privada revisada</span>
+          </div>
+          <div>
+            <strong>1 a 1</strong>
+            <span>Acompañamiento con Viridiana</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="alt-diagnostico">
+    <div class="contenedor alt-diagnostico__inner">
+      <div>
+        <span class="etiqueta">Diagnóstico sin costo</span>
+        <h2>Cuéntanos tu objetivo y recibe una ruta inicial.</h2>
+        <p>
+          Un formulario breve para separar lo urgente de lo importante: presupuesto, horizonte y
+          tipo de inversión. Si prefieres, puedes escribir directo por WhatsApp.
+        </p>
+      </div>
+      <form class="alt-lead" action="/contact.php" method="POST">
+        <label>
+          Nombre
+          <input type="text" name="nombre" required autocomplete="name" />
+        </label>
+        <label>
+          WhatsApp
+          <input type="tel" name="telefono" required autocomplete="tel" />
+        </label>
+        <label>
+          Presupuesto aproximado
+          <select name="presupuesto" required>
+            <option value="hasta-500k">Hasta $500,000 MXN</option>
+            <option value="500k-2m">$500,000 - $2,000,000 MXN</option>
+            <option value="2m-8m">$2,000,000 - $8,000,000 MXN</option>
+            <option value="8m+">Más de $8,000,000 MXN</option>
+          </select>
+        </label>
+        <label>
+          Objetivo
+          <select name="interes" required>
+            <option value="lote">Comprar lote con plusvalía</option>
+            <option value="departamento">Invertir para renta vacacional</option>
+            <option value="penthouse">Comprar frente al mar</option>
+            <option value="asesoria">Comparar opciones</option>
+          </select>
+        </label>
+        <input type="text" name="empresa" class="campo-oculto" tabindex="-1" autocomplete="off" />
+        <label class="alt-lead__privacidad">
+          <input type="checkbox" name="privacidad" required />
+          <span>Acepto el <a href="/aviso-de-privacidad">aviso de privacidad</a>.</span>
+        </label>
+        <button type="submit" class="boton boton--laton">Solicitar diagnóstico</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="seccion" id="diagnostico">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Rutas de inversión</span>
+        <h2>Elige por objetivo, no por impulso</h2>
+        <p>
+          Esta variante ordena la experiencia como una asesoría: primero define tu perfil,
+          después compara zonas y finalmente solicita documentación de una oportunidad concreta.
+        </p>
+      </div>
+
+      <div class="alt-rutas">
+        {
+          rutas.map((ruta) => (
+            <article class="alt-ruta">
+              <span>{ruta.dato}</span>
+              <h3>{ruta.titulo}</h3>
+              <p>{ruta.texto}</p>
+              <a href={ruta.enlace}>Explorar ruta</a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <div class="alt-split">
+        <div>
+          <span class="etiqueta">Certeza antes que prisa</span>
+          <h2>Lo que revisamos antes de recomendar una propiedad</h2>
+          <p>
+            La Riviera Maya tiene oportunidades extraordinarias, pero no todas son iguales. La
+            diferencia está en revisar documentación, ubicación, forma de pago y estrategia de
+            salida antes de enamorarse de una imagen.
+          </p>
+        </div>
+        <div class="alt-checklist">
+          <div>
+            <strong>01</strong>
+            <span>Propiedad privada, escritura y no origen ejidal cuando aplica.</span>
+          </div>
+          <div>
+            <strong>02</strong>
+            <span>Precio por m², etapa del desarrollo y comparables de la zona.</span>
+          </div>
+          <div>
+            <strong>03</strong>
+            <span>Plan de pago, entrega, gastos notariales y flujo para renta.</span>
+          </div>
+          <div>
+            <strong>04</strong>
+            <span>Uso esperado: patrimonio, renta vacacional, retiro o reventa.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Inventario publicado</span>
+        <h2>Oportunidades reales destacadas</h2>
+        <p>
+          En esta versión no se muestran propiedades de ejemplo en la home. El catálogo puede
+          crecer sin mezclar inventario demostrativo con oportunidades activas.
+        </p>
+      </div>
+      <div class="grid-propiedades">
+        {inventarioReal.map((p) => <PropertyCard propiedad={p} />)}
+      </div>
+      <p style="margin-top: 2rem;">
+        <a href="/propiedades" class="boton boton--primario">Comparar todo el catálogo</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="alt-band">
+    <div class="contenedor alt-band__inner">
+      <div>
+        <span class="etiqueta" style="color: var(--laton-claro);">Zonas clave</span>
+        <h2>Cancún, Playa del Carmen y Tulum tienen perfiles distintos.</h2>
+      </div>
+      <div class="alt-zonas">
+        <a href="/zonas/cancun">Cancún para renta y conectividad</a>
+        <a href="/zonas/playa-del-carmen">Playa del Carmen para plusvalía consolidada</a>
+        <a href="/zonas/tulum">Tulum para crecimiento con revisión legal estricta</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--alterna" id="nosotros">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <img
+          src="/img/viridiana-penthouse.jpg"
+          alt="Viridiana Mar en una propiedad frente al mar en Playa del Carmen"
+          style="border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 4 / 5; object-fit: cover; width: 100%;"
+          width="640"
+          height="800"
+          loading="lazy"
+        />
+        <div>
+          <span class="etiqueta">Tu asesora</span>
+          <h2>Viridiana Mar</h2>
+          <p>
+            Vive Mar combina asesoría inmobiliaria, lectura de mercado y acompañamiento humano.
+            La meta no es mostrarte todo: es ayudarte a descartar rápido lo que no te conviene y
+            profundizar en las propiedades que sí hacen sentido para tu presupuesto.
+          </p>
+          <ul class="lista-check">
+            <li>Revisión legal antes de avanzar a apartado.</li>
+            <li>Comparativo de zonas según objetivo de inversión.</li>
+            <li>Seguimiento por WhatsApp, videollamada o visita presencial.</li>
+            <li>Acompañamiento con desarrollador, notaría y escritura.</li>
+          </ul>
+          <p style="margin-top: 1.5rem;">
+            <a
+              href={waLink('Hola Viridiana, quiero una asesoría para invertir con certeza en la Riviera Maya.')}
+              class="boton boton--whatsapp"
+              target="_blank"
+              rel="noopener"
+            >
+              Hablar con Viridiana
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTAContacto titulo="Recibe una recomendación según tu presupuesto" />
+</BaseLayout>

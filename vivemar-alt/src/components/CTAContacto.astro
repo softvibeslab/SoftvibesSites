@@ -1,0 +1,102 @@
+---
+import { SITE, waLink } from '../data/site';
+
+interface Props {
+  mensaje?: string;
+  titulo?: string;
+}
+
+const {
+  mensaje = SITE.waMensaje,
+  titulo = '¿Lista o listo para invertir en el paraíso?',
+} = Astro.props;
+---
+
+<section class="seccion" id="contacto">
+  <div class="contenedor">
+    <div class="seccion__intro">
+      <span class="etiqueta">Contacto</span>
+      <h2>{titulo}</h2>
+      <p>
+        Escríbenos por WhatsApp para una respuesta inmediata, agenda una asesoría sin costo o
+        déjanos tus datos y {SITE.asesora} te contacta en menos de 24 horas.
+      </p>
+    </div>
+
+    <div class="dos-columnas">
+      <form class="formulario" action="/contact.php" method="POST">
+        <label>
+          Nombre
+          <input type="text" name="nombre" required autocomplete="name" />
+        </label>
+        <label>
+          WhatsApp
+          <input type="tel" name="telefono" required autocomplete="tel" />
+        </label>
+        <label>
+          Correo
+          <input type="email" name="correo" autocomplete="email" />
+        </label>
+        <label>
+          ¿Qué te interesa?
+          <select name="interes">
+            <option value="lote">Lotes de inversión</option>
+            <option value="departamento">Departamento / Penthouse</option>
+            <option value="casa">Casa</option>
+            <option value="asesoria">Asesoría de inversión</option>
+          </select>
+        </label>
+        <label>
+          Presupuesto aproximado (MXN)
+          <select name="presupuesto">
+            <option value="hasta-500k">Hasta $500,000</option>
+            <option value="500k-2m">$500,000 – $2,000,000</option>
+            <option value="2m-8m">$2,000,000 – $8,000,000</option>
+            <option value="8m+">Más de $8,000,000</option>
+          </select>
+        </label>
+        <label>
+          Cuéntanos tu objetivo
+          <textarea
+            name="mensaje"
+            rows="4"
+            placeholder="Ej. Quiero comprar un lote escriturado o comparar opciones para renta vacacional."
+          ></textarea>
+        </label>
+        <!-- Honeypot antispam -->
+        <input type="text" name="empresa" class="campo-oculto" tabindex="-1" autocomplete="off" />
+        <label
+          style="font-weight: 400; display: flex; gap: 0.5rem; align-items: start; text-transform: none; letter-spacing: 0;"
+        >
+          <input type="checkbox" name="privacidad" required style="margin-top: 0.3rem;" />
+          <span>
+            Acepto el <a href="/aviso-de-privacidad">aviso de privacidad</a> y el uso de mis datos
+            para ser contactado.
+          </span>
+        </label>
+        <button type="submit" class="boton boton--laton">Quiero más información</button>
+        <p class="formulario__nota">🔒 Tus datos están seguros. Sin spam, sin compromiso.</p>
+      </form>
+
+      <div>
+        <h3>Respuesta inmediata</h3>
+        <p>
+          <strong>El canal más rápido es WhatsApp</strong> — te respondemos en minutos, no en
+          días.
+        </p>
+        <a href={waLink(mensaje)} target="_blank" rel="noopener" class="boton boton--whatsapp">
+          💬 WhatsApp {SITE.telefono}
+        </a>
+        <p style="margin-top: 1.75rem;"><strong>¿Prefieres una videollamada?</strong></p>
+        <a href={SITE.calendly} target="_blank" rel="noopener" class="boton boton--primario">
+          📅 Agendar asesoría sin costo
+        </a>
+        <p class="mini-testimonio">
+          Antes de recomendarte una propiedad revisamos objetivo, presupuesto, zona, forma de
+          pago y documentación disponible.
+          <strong>Asesoría enfocada en decisión, no en presión.</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

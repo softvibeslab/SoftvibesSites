@@ -1,0 +1,125 @@
+{
+  "slug": "mario-villanueva-beat",
+  "nombre": "Mario Villanueva",
+  "marca": "Mario Villanueva | Método BEAT",
+  "tagline": "Aprendí a vender y construí activos",
+  "nicho": "formación en ventas / emprendedores / coaches (método BEAT)",
+  "ciudad": "Hermosillo, Sonora / Bahías de Huatulco, Oaxaca",
+  "contacto": {
+    "instagram": "https://www.instagram.com/mariovillanueva.mx/",
+    "linkedin": "https://www.linkedin.com/in/mario-villanueva-426a7b8a/",
+    "whatsapp": "+52 958 111 0768",
+    "email": "mario@mariovillanueva.com"
+  },
+  "datos_verificados": {
+    "instagram_verificado": true,
+    "instagram_seguidores": 11100,
+    "instagram_publicaciones": 1882,
+    "instagram_siguiendo": 6499,
+    "anos_experiencia": "15+",
+    "empresas_operando": 3,
+    "estudiantes_beat": "1000+"
+  },
+  "empresas": [
+    {
+      "nombre": "Casa Xtao",
+      "tipo": "Hotel boutique",
+      "ubicacion": "Bahías de Huatulco",
+      "instagram": "@casaxtao",
+      "propósito": "Proof of execution"
+    },
+    {
+      "nombre": "Xtao Expeditions",
+      "tipo": "Club de viajes + inversión",
+      "instagram": "@xtaoexpeditions",
+      "propósito": "Community + revenue"
+    },
+    {
+      "nombre": "Xtao Xounds",
+      "tipo": "Label musical",
+      "instagram": "@xtaoxounds",
+      "propósito": "Creative outlet"
+    }
+  ],
+  "productos": [
+    {
+      "nombre": "BEAT EXPRESS",
+      "precio_usd": 27,
+      "duracion": "60 minutos",
+      "acceso": "Vitalicio",
+      "garantia": "7 días (Hotmart)",
+      "contenido": "4 módulos de 15 min + audio bonus",
+      "plataforma": "Hotmart",
+      "url": "https://pay.hotmart.com/"
+    },
+    {
+      "nombre": "Ritmo Mental BEAT",
+      "precio_usd": "?",
+      "duracion": "3 minutos",
+      "tipo": "Micro-oferta",
+      "plataforma": "Hotmart"
+    },
+    {
+      "nombre": "Vender Antes de Vender",
+      "tipo": "Ebook",
+      "plataforma": "Hotmart"
+    }
+  ],
+  "metodo_beat": {
+    "b": "Alínea el Ser (estado mental + emocional)",
+    "e": "Genera Confianza (genuina, no manipulación)",
+    "a": "Descubre Necesidad (real, no lo que dicen)",
+    "t": "Guía Decisión (sin presión, con claridad)"
+  },
+  "posicionamiento": {
+    "headline": "Deja de perseguir clientes. Vende mejor en 60 minutos.",
+    "subheadline": "El método BEAT: de vendedor asustado a guía de confianza",
+    "diferencial": "Método BEAT propio + 15 años de ejecución + 1000+ estudiantes",
+    "tonalidad": "Conversacional, sin hype motivacional, honesto"
+  },
+  "publicos_objetivo": [
+    {
+      "nombre": "Vendedores sin formación",
+      "tamaño": "10M+ en LatAm",
+      "problema": "Venden por WhatsApp sin método"
+    },
+    {
+      "nombre": "Coaches y consultores",
+      "tamaño": "50K+ en LatAm",
+      "problema": "Quieren cerrar sin perder autenticidad"
+    },
+    {
+      "nombre": "Emprendedores",
+      "tamaño": "500K+ en LatAm",
+      "problema": "Necesitan vender para validar"
+    }
+  ],
+  "analisis_key_findings": [
+    "BEAT es el diferenciador central (no las empresas)",
+    "Narrativa hoy = confusa; oportunidad = concentrada",
+    "Pricing es estratégico ($27 → BEAT PRO → escalado)",
+    "Sin testimonios visibles (1000+ personas esperando)",
+    "Copy honesto es ventaja competitiva secreta"
+  ],
+  "oportunidades": [
+    "Landing clara (tipo Karla, Diana, Fabiola)",
+    "Testimonios visibles (social proof)",
+    "Email sequences post-compra (upsell PRO)",
+    "Análisis digital como lead magnet",
+    "Ads dirigidos a vendedores + coaches"
+  ],
+  "deploy": {
+    "url_landing": "https://peachpuff-hippopotamus-402186.hostingersite.com/",
+    "url_analisis": "https://peachpuff-hippopotamus-402186.hostingersite.com/analisis/",
+    "url_links": "https://peachpuff-hippopotamus-402186.hostingersite.com/links/",
+    "fecha_deploy": "2026-07-28",
+    "hosting": "softvibes-hosting (Hostinger, order 1008508005)",
+    "status": "LISTO PARA DEPLOY"
+  },
+  "roadmap": {
+    "fase_1": "Landing + Análisis deploy (HOY)",
+    "fase_2": "Recolectar testimonios reales (1 semana)",
+    "fase_3": "Email sequences post-compra (2 semanas)",
+    "fase_4": "Ads launch + escalado (3-4 semanas)"
+  }
+}

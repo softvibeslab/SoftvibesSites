@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MenuVibes Mesero</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+  /* ══ MenuVibes Design System v1 — "Hospitalidad cálida" (ver DESIGN.md) ══ */
+  :root{--y:#ff385c;--ya:#e00b41;--b:#f7f7f7;--d:#ffffff;--s:#ffffff;--w:#222222;--body:#3f3f3f;--m:#6a6a6a;
+        --hair:#dddddd;--hair2:#ebebeb;--g:#008a05;--gsoft:#e8f5e9;--r:#c13515;
+        --shc:rgba(0,0,0,.05) 0 2px 8px;--shl:rgba(0,0,0,.08) 0 6px 20px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;overflow-x:hidden;}
+  body{min-height:100vh;background:var(--b);color:var(--w);font-family:'Nunito Sans',system-ui,-apple-system,sans-serif;padding:16px;}
+  .shell{width:100%;max-width:520px;margin:0 auto;}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
+  .brand{font-weight:800;letter-spacing:.06em;color:var(--y);text-transform:uppercase;font-size:12px;}
+  .biz{font-size:22px;font-weight:800;margin-top:3px;color:var(--w);}
+  .card{width:100%;max-width:100%;overflow:hidden;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:var(--shc);}
+  h1,h2{font-size:19px;font-weight:800;margin-bottom:8px;}
+  p,h1,h2,.biz{overflow-wrap:anywhere;}
+  p{color:var(--m);font-size:13px;line-height:1.5;margin-bottom:12px;}
+  input,select{width:100%;max-width:100%;background:#fff;border:1px solid var(--hair);color:var(--w);border-radius:8px;padding:12px 13px;font-size:15px;font-weight:600;margin-bottom:10px;outline:none;font-family:inherit;}
+  input:focus,select:focus{border-color:var(--w);}
+  .btn{width:100%;max-width:100%;border:0;border-radius:8px;padding:13px 16px;font-weight:800;font-size:15px;cursor:pointer;background:var(--y);color:#fff;margin-top:6px;font-family:inherit;}
+  .btn:hover{background:var(--ya);}
+  .btn.ghost{background:#fff;color:var(--body);border:1px solid var(--hair);}
+  .btn.good{background:var(--g);color:#fff;}
+  .btn.danger{background:#fff;color:var(--r);border:1px solid var(--r);}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .hidden{display:none!important;}
+  .err{min-height:18px;color:var(--r);font-size:12px;font-weight:700;margin-bottom:6px;}
+  .pill{display:inline-flex;background:var(--b);border:1px solid var(--hair2);border-radius:9999px;padding:5px 11px;font-size:11px;font-weight:800;color:var(--m);}
+  .pill.ok{background:var(--gsoft);border-color:#b7dfb9;color:var(--g);}
+  .pill.warn{background:#fff3e6;border-color:#f0d4b5;color:#c25e00;}
+  .qrbox{overflow:hidden;border-radius:16px;background:#000;margin-top:10px;}
+  #qr-reader{width:100%;}
+  .order-code{font-size:24px;font-weight:800;color:var(--y);letter-spacing:.04em;}
+  .items{display:grid;gap:6px;margin:12px 0;}
+  .item{display:flex;justify-content:space-between;gap:10px;background:var(--b);border-radius:12px;padding:10px 11px;font-size:13.5px;}
+  .item span:last-child{color:var(--w);font-weight:800;}
+  .total{display:flex;justify-content:space-between;font-size:18px;font-weight:800;border-top:1px solid var(--hair2);padding-top:10px;margin-top:8px;}
+  .list{display:grid;gap:8px;}
+  .mini-order{background:var(--b);border-radius:14px;padding:12px;display:grid;gap:5px;}
+  .muted{color:var(--m);font-size:12px;}
+  .result{font-size:13px;line-height:1.45;margin-top:8px;border-radius:12px;padding:11px;background:var(--b);color:var(--body);display:none;}
+  .result.ok{display:block;background:var(--gsoft);border:1px solid #b7dfb9;color:var(--g);}
+  .result.bad{display:block;background:#fdeeea;border:1px solid #f2c4b8;color:var(--r);}
+  .toast{position:fixed;left:16px;right:16px;bottom:16px;max-width:420px;margin:0 auto;background:var(--w);color:#fff;border-radius:9999px;padding:13px 20px;font-size:13px;font-weight:700;display:none;box-shadow:var(--shl);text-align:center;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="top">
+    <div>
+      <div class="brand">MenuVibes Staff</div>
+      <div class="biz" id="biz-name">Mesero</div>
+    </div>
+    <button class="btn ghost hidden" id="logout-btn" style="width:auto;margin:0;padding:9px 12px;" onclick="logout()">Salir</button>
+  </div>
+
+  <div class="card" id="login-card">
+    <h1>Entrar como mesero</h1>
+    <p>Usa tu usuario del negocio para confirmar pedidos de mesa.</p>
+    <div class="err" id="login-err"></div>
+    <input id="email" type="email" placeholder="Email">
+    <input id="pass" type="password" placeholder="Contrasena">
+    <button class="btn" onclick="login()">Entrar</button>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="card">
+      <h2>Escanear pedido</h2>
+      <p>Escanea el QR del cliente o captura el codigo manualmente.</p>
+      <div class="row">
+        <button class="btn" onclick="startScanner()">Escanear QR</button>
+        <button class="btn ghost" onclick="stopScanner()">Detener</button>
+      </div>
+      <div class="qrbox hidden" id="qr-wrap"><div id="qr-reader"></div></div>
+      <div style="margin-top:12px;">
+        <input id="manual-code" placeholder="Codigo MV-000000">
+        <input id="manual-token" placeholder="Token del QR">
+        <button class="btn ghost" onclick="loadManual()">Buscar pedido</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="order-card">
+      <div class="pill warn" id="order-status"></div>
+      <h2 style="margin-top:8px;">Pedido <span class="order-code" id="order-code"></span></h2>
+      <p id="order-meta"></p>
+      <div class="items" id="order-items"></div>
+      <div class="total"><span>Total</span><span id="order-total"></span></div>
+      <button class="btn good" id="confirm-btn" onclick="confirmOrder()">Confirmar pedido</button>
+    </div>
+
+    <div class="card">
+      <h2>Redimir beneficio</h2>
+      <p>Captura el codigo que muestra el cliente en su Club.</p>
+      <input id="benefit-code" placeholder="BEN-ABC123" onkeydown="if(event.key==='Enter')redeemBenefit()">
+      <input id="benefit-note" placeholder="Nota opcional">
+      <button class="btn good" onclick="redeemBenefit()">Redimir codigo</button>
+      <div class="result" id="benefit-result"></div>
+    </div>
+
+    <div class="card">
+      <h2>Reservas de hoy</h2>
+      <p>Confirma llegadas y marca no-shows.</p>
+      <div class="list" id="reservas-hoy"><div class="muted">Cargando...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Pedidos activos</h2>
+      <p>Pedidos recientes del negocio para seguimiento rapido.</p>
+      <div class="list" id="active-orders"><div class="muted">Cargando...</div></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var PLATFORM = {
+  supabase_url: 'https://supabase.rovicrm.com',
+  supabase_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzgzNjYzOTY3LCJleHAiOjE5NDEzNDM5Njd9.GLcqHfvdPpXwISiCd00olUgEjQku1cjwxiMKamU-A2A'
+};
+const SUPA = supabase.createClient(PLATFORM.supabase_url, PLATFORM.supabase_key);
+var NEG = null;
+var STAFF = null;
+var CURRENT = null;
+var SCANNER = null;
+
+function qs(name){ return new URLSearchParams(location.search).get(name) || ''; }
+function esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2600); }
+function statusLabel(s){ return ({pendiente_confirmacion:'Pendiente confirmacion',pendiente:'Pendiente',confirmado:'Confirmado',en_preparacion:'En preparacion',listo:'Listo',entregado:'Entregado',cancelado:'Cancelado'})[s] || s; }
+
+async function init() {
+  var slug = qs('n');
+  if (!slug) { document.getElementById('login-err').textContent = 'Falta ?n=slug del negocio.'; return; }
+  var neg = await SUPA.from('negocios').select('*').eq('slug', slug).maybeSingle();
+  if (!neg.data) { document.getElementById('login-err').textContent = 'Negocio no encontrado.'; return; }
+  NEG = neg.data;
+  document.getElementById('biz-name').textContent = NEG.nombre;
+  var session = await SUPA.auth.getSession();
+  if (session.data.session) await enterApp(session.data.session.user);
+}
+
+async function login() {
+  document.getElementById('login-err').textContent = '';
+  var email = document.getElementById('email').value.trim();
+  var pass = document.getElementById('pass').value;
+  var res = await SUPA.auth.signInWithPassword({ email, password: pass });
+  if (res.error) { document.getElementById('login-err').textContent = 'Credenciales incorrectas.'; return; }
+  await enterApp(res.data.user);
+}
+
+async function enterApp(user) {
+  var st = await SUPA.from('negocio_staff')
+    .select('*')
+    .eq('negocio_id', NEG.id)
+    .eq('user_id', user.id)
+    .eq('activo', true)
+    .maybeSingle();
+  if (!st.data) {
+    document.getElementById('login-err').textContent = 'Este usuario no esta asignado como staff de este negocio.';
+    await SUPA.auth.signOut();
+    return;
+  }
+  STAFF = st.data;
+  document.getElementById('login-card').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('logout-btn').classList.remove('hidden');
+  await loadActiveOrders();
+  await loadReservasHoy();
+  if (qs('o') && qs('t')) await loadByToken(qs('o'), qs('t'));
+}
+
+async function logout() {
+  await stopScanner();
+  await SUPA.auth.signOut();
+  location.reload();
+}
+
+async function startScanner() {
+  document.getElementById('qr-wrap').classList.remove('hidden');
+  if (!SCANNER) SCANNER = new Html5Qrcode('qr-reader');
+  await SCANNER.start(
+    { facingMode: 'environment' },
+    { fps: 10, qrbox: { width: 240, height: 240 } },
+    async function(decoded) {
+      await stopScanner();
+      handleScanned(decoded);
+    }
+  ).catch(function(){ toast('No se pudo abrir la camara. Usa codigo manual.'); });
+}
+
+async function stopScanner() {
+  if (SCANNER && SCANNER.isScanning) await SCANNER.stop().catch(function(){});
+  document.getElementById('qr-wrap').classList.add('hidden');
+}
+
+function handleScanned(value) {
+  try {
+    var u = new URL(value);
+    loadByToken(u.searchParams.get('o') || '', u.searchParams.get('t') || '');
+  } catch(e) {
+    toast('QR invalido');
+  }
+}
+
+function loadManual() {
+  loadByToken(document.getElementById('manual-code').value.trim(), document.getElementById('manual-token').value.trim());
+}
+
+async function loadByToken(code, token) {
+  if (!code || !token) { toast('Falta codigo o token'); return; }
+  var res = await SUPA.rpc('leer_pedido_qr', {
+    p_negocio_id: NEG.id,
+    p_codigo_confirmacion: code,
+    p_qr_token: token
+  });
+  if (res.error || !res.data || !res.data.length) { toast('Pedido no encontrado o QR invalido'); return; }
+  CURRENT = Object.assign({}, res.data[0], { qr_token: token });
+  renderOrder(CURRENT);
+}
+
+function renderOrder(p) {
+  document.getElementById('order-card').classList.remove('hidden');
+  document.getElementById('order-status').textContent = statusLabel(p.estado);
+  document.getElementById('order-code').textContent = p.codigo_confirmacion;
+  document.getElementById('order-meta').textContent = (p.cliente_nombre || 'Cliente') + ' · ' + new Date(p.created_at).toLocaleString();
+  var items = Array.isArray(p.items) ? p.items : [];
+  document.getElementById('order-items').innerHTML = items.map(i =>
+    '<div class="item"><strong>'+esc(i.name)+'</strong><span>$'+esc(i.price)+'</span></div>'
+  ).join('');
+  document.getElementById('order-total').textContent = '$' + p.total;
+  document.getElementById('confirm-btn').disabled = p.estado === 'confirmado' || p.estado === 'entregado' || p.estado === 'cancelado';
+  document.getElementById('confirm-btn').textContent = p.estado === 'confirmado' ? 'Ya confirmado' : 'Confirmar pedido';
+}
+
+async function confirmOrder() {
+  if (!CURRENT) return;
+  var res = await SUPA.rpc('confirmar_pedido_qr', {
+    p_negocio_id: NEG.id,
+    p_codigo_confirmacion: CURRENT.codigo_confirmacion,
+    p_qr_token: CURRENT.qr_token
+  });
+  if (res.error) { toast('No se pudo confirmar'); return; }
+  CURRENT.estado = 'confirmado';
+  CURRENT.confirmado_at = new Date().toISOString();
+  renderOrder(CURRENT);
+  toast('Pedido confirmado');
+  await loadActiveOrders();
+}
+
+async function redeemBenefit() {
+  var codeEl = document.getElementById('benefit-code');
+  var noteEl = document.getElementById('benefit-note');
+  var out = document.getElementById('benefit-result');
+  var code = codeEl.value.trim().toUpperCase();
+  out.className = 'result';
+  out.textContent = '';
+  if (!code) { toast('Falta el codigo'); return; }
+  var res = await SUPA.rpc('redimir_beneficio_codigo', {
+    p_negocio_id: NEG.id,
+    p_codigo: code,
+    p_notas: noteEl.value.trim()
+  });
+  if (res.error) {
+    out.className = 'result bad';
+    out.textContent = res.error.message || 'No se pudo redimir el beneficio.';
+    return;
+  }
+  var row = (res.data && res.data[0]) || {};
+  out.className = 'result ok';
+  out.textContent = 'Beneficio redimido: ' + (row.beneficio_nombre || 'Beneficio') + ' para ' + (row.nickname || 'cliente') + '.';
+  codeEl.value = '';
+  noteEl.value = '';
+  toast('Beneficio redimido');
+}
+
+async function loadActiveOrders() {
+  var res = await SUPA.from('pedidos')
+    .select('id,codigo_confirmacion,estado,tipo_servicio,cliente_nombre,total,created_at')
+    .eq('negocio_id', NEG.id)
+    .in('estado', ['pendiente_confirmacion','pendiente','confirmado','en_preparacion','listo'])
+    .order('created_at', { ascending:false })
+    .limit(12);
+  var root = document.getElementById('active-orders');
+  if (res.error) { root.innerHTML = '<div class="muted">No se pudieron cargar pedidos.</div>'; return; }
+  if (!res.data.length) { root.innerHTML = '<div class="muted">Sin pedidos activos.</div>'; return; }
+  root.innerHTML = res.data.map(p =>
+    '<div class="mini-order"><div><strong>'+esc(p.codigo_confirmacion || 'Sin codigo')+'</strong> <span class="pill">'+esc(statusLabel(p.estado))+'</span></div>' +
+    '<div class="muted">'+esc(p.cliente_nombre || 'Cliente')+' · $'+esc(p.total)+' · '+new Date(p.created_at).toLocaleTimeString()+'</div></div>'
+  ).join('');
+}
+
+function rsvHoy(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+async function loadReservasHoy() {
+  var root = document.getElementById('reservas-hoy');
+  var res = await SUPA.from('reservas')
+    .select('id,cliente_nombre,cliente_telefono,personas,hora,estado,notas,codigo_confirmacion')
+    .eq('negocio_id', NEG.id)
+    .eq('fecha', rsvHoy())
+    .in('estado', ['solicitada','confirmada','sentada'])
+    .order('hora', { ascending: true })
+    .limit(30);
+  if (res.error) { root.innerHTML = '<div class="muted">No se pudieron cargar reservas.</div>'; return; }
+  if (!res.data.length) { root.innerHTML = '<div class="muted">Sin reservas para hoy.</div>'; return; }
+  root.innerHTML = res.data.map(function(r){
+    var acc = '';
+    if (r.estado === 'solicitada') acc += '<button class="btn good" style="width:auto;padding:8px 12px;margin:0;" onclick="accReservaMesero(\''+r.id+'\',\'confirmada\')">Confirmar</button>';
+    if (r.estado === 'solicitada' || r.estado === 'confirmada') {
+      acc += '<button class="btn good" style="width:auto;padding:8px 12px;margin:0;" onclick="accReservaMesero(\''+r.id+'\',\'sentada\')">Sento</button>';
+      acc += '<button class="btn danger" style="width:auto;padding:8px 12px;margin:0;" onclick="accReservaMesero(\''+r.id+'\',\'no_show\')">No-show</button>';
+    }
+    return '<div class="mini-order">' +
+      '<div><strong>'+esc(r.hora||'—')+'</strong> · '+esc(r.cliente_nombre||'Cliente')+' <span class="pill">'+esc(r.estado)+'</span></div>' +
+      '<div class="muted">'+esc(r.personas||1)+' personas'+(r.cliente_telefono?(' · '+esc(r.cliente_telefono)):'')+(r.notas?(' · '+esc(r.notas)):'')+'</div>' +
+      (acc?('<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">'+acc+'</div>'):'') +
+    '</div>';
+  }).join('');
+}
+
+async function accReservaMesero(id, estado) {
+  var res = await SUPA.rpc('cambiar_estado_reserva', { p_reserva_id: id, p_estado: estado });
+  if (res.error) { toast('No se pudo actualizar'); return; }
+  toast('Reserva actualizada');
+  await loadReservasHoy();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

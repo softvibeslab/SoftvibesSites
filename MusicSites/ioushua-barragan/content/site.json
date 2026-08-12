@@ -1,0 +1,394 @@
+{
+  "meta": {
+    "lang": "es",
+    "title": "Ieoushua Barragán — Contrabajista · Barragán Quintet · Jazz Riviera Maya",
+    "description": "Ieoushua Barragán, contrabajista y bajista de jazz. Director del Barragán Quintet (CECUT 2026), Obed Orozco Trío (PDC Jazz Fest), Zoar Miranda Quartet. Booking para festivales, venues y sesiones.",
+    "ogTitle": "Ieoushua Barragán — Contrabajo · Jazz · Riviera Maya",
+    "ogDescription": "Del Caribe a la frontera: contrabajista y director del Barragán Quintet. Booking disponible.",
+    "ogType": "profile",
+    "ogLocale": "es_MX",
+    "ogImage": "assets/retrato-color.jpg"
+  },
+  "artist": {
+    "name": "Ieoushua Barragán",
+    "brandFirst": "Ieoushua",
+    "brandLast": "Barragán",
+    "alternateName": "Joshua Barragán",
+    "jobTitle": "Contrabajista y bajista de jazz",
+    "location": "Playa del Carmen, Quintana Roo, México",
+    "footerNote": "© 2026 Ieoushua Barragán · Contrabajo & bajo eléctrico · Playa del Carmen, México · Sitio por Softvibes"
+  },
+  "schema": {
+    "memberOf": [
+      "Barragán Quintet",
+      "Obed Orozco Trío",
+      "Zoar Miranda Quartet"
+    ],
+    "sameAs": [
+      "https://www.instagram.com/ieoushua",
+      "https://www.discogs.com/artist/12024961",
+      "https://music.apple.com/us/artist/ieoushua-barrag%C3%A1n-bajo/1655970557"
+    ]
+  },
+  "navigation": [
+    {
+      "label": "Bio",
+      "href": "#bio"
+    },
+    {
+      "label": "Trayectoria",
+      "href": "#trayectoria"
+    },
+    {
+      "label": "Música",
+      "href": "#musica"
+    },
+    {
+      "label": "Fechas",
+      "href": "#fechas"
+    },
+    {
+      "label": "Galería",
+      "href": "#galeria"
+    },
+    {
+      "label": "Servicios",
+      "href": "#servicios"
+    }
+  ],
+  "hero": {
+    "eyebrow": "Contrabajo · Bajo eléctrico · Jazz",
+    "title": {
+      "line1": "Del Caribe",
+      "line2": "a la frontera",
+      "emphasis": "frontera"
+    },
+    "subtitle": "Ieoushua Barragán — contrabajista de la Riviera Maya y director del Barragán Quintet. La base rítmica detrás de los escenarios del jazz mexicano: del Playa del Carmen Jazz Fest al CECUT de Tijuana.",
+    "slides": [
+      {
+        "image": "assets/hero-medianoche-full.jpg",
+        "label": "Medianoche"
+      },
+      {
+        "image": "assets/hero-propuesta-b.jpg",
+        "label": "Luz de escenario"
+      }
+    ],
+    "ctas": [
+      {
+        "label": "Booking & contrataciones",
+        "href": "#booking",
+        "style": "primary"
+      },
+      {
+        "label": "▶ Escuchar",
+        "href": "#musica",
+        "style": "ghost"
+      }
+    ],
+    "badges": [
+      {
+        "title": "Barragán Quintet",
+        "text": "CECUT 2026"
+      },
+      {
+        "title": "PDC Jazz Fest",
+        "text": "Teatro de la Ciudad"
+      },
+      {
+        "title": "Esoteric Fat Dog",
+        "text": "Chancla Records"
+      }
+    ]
+  },
+  "bio": {
+    "eyebrow": "Bio",
+    "title": "El pulso grave de la<br>escena del sureste",
+    "paragraphs": [
+      "Bajista y contrabajista radicado en Playa del Carmen, Ieoushua Barragán es una de las piezas fundamentales del jazz en la Riviera Maya. Su recorrido conecta el Caribe con los foros más exigentes de la Ciudad de México — Jazzatlán Capital, Pizza Jazz Café — y, desde 2026, con la frontera norte al frente de su propio quinteto.",
+      "Ha compartido escenario y cartel con Obed Orozco, Rodrigo López, Zoar Miranda, Diego Maroto, Joan Chamorro y Karen Souza, entre otros referentes del jazz nacional e internacional."
+    ],
+    "quote": "De sideman de alta confiabilidad a director musical: curaduría, arreglos y concepto sonoro bajo su propia firma.",
+    "image": "assets/bio.jpg",
+    "imageAlt": "Ieoushua Barragán practicando con el contrabajo"
+  },
+  "timeline": {
+    "eyebrow": "Trayectoria",
+    "title": "Cinco años, tres regiones,<br>un mismo groove",
+    "items": [
+      {
+        "period": "Mov. I · 2021 — 2022",
+        "title": "Esoteric Fat Dog · Zoar Miranda",
+        "description": "Contrabajo en el álbum debut del baterista Zoar Miranda (Chancla Records). Hard bop y fusión progresiva junto a Romeo Rodríguez, Fidel González y Gil Henderson. Ingeniería de Irving Novelo; mezcla de Luis F. Herrera.",
+        "tags": [
+          "Contrabajo",
+          "Chancla Records"
+        ]
+      },
+      {
+        "period": "Mov. II · 2022",
+        "title": "Gira CDMX · Zoar Miranda Quartet",
+        "description": "Circuito de clubes de la capital con Bernardo Ron y Lucio De Rosa: Pizza Jazz Café, Jazzatlán Capital (Col. Roma) y El Convite, entre otros foros.",
+        "tags": [
+          "Jazzatlán Capital",
+          "Pizza Jazz Café"
+        ]
+      },
+      {
+        "period": "Mov. III · 2025",
+        "title": "Playa del Carmen Jazz Fest · Obed Orozco Trío",
+        "description": "Noche estelar en el Teatro de la Ciudad (4 de octubre) junto al pianista Obed Orozco y el guitarrista Rodrigo López, compartiendo cartel con Diego Maroto, Joan Chamorro, Èlia Bastida y Karen Souza.",
+        "tags": [
+          "Teatro de la Ciudad",
+          "Explayarte A.C."
+        ]
+      },
+      {
+        "period": "Mov. IV · 2026",
+        "title": "Barragán Quintet · CECUT, Tijuana",
+        "description": "Debut como líder y director musical en el Foro Luna del Centro Cultural Tijuana, dentro del ciclo «Tardes de Jazz». El salto del Caribe a la frontera noroeste bajo firma propia.",
+        "tags": [
+          "Líder",
+          "Foro Luna · CECUT"
+        ]
+      }
+    ]
+  },
+  "music": {
+    "eyebrow": "Música & video",
+    "title": "Escúchalo en acción",
+    "lead": "Sesiones en vivo y grabaciones de estudio con los proyectos donde Ieoushua sostiene la base.",
+    "vinylImage": "assets/vinyl.png",
+    "videos": [
+      {
+        "youtubeId": "sDP6b6N7qEg",
+        "title": "Calle 44 Jazz Club",
+        "subtitle": "Zoar Miranda Cuarteto · Ieoushua Barragán, contrabajo",
+        "thumbnail": "https://i.ytimg.com/vi/sDP6b6N7qEg/hqdefault.jpg",
+        "alt": "Zoar Miranda Cuarteto en Calle 44 Jazz Club"
+      },
+      {
+        "youtubeId": "UKEfTzj236g",
+        "title": "Esoteric Fat Dog",
+        "subtitle": "Zoar Miranda · sesión oficial del álbum",
+        "thumbnail": "https://i.ytimg.com/vi/UKEfTzj236g/hqdefault.jpg",
+        "alt": "Esoteric Fat Dog — video oficial"
+      }
+    ],
+    "links": [
+      {
+        "icon": "♫",
+        "title": "A Happy Day For A Sad Bird",
+        "subtitle": "Bandcamp · 2023",
+        "href": "https://zoarmiranda.bandcamp.com/track/a-happy-day-for-a-sad-bird"
+      },
+      {
+        "icon": "",
+        "title": "Apple Music",
+        "subtitle": "Perfil de artista",
+        "href": "https://music.apple.com/us/artist/ieoushua-barrag%C3%A1n-bajo/1655970557"
+      },
+      {
+        "icon": "🎙",
+        "title": "Mapaná Music en vivo",
+        "subtitle": "Podcast Sonidos Independientes",
+        "href": "https://podcasters.spotify.com/pod/show/sonidosindependientes/episodes/Mapan-Music-en-vivo--Sonidos-Independientes-Episodio-38-e1vpbc5"
+      }
+    ]
+  },
+  "events": {
+    "eyebrow": "Fechas",
+    "title": "En escena",
+    "lead": "¿Quieres al Barragán Quintet en tu escenario?",
+    "items": [
+      {
+        "day": "22",
+        "month": "Jul 26",
+        "date": "2026-07-22",
+        "title": "Aleita Cabrera en concierto",
+        "description": "Playa del Carmen · 8:00 pm · RSVP 984 144 2987 · Prev. $180 / Cover $250",
+        "status": "Próxima",
+        "statusStyle": "next",
+        "href": "assets/flyer-aleita-22jul.jpg"
+      },
+      {
+        "day": "30",
+        "month": "Jul 26",
+        "date": "2026-07-30",
+        "title": "El Arrecife de Aleita — Ensamble Grande",
+        "description": "Mora Mora, cocina urbana & galería de arte · Playa del Carmen · Cover $180",
+        "status": "Próxima",
+        "statusStyle": "next",
+        "href": "assets/flyer-arrecife-30jul.jpg"
+      },
+      {
+        "day": "11",
+        "month": "Jul 26",
+        "date": "2026-07-11",
+        "title": "Barragán Quintet — Tardes de Jazz",
+        "description": "Foro Luna, Centro Cultural Tijuana (CECUT) · Tijuana, B.C.",
+        "status": "Presentado",
+        "statusStyle": "",
+        "href": ""
+      },
+      {
+        "day": "04",
+        "month": "Oct 25",
+        "date": "2025-10-04",
+        "title": "Obed Orozco Trío — PDC Jazz Fest",
+        "description": "Teatro de la Ciudad · Playa del Carmen, Q. Roo",
+        "status": "Presentado",
+        "statusStyle": "",
+        "href": ""
+      },
+      {
+        "day": "21",
+        "month": "Sep 22",
+        "date": "2022-09-21",
+        "title": "Zoar Miranda Quartet",
+        "description": "Jazzatlán Capital · Col. Roma, CDMX",
+        "status": "Presentado",
+        "statusStyle": "",
+        "href": ""
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Galería",
+    "title": "Entre foros, estudios<br>y ensayos",
+    "images": [
+      {
+        "src": "assets/galeria-contrabajo-escenario.jpg",
+        "alt": "Contrabajo en escenario con telón oscuro",
+        "caption": "EN EL FORO",
+        "variant": "tall"
+      },
+      {
+        "src": "assets/galeria-teatro.jpg",
+        "alt": "Músicos tras el concierto en el teatro",
+        "caption": "DESPUÉS DEL SHOW · TEATRO",
+        "variant": "tall"
+      },
+      {
+        "src": "assets/hero-contrabajo.jpg",
+        "alt": "Ieoushua Barragán con contrabajo, blanco y negro",
+        "caption": "CONTRABAJO",
+        "variant": "tall"
+      },
+      {
+        "src": "assets/galeria-estudio-bajo.jpg",
+        "alt": "Sesión de estudio con bajo eléctrico",
+        "caption": "SESIÓN DE ESTUDIO",
+        "variant": ""
+      },
+      {
+        "src": "assets/galeria-sesion-trio.jpg",
+        "alt": "Grabación en trío: bajo, teclado y batería",
+        "caption": "GRABANDO EN TRÍO",
+        "variant": ""
+      },
+      {
+        "src": "assets/galeria-ensayo-polaroid.jpg",
+        "alt": "Polaroid de ensayo con teclado y batería",
+        "caption": "ENSAYO",
+        "variant": ""
+      },
+      {
+        "src": "assets/galeria-hotel-lobby.jpg",
+        "alt": "Montaje de cello, pedalera y atril en el lobby de un hotel",
+        "caption": "LISTO PARA EL SET · HOTELERÍA RIVIERA MAYA",
+        "variant": "wide"
+      }
+    ],
+    "reels": [
+      {
+        "src": "assets/reel-funk.mp4",
+        "caption": "SKATE OR DIE · FUNK"
+      },
+      {
+        "src": "assets/reel-creativo.mp4",
+        "caption": "TEMPORADA BAJA, MODO CREATIVO"
+      },
+      {
+        "src": "assets/reel-te-vemos.mp4",
+        "caption": "TE VEMOS PRONTO"
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "Servicios",
+    "title": "Lleva el jazz a tu escenario",
+    "items": [
+      {
+        "number": "I.",
+        "glyph": "𝄢",
+        "title": "Barragán Quintet",
+        "description": "Quinteto de jazz con repertorio curado por Ieoushua para festivales, teatros, centros culturales y venues."
+      },
+      {
+        "number": "II.",
+        "glyph": "♬",
+        "title": "Sideman · contrabajo y bajo eléctrico",
+        "description": "Base rítmica de alta confiabilidad para ensambles, giras y proyectos de jazz, jazz latino y fusión."
+      },
+      {
+        "number": "III.",
+        "glyph": "𝄞",
+        "title": "Sesiones de estudio",
+        "description": "Grabación de contrabajo y bajo eléctrico para producciones discográficas y bandas sonoras."
+      },
+      {
+        "number": "IV.",
+        "glyph": "♪",
+        "title": "Eventos privados & hotelería",
+        "description": "Formatos de trío a quinteto para hoteles, restaurantes y eventos privados en la Riviera Maya."
+      }
+    ]
+  },
+  "booking": {
+    "eyebrow": "Booking",
+    "title": "Hagamos que suene",
+    "lead": "Contrataciones para festivales, venues, sesiones y eventos privados. Respuesta directa, sin intermediarios.",
+    "whatsappNumber": "5219841568693",
+    "whatsappText": "Hola Ieoushua, me interesa una contratación",
+    "email": "booking@example.com",
+    "emailLabel": "booking@…",
+    "instagram": "https://www.instagram.com/ieoushua",
+    "instagramLabel": "Instagram @ieoushua"
+  },
+  "footerLinks": [
+    {
+      "label": "Instagram",
+      "href": "https://www.instagram.com/ieoushua"
+    },
+    {
+      "label": "Apple Music",
+      "href": "https://music.apple.com/us/artist/ieoushua-barrag%C3%A1n-bajo/1655970557"
+    },
+    {
+      "label": "Discogs",
+      "href": "https://www.discogs.com/artist/12024961"
+    },
+    {
+      "label": "Bandcamp",
+      "href": "https://zoarmiranda.bandcamp.com"
+    }
+  ],
+  "spotify": {
+    "label": "Playlist en Spotify",
+    "panelTitle": "Playlist de Ieoushua Barragán en Spotify",
+    "embedUrl": "https://open.spotify.com/embed/playlist/1SFyAkzyEablQUJCaDiqwS?utm_source=generator&theme=0",
+    "externalUrl": "https://open.spotify.com/playlist/1SFyAkzyEablQUJCaDiqwS"
+  },
+  "legacyPages": [
+    "rhoman/index.html",
+    "alt-cultura/index.html",
+    "analisis/index.html",
+    "alternative/site.html",
+    "alternative/info.html",
+    "hero-propuestas.html",
+    "PLAN.md",
+    "deepresearch.md",
+    "research-ieoushua.md"
+  ]
+}

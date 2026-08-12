@@ -1,0 +1,245 @@
+---
+const { content } = Astro.props;
+const wa = (message: string) => `${content.contact.whatsapp}?text=${encodeURIComponent(message)}`;
+const genericMessage = 'Hola Emir, vi tu página y quiero saber qué modalidad de entrenamiento me conviene.';
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#inicio" aria-label="Emir 24, inicio">
+      <span class="brand-mark">E24</span>
+      <span><strong data-content="brand.name">{content.brand.name}</strong><small>Coach · PDC</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#modalidades">Modalidades</a>
+      <a href="#metodo">Método</a>
+      <a href="#coach">Coach</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <a class="header-cta" data-wa-main data-track="whatsapp_click" href={wa(genericMessage)} target="_blank" rel="noopener">Hablar con Emir <span>↗</span></a>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="hero" id="inicio">
+    <div class="hero-grid"></div>
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <p class="kicker kicker--light"><span>01</span> <b data-content="hero.eyebrow">{content.hero.eyebrow}</b></p>
+        <h1 data-content="hero.title">{content.hero.title}</h1>
+        <p class="hero-summary" data-content="hero.summary">{content.hero.summary}</p>
+        <div class="hero-actions">
+          <a class="button button--acid" data-wa-service="personal" data-track="whatsapp_click" href={wa(content.services[0].message)} target="_blank" rel="noopener"><span data-content="hero.primaryCta">{content.hero.primaryCta}</span> <b>↗</b></a>
+          <a class="button button--outline" data-wa-service="online" data-track="whatsapp_click" href={wa(content.services[1].message)} target="_blank" rel="noopener"><span data-content="hero.secondaryCta">{content.hero.secondaryCta}</span></a>
+        </div>
+        <p class="hero-meta"><i></i><span data-content="contact.location">{content.contact.location}</span></p>
+      </div>
+      <div class="hero-visual" aria-label="Emir entrenando en gimnasio">
+        <div class="hero-photo">
+          <img src="/img/research/post-2024.jpg" alt="Emir Morales en un gimnasio" width="1080" height="1080" />
+          <span class="photo-index">24<span>/FIT</span></span>
+        </div>
+        <div class="availability"><span>Modalidades</span><strong>Presencial<br />+ Online</strong><small>Disponibilidad por confirmar</small></div>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#modalidades"><span>Desliza</span><i></i></a>
+  </section>
+
+  <section class="signal-strip" aria-label="Datos públicos del perfil">
+    <div class="container signal-grid">
+      <div><strong>785</strong><span>seguidores actuales</span></div>
+      <div><strong>138</strong><span>interacciones visibles en la oferta</span></div>
+      <div><strong>2</strong><span>formas de trabajar</span></div>
+      <p>Datos públicos al <time datetime="2026-08-05">05.08.26</time>. No equivalen a resultados de clientes.</p>
+    </div>
+  </section>
+
+  <section class="section services" id="modalidades">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="kicker"><span>02</span> Elige tu ruta</p><h2>Tu horario cambia.<br />El plan no debería.</h2></div>
+        <p>Dos modalidades con una misma base: saber qué hacer, ejecutar mejor y tener a quién preguntar cuando toca ajustar.</p>
+      </div>
+      <div class="service-grid">
+        {content.services.map((service: any) => (
+          <article class={`service-card service-card--${service.id}`} data-service={service.id}>
+            <div class="service-top"><span data-field="number">{service.number}</span><em data-field="tag">{service.tag}</em></div>
+            <h3 data-field="title">{service.title}</h3>
+            <p data-field="summary">{service.summary}</p>
+            <ul data-field="details">{service.details.map((detail: string) => <li>{detail}</li>)}</ul>
+            <a data-field="cta" data-wa-service={service.id} data-track="whatsapp_click" href={wa(service.message)} target="_blank" rel="noopener">{service.cta} <span>↗</span></a>
+          </article>
+        ))}
+      </div>
+      <div class="floor-note"><span>18:00—23:00</span><p><strong>Turno de piso ≠ sesión personal.</strong> En ese horario Emir puede resolver dudas puntuales y postura, pero no quedarse una hora completa contigo.</p></div>
+    </div>
+  </section>
+
+  <section class="section method" id="metodo">
+    <div class="container method-grid">
+      <div class="method-intro">
+        <p class="kicker kicker--light"><span>03</span> Una ruta simple</p>
+        <h2>Menos improvisar.<br /><i>Más ejecutar.</i></h2>
+        <p>La página no promete atajos. Organiza una conversación para definir objetivo, modalidad y alcance antes de empezar.</p>
+      </div>
+      <ol class="steps">
+        <li><span>01</span><div><h3>Define el punto de partida</h3><p>Cuéntale a Emir qué buscas, dónde entrenas y cuánto tiempo puedes sostener.</p></div></li>
+        <li><span>02</span><div><h3>Confirma la modalidad</h3><p>Revisa disponibilidad, precio, alcance del servicio y la forma de seguimiento.</p></div></li>
+        <li><span>03</span><div><h3>Ejecuta y ajusta</h3><p>Entrena con una ruta clara y usa el seguimiento para resolver lo que frena el proceso.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section coach" id="coach">
+    <div class="container coach-grid">
+      <div class="coach-media">
+        <img src="/img/research/offer-post.jpg" alt="Retrato de Emir Morales" width="1080" height="810" loading="lazy" />
+        <div class="coach-stamp"><span>Coach</span><strong>EM</strong><small>Playa del Carmen</small></div>
+      </div>
+      <div class="coach-copy">
+        <p class="kicker"><span>04</span> <b data-content="about.eyebrow">{content.about.eyebrow}</b></p>
+        <h2 data-content="about.title">{content.about.title}</h2>
+        <p class="coach-body" data-content="about.body">{content.about.body}</p>
+        <div class="verification"><span>✓</span><p data-content="about.note">{content.about.note}</p></div>
+        <a class="text-link" data-instagram data-track="instagram_click" href={content.contact.instagram} target="_blank" rel="noopener">Ver perfil público @emir24.fit <span>↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section content-proof">
+    <div class="container proof-grid">
+      <div class="proof-copy">
+        <p class="kicker kicker--light"><span>05</span> Sin vender humo</p>
+        <h2>El físico llama la atención.<br />El proceso construye confianza.</h2>
+        <p>Por ahora la evidencia pública muestra la constancia personal de Emir y una oferta bien explicada. Antes de publicar resultados de clientes, hacen falta permiso y contexto.</p>
+        <a class="button button--acid" data-instagram data-track="instagram_click" href={content.contact.instagram} target="_blank" rel="noopener">Explorar Instagram ↗</a>
+      </div>
+      <div class="proof-collage">
+        <a href="https://www.instagram.com/p/DSn2aITD_IM/" target="_blank" rel="noopener"><img src="/img/research/progress-reel.jpg" alt="Fotograma de reel de progreso físico de Emir" width="640" height="1136" loading="lazy" /><span>Reel · progreso propio</span></a>
+        <a href="https://www.instagram.com/p/C5aAvl9uC0j/" target="_blank" rel="noopener"><img src="/img/research/post-2024.jpg" alt="Emir en el área de entrenamiento" width="1080" height="1080" loading="lazy" /><span>Entrenamiento · 2024</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq" id="preguntas">
+    <div class="container faq-grid">
+      <div><p class="kicker"><span>06</span> Antes de escribir</p><h2>Preguntas claras.<br />Decisiones mejores.</h2><p>Lo que todavía no está confirmado se señala como tal. WhatsApp es el canal para validar condiciones vigentes.</p></div>
+      <div class="faq-list" data-faq-list>
+        {content.faq.map((item: any, index: number) => (
+          <details open={index === 0}>
+            <summary><span>{String(index + 1).padStart(2, '0')}</span>{item.question}<i>+</i></summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="final-watermark">24</div>
+    <div class="container final-inner">
+      <p class="kicker kicker--light"><span>07</span> <b data-content="finalCta.eyebrow">{content.finalCta.eyebrow}</b></p>
+      <h2 data-content="finalCta.title">{content.finalCta.title}</h2>
+      <p data-content="finalCta.summary">{content.finalCta.summary}</p>
+      <a class="button button--acid button--large" data-wa-main data-track="whatsapp_click" href={wa(genericMessage)} target="_blank" rel="noopener"><span data-content="finalCta.button">{content.finalCta.button}</span> <b>↗</b></a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-main">
+    <a class="brand" href="#inicio"><span class="brand-mark">E24</span><span><strong data-content="brand.name">{content.brand.name}</strong><small data-content="brand.descriptor">{content.brand.descriptor}</small></span></a>
+    <div><a data-instagram href={content.contact.instagram} target="_blank" rel="noopener">Instagram ↗</a><a data-wa-main href={wa(genericMessage)} target="_blank" rel="noopener">WhatsApp ↗</a><a href="/analisis/">Análisis</a></div>
+  </div>
+  <div class="container footer-bottom"><span>© 2026 Emir24 Fit · Prototipo local</span><span>Salud y progreso requieren evaluación individual.</span></div>
+</footer>
+
+<script>
+  type Service = {
+    id: string;
+    number: string;
+    tag: string;
+    title: string;
+    summary: string;
+    details: string[];
+    cta: string;
+    message: string;
+  };
+  type FaqItem = { question: string; answer: string };
+  type SiteContent = {
+    contact: { instagram: string; whatsapp: string; location: string };
+    services: Service[];
+    faq: FaqItem[];
+    seo: { title: string; description: string };
+    [key: string]: unknown;
+  };
+  type DataLayerWindow = Window & { dataLayer?: Array<Record<string, string | undefined>> };
+
+  const get = (object: unknown, path: string): unknown => path.split('.').reduce<unknown>((value, key) => {
+    if (typeof value !== 'object' || value === null) return undefined;
+    return (value as Record<string, unknown>)[key];
+  }, object);
+  const whatsapp = (base: string, message: string) => `${base}?text=${encodeURIComponent(message)}`;
+
+  fetch('/data/site-content.json', { cache: 'no-store' })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error('content')))
+    .then((content: SiteContent) => {
+      document.querySelectorAll<HTMLElement>('[data-content]').forEach((element) => {
+        const value = get(content, element.dataset.content ?? '');
+        if (typeof value === 'string') element.textContent = value;
+      });
+      document.querySelectorAll<HTMLAnchorElement>('[data-instagram]').forEach((link) => link.href = content.contact.instagram);
+      const generic = 'Hola Emir, vi tu página y quiero saber qué modalidad de entrenamiento me conviene.';
+      document.querySelectorAll<HTMLAnchorElement>('[data-wa-main]').forEach((link) => link.href = whatsapp(content.contact.whatsapp, generic));
+      content.services.forEach((service: Service) => {
+        const card = document.querySelector<HTMLElement>(`[data-service="${service.id}"]`);
+        if (card) {
+          ['number', 'tag', 'title', 'summary', 'cta'].forEach((field) => {
+            const element = card.querySelector<HTMLElement>(`[data-field="${field}"]`);
+            const value = service[field as keyof Service];
+            if (!element || typeof value !== 'string') return;
+            if (field === 'cta' && element.firstChild) element.firstChild.textContent = `${value} `;
+            else element.textContent = value;
+          });
+          const list = card.querySelector<HTMLElement>('[data-field="details"]');
+          if (list) {
+            const items = service.details.map((detail: string) => {
+              const item = document.createElement('li');
+              item.textContent = detail;
+              return item;
+            });
+            list.replaceChildren(...items);
+          }
+        }
+        document.querySelectorAll<HTMLAnchorElement>(`[data-wa-service="${service.id}"]`).forEach((link) => link.href = whatsapp(content.contact.whatsapp, service.message));
+      });
+      const faq = document.querySelector<HTMLElement>('[data-faq-list]');
+      if (faq) {
+        const items = content.faq.map((item: FaqItem, index: number) => {
+          const details = document.createElement('details');
+          details.open = index === 0;
+          const summary = document.createElement('summary');
+          const number = document.createElement('span');
+          number.textContent = String(index + 1).padStart(2, '0');
+          const icon = document.createElement('i');
+          icon.textContent = '+';
+          summary.append(number, document.createTextNode(item.question), icon);
+          const answer = document.createElement('p');
+          answer.textContent = item.answer;
+          details.append(summary, answer);
+          return details;
+        });
+        faq.replaceChildren(...items);
+      }
+      document.title = content.seo.title;
+      const description = document.querySelector('meta[name="description"]');
+      if (description) description.setAttribute('content', content.seo.description);
+    })
+    .catch(() => {});
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-track]').forEach((link) => link.addEventListener('click', () => {
+    const trackedWindow = window as DataLayerWindow;
+    trackedWindow.dataLayer = trackedWindow.dataLayer || [];
+    trackedWindow.dataLayer.push({ event: link.dataset.track, destination: link.href });
+  }));
+</script>

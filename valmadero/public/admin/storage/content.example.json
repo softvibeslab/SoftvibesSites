@@ -1,0 +1,43 @@
+{
+  "properties": {
+    "referencia-zona-diamante": {
+      "title": "Casa con roof y jacuzzi en Zona Diamante",
+      "summary": "Referencia tomada de una publicación pública; confirma superficie, disponibilidad, precio y condiciones vigentes con la asesora.",
+      "price": 4200000,
+      "currency": "MXN",
+      "type": "casa",
+      "zone": "playa-del-carmen",
+      "location": "Zona Diamante, Playa del Carmen",
+      "area": null,
+      "bedrooms": 3,
+      "bathrooms": 3.5,
+      "image": "/img/valmadero/hero-conceptual.webp",
+      "featured": true,
+      "demo": true,
+      "status": "entrega-inmediata",
+      "features": [
+        "Cocina equipada, según publicación",
+        "Recámara en planta baja, según publicación",
+        "Patio techado, según publicación",
+        "Roof con jacuzzi privado, según publicación"
+      ],
+      "payment": [
+        "La publicación mencionaba una mensualidad estimada de $38,000 a $42,000 MXN",
+        "Crédito, enganche, gastos y elegibilidad deben cotizarse individualmente"
+      ],
+      "body": "Referencia pública del 18 de junio de 2026. No representa inventario confirmado; verifica todos los datos antes de decidir.\n\nFuente: https://www.instagram.com/p/DZtVYxuOehX/",
+      "updated_at": "2026-08-03T00:00:00Z"
+    }
+  },
+  "blog": {
+    "primer-departamento-riviera-maya": {
+      "title": "Antes de elegir tu primer departamento: cinco preguntas útiles",
+      "description": "Una guía inicial para ordenar presupuesto, financiamiento y prioridades antes de comparar propiedades.",
+      "date": "2026-08-03",
+      "image": "/img/valmadero/hero-conceptual.webp",
+      "draft": false,
+      "body": "Define primero el uso, el presupuesto completo, la mensualidad posible, los datos pendientes y el siguiente paso reversible.",
+      "updated_at": "2026-08-03T00:00:00Z"
+    }
+  }
+}

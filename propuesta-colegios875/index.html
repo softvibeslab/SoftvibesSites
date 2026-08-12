@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Escalera de Valor — Landing Colegios 875 · Softvibes</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bone:#F2F0E8; --paper:#FBFAF5; --ink:#16211C; --ink-soft:#3b463f; --stone:#8a897c;
+    --gold:#B08A4F; --gold-soft:#e6cf9c; --green:#1F3D34; --green-deep:#132a23;
+    --line:rgba(22,33,28,.14); --ease:cubic-bezier(.19,1,.22,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Archivo",system-ui,sans-serif;background:var(--bone);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:"Fraunces",Georgia,serif;}
+  .wrap{width:min(1120px,calc(100% - 34px));margin:0 auto;}
+  .label{font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--gold);}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+  .reveal.in{opacity:1;transform:none;}
+  section{padding:clamp(3rem,7vh,5.5rem) 0;}
+  h2{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:700;text-transform:uppercase;line-height:1.03;letter-spacing:.01em;}
+  .sub{color:var(--ink-soft);font-weight:300;max-width:640px;margin-top:.7rem;}
+
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--green-deep),var(--green) 60%,#2b5647);color:var(--bone);padding:3.4rem 0 3.2rem;}
+  .hero .brand{font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-soft);font-weight:700;}
+  .hero h1{font-size:clamp(2.1rem,5.5vw,3.8rem);font-weight:700;text-transform:uppercase;line-height:1;margin:.8rem 0 .5rem;}
+  .hero h1 em{font-family:"Fraunces",serif;font-style:italic;font-weight:400;text-transform:none;color:var(--gold-soft);}
+  .hero p{color:rgba(242,240,232,.82);font-weight:300;max-width:620px;}
+  .price-tag{display:inline-flex;align-items:baseline;gap:.6rem;margin-top:1.8rem;background:rgba(242,240,232,.08);border:1px solid rgba(230,207,156,.35);border-radius:16px;padding:1.1rem 1.5rem;}
+  .price-tag .n{font-family:"Fraunces",serif;font-size:clamp(2rem,5vw,3rem);color:#fff;line-height:1;}
+  .price-tag .c{font-size:.8rem;color:var(--gold-soft);letter-spacing:.1em;text-transform:uppercase;}
+  .price-tag .rango{font-size:.82rem;color:rgba(242,240,232,.7);}
+
+  /* STATS / por qué */
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.4rem;}
+  .why .c{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:1.3rem;border-top:3px solid var(--gold);}
+  .why .c h3{font-size:1.05rem;margin-bottom:.35rem;}
+  .why .c p{font-size:.88rem;color:var(--ink-soft);font-weight:300;}
+  @media(max-width:760px){.why{grid-template-columns:1fr;}}
+
+  /* ESCALERA */
+  .stairs{display:flex;align-items:flex-end;gap:.6rem;margin:2.4rem 0 1rem;height:190px;}
+  .stairs .step{flex:1;background:linear-gradient(180deg,var(--green),var(--green-deep));border-radius:10px 10px 0 0;position:relative;cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:.7rem .6rem;overflow:hidden;}
+  .stairs .step:hover,.stairs .step.on{transform:translateY(-6px);box-shadow:0 16px 40px rgba(19,42,35,.35);}
+  .stairs .step.on{background:linear-gradient(180deg,var(--gold),#8a6a34);}
+  .stairs .step .pn{font-size:.7rem;opacity:.75;letter-spacing:.1em;}
+  .stairs .step .pnm{font-size:.82rem;font-weight:700;line-height:1.05;}
+  .stairs .step .pp{font-size:.72rem;color:var(--gold-soft);margin-top:.3rem;}
+  .stairs .step.on .pp{color:#fff;}
+  @media(max-width:760px){.stairs{display:none;}}
+
+  .rungs{display:grid;gap:1rem;}
+  .rung{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1.5rem 1.6rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.4rem;align-items:center;transition:box-shadow .25s,border-color .25s;}
+  .rung:hover,.rung.on{box-shadow:0 18px 50px rgba(22,33,28,.1);border-color:var(--gold);}
+  .rung .num{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-family:"Fraunces",serif;font-size:1.5rem;flex:0 0 auto;}
+  .rung.core .num{background:var(--gold);}
+  .rung h3{font-size:1.25rem;text-transform:uppercase;letter-spacing:.01em;}
+  .rung .obj{font-size:.82rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem;}
+  .rung ul{list-style:none;margin-top:.7rem;display:flex;flex-wrap:wrap;gap:.4rem;}
+  .rung li{font-size:.78rem;background:rgba(31,61,52,.07);border-radius:99px;padding:.28rem .7rem;color:var(--ink-soft);}
+  .rung .price{text-align:right;flex:0 0 auto;}
+  .rung .price .p{font-family:"Fraunces",serif;font-size:1.5rem;color:var(--green);line-height:1;}
+  .rung .price .u{font-size:.68rem;color:var(--stone);letter-spacing:.08em;text-transform:uppercase;}
+  .rung .mrr{display:inline-block;margin-top:.5rem;font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--green);color:#fff;padding:.22rem .55rem;border-radius:99px;}
+  .rung.core{border-color:var(--gold);}
+  .rung.core .badge{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:#fff;padding:.2rem .55rem;border-radius:99px;margin-bottom:.35rem;}
+  @media(max-width:760px){.rung{grid-template-columns:1fr;text-align:left;gap:.8rem;}.rung .price{text-align:left;}}
+
+  /* CALC */
+  .calc-sec{background:var(--green-deep);color:var(--bone);}
+  .calc-sec h2{color:#fff;}
+  .calc-sec .sub{color:rgba(242,240,232,.7);}
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.2rem;align-items:start;}
+  .calc .controls{background:rgba(242,240,232,.06);border:1px solid rgba(230,207,156,.25);border-radius:18px;padding:1.7rem;}
+  .ctl{margin-bottom:1.5rem;}
+  .ctl label{display:flex;justify-content:space-between;font-size:.82rem;font-weight:600;margin-bottom:.6rem;color:rgba(242,240,232,.9);}
+  .ctl label b{color:var(--gold-soft);font-family:"Fraunces",serif;font-weight:400;font-size:1.05rem;}
+  input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:99px;background:rgba(242,240,232,.2);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;}
+  .rung-pick{display:flex;flex-wrap:wrap;gap:.4rem;}
+  .rung-pick button{font-family:inherit;font-size:.72rem;font-weight:700;border:1px solid rgba(230,207,156,.4);background:transparent;color:var(--bone);padding:.45rem .75rem;border-radius:99px;cursor:pointer;transition:.2s;}
+  .rung-pick button.on{background:var(--gold);color:#fff;border-color:var(--gold);}
+  .results{display:grid;gap:1rem;}
+  .res{background:rgba(242,240,232,.06);border:1px solid rgba(230,207,156,.25);border-radius:16px;padding:1.4rem 1.5rem;}
+  .res .k{font-size:.78rem;color:rgba(242,240,232,.7);letter-spacing:.04em;}
+  .res .v{font-family:"Fraunces",serif;font-size:clamp(1.7rem,4vw,2.4rem);color:#fff;line-height:1.05;margin-top:.3rem;}
+  .res.big{background:linear-gradient(135deg,var(--gold),#8a6a34);border-color:transparent;}
+  .res.big .k{color:rgba(255,255,255,.85);}
+  .res .hint{font-size:.8rem;color:rgba(242,240,232,.6);margin-top:.4rem;font-weight:300;}
+  @media(max-width:760px){.calc{grid-template-columns:1fr;}}
+
+  /* TIPS */
+  .tips{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2rem;}
+  .tip{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:1.2rem 1.3rem;}
+  .tip h3{font-size:1rem;margin-bottom:.3rem;}
+  .tip p{font-size:.9rem;color:var(--ink-soft);font-weight:300;}
+  @media(max-width:760px){.tips{grid-template-columns:1fr;}}
+
+  footer{background:var(--ink);color:rgba(242,240,232,.6);text-align:center;padding:2rem 1rem;font-size:.82rem;}
+  footer b{color:var(--gold-soft);}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">Softvibes · Propuesta de valor</div>
+    <h1>Landing Colegios 875<br /><em>precio & escalera de valor</em></h1>
+    <p>Cuánto cobrar por esta landing premium para desarrolladores inmobiliarios — y cómo subir el ticket con una escalera de valor que genera recurrencia.</p>
+    <div class="price-tag">
+      <span class="n">$35,000</span>
+      <div>
+        <div class="c">MXN · pago único</div>
+        <div class="rango">rango $29,000 – $45,000 · +hosting/dominio</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- POR QUÉ -->
+<section>
+  <div class="wrap">
+    <span class="label reveal">Por qué ese precio</span>
+    <h2 class="reveal">Vendes valor, no horas</h2>
+    <div class="why">
+      <div class="c reveal"><h3>ROI del cliente</h3><p>Cada unidad vale millones. Si la landing adelanta <b>una sola venta</b>, el retorno es 50–100×. Esa es la ancla, no el costo.</p></div>
+      <div class="c reveal"><h3>No es una landing común</h3><p>Diseño premium, accesibilidad real (voz, alto contraste), galería, planos, demos 360/AR y agenda VR. 40–70 h de trabajo senior.</p></div>
+      <div class="c reveal"><h3>Cliente premium</h3><p>Una desarrolladora no es un SMB: aquí el ticket parte en decenas de miles, no en los $1,500–$7,000 del white-label.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ESCALERA -->
+<section style="background:var(--paper);">
+  <div class="wrap">
+    <span class="label reveal">La estrategia</span>
+    <h2 class="reveal">Escalera de valor</h2>
+    <p class="sub reveal">Cada peldaño sube el ticket y añade recurrencia (MRR). Toca un escalón para resaltarlo.</p>
+
+    <div class="stairs reveal" id="stairs"></div>
+    <div class="rungs" id="rungs"></div>
+  </div>
+</section>
+
+<!-- CALCULADORA ROI -->
+<section class="calc-sec">
+  <div class="wrap">
+    <span class="label reveal" style="color:var(--gold-soft);">Herramienta de cierre</span>
+    <h2 class="reveal">Calculadora de ROI</h2>
+    <p class="sub reveal">Muéstrale al cliente, en vivo, lo insignificante que es la inversión frente al valor de su inventario.</p>
+    <div class="calc reveal">
+      <div class="controls">
+        <div class="ctl">
+          <label>Precio por unidad <b id="lblUnidad"></b></label>
+          <input type="range" id="unidad" min="1500000" max="15000000" step="100000" value="4500000" />
+        </div>
+        <div class="ctl">
+          <label>Unidades en el desarrollo <b id="lblNum"></b></label>
+          <input type="range" id="num" min="1" max="60" step="1" value="6" />
+        </div>
+        <div class="ctl">
+          <label style="margin-bottom:.7rem;">Peldaño / precio de la landing</label>
+          <div class="rung-pick" id="pick"></div>
+        </div>
+      </div>
+      <div class="results">
+        <div class="res big"><div class="k">Vender 1 unidad devuelve</div><div class="v" id="rMult"></div><div class="hint">veces lo que cuesta la landing</div></div>
+        <div class="res"><div class="k">La landing equivale a</div><div class="v" id="rPct"></div><div class="hint">del valor de una sola unidad</div></div>
+        <div class="res"><div class="k">Valor total del inventario</div><div class="v" id="rInv"></div><div class="hint" id="rInvHint"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section>
+  <div class="wrap">
+    <span class="label reveal">Cómo cerrarlo</span>
+    <h2 class="reveal">Tips de venta</h2>
+    <div class="tips">
+      <div class="tip reveal"><h3>Ancla alto</h3><p>Presenta primero el peldaño 3 (inmersivo real) para que el 1 se vea barato.</p></div>
+      <div class="tip reveal"><h3>Vende resultado</h3><p>"Una unidad vendida paga esto 100 veces." El costo es irrelevante frente al inventario.</p></div>
+      <div class="tip reveal"><h3>Reparte el pago</h3><p>50% anticipo / 50% al publicar. Baja la fricción de decidir.</p></div>
+      <div class="tip reveal"><h3>Ve por el MRR</h3><p>Lo rentable es el peldaño 2–4 (retainer), no la venta única. La landing es la puerta.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Escalera de valor · <b>Softvibes</b> — Landing Colegios 875 / Aura Residences<br />
+  Imán → Landing → Captación → Inmersivo → Retainer
+</footer>
+
+<script>
+const MXN = n => "$" + Math.round(n).toLocaleString("es-MX");
+const RUNGS = [
+  {n:0,nombre:"Imán",incluye:["Análisis/preview","Marca de agua"],precio:0,precioTxt:"Gratis",obj:"Entrar · generar deseo",mrr:false},
+  {n:1,nombre:"Landing de Lanzamiento",incluye:["Diseño premium","Accesibilidad","Galería + planos","Demos 360/AR/VR","WhatsApp"],precio:35000,precioTxt:"$35,000",obj:"Ticket de entrada",mrr:false,core:true},
+  {n:2,nombre:"Landing + Captación",incluye:["Todo lo anterior","CRM + leads","Automatización WhatsApp","Pauta","Reporte mensual"],precio:55000,precioTxt:"$55,000",obj:"Meterte al flujo de ventas",mrr:"+$8,000/mes"},
+  {n:3,nombre:"Asistentes que trabajan por ti · 24/7",incluye:["Atención al instante","Califica y agenda solo","Seguimiento hasta el cierre","Reportes de crecimiento"],precio:20000,precioTxt:"$20k + mes",obj:"Fulfillment + guía de crecimiento",mrr:"Mensualidad"},
+  {n:4,nombre:"Experiencia Inmersiva Real",incluye:["360°/Matterport real","Modelo 3D/AR real","VR en oficinas","Video render"],precio:105000,precioTxt:"$80–130k",obj:"Diferenciador premium",mrr:false},
+  {n:5,nombre:"Marketing del Desarrollo",incluye:["Sitio maestro","Landing por proyecto","Embudo + pauta","CRM + reporting"],precio:35000,precioTxt:"$25–45k/mes",obj:"Relación de largo plazo",mrr:"Retainer"},
+];
+
+// Escalera visual
+document.getElementById("stairs").innerHTML = RUNGS.map((r,i)=>`
+  <div class="step ${r.core?'on':''}" data-i="${i}" style="height:${40+i*30}px">
+    <span class="pn">Peldaño ${r.n}</span>
+    <span class="pnm">${r.nombre}</span>
+    <span class="pp">${r.precioTxt}</span>
+  </div>`).join("");
+
+// Tarjetas rung
+document.getElementById("rungs").innerHTML = RUNGS.map((r,i)=>`
+  <div class="rung ${r.core?'core':''}" data-i="${i}">
+    <div class="num">${r.n}</div>
+    <div>
+      ${r.core?'<span class="badge">★ Core — esta landing</span><br/>':''}
+      <h3>${r.nombre}</h3>
+      <div class="obj">${r.obj}</div>
+      <ul>${r.incluye.map(x=>`<li>${x}</li>`).join("")}</ul>
+    </div>
+    <div class="price">
+      <div class="p">${r.precioTxt}</div>
+      <div class="u">${r.n===4||r.n===2?'MXN':(r.precio?'MXN · único':'')}</div>
+      ${r.mrr?`<span class="mrr">${r.mrr===true?'MRR':r.mrr}</span>`:''}
+    </div>
+  </div>`).join("");
+
+// Sync hover escalera <-> tarjetas
+function highlight(i){
+  document.querySelectorAll(".stairs .step").forEach(s=>s.classList.toggle("on", +s.dataset.i===i));
+  document.querySelectorAll(".rungs .rung").forEach(s=>s.classList.toggle("on", +s.dataset.i===i));
+}
+document.querySelectorAll(".stairs .step,.rungs .rung").forEach(el=>{
+  el.addEventListener("mouseenter",()=>highlight(+el.dataset.i));
+});
+
+// Calculadora
+const pickWrap=document.getElementById("pick");
+const pickable=RUNGS.filter(r=>r.precio>0);
+pickWrap.innerHTML=pickable.map((r,i)=>`<button data-p="${r.precio}" class="${r.core?'on':''}">P${r.n} · ${r.precioTxt}</button>`).join("");
+let landing=35000;
+pickWrap.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+  pickWrap.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  landing=+b.dataset.p; calc();
+}));
+const U=document.getElementById("unidad"), N=document.getElementById("num");
+function calc(){
+  const pu=+U.value, num=+N.value;
+  document.getElementById("lblUnidad").textContent=MXN(pu);
+  document.getElementById("lblNum").textContent=num;
+  const mult=pu/landing;
+  const pct=landing/pu*100;
+  document.getElementById("rMult").textContent=Math.round(mult).toLocaleString("es-MX")+"×";
+  document.getElementById("rPct").textContent=pct.toFixed(pct<1?2:1)+"%";
+  document.getElementById("rInv").textContent=MXN(pu*num);
+  document.getElementById("rInvHint").textContent=`${num} unidades × ${MXN(pu)}`;
+}
+U.addEventListener("input",calc); N.addEventListener("input",calc); calc();
+
+// Reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTAContacto from '../../components/CTAContacto.astro';
+
+export async function getStaticPaths() {
+  const articulos = await getCollection('blog');
+  return articulos.map((a) => ({ params: { slug: a.id }, props: { articulo: a } }));
+}
+
+const { articulo } = Astro.props;
+const { Content } = await render(articulo);
+
+const formatoFecha = new Intl.DateTimeFormat('es-MX', { dateStyle: 'long' });
+
+const schemaArticulo = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: articulo.data.titulo,
+  description: articulo.data.descripcion,
+  datePublished: articulo.data.fecha.toISOString(),
+  author: { '@type': 'Person', name: 'Viridiana Mar' },
+  publisher: { '@type': 'Organization', name: 'Vive Mar · Real Estate' },
+};
+---
+
+<BaseLayout
+  titulo={`${articulo.data.titulo} | Vive Mar`}
+  descripcion={articulo.data.descripcion}
+  schema={schemaArticulo}
+>
+  <article class="seccion">
+    <div class="contenedor" style="max-width: 760px;">
+      <nav style="font-size: 0.85rem; margin-bottom: 1rem;" aria-label="Migas de pan">
+        <a href="/blog">← Volver al blog</a>
+      </nav>
+      <span class="fecha">{formatoFecha.format(articulo.data.fecha)}</span>
+      <h1>{articulo.data.titulo}</h1>
+      <div class="prosa">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  <CTAContacto titulo="¿Dudas sobre tu inversión? Hablemos" />
+</BaseLayout>

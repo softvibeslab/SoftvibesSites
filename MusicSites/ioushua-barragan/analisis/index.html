@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ieoushua Barragán — Análisis digital y ruta de crecimiento</title>
+<meta name="description" content="Diagnóstico interactivo de presencia digital y plan paso a paso para Ieoushua Barragán.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0E14; --panel: #141A24; --panel-2: #1A2230;
+    --amber: #E0A458; --ivory: #F5F0E8; --muted: #9AA3B2;
+    --line: rgba(245,240,232,.09); --ok: #6FBF8B; --warn: #E0A458; --bad: #D96C6C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ivory); font-family: 'Inter', sans-serif; font-weight: 300; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 500; }
+  a { color: var(--amber); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; }
+  .eyebrow { font-size: 11px; letter-spacing: .35em; text-transform: uppercase; color: var(--amber); font-weight: 500; margin-bottom: 18px; }
+  .title { font-size: clamp(26px, 4.5vw, 42px); line-height: 1.15; margin-bottom: 16px; }
+  .lead { color: var(--muted); max-width: 640px; }
+
+  /* hero */
+  header.top {
+    padding: 90px 0 60px; text-align: center;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(224,164,88,.12), transparent 70%), var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top h1 { font-size: clamp(32px, 6vw, 58px); line-height: 1.05; margin: 14px 0; }
+  header.top h1 em { color: var(--amber); }
+  .pill { display: inline-block; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; color: var(--muted); }
+
+  /* score general */
+  .score-hero { display: flex; gap: 40px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 92px; line-height: 1; color: var(--amber); }
+  .score-num small { font-size: 30px; color: var(--muted); }
+  .score-label { text-align: left; max-width: 300px; color: var(--muted); font-size: 14px; }
+
+  /* radar + barras */
+  .diag-grid { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 860px) { .diag-grid { grid-template-columns: 1fr 1fr; } }
+  #radar { width: 100%; max-width: 420px; margin: 0 auto; display: block; }
+  .bar-row { margin-bottom: 18px; }
+  .bar-row .bar-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .bar-row .bar-head b { font-weight: 600; }
+  .bar-row .bar-head span { color: var(--muted); }
+  .bar-track { height: 8px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--amber), #f0c489); transition: width 1.2s cubic-bezier(.2,.7,.3,1); }
+
+  /* hallazgos */
+  .cards { display: grid; gap: 16px; margin-top: 36px; }
+  @media (min-width: 720px) { .cards { grid-template-columns: 1fr 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .card .tag { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; font-weight: 600; }
+  .tag.ok { background: rgba(111,191,139,.15); color: var(--ok); }
+  .tag.warn { background: rgba(224,164,88,.15); color: var(--warn); }
+  .tag.bad { background: rgba(217,108,108,.15); color: var(--bad); }
+  .card h3 { font-size: 18px; margin: 12px 0 6px; }
+  .card p { font-size: 14px; color: var(--muted); }
+
+  /* propuestas web */
+  .props { display: grid; gap: 20px; margin-top: 36px; }
+  @media (min-width: 720px) { .props { grid-template-columns: 1fr 1fr; } }
+  .prop { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; transition: transform .3s, border-color .3s; }
+  .prop:hover { transform: translateY(-4px); border-color: rgba(224,164,88,.4); }
+  .prop .ph { aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 22px; }
+  .prop.p1 .ph { background: linear-gradient(135deg, #0B0E14, #1a2230 60%, rgba(224,164,88,.3)); color: var(--amber); }
+  .prop.p2 .ph { background: #000; color: #fff; font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: .2em; }
+  .prop .body { padding: 20px 24px 24px; }
+  .prop h3 { font-size: 19px; margin-bottom: 6px; }
+  .prop p { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+  .btn { display: inline-block; font-size: 13px; font-weight: 500; text-decoration: none; padding: 11px 22px; border-radius: 999px; background: var(--amber); color: var(--bg); }
+  .btn.ghost { background: none; border: 1px solid var(--line); color: var(--ivory); }
+
+  /* roadmap */
+  .step { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 14px; overflow: hidden; }
+  .step-head { display: flex; align-items: center; gap: 18px; padding: 20px 24px; cursor: pointer; user-select: none; }
+  .step-num {
+    flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--amber); color: var(--amber);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 18px;
+  }
+  .step-head h3 { font-size: 17px; flex: 1; }
+  .step-head .when { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .step-head .chev { color: var(--amber); transition: transform .3s; }
+  .step.open .chev { transform: rotate(90deg); }
+  .step-body { max-height: 0; overflow: hidden; transition: max-height .45s cubic-bezier(.2,.7,.3,1); }
+  .step.open .step-body { max-height: 900px; }
+  .step-inner { padding: 0 24px 24px 84px; }
+  .step-inner label { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--muted); padding: 7px 0; cursor: pointer; }
+  .step-inner label input { accent-color: var(--amber); margin-top: 5px; }
+  .step-inner label b { color: var(--ivory); font-weight: 500; }
+  .tools { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tool { font-size: 11px; letter-spacing: .05em; background: var(--panel-2); border: 1px solid var(--line); border-radius: 99px; padding: 5px 12px; color: var(--muted); }
+  .tool b { color: var(--amber); font-weight: 600; }
+
+  /* progreso */
+  .progress-wrap { position: sticky; top: 0; z-index: 50; background: rgba(11,14,20,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 12px 0; }
+  .progress-inner { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--muted); }
+  .progress-track { flex: 1; height: 6px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
+  #progressFill { height: 100%; width: 0; background: var(--amber); border-radius: 99px; transition: width .5s cubic-bezier(.2,.7,.3,1); }
+  #progressPct { color: var(--amber); font-weight: 600; min-width: 38px; text-align: right; }
+
+  /* cta final */
+  .final { text-align: center; background: radial-gradient(ellipse 60% 70% at 50% 110%, rgba(224,164,88,.16), transparent 70%), var(--bg); }
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  footer { border-top: 1px solid var(--line); padding: 30px 0; text-align: center; font-size: 11px; color: rgba(154,163,178,.55); letter-spacing: .06em; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="pill">Análisis preparado por Softvibes · Julio 2026</span>
+    <h1>Ieoushua, tu música ya suena.<br><em>Ahora que te encuentren.</em></h1>
+    <p class="lead" style="margin: 0 auto;">
+      Diagnóstico de tu presencia digital y una ruta clara, paso a paso, para convertir
+      el momento Barragán Quintet en fechas, sesiones y comunidad propia.
+    </p>
+    <div class="score-hero">
+      <div><span class="score-num" id="scoreNum">0</span><span class="score-num"><small>/100</small></span></div>
+      <p class="score-label">
+        <b style="color: var(--ivory);">Índice de presencia digital hoy.</b><br>
+        Tu talento y trayectoria están al máximo — lo digital todavía no los refleja.
+        La buena noticia: todo lo que falta se construye.
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="wrap progress-inner">
+    <span>Tu avance en la ruta</span>
+    <div class="progress-track"><div id="progressFill"></div></div>
+    <span id="progressPct">0%</span>
+  </div>
+</div>
+
+<section id="diagnostico">
+  <div class="wrap">
+    <p class="eyebrow reveal">Diagnóstico</p>
+    <h2 class="title reveal">Dónde estás parado hoy</h2>
+    <p class="lead reveal">Seis dimensiones medidas con lo que existe públicamente en internet sobre ti (julio 2026).</p>
+    <div class="diag-grid" style="margin-top: 40px;">
+      <canvas id="radar" width="420" height="420" class="reveal"></canvas>
+      <div class="reveal" id="bars"></div>
+    </div>
+
+    <div class="cards">
+      <div class="card reveal">
+        <span class="tag ok">Fortaleza</span>
+        <h3>Trayectoria de élite verificable</h3>
+        <p>PDC Jazz Fest (cartel con Joan Chamorro y Karen Souza), CECUT Tijuana como líder, álbum en Chancla Records. Prensa real te respalda: La Jornada Maya, Riviera Maya News.</p>
+      </div>
+      <div class="card reveal">
+        <span class="tag ok">Fortaleza</span>
+        <h3>Instagram activo con contenido honesto</h3>
+        <p>Reels con personalidad (funk, humor), fotos de calidad de shows y sesiones. Es hoy tu único canal — y funciona.</p>
+      </div>
+      <div class="card reveal">
+        <span class="tag warn">Oportunidad</span>
+        <h3>En streaming existes como crédito, no como artista</h3>
+        <p>Apple Music y Discogs te listan como sideman de otros proyectos. El Barragán Quintet aún no tiene un solo release propio en plataformas: nadie puede "seguirte" ni guardarte.</p>
+      </div>
+      <div class="card reveal">
+        <span class="tag warn">Oportunidad</span>
+        <h3>El booking depende de DMs y suerte</h3>
+        <p>Un booker que te ve en el festival no tiene dónde escuchar tu propuesta, ver tu rider ni contactarte formalmente. Cada show genera interés que hoy no se captura.</p>
+      </div>
+      <div class="card reveal">
+        <span class="tag bad">Brecha</span>
+        <h3>Sin casa digital propia (hasta ahora)</h3>
+        <p>Sin sitio, sin EPK, sin dominio: tu narrativa la cuentan los carteles de otros. Ya construimos dos propuestas para resolverlo — abajo puedes verlas en vivo.</p>
+      </div>
+      <div class="card reveal">
+        <span class="tag bad">Brecha</span>
+        <h3>Cero datos propios de tu audiencia</h3>
+        <p>Todo tu público vive en el algoritmo de Instagram. Sin correos ni WhatsApp de fans/venues, cada anuncio importante depende de que Meta lo muestre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="propuestas" style="background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="wrap">
+    <p class="eyebrow reveal">Tu nueva casa digital</p>
+    <h2 class="title reveal">Dos direcciones, elige la tuya</h2>
+    <p class="lead reveal">Ambas están vivas ahora mismo, con tu música, tus fechas y booking directo a tu WhatsApp.</p>
+    <div class="props">
+      <div class="prop p1 reveal">
+        <div class="ph">Jazz nocturno · ámbar</div>
+        <div class="body">
+          <h3>Versión EPK completa</h3>
+          <p>Bio, trayectoria en 4 movimientos, galería, servicios, fechas y playlist flotante de Spotify. Pensada para bookers y prensa.</p>
+          <a class="btn" href="https://plum-hyena-228473.hostingersite.com" target="_blank" rel="noopener">Ver en vivo</a>
+        </div>
+      </div>
+      <div class="prop p2 reveal">
+        <div class="ph">BRUTALISTA · B/N</div>
+        <div class="body">
+          <h3>Versión artística minimalista</h3>
+          <p>Negro absoluto, tipografía gigante y cuerdas que vibran con el cursor. Pensada para impacto y marca personal.</p>
+          <a class="btn" href="https://olivedrab-hummingbird-501488.hostingersite.com" target="_blank" rel="noopener">Ver en vivo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ruta">
+  <div class="wrap">
+    <p class="eyebrow reveal">La ruta</p>
+    <h2 class="title reveal">Paso a paso hacia tu propósito</h2>
+    <p class="lead reveal" style="margin-bottom: 36px;">
+      Seis pasos en orden. Cada uno con sus herramientas (casi todas gratis) y acciones concretas.
+      Marca las casillas conforme avances — tu progreso se guarda en este navegador.
+    </p>
+
+    <div class="step open reveal">
+      <div class="step-head"><span class="step-num">1</span><h3>Fundación: tu casa digital</h3><span class="when">Semana 1</span><span class="chev">▶</span></div>
+      <div class="step-body"><div class="step-inner">
+        <label><input type="checkbox" data-k="s1a"><span><b>Elegir versión del sitio</b> (nocturna o brutalista) y afinar textos/fotos contigo.</span></label>
+        <label><input type="checkbox" data-k="s1b"><span><b>Comprar dominio propio</b> (ieoushuabarragan.com o barraganquintet.com) y conectarlo.</span></label>
+        <label><input type="checkbox" data-k="s1c"><span><b>WhatsApp Business</b> en tu número: perfil con servicios, respuestas rápidas para cotizaciones, etiquetas (venue / fan / prensa).</span></label>
+        <label><input type="checkbox" data-k="s1d"><span><b>Link del sitio en tu bio de Instagram</b> (reemplaza cualquier linktree genérico).</span></label>
+        <div class="tools"><span class="tool"><b>Hostinger</b> dominio ~$230 MXN/año</span><span class="tool"><b>WhatsApp Business</b> gratis</span><span class="tool"><b>Sitio</b> ya construido ✓</span></div>
+      </div></div>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-head"><span class="step-num">2</span><h3>Identidad de líder: EPK profesional</h3><span class="when">Semanas 2–4</span><span class="chev">▶</span></div>
+      <div class="step-body"><div class="step-inner">
+        <label><input type="checkbox" data-k="s2a"><span><b>Sesión de fotos del Barragán Quintet</b> (aprovecha contactos como Emmanuel Santana, fotógrafo del PDC Jazz Fest).</span></label>
+        <label><input type="checkbox" data-k="s2b"><span><b>Bio oficial en 3 tamaños</b> (50 / 150 / 400 palabras) — la escribimos juntos partiendo de tu historia real.</span></label>
+        <label><input type="checkbox" data-k="s2c"><span><b>EPK descargable en PDF</b>: bio + fotos HR + rider técnico + fechas destacadas + contacto.</span></label>
+        <label><input type="checkbox" data-k="s2d"><span><b>Rider técnico</b> del quinteto (backline, mapa de escenario, requerimientos de audio).</span></label>
+        <div class="tools"><span class="tool"><b>Canva</b> gratis</span><span class="tool"><b>Google Docs</b> gratis</span><span class="tool"><b>Fotógrafo</b> por sesión/intercambio</span></div>
+      </div></div>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-head"><span class="step-num">3</span><h3>Música propia en plataformas</h3><span class="when">Meses 1–3</span><span class="chev">▶</span></div>
+      <div class="step-body"><div class="step-inner">
+        <label><input type="checkbox" data-k="s3a"><span><b>Grabar un single o EP en vivo del Barragán Quintet</b> — Quinto Ned Studio ya está en tu red (flyer de Aleita); una sesión en vivo bien grabada basta para empezar.</span></label>
+        <label><input type="checkbox" data-k="s3b"><span><b>Distribuir con DistroKid</b>: en 2 semanas el Barragán Quintet existe en Spotify, Apple Music y todas las plataformas.</span></label>
+        <label><input type="checkbox" data-k="s3c"><span><b>Reclamar Spotify for Artists y Apple Music for Artists</b>: foto, bio, y por fin datos de quién te escucha.</span></label>
+        <label><input type="checkbox" data-k="s3d"><span><b>Actualizar el sitio</b> con tu player propio en lugar de solo colaboraciones.</span></label>
+        <div class="tools"><span class="tool"><b>DistroKid</b> ~$460 MXN/año ilimitado</span><span class="tool"><b>Spotify for Artists</b> gratis</span><span class="tool"><b>Quinto Ned Studio</b> por sesión</span></div>
+      </div></div>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-head"><span class="step-num">4</span><h3>Motor de contenido</h3><span class="when">Continuo</span><span class="chev">▶</span></div>
+      <div class="step-body"><div class="step-inner">
+        <label><input type="checkbox" data-k="s4a"><span><b>Ritmo sostenible: 2–3 reels por semana</b> — ya tienes el estilo (funk, humor, sesiones); ahora con constancia y horarios fijos.</span></label>
+        <label><input type="checkbox" data-k="s4b"><span><b>Canal de YouTube propio</b>: sube los lives completos (Calle 44, CECUT cuando haya video) — YouTube es el buscador nº2 del mundo y los bookers lo usan.</span></label>
+        <label><input type="checkbox" data-k="s4c"><span><b>Programar publicaciones</b> con Meta Business Suite para no depender del momento.</span></label>
+        <label><input type="checkbox" data-k="s4d"><span><b>Documentar cada show</b>: 30 segundos de video vertical por fecha mínimo.</span></label>
+        <div class="tools"><span class="tool"><b>CapCut</b> gratis</span><span class="tool"><b>YouTube Studio</b> gratis</span><span class="tool"><b>Meta Business Suite</b> gratis</span></div>
+      </div></div>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-head"><span class="step-num">5</span><h3>Máquina de booking</h3><span class="when">Mes 2 en adelante</span><span class="chev">▶</span></div>
+      <div class="step-body"><div class="step-inner">
+        <label><input type="checkbox" data-k="s5a"><span><b>Lista de 30 objetivos</b>: hoteles y venues de Riviera Maya + festivales de jazz nacionales + clubes CDMX (Jazzatlán ya te conoce).</span></label>
+        <label><input type="checkbox" data-k="s5b"><span><b>Outreach con EPK</b>: mensaje corto por WhatsApp/correo + link al sitio; 5 contactos por semana.</span></label>
+        <label><input type="checkbox" data-k="s5c"><span><b>Seguimiento en una hoja</b>: quién, cuándo, respuesta, siguiente paso. Sin esto el outreach muere.</span></label>
+        <label><input type="checkbox" data-k="s5d"><span><b>Google Business Profile</b> como músico/banda en Playa del Carmen — apareces cuando busquen "jazz en vivo Playa del Carmen".</span></label>
+        <div class="tools"><span class="tool"><b>Google Sheets</b> gratis</span><span class="tool"><b>Google Business</b> gratis</span><span class="tool"><b>Google Maps</b> para prospectar</span></div>
+      </div></div>
+    </div>
+
+    <div class="step reveal">
+      <div class="step-head"><span class="step-num">6</span><h3>Comunidad propia</h3><span class="when">Mes 3 en adelante</span><span class="chev">▶</span></div>
+      <div class="step-body"><div class="step-inner">
+        <label><input type="checkbox" data-k="s6a"><span><b>Newsletter mensual</b>: fechas + una historia del mes. El correo es el único canal que el algoritmo no te puede quitar.</span></label>
+        <label><input type="checkbox" data-k="s6b"><span><b>Captura en el sitio y en shows</b>: QR en el escenario → "entérate de la próxima fecha".</span></label>
+        <label><input type="checkbox" data-k="s6c"><span><b>Medir cada mes</b>: fechas cerradas, ingresos por booking, oyentes mensuales, correos captados.</span></label>
+        <div class="tools"><span class="tool"><b>Mailchimp</b> gratis hasta 500</span><span class="tool"><b>QR</b> gratis (Canva)</span></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <p class="eyebrow reveal">Siguiente paso</p>
+    <h2 class="title reveal">Del Caribe a la frontera —<br>ahora también en digital</h2>
+    <p class="lead reveal" style="margin: 0 auto 36px;">
+      El paso 1 ya está hecho: tus dos sitios están en vivo. Elige tu versión favorita
+      y arrancamos con el resto de la ruta.
+    </p>
+    <a class="btn reveal" style="font-size: 15px; padding: 16px 34px;" href="https://wa.me/5219841568693?text=Me%20gust%C3%B3%20el%20an%C3%A1lisis%2C%20hablemos" target="_blank" rel="noopener">Responder por WhatsApp</a>
+  </div>
+</section>
+
+<footer>ANÁLISIS PREPARADO POR SOFTVIBES · JULIO 2026 · DATOS DE FUENTES PÚBLICAS</footer>
+
+<script>
+  // ===== datos del diagnóstico =====
+  const DIMS = [
+    { name: 'Trayectoria y prensa', val: 8.5 },
+    { name: 'Instagram', val: 7 },
+    { name: 'Streaming propio', val: 3 },
+    { name: 'Buscabilidad (Google)', val: 4 },
+    { name: 'Sistema de booking', val: 3 },
+    { name: 'Audiencia propia (datos)', val: 1 },
+  ];
+  const SCORE = Math.round(DIMS.reduce((a, d) => a + d.val, 0) / DIMS.length * 10);
+
+  // contador animado
+  const num = document.getElementById('scoreNum');
+  let cur = 0;
+  const target = SCORE;
+  const step = () => { cur = Math.min(target, cur + 1); num.textContent = cur; if (cur < target) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+
+  // barras
+  const bars = document.getElementById('bars');
+  DIMS.forEach((d, i) => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = '<div class="bar-head"><b>' + d.name + '</b><span>' + d.val + '/10</span></div>' +
+      '<div class="bar-track"><div class="bar-fill" data-w="' + (d.val * 10) + '"></div></div>';
+    bars.appendChild(row);
+  });
+  setTimeout(() => document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.w + '%'), 400);
+
+  // ===== radar canvas =====
+  const cv = document.getElementById('radar'), ctx = cv.getContext('2d');
+  const cx = 210, cy = 210, R = 150, N = DIMS.length;
+  let prog = 0;
+  function drawRadar() {
+    ctx.clearRect(0, 0, 420, 420);
+    // rejilla
+    for (let ring = 1; ring <= 5; ring++) {
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const a = -Math.PI / 2 + i * 2 * Math.PI / N;
+        const r = R * ring / 5;
+        const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(245,240,232,.08)'; ctx.stroke();
+    }
+    // ejes + etiquetas
+    ctx.font = '11px Inter'; ctx.fillStyle = '#9AA3B2';
+    DIMS.forEach((d, i) => {
+      const a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+      ctx.strokeStyle = 'rgba(245,240,232,.08)'; ctx.stroke();
+      const lx = cx + (R + 26) * Math.cos(a), ly = cy + (R + 26) * Math.sin(a);
+      ctx.textAlign = Math.abs(Math.cos(a)) < .3 ? 'center' : (Math.cos(a) > 0 ? 'left' : 'right');
+      const words = d.name.split(' ');
+      const mid = Math.ceil(words.length / 2);
+      if (d.name.length > 14 && words.length > 1) {
+        ctx.fillText(words.slice(0, mid).join(' '), lx, ly - 5);
+        ctx.fillText(words.slice(mid).join(' '), lx, ly + 8);
+      } else { ctx.fillText(d.name, lx, ly + 3); }
+    });
+    // polígono de valores
+    ctx.beginPath();
+    DIMS.forEach((d, i) => {
+      const a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      const r = R * (d.val / 10) * prog;
+      const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(224,164,88,.18)'; ctx.fill();
+    ctx.strokeStyle = '#E0A458'; ctx.lineWidth = 2; ctx.stroke();
+    DIMS.forEach((d, i) => {
+      const a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      const r = R * (d.val / 10) * prog;
+      ctx.beginPath();
+      ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), 4, 0, 7);
+      ctx.fillStyle = '#E0A458'; ctx.fill();
+    });
+    if (prog < 1) { prog = Math.min(1, prog + 0.03); requestAnimationFrame(drawRadar); }
+  }
+  const radarObs = new IntersectionObserver(e => { if (e[0].isIntersecting) { drawRadar(); radarObs.disconnect(); } }, { threshold: .4 });
+  radarObs.observe(cv);
+
+  // ===== acordeón =====
+  document.querySelectorAll('.step-head').forEach(h =>
+    h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
+
+  // ===== checklist con persistencia =====
+  const boxes = document.querySelectorAll('input[type="checkbox"]');
+  const KEY = 'ieoushua-ruta';
+  const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+  boxes.forEach(b => {
+    b.checked = !!saved[b.dataset.k];
+    b.addEventListener('change', () => {
+      saved[b.dataset.k] = b.checked;
+      localStorage.setItem(KEY, JSON.stringify(saved));
+      updateProgress();
+    });
+  });
+  function updateProgress() {
+    const total = boxes.length;
+    const done = [...boxes].filter(b => b.checked).length;
+    const pct = Math.round(done / total * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+  updateProgress();
+
+  // ===== reveals =====
+  const obs = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+  }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

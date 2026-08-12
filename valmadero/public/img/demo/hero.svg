@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Imagen de demostración para el hero</title>
+  <desc id="desc">Composición arquitectónica abstracta en tonos arena, azul y terracota.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9e9ea"/><stop offset="1" stop-color="#f3e8d7"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#397076"/><stop offset="1" stop-color="#183b41"/></linearGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <circle cx="1240" cy="190" r="100" fill="#d7855e" opacity=".85"/>
+  <path d="M0 710 430 480 740 650 1050 390 1600 680V1000H0Z" fill="#c8ad87"/>
+  <path d="M470 450h720v430H470z" fill="#f7f3eb"/>
+  <path d="M540 520h250v290H540zm330 0h250v290H870z" fill="url(#glass)"/>
+  <path d="M420 450h820L1080 330H590Z" fill="#233f42"/>
+  <path d="M0 820c310-80 500 10 740-25 270-40 500-145 860-40v245H0Z" fill="#2f696d" opacity=".68"/>
+</svg>

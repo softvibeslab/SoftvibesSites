@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aplicar al proceso · Mujer Montaña · Fabiola González</title>
+<meta name="description" content="Solicita tu lugar en el proceso Mujer Puente → Mujer Montaña. Una solicitud breve para saber si este es tu momento." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/index.html">
+      <img src="/img/logo.webp" alt="Fabiola González" />
+      <span>Fabiola González</span>
+    </a>
+    <div class="nav-links">
+      <a href="/index.html">Inicio</a>
+      <a href="/programa/">El proceso</a>
+      <a href="/links/">Enlaces</a>
+      <a class="nav-cta" href="#form">Aplicar</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== PAGE HERO ===== -->
+<header class="page-hero">
+  <div class="container">
+    <span class="eyebrow" style="color:var(--gold-soft);">Aplicar</span>
+    <h1>Cuéntame dónde estás hoy</h1>
+    <p>No es un formulario frío: es el primer paso del proceso. Con tus respuestas veo si este es tu momento y te contacto por WhatsApp con contexto, no en frío.</p>
+  </div>
+</header>
+
+<!-- ===== FORM ===== -->
+<section id="form">
+  <div class="container">
+    <form class="form-card reveal" id="aplicacion">
+      <label for="nombre">¿Cómo te llamas?</label>
+      <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required />
+
+      <label for="origen">¿Desde dónde me encontraste?</label>
+      <select id="origen" name="origen" required>
+        <option value="" disabled selected>Elige una opción</option>
+        <option>Instagram</option>
+        <option>Facebook</option>
+        <option>YouTube</option>
+        <option>Me recomendaron</option>
+        <option>Otro</option>
+      </select>
+
+      <label for="momento">¿Qué te tiene aquí hoy?</label>
+      <textarea id="momento" name="momento" placeholder="Cuéntame en pocas líneas qué estás viviendo y qué te gustaría cambiar." required></textarea>
+
+      <label for="urgencia">¿Qué tan lista te sientes para empezar?</label>
+      <select id="urgencia" name="urgencia" required>
+        <option value="" disabled selected>Elige una opción</option>
+        <option>Estoy lista para aplicar ahora</option>
+        <option>Quiero información antes de decidir</option>
+        <option>Apenas estoy explorando</option>
+      </select>
+
+      <label class="form-consent" for="consent">
+        <input id="consent" type="checkbox" required />
+        <span>Entiendo que este es un acompañamiento profesional con criterios de admisión y que mi información se trata con confidencialidad.</span>
+      </label>
+
+      <button type="submit" class="btn btn-gold">Enviar mi solicitud por WhatsApp</button>
+    </form>
+
+    <p class="crisis-nota reveal">🆘 <strong>Si estás en crisis o necesitas ayuda inmediata</strong>, este proceso no sustituye una atención de urgencia. En México puedes llamar a la Línea de la Vida <strong>800 911 2000</strong>, disponible 24/7.</p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <img src="/img/logo.webp" alt="Fabiola González" />
+  <div>Fabiola González Hernández · Psicóloga y logoterapeuta</div>
+  <div class="foot-links">
+    <a href="/index.html">Inicio</a>
+    <a href="/programa/">El proceso</a>
+    <a href="/links/">Enlaces</a>
+  </div>
+  <div class="fine">Acompañamiento profesional con criterios de admisión. Este espacio no sustituye atención psiquiátrica de urgencia.</div>
+</footer>
+
+<script src="/app.js"></script>
+<script>
+  document.getElementById("aplicacion").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const msg =
+      "Hola Fabiola, quiero aplicar al proceso Mujer Montaña 🏔️%0A%0A" +
+      "*Nombre:* " + encodeURIComponent(f.nombre.value) + "%0A" +
+      "*Vengo de:* " + encodeURIComponent(f.origen.value) + "%0A" +
+      "*Mi momento:* " + encodeURIComponent(f.momento.value) + "%0A" +
+      "*Disposición:* " + encodeURIComponent(f.urgencia.value);
+    window.open("https://wa.me/525537175726?text=" + msg, "_blank");
+  });
+</script>
+</body>
+</html>

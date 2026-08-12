@@ -1,0 +1,165 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, waLink, formatoPrecio, CATEGORIAS } from '../../data/site';
+
+export async function getStaticPaths() {
+  const servicios = await getCollection('servicios');
+  return servicios.map((s) => ({ params: { slug: s.id }, props: { servicio: s } }));
+}
+
+const { servicio } = Astro.props;
+const { Content } = await render(servicio);
+const d = servicio.data;
+
+const mensajeWa = `Hola Blooming, quiero agendar "${d.titulo}". ¿Me comparten disponibilidad?`;
+const mensajeDuda = `Hola Blooming, tengo una duda sobre "${d.titulo}" antes de agendar.`;
+
+const schemaServicio = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: d.titulo,
+  description: d.resumen,
+  image: new URL(d.imagen, Astro.site).href,
+  provider: {
+    '@type': 'BeautySalon',
+    name: SITE.nombre,
+    telephone: SITE.telefono,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: SITE.direccion,
+      addressLocality: 'Playa del Carmen',
+      addressRegion: 'Quintana Roo',
+      postalCode: '77710',
+      addressCountry: 'MX',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: SITE.resenas.calificacion,
+      reviewCount: SITE.resenas.total,
+    },
+  },
+  ...(d.precio > 0 && {
+    offers: {
+      '@type': 'Offer',
+      price: d.precio,
+      priceCurrency: 'MXN',
+      availability: 'https://schema.org/InStock',
+    },
+  }),
+};
+---
+
+<BaseLayout
+  titulo={`${d.titulo} en Playa del Carmen | ${SITE.nombre}`}
+  descripcion={d.resumen}
+  schema={schemaServicio}
+  lang="es"
+  rutaAlterna={`/en/services/${servicio.id}`}
+>
+  <section class="detalle-hero detalle-hero--banner" style={`background-image: url('${d.imagen}')`}>
+    <div class="contenedor">
+      <nav style="font-size: 0.85rem; margin-bottom: 1rem;" aria-label="Migas de pan">
+        <a href="/servicios">Servicios</a> · <span>{CATEGORIAS[d.categoria]}</span>
+      </nav>
+      <div class="detalle-badges">
+        {d.favorito && <span class="badge badge--favorito">★ El favorito de nuestras clientas</span>}
+        {d.precioAntes && <span class="badge badge--promo">Promoción vigente</span>}
+      </div>
+      <h1 data-cms={`serv-${servicio.id}-titulo`}>{d.titulo}</h1>
+      <div class="detalle-precio">
+        {
+          d.precio > 0 ? (
+            <>
+              desde {formatoPrecio(d.precio)}
+              {d.precioAntes && <span class="detalle-antes">antes {formatoPrecio(d.precioAntes)}</span>}
+            </>
+          ) : (
+            'Se cotiza en tu valoración'
+          )
+        }
+      </div>
+      <div class="detalle-meta">
+        {d.duracion && <span>⏱ {d.duracion}</span>}
+        {d.sesiones && <span>✨ {d.sesiones}</span>}
+        <span>⭐ {SITE.resenas.calificacion} · {SITE.resenas.total} reseñas</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="detalle-cuerpo">
+        <div>
+          {
+            d.paraQuien && (
+              <p class="mini-testimonio" style="margin-bottom: 2rem;">
+                💗 <strong style="display: inline;">Ideal para:</strong> {d.paraQuien}
+              </p>
+            )
+          }
+
+          <div class="prosa">
+            <Content />
+          </div>
+
+          {
+            d.beneficios.length > 0 && (
+              <>
+                <h2>Beneficios</h2>
+                <ul class="lista-check">
+                  {d.beneficios.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+
+          <h2>Cómo es tu visita</h2>
+          <ol class="pasos">
+            <li><strong>Valoración.</strong> Antes de empezar revisamos tu piel o la zona a trabajar: si es sensible, grasa o seca, si hay irritación o alguna condición especial.</li>
+            <li><strong>Tu sesión.</strong> El tratamiento se ajusta a lo que encontramos — no aplicamos el mismo protocolo a todas.</li>
+            <li><strong>Cuidados en casa.</strong> Te explicamos qué hacer los días siguientes para que el resultado dure.</li>
+          </ol>
+        </div>
+
+        <aside class="detalle-lateral">
+          <div class="asesora-card">
+            <div class="asesora-card__perfil">
+              <img src="/img/logo-icono.jpg" alt="Blooming" class="asesora-card__foto" width="72" height="72" />
+              <div>
+                <div class="asesora-card__nombre">Blooming</div>
+                <div class="asesora-card__titulo">Depilación láser & skincare</div>
+              </div>
+            </div>
+            <div class="resenas-mini">
+              <strong>⭐ {SITE.resenas.calificacion}</strong>
+              <span>{SITE.resenas.total} reseñas en {SITE.resenas.fuente}</span>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--gris);">
+              Agenda tu cita por WhatsApp y te confirmamos disponibilidad el mismo día.
+            </p>
+            <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Agendar por WhatsApp</a>
+            <a href={waLink(mensajeDuda)} class="boton boton--primario" target="_blank" rel="noopener">❓ Tengo una duda</a>
+            <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`} class="boton boton--secundario">📞 {SITE.telefono}</a>
+          </div>
+
+          <div class="asesora-card" style="border-top-color: var(--laton);">
+            <h3 style="margin: 0; font-size: 1.05rem;">Dónde estamos</h3>
+            <p style="font-size: 0.9rem; margin: 0.5rem 0;">
+              {SITE.direccion}<br />{SITE.cp}, {SITE.ciudad}
+            </p>
+            <p style="font-size: 0.86rem; color: var(--gris); margin: 0 0 0.9rem;">{SITE.horario}</p>
+            <a href={SITE.mapa} class="boton boton--secundario" target="_blank" rel="noopener">📍 Cómo llegar</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="barra-movil">
+    <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Agendar</a>
+    <a href={SITE.mapa} class="boton boton--primario" target="_blank" rel="noopener">📍 Cómo llegar</a>
+  </div>
+</BaseLayout>

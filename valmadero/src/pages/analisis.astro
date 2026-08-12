@@ -1,0 +1,808 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../config/site';
+
+const metricas = [
+  { valor: 6547, sufijo: '', decimales: 0, etiqueta: 'seguidores al corte' },
+  { valor: 12, sufijo: '', decimales: 0, etiqueta: 'publicaciones en la muestra' },
+  { valor: 10, sufijo: '/12', decimales: 0, etiqueta: 'piezas en formato video' },
+  { valor: 4.1, sufijo: '×', decimales: 1, etiqueta: 'más likes en contenido personal' },
+];
+
+const hallazgos = [
+  {
+    icono: '01',
+    titulo: 'La historia personal abre más puertas que el inventario',
+    detalle: 'Las cuatro piezas personales promedian 242 likes; las ocho inmobiliarias, 58.9. En esta muestra, la afinidad personal obtiene aproximadamente 4.1 veces más respuesta.',
+    solucion: 'Aplicado: la landing abre con una decisión de vida y presenta a Val antes de llevar a opciones, educación y contacto.',
+    estado: 'aplicado',
+  },
+  {
+    icono: '02',
+    titulo: 'El siguiente paso cambia entre comentario, DM y WhatsApp',
+    detalle: 'Cada llamada a la acción obliga al prospecto a decidir por dónde continuar y a volver a explicar qué busca. Ese salto pierde contexto y hace más lenta la conversación.',
+    solucion: 'Aplicado: el sitio segmenta vivir, invertir o entender crédito y conduce a una conversación de WhatsApp con una promesa consistente.',
+    estado: 'aplicado',
+  },
+  {
+    icono: '03',
+    titulo: 'Una publicación de propiedad envejece sin avisar',
+    detalle: 'Precio, disponibilidad, superficie y financiamiento pueden cambiar después de publicar. Un feed no distingue automáticamente una referencia histórica de inventario vigente.',
+    solucion: 'Aplicado: las referencias llevan fuente, fecha y estado de verificación; el CMS permite actualizar o retirar información sin rehacer el sitio.',
+    estado: 'aplicado',
+  },
+  {
+    icono: '04',
+    titulo: 'El contenido educa, pero no explica el acompañamiento completo',
+    detalle: 'Crédito, enganche, Airbnb y plusvalía generan preguntas útiles, aunque el perfil no muestra en un solo lugar qué ocurre después del primer mensaje.',
+    solucion: 'Aplicado: la propuesta convierte el servicio en una ruta visible — escuchar, filtrar y decidir con contexto.',
+    estado: 'aplicado',
+  },
+  {
+    icono: '05',
+    titulo: 'La infraestructura comercial todavía necesita datos definitivos',
+    detalle: 'El dominio, correo receptor, teléfono, responsable de privacidad, relación con Blestyum y analítica deben confirmarse antes de abrir la indexación.',
+    solucion: 'Pendiente: completar identidad operativa, privacidad y medición antes de presentar el prototipo como sitio oficial.',
+    estado: 'pendiente',
+  },
+];
+
+const pilares = [
+  {
+    numero: '4 piezas',
+    titulo: 'Vida en el Caribe',
+    texto: 'Construye afinidad, hace memorable a Val y produce la mayor respuesta de la muestra.',
+    funcion: 'Atracción',
+  },
+  {
+    numero: 'Temas útiles',
+    titulo: 'Educación inmobiliaria',
+    texto: 'Crédito, enganche, gastos y Airbnb convierten curiosidad en preguntas concretas.',
+    funcion: 'Consideración',
+  },
+  {
+    numero: '8 piezas',
+    titulo: 'Producto y oportunidad',
+    texto: 'Casas, departamentos, lotes y villas aterrizan la intención, con control de vigencia.',
+    funcion: 'Conversión',
+  },
+];
+
+const mejoras = [
+  { icono: '◎', titulo: 'Posicionamiento propio', texto: '“Tu siguiente paso en Riviera Maya, explicado claro” une vida, educación y producto en una sola promesa.' },
+  { icono: '↗', titulo: 'Rutas por intención', texto: 'Vivir, invertir o entender crédito permite responder desde el objetivo, no desde una lista infinita.' },
+  { icono: '▶', titulo: 'Contenido en movimiento', texto: 'Siete videos autorizados llevan la presencia cercana de Instagram a una galería web rápida y responsive.' },
+  { icono: 'WA', titulo: 'Conversación contextual', texto: 'Las llamadas a la acción llevan a un canal principal y mantienen visible el motivo del contacto.' },
+  { icono: '✓', titulo: 'Inventario responsable', texto: 'Las referencias separan demostración y vigencia; el CMS conserva fuente, fecha y estado.' },
+  { icono: '⌂', titulo: 'Ecosistema completo', texto: 'Landing, propiedades, zonas, guías, enlaces, contacto y CMS viven bajo la misma arquitectura.' },
+];
+
+const fases = [
+  {
+    paso: '01',
+    titulo: 'Confirmar',
+    etiqueta: 'Antes de indexar',
+    items: ['Dominio y correo definitivos', 'Teléfono y razón comercial', 'Aviso de privacidad y responsable', 'Relación pública con Blestyum'],
+  },
+  {
+    paso: '02',
+    titulo: 'Operar',
+    etiqueta: 'Primera semana',
+    items: ['Cargar inventario autorizado', 'Asignar fecha y responsable', 'Probar formulario y respaldos', 'Definir rutina de actualización'],
+  },
+  {
+    paso: '03',
+    titulo: 'Activar',
+    etiqueta: 'Después de validar',
+    items: ['Conectar dominio y Search Console', 'Habilitar analítica de conversiones', 'Actualizar enlace de la bio', 'Medir visitas, clics y contactos'],
+  },
+];
+
+const tour = [
+  { etiqueta: '1 · Inicio', url: `${SITE.dominio}/`, nota: 'La marca recibe desde una decisión de vida y segmenta la intención.' },
+  { etiqueta: '2 · Videos', url: `${SITE.dominio}/#videos`, nota: 'La cercanía de Instagram se conserva en una galería propia y navegable.' },
+  { etiqueta: '3 · Opciones', url: `${SITE.dominio}/propiedades/`, nota: 'Las referencias se presentan con contexto, fuente y estado de verificación.' },
+  { etiqueta: '4 · Enlaces', url: `${SITE.dominio}/links/`, nota: 'La bio puede conducir a un punto de entrada con la identidad de Val.' },
+  { etiqueta: '5 · Contacto', url: `${SITE.dominio}/contacto/`, nota: 'El prospecto comparte objetivo y presupuesto antes de la conversación.' },
+];
+---
+
+<BaseLayout
+  titulo={`Análisis digital de ${SITE.nombre} | Softvibes`}
+  descripcion="Diagnóstico de marca, contenido y conversión de Val Madero basado en una muestra pública de Instagram."
+  imagen="/media/valmadero/valeria-soto-madero.jpg"
+  desnudo
+  noindex
+>
+  <div class="analysis-page">
+    <header class="analysis-hero">
+      <a class="analysis-brand" href="/" aria-label={`Volver al sitio de ${SITE.nombre}`}>
+        <span>V</span>
+        <strong>{SITE.nombre}</strong>
+      </a>
+      <div class="hero-orbit hero-orbit--one" aria-hidden="true"></div>
+      <div class="hero-orbit hero-orbit--two" aria-hidden="true"></div>
+      <img class="hero-portrait" src={SITE.asesor.imagen} alt={`Retrato de ${SITE.asesor.nombre}`} />
+      <p class="eyebrow eyebrow--light">Análisis de presencia digital · 3 de agosto de 2026</p>
+      <h1>Val, tu cercanía ya genera atención.<br /><em>Ahora tiene una ruta para convertirla en conversación.</em></h1>
+      <p class="hero-copy">Analizamos una muestra pública de tu Instagram, detectamos dónde se pierde el contexto y construimos una propuesta para unir contenido, asesoría e inventario responsable.</p>
+      <div class="hero-note">Preparado por <strong>Softvibes</strong> · diagnóstico basado en datos públicos y activos autorizados</div>
+    </header>
+
+    <section class="metrics" aria-label="Resumen cuantitativo">
+      {metricas.map((metrica) => (
+        <article class="metric">
+          <strong
+            data-counter
+            data-target={metrica.valor}
+            data-suffix={metrica.sufijo}
+            data-decimals={metrica.decimales}
+          >0</strong>
+          <span>{metrica.etiqueta}</span>
+        </article>
+      ))}
+    </section>
+
+    <section class="media-story analysis-container" aria-labelledby="media-title">
+      <div class="section-heading section-heading--center" data-analysis-reveal>
+        <p class="eyebrow">La señal más valiosa</p>
+        <h2 id="media-title">La persona es el punto de entrada</h2>
+        <p>La muestra no pide abandonar el contenido inmobiliario. Pide conectarlo mejor con la historia y la confianza que Val ya construye.</p>
+      </div>
+      <div class="story-gallery">
+        <figure class="story-card" data-analysis-reveal>
+          <img src="/media/valmadero/valeria-soto-madero.jpg" alt="Valeria Soto Madero" loading="lazy" />
+          <figcaption><strong>Cercanía</strong><span>La persona hace memorable la marca.</span></figcaption>
+        </figure>
+        <figure class="story-card" data-analysis-reveal>
+          <img src="/media/valmadero/reel-03-primer-departamento.jpg" alt="Recorrido por un departamento" loading="lazy" />
+          <figcaption><strong>Claridad</strong><span>El contenido traduce espacios y decisiones.</span></figcaption>
+        </figure>
+        <figure class="story-card" data-analysis-reveal>
+          <img src="/media/valmadero/reel-05-lotes-tulum.jpg" alt="Contenido inmobiliario sobre Tulum" loading="lazy" />
+          <figcaption><strong>Oportunidad</strong><span>El producto aparece después del contexto.</span></figcaption>
+        </figure>
+      </div>
+      <p class="gallery-note">242 likes promedio en contenido personal frente a 58.9 en contenido inmobiliario. <strong>El hallazgo es direccional, no una medición de ventas.</strong></p>
+    </section>
+
+    <section class="findings-section">
+      <div class="analysis-container">
+        <div class="section-heading section-heading--center" data-analysis-reveal>
+          <p class="eyebrow">El diagnóstico</p>
+          <h2>Lo que encontramos y cómo lo abordamos</h2>
+          <p>Abre cada hallazgo para separar la evidencia, la decisión aplicada y lo que todavía requiere confirmación.</p>
+        </div>
+        <div class="findings-list">
+          {hallazgos.map((hallazgo, index) => (
+            <article class:list={['finding', hallazgo.estado === 'pendiente' && 'finding--pending', index === 0 && 'is-open']} data-finding data-analysis-reveal>
+              <button type="button" aria-expanded={index === 0 ? 'true' : 'false'}>
+                <span class="finding-number">{hallazgo.icono}</span>
+                <span class="finding-title">{hallazgo.titulo}</span>
+                <span class="finding-status">{hallazgo.estado}</span>
+                <span class="finding-arrow" aria-hidden="true">⌄</span>
+              </button>
+              <div class="finding-detail">
+                <div>
+                  <p>{hallazgo.detalle}</p>
+                  <p class="finding-solution"><strong>{hallazgo.solucion.split(':')[0]}:</strong>{hallazgo.solucion.split(':').slice(1).join(':')}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="pillars-section analysis-container" aria-labelledby="pillars-title">
+      <div class="section-heading" data-analysis-reveal>
+        <p class="eyebrow">Arquitectura editorial</p>
+        <h2 id="pillars-title">Tres territorios, una función para cada uno</h2>
+        <p>El sitio no reemplaza el contenido: le asigna un lugar dentro del recorrido comercial.</p>
+      </div>
+      <div class="pillar-grid">
+        {pilares.map((pilar) => (
+          <article class="pillar" data-analysis-reveal>
+            <div class="pillar-top"><span>{pilar.numero}</span><strong>{pilar.funcion}</strong></div>
+            <h3>{pilar.titulo}</h3>
+            <p>{pilar.texto}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="transformation" aria-labelledby="transformation-title">
+      <div class="analysis-container">
+        <div class="section-heading section-heading--center section-heading--light">
+          <p class="eyebrow eyebrow--light">La transformación</p>
+          <h2 id="transformation-title">Del contenido suelto a una ruta propia</h2>
+          <p>Cambia la vista para comparar el recorrido actual con el sistema propuesto.</p>
+        </div>
+
+        <div class="view-switch" role="tablist" aria-label="Comparar antes y ahora">
+          <button class="is-active" type="button" data-scene-button="before" role="tab" aria-selected="true">Antes</button>
+          <button type="button" data-scene-button="after" role="tab" aria-selected="false">Ahora</button>
+        </div>
+
+        <div class="scene" data-scene="before">
+          <div class="before-grid">
+            <article class="before-card before-card--instagram">
+              <div class="app-label"><span>Instagram</span><i>atención</i></div>
+              <strong>@_valmadero</strong>
+              <p>El contenido genera afinidad, preguntas y descubrimiento.</p>
+              <div class="mini-feed" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </article>
+            <article class="before-card">
+              <div class="app-label"><span>Comentarios y DM</span><i>fragmentado</i></div>
+              <div class="message message--left">Info</div>
+              <div class="message message--right">¿De qué propiedad?</div>
+              <div class="message message--left">La que vi ayer…</div>
+            </article>
+            <article class="before-card">
+              <div class="app-label"><span>WhatsApp</span><i>sin contexto</i></div>
+              <div class="message message--left">Hola</div>
+              <div class="message message--right">¡Hola! ¿Qué buscas?</div>
+              <div class="message message--left">Algo para invertir</div>
+            </article>
+            <article class="before-card">
+              <div class="app-label"><span>Publicación</span><i>vigencia incierta</i></div>
+              <div class="property-placeholder"><span>$4.2 M</span><small>¿Sigue disponible?</small></div>
+            </article>
+          </div>
+          <p class="scene-verdict">“La atención existe, pero el prospecto debe reconstruir el contexto.”</p>
+        </div>
+
+        <div class="scene" data-scene="after" hidden>
+          <div class="source-chips" aria-label="Canales que convergen en el sitio">
+            <span>Instagram</span><span>Reels</span><span>WhatsApp</span><span>Google</span>
+          </div>
+          <p class="converge">todos conducen a una misma ruta <i aria-hidden="true"></i></p>
+
+          <div class="device-tabs" role="tablist" aria-label="Vista por dispositivo">
+            <button type="button" data-device="laptop">Laptop</button>
+            <button type="button" data-device="tablet">Tablet</button>
+            <button class="is-active" type="button" data-device="phone">Teléfono</button>
+          </div>
+
+          <div class="device device--phone" data-device-frame>
+            <div class="device-notch" aria-hidden="true"></div>
+            <div class="device-screen" data-device-screen>
+              <iframe
+                data-tour-frame
+                data-src={tour[0].url}
+                src="about:blank"
+                title={`Sitio de ${SITE.nombre} en vivo`}
+                loading="lazy"
+              ></iframe>
+            </div>
+            <div class="device-base" aria-hidden="true"></div>
+          </div>
+
+          <div class="tour-tabs" role="tablist" aria-label="Recorrido por el sitio">
+            {tour.map((item, index) => (
+              <button
+                class:list={[index === 0 && 'is-active']}
+                type="button"
+                data-tour-url={item.url}
+                data-tour-note={item.nota}
+              >{item.etiqueta}</button>
+            ))}
+          </div>
+          <p class="tour-note" data-tour-note-output>{tour[0].nota}</p>
+          <div class="scene-cta"><a class="analysis-button analysis-button--accent" href={SITE.dominio} target="_blank" rel="noopener">Abrir la landing completa ↗</a></div>
+          <p class="scene-verdict">“El mismo contenido, ahora conectado a intención, contexto y seguimiento.”</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="improvements-section analysis-container">
+      <div class="section-heading section-heading--center" data-analysis-reveal>
+        <p class="eyebrow">Lo que ya está construido</p>
+        <h2>La propuesta convierte el análisis en producto</h2>
+        <p>No es una lista de recomendaciones aisladas: cada decisión tiene una implementación visible.</p>
+      </div>
+      <div class="improvements-grid">
+        {mejoras.map((mejora) => (
+          <article class="improvement" data-analysis-reveal>
+            <span>{mejora.icono}</span>
+            <h3>{mejora.titulo}</h3>
+            <p>{mejora.texto}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="evidence-section">
+      <div class="analysis-container evidence-grid">
+        <div class="evidence-copy" data-analysis-reveal>
+          <p class="eyebrow">Transparencia de datos</p>
+          <h2>Qué significan —y qué no— estas cifras</h2>
+          <p>La muestra permite detectar patrones editoriales, no atribuir ventas. La interacción proxy usa likes y comentarios sobre seguidores; no incluye alcance, guardados, compartidos, mensajes, pauta ni cierres.</p>
+          <details>
+            <summary>Ver fuente y alcance técnico</summary>
+            <div>
+              <p>Perfil público: <a href={SITE.redes.instagram} target="_blank" rel="noopener">@_valmadero</a>.</p>
+              <p>Actor: <code>apify/instagram-profile-scraper</code>. Muestra de 12 publicaciones entre julio de 2025 y junio de 2026, recolectada el 3 de agosto de 2026.</p>
+              <p>Las URL temporales de medios fueron omitidas del snapshot; el sitio utiliza únicamente archivos proporcionados para esta landing.</p>
+            </div>
+          </details>
+        </div>
+        <div class="evidence-table" data-analysis-reveal>
+          <div><span>Likes promedio</span><strong>119.9</strong></div>
+          <div><span>Mediana de likes</span><strong>71.5</strong></div>
+          <div><span>Comentarios promedio</span><strong>1.5</strong></div>
+          <div><span>Vistas promedio en video</span><strong>1,314.8</strong></div>
+          <div><span>Interacción proxy</span><strong>1.85%</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap-section analysis-container" id="siguientes-pasos">
+      <div class="section-heading section-heading--center" data-analysis-reveal>
+        <p class="eyebrow">Hoja de activación</p>
+        <h2>De prototipo validado a activo oficial</h2>
+        <p>La base técnica está lista. Estos pasos reducen el riesgo antes de abrir el sitio a búsqueda y campañas.</p>
+      </div>
+      <div class="roadmap-grid">
+        {fases.map((fase) => (
+          <article class="roadmap-card" data-analysis-reveal>
+            <div class="roadmap-head"><span>{fase.paso}</span><small>{fase.etiqueta}</small></div>
+            <h3>{fase.titulo}</h3>
+            <ul>{fase.items.map((item) => <li>{item}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="analysis-cta">
+      <p class="eyebrow">La idea central</p>
+      <h2>Tu contenido deja de ser una colección de publicaciones<br /><em>y empieza a construir una ruta propia.</em></h2>
+      <p>La atención ya existe. La oportunidad está en conservar el contexto hasta la conversación correcta.</p>
+      <div>
+        <a class="analysis-button analysis-button--accent" href={SITE.dominio} target="_blank" rel="noopener">Ver la landing</a>
+        <a class="analysis-button analysis-button--outline" href={waLink()} target="_blank" rel="noopener">Hablar con Val</a>
+      </div>
+    </section>
+
+    <div class="floating-actions" data-floating-actions>
+      <a href={SITE.dominio} target="_blank" rel="noopener">Ver landing</a>
+      <a href="#siguientes-pasos">Siguientes pasos</a>
+    </div>
+
+    <footer class="analysis-footer">
+      <span class="footer-mark">V</span>
+      <p>Diagnóstico preparado por <strong>Softvibes</strong> para {SITE.nombre}.</p>
+      <p>Prototipo privado y no indexable. Cualquier dato inmobiliario debe confirmarse antes de publicarse.</p>
+    </footer>
+  </div>
+
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const formatCounter = (value: number, decimals: number, suffix: string) =>
+      `${new Intl.NumberFormat('es-MX', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      }).format(value)}${suffix}`;
+
+    document.querySelectorAll<HTMLElement>('[data-counter]').forEach((counter) => {
+      const target = Number(counter.dataset.target ?? 0);
+      const decimals = Number(counter.dataset.decimals ?? 0);
+      const suffix = counter.dataset.suffix ?? '';
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        counter.textContent = formatCounter(target, decimals, suffix);
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        observer.disconnect();
+        const start = performance.now();
+        const duration = 1100;
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          counter.textContent = formatCounter(target * eased, decimals, suffix);
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }, { threshold: 0.45 });
+      observer.observe(counter);
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-finding]').forEach((finding) => {
+      const button = finding.querySelector<HTMLButtonElement>('button');
+      button?.addEventListener('click', () => {
+        const open = finding.classList.toggle('is-open');
+        button.setAttribute('aria-expanded', String(open));
+      });
+    });
+
+    const scenes = document.querySelectorAll<HTMLElement>('[data-scene]');
+    const sceneButtons = document.querySelectorAll<HTMLButtonElement>('[data-scene-button]');
+    const tourFrame = document.querySelector<HTMLIFrameElement>('[data-tour-frame]');
+    const deviceFrame = document.querySelector<HTMLElement>('[data-device-frame]');
+    const deviceScreen = document.querySelector<HTMLElement>('[data-device-screen]');
+    let currentDevice: 'phone' | 'tablet' | 'laptop' = 'phone';
+
+    const deviceSizes = {
+      phone: { width: 390, height: 800, max: 440 },
+      tablet: { width: 834, height: 1024, max: 650 },
+      laptop: { width: 1280, height: 800, max: 920 },
+    };
+
+    const fitDevice = () => {
+      if (!tourFrame || !deviceScreen || !deviceFrame || deviceFrame.closest('[hidden]')) return;
+      const config = deviceSizes[currentDevice];
+      const available = Math.min(config.max, window.innerWidth - 48);
+      let scale = available / config.width;
+      const maxHeight = window.innerHeight * 0.72;
+      if (config.height * scale > maxHeight) scale = maxHeight / config.height;
+      tourFrame.style.width = `${config.width}px`;
+      tourFrame.style.height = `${config.height}px`;
+      tourFrame.style.transform = `scale(${scale})`;
+      deviceScreen.style.width = `${Math.round(config.width * scale)}px`;
+      deviceScreen.style.height = `${Math.round(config.height * scale)}px`;
+    };
+
+    sceneButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const next = button.dataset.sceneButton;
+        sceneButtons.forEach((item) => {
+          const active = item === button;
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-selected', String(active));
+        });
+        scenes.forEach((scene) => { scene.hidden = scene.dataset.scene !== next; });
+        if (next === 'after' && tourFrame?.src === 'about:blank') tourFrame.src = tourFrame.dataset.src ?? '/';
+        requestAnimationFrame(fitDevice);
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-device]').forEach((button) => {
+      button.addEventListener('click', () => {
+        currentDevice = (button.dataset.device ?? 'phone') as typeof currentDevice;
+        document.querySelectorAll('[data-device]').forEach((item) => item.classList.toggle('is-active', item === button));
+        if (deviceFrame) deviceFrame.className = `device device--${currentDevice}`;
+        fitDevice();
+      });
+    });
+    window.addEventListener('resize', fitDevice, { passive: true });
+
+    const tourNote = document.querySelector<HTMLElement>('[data-tour-note-output]');
+    document.querySelectorAll<HTMLButtonElement>('[data-tour-url]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-tour-url]').forEach((item) => item.classList.toggle('is-active', item === button));
+        if (tourFrame) tourFrame.src = button.dataset.tourUrl ?? '/';
+        if (tourNote) tourNote.textContent = button.dataset.tourNote ?? '';
+        button.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+      });
+    });
+
+    const revealElements = document.querySelectorAll<HTMLElement>('[data-analysis-reveal]');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealElements.forEach((element) => element.classList.add('is-visible'));
+    } else {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.12 });
+      revealElements.forEach((element) => revealObserver.observe(element));
+    }
+
+    const floatingActions = document.querySelector<HTMLElement>('[data-floating-actions]');
+    const transformation = document.querySelector('.transformation');
+    const roadmap = document.querySelector('.roadmap-section');
+    if (floatingActions && transformation && roadmap && 'IntersectionObserver' in window) {
+      let passedTransformation = false;
+      let roadmapVisible = false;
+      const updateFloating = () => floatingActions.classList.toggle('is-visible', passedTransformation && !roadmapVisible);
+      new IntersectionObserver((entries) => {
+        if (entries[0]?.isIntersecting) passedTransformation = true;
+        updateFloating();
+      }, { threshold: 0.2 }).observe(transformation);
+      new IntersectionObserver((entries) => {
+        roadmapVisible = Boolean(entries[0]?.isIntersecting);
+        updateFloating();
+      }, { threshold: 0.08 }).observe(roadmap);
+    }
+  </script>
+
+  <style>
+    .analysis-page {
+      --analysis-ink: #123d39;
+      --analysis-deep: #0b2e2b;
+      --analysis-sea: #4f7d77;
+      --analysis-sand: #f5f0e6;
+      --analysis-paper: #fffdf8;
+      --analysis-coral: #c87954;
+      --analysis-coral-soft: #e8b18f;
+      --analysis-line: rgba(18, 61, 57, .14);
+      --analysis-green: #3f8065;
+      --analysis-red: #aa5d4e;
+      color: var(--analysis-ink);
+      background: var(--analysis-sand);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .analysis-page *, .analysis-page *::before, .analysis-page *::after { box-sizing: border-box; }
+    .analysis-page h1, .analysis-page h2, .analysis-page h3, .analysis-page p { margin-top: 0; }
+    .analysis-container { width: min(1040px, calc(100% - 2rem)); margin-inline: auto; }
+
+    .analysis-hero {
+      position: relative;
+      isolation: isolate;
+      min-height: 720px;
+      padding: 2rem 1.5rem 8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #f8f3e9;
+      background:
+        linear-gradient(150deg, rgba(8, 40, 37, .95), rgba(20, 74, 68, .89)),
+        url('/media/valmadero/reel-04-amenidades.jpg') center / cover;
+    }
+
+    .analysis-hero::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: auto 0 -1px;
+      height: 92px;
+      background: var(--analysis-sand);
+      clip-path: ellipse(62% 100% at 50% 100%);
+    }
+
+    .analysis-brand {
+      position: absolute;
+      top: 1.4rem;
+      left: clamp(1.25rem, 4vw, 3.5rem);
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      color: inherit;
+      text-decoration: none;
+      letter-spacing: .08em;
+    }
+
+    .analysis-brand span, .footer-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(232, 177, 143, .7);
+      border-radius: 50%;
+      font: 600 1.35rem/1 'Playfair Display Variable', Georgia, serif;
+      color: var(--analysis-coral-soft);
+    }
+
+    .analysis-brand strong { font-size: .82rem; text-transform: uppercase; }
+
+    .hero-portrait {
+      width: 116px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--analysis-coral-soft);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .35);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-orbit { position: absolute; z-index: -1; border: 1px solid rgba(232, 177, 143, .16); border-radius: 50%; }
+    .hero-orbit--one { width: 440px; aspect-ratio: 1; top: -230px; right: -120px; }
+    .hero-orbit--two { width: 260px; aspect-ratio: 1; bottom: 50px; left: -120px; }
+
+    .eyebrow {
+      color: var(--analysis-coral);
+      font-size: .72rem;
+      font-weight: 750;
+      letter-spacing: .24em;
+      line-height: 1.5;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow--light { color: var(--analysis-coral-soft); }
+    .analysis-hero h1 { max-width: 880px; font-size: clamp(2.15rem, 5.6vw, 4.1rem); font-weight: 520; line-height: 1.04; letter-spacing: -.035em; margin-bottom: 1.5rem; }
+    .analysis-hero h1 em, .analysis-cta h2 em { color: var(--analysis-coral-soft); font-weight: 500; }
+    .hero-copy { max-width: 680px; color: rgba(248, 243, 233, .82); font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.75; }
+    .hero-note { margin-top: 2rem; color: rgba(248, 243, 233, .62); font-size: .82rem; }
+    .hero-note strong { color: var(--analysis-coral-soft); }
+
+    .metrics {
+      position: relative;
+      z-index: 2;
+      width: min(880px, calc(100% - 2rem));
+      margin: -3.2rem auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .metric { padding: 1.45rem 1rem; border-radius: 16px; background: var(--analysis-paper); text-align: center; box-shadow: 0 20px 60px rgba(12, 51, 47, .14); }
+    .metric strong { display: block; color: var(--analysis-coral); font: 700 clamp(1.8rem, 4vw, 2.4rem)/1 'Playfair Display Variable', Georgia, serif; }
+    .metric span { display: block; margin-top: .4rem; color: var(--analysis-sea); font-size: .75rem; line-height: 1.35; }
+
+    .media-story, .pillars-section, .improvements-section, .roadmap-section { padding-block: clamp(5rem, 9vw, 8rem); }
+    .section-heading { max-width: 670px; margin-bottom: 3rem; }
+    .section-heading--center { margin-inline: auto; text-align: center; }
+    .section-heading h2 { font-size: clamp(2rem, 4.2vw, 3rem); font-weight: 540; line-height: 1.08; letter-spacing: -.035em; margin-bottom: 1rem; }
+    .section-heading > p:last-child { color: var(--analysis-sea); line-height: 1.75; }
+    .section-heading--light h2 { color: #fffaf0; }
+    .section-heading--light > p:last-child { color: rgba(248, 243, 233, .68); }
+
+    [data-analysis-reveal] { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+    [data-analysis-reveal].is-visible { opacity: 1; transform: none; }
+
+    .story-gallery { display: flex; align-items: stretch; justify-content: center; gap: clamp(1rem, 3vw, 1.7rem); flex-wrap: wrap; }
+    .story-card { width: min(270px, calc(100vw - 3rem)); padding: 10px 10px 1rem; background: var(--analysis-paper); border-radius: 7px; box-shadow: 0 18px 45px rgba(12, 51, 47, .13); transition: transform .3s ease; }
+    .story-card:nth-child(1) { transform: rotate(-2deg); }
+    .story-card:nth-child(2) { transform: rotate(1.5deg) translateY(12px); }
+    .story-card:nth-child(3) { transform: rotate(-1deg); }
+    .story-card:hover { transform: translateY(-5px) rotate(0); }
+    .story-card img { width: 100%; height: 315px; object-fit: cover; border-radius: 4px; }
+    .story-card figcaption { display: grid; gap: .25rem; padding: .8rem .4rem 0; }
+    .story-card figcaption strong { font-family: 'Playfair Display Variable', Georgia, serif; font-size: 1rem; }
+    .story-card figcaption span { color: var(--analysis-sea); font-size: .78rem; }
+    .gallery-note { max-width: 640px; margin: 2.4rem auto 0; color: var(--analysis-sea); text-align: center; font-size: .9rem; }
+    .gallery-note strong { color: var(--analysis-coral); }
+
+    .findings-section { padding-block: clamp(5rem, 9vw, 7rem); background: #eee7da; }
+    .findings-list { max-width: 880px; margin-inline: auto; }
+    .finding { margin-bottom: .9rem; background: var(--analysis-paper); border-left: 4px solid var(--analysis-green); border-radius: 15px; overflow: hidden; box-shadow: 0 8px 28px rgba(12, 51, 47, .07); }
+    .finding--pending { border-left-color: var(--analysis-red); }
+    .finding button { width: 100%; display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 1rem; padding: 1.2rem 1.35rem; color: inherit; border: 0; background: transparent; text-align: left; cursor: pointer; }
+    .finding-number { display: grid; place-items: center; width: 42px; aspect-ratio: 1; border-radius: 50%; background: rgba(63, 128, 101, .1); color: var(--analysis-green); font-weight: 800; font-size: .75rem; }
+    .finding--pending .finding-number { color: var(--analysis-red); background: rgba(170, 93, 78, .1); }
+    .finding-title { font-weight: 750; }
+    .finding-status { padding: .28rem .65rem; color: var(--analysis-green); border: 1px solid rgba(63, 128, 101, .3); border-radius: 99px; font-size: .62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .finding--pending .finding-status { color: var(--analysis-red); border-color: rgba(170, 93, 78, .3); }
+    .finding-arrow { color: var(--analysis-coral); font-size: 1.25rem; transition: transform .3s ease; }
+    .finding.is-open .finding-arrow { transform: rotate(180deg); }
+    .finding-detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+    .finding.is-open .finding-detail { grid-template-rows: 1fr; }
+    .finding-detail > div { overflow: hidden; }
+    .finding-detail p { margin-inline: 4.9rem 1.35rem; color: var(--analysis-sea); font-size: .92rem; line-height: 1.7; }
+    .finding-solution { margin-top: .8rem; margin-bottom: 1.35rem; padding: .85rem 1rem; background: rgba(63, 128, 101, .08); border-left: 3px solid var(--analysis-green); border-radius: 0 8px 8px 0; }
+    .finding--pending .finding-solution { background: rgba(170, 93, 78, .07); border-left-color: var(--analysis-red); }
+    .finding-solution strong { color: var(--analysis-green); }
+    .finding--pending .finding-solution strong { color: var(--analysis-red); }
+
+    .pillar-grid, .improvements-grid, .roadmap-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.15rem; }
+    .pillar { min-height: 280px; padding: 1.7rem; display: flex; flex-direction: column; border: 1px solid var(--analysis-line); border-radius: 18px; background: var(--analysis-paper); box-shadow: 0 10px 35px rgba(12, 51, 47, .06); }
+    .pillar-top { display: flex; justify-content: space-between; gap: 1rem; color: var(--analysis-coral); font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .pillar-top strong { color: var(--analysis-sea); }
+    .pillar h3 { margin: auto 0 .7rem; font-size: 1.55rem; }
+    .pillar p { margin-bottom: 0; color: var(--analysis-sea); font-size: .9rem; }
+
+    .transformation { padding-block: clamp(5rem, 9vw, 7rem); color: #f8f3e9; background: var(--analysis-deep); }
+    .view-switch { width: fit-content; margin: 0 auto 3rem; display: flex; gap: .3rem; padding: .35rem; border-radius: 99px; background: rgba(255, 255, 255, .08); }
+    .view-switch button { min-width: 110px; padding: .65rem 1.4rem; color: rgba(248, 243, 233, .58); border: 0; border-radius: 99px; background: transparent; font: inherit; font-size: .82rem; font-weight: 800; cursor: pointer; }
+    .view-switch button.is-active { color: var(--analysis-deep); background: var(--analysis-coral-soft); }
+    .scene[hidden] { display: none; }
+    .before-grid { max-width: 790px; margin-inline: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
+    .before-card { min-height: 225px; padding: 1rem; color: var(--analysis-ink); background: var(--analysis-paper); border-radius: 16px; box-shadow: 0 20px 45px rgba(0, 0, 0, .28); }
+    .before-card:nth-child(1) { transform: rotate(-1.5deg); }
+    .before-card:nth-child(2) { transform: rotate(1deg) translateY(8px); }
+    .before-card:nth-child(3) { transform: rotate(.8deg); }
+    .before-card:nth-child(4) { transform: rotate(-1deg) translateY(-4px); }
+    .app-label { display: flex; justify-content: space-between; gap: .7rem; padding-bottom: .7rem; border-bottom: 1px solid var(--analysis-line); font-size: .75rem; font-weight: 800; }
+    .app-label i { color: var(--analysis-red); font-style: normal; font-size: .62rem; text-transform: uppercase; }
+    .before-card > strong { display: block; padding-top: 1rem; }
+    .before-card > p { color: var(--analysis-sea); font-size: .82rem; }
+    .mini-feed { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .mini-feed span { aspect-ratio: 1; background: linear-gradient(145deg, #d9b293, #567e78); }
+    .mini-feed span:nth-child(2n) { background: linear-gradient(145deg, #ebe0cf, #a46751); }
+    .message { width: fit-content; max-width: 80%; margin-top: .65rem; padding: .5rem .7rem; color: #2e3c39; background: #eee9df; border-radius: 12px; font-size: .76rem; }
+    .message--right { margin-left: auto; background: #d9ebdc; }
+    .property-placeholder { height: 150px; margin-top: 1rem; display: grid; place-items: center; align-content: center; gap: .4rem; color: #fff; border-radius: 10px; background: linear-gradient(145deg, rgba(18, 61, 57, .8), rgba(200, 121, 84, .8)), url('/media/valmadero/reel-02-casa-premium.jpg') center / cover; }
+    .property-placeholder span { font: 700 1.8rem/1 'Playfair Display Variable', Georgia, serif; }
+    .property-placeholder small { color: rgba(255, 255, 255, .75); }
+    .scene-verdict { margin: 2.3rem auto 0; color: var(--analysis-coral-soft); text-align: center; font: italic 500 1.12rem/1.5 'Playfair Display Variable', Georgia, serif; }
+
+    .source-chips, .device-tabs, .tour-tabs { display: flex; justify-content: center; gap: .55rem; flex-wrap: wrap; }
+    .source-chips span, .device-tabs button, .tour-tabs button { padding: .42rem .8rem; color: rgba(248, 243, 233, .72); border: 1px solid rgba(232, 177, 143, .34); border-radius: 99px; background: transparent; font: inherit; font-size: .72rem; }
+    .converge { margin-bottom: 1.2rem; color: var(--analysis-coral-soft); text-align: center; font-size: .9rem; }
+    .converge i { display: block; width: 1px; height: 28px; margin: .3rem auto 0; background: linear-gradient(var(--analysis-coral-soft), transparent); }
+    .device-tabs { margin-bottom: 1.3rem; }
+    .device-tabs button, .tour-tabs button { cursor: pointer; font-weight: 750; }
+    .device-tabs button.is-active, .tour-tabs button.is-active { color: var(--analysis-deep); border-color: var(--analysis-coral-soft); background: var(--analysis-coral-soft); }
+    .device { position: relative; width: fit-content; margin-inline: auto; background: #041817; box-shadow: 0 32px 70px rgba(0, 0, 0, .5); }
+    .device-screen { overflow: hidden; background: #fff; }
+    .device iframe { display: block; border: 0; transform-origin: top left; }
+    .device-notch { display: none; position: absolute; z-index: 2; top: 18px; left: 50%; width: 105px; height: 20px; border-radius: 99px; background: #041817; transform: translateX(-50%); }
+    .device-base { display: none; }
+    .device--phone { padding: 11px; border-radius: 48px; }
+    .device--phone .device-screen { border-radius: 38px; }
+    .device--phone .device-notch { display: block; }
+    .device--tablet { padding: 15px; border-radius: 28px; }
+    .device--tablet .device-screen { border-radius: 14px; }
+    .device--laptop { margin-bottom: 24px; padding: 13px 13px 15px; border-radius: 15px 15px 4px 4px; }
+    .device--laptop .device-screen { border-radius: 6px; }
+    .device--laptop .device-base { display: block; position: absolute; left: 50%; bottom: -14px; width: calc(100% + 80px); height: 15px; border-radius: 0 0 18px 18px; background: linear-gradient(#34504d, #071d1b); transform: translateX(-50%); }
+    .tour-tabs { margin-top: 1.7rem; }
+    .tour-note { min-height: 2.8em; margin: .9rem auto 0; color: rgba(248, 243, 233, .72); text-align: center; font-size: .88rem; }
+    .scene-cta { margin-top: 1.4rem; text-align: center; }
+
+    .improvements-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .improvement { padding: 1.55rem; border-top: 3px solid var(--analysis-coral); border-radius: 15px; background: var(--analysis-paper); box-shadow: 0 8px 28px rgba(12, 51, 47, .08); }
+    .improvement > span { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 1rem; color: var(--analysis-coral); border-radius: 12px; background: rgba(200, 121, 84, .1); font-weight: 800; }
+    .improvement h3 { font-size: 1.08rem; margin-bottom: .55rem; }
+    .improvement p { margin-bottom: 0; color: var(--analysis-sea); font-size: .86rem; line-height: 1.65; }
+
+    .evidence-section { padding-block: clamp(5rem, 9vw, 7rem); background: #e9e1d3; }
+    .evidence-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr); gap: clamp(2rem, 7vw, 5rem); align-items: center; }
+    .evidence-copy h2 { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.1; }
+    .evidence-copy > p { color: var(--analysis-sea); line-height: 1.75; }
+    .evidence-copy details { margin-top: 1.5rem; border-top: 1px solid var(--analysis-line); border-bottom: 1px solid var(--analysis-line); }
+    .evidence-copy summary { padding: 1rem 0; color: var(--analysis-coral); font-weight: 750; cursor: pointer; }
+    .evidence-copy details div { padding-bottom: 1rem; color: var(--analysis-sea); font-size: .86rem; }
+    .evidence-copy details p { margin-bottom: .6rem; }
+    .evidence-copy a { color: var(--analysis-ink); }
+    .evidence-table { border-radius: 18px; background: var(--analysis-paper); box-shadow: 0 18px 48px rgba(12, 51, 47, .11); overflow: hidden; }
+    .evidence-table div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--analysis-line); }
+    .evidence-table div:last-child { border-bottom: 0; }
+    .evidence-table span { color: var(--analysis-sea); font-size: .82rem; }
+    .evidence-table strong { color: var(--analysis-coral); font-family: 'Playfair Display Variable', Georgia, serif; font-size: 1.25rem; }
+
+    .roadmap-card { padding: 1.6rem; border: 1px solid var(--analysis-line); border-radius: 18px; background: var(--analysis-paper); }
+    .roadmap-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .roadmap-head span { color: var(--analysis-coral); font: 700 2rem/1 'Playfair Display Variable', Georgia, serif; }
+    .roadmap-head small { color: var(--analysis-sea); font-size: .64rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .roadmap-card h3 { margin: 2.3rem 0 1rem; font-size: 1.55rem; }
+    .roadmap-card ul { margin: 0; padding: 0; list-style: none; }
+    .roadmap-card li { position: relative; padding: .62rem 0 .62rem 1.25rem; color: var(--analysis-sea); border-top: 1px solid var(--analysis-line); font-size: .85rem; }
+    .roadmap-card li::before { content: '✓'; position: absolute; left: 0; color: var(--analysis-green); font-weight: 800; }
+
+    .analysis-cta { padding: clamp(5rem, 10vw, 8rem) 1.5rem; text-align: center; background: var(--analysis-paper); }
+    .analysis-cta h2 { max-width: 760px; margin: 0 auto 1.2rem; font-size: clamp(2rem, 4.5vw, 3.25rem); line-height: 1.08; }
+    .analysis-cta h2 em { color: var(--analysis-coral); }
+    .analysis-cta > p:not(.eyebrow) { max-width: 590px; margin: 0 auto 2rem; color: var(--analysis-sea); }
+    .analysis-cta > div { display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; }
+    .analysis-button { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: .8rem 1.45rem; border-radius: 99px; text-decoration: none; font-weight: 800; font-size: .82rem; transition: transform .2s ease; }
+    .analysis-button:hover { transform: translateY(-2px); }
+    .analysis-button--accent { color: #fff; background: var(--analysis-coral); }
+    .analysis-button--outline { color: var(--analysis-ink); border: 1px solid var(--analysis-ink); }
+    .transformation .analysis-button--accent { color: var(--analysis-deep); background: var(--analysis-coral-soft); }
+
+    .floating-actions { position: fixed; z-index: 30; left: 50%; bottom: 14px; display: flex; gap: .4rem; padding: .4rem; border: 1px solid rgba(232, 177, 143, .4); border-radius: 99px; background: rgba(11, 46, 43, .94); box-shadow: 0 18px 45px rgba(0, 0, 0, .32); backdrop-filter: blur(10px); transform: translate(-50%, 150%); transition: transform .4s ease; }
+    .floating-actions.is-visible { transform: translate(-50%, 0); }
+    .floating-actions a { padding: .65rem 1rem; color: #fff8ec; border-radius: 99px; text-decoration: none; font-size: .75rem; font-weight: 800; white-space: nowrap; }
+    .floating-actions a:first-child { color: var(--analysis-deep); background: var(--analysis-coral-soft); }
+
+    .analysis-footer { padding: 3rem 1.5rem; color: rgba(248, 243, 233, .65); background: var(--analysis-deep); text-align: center; font-size: .76rem; }
+    .footer-mark { margin: 0 auto 1rem; }
+    .analysis-footer p { margin-bottom: .35rem; }
+    .analysis-footer strong { color: var(--analysis-coral-soft); }
+
+    @media (max-width: 820px) {
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pillar-grid, .improvements-grid, .roadmap-grid { grid-template-columns: 1fr; max-width: 560px; margin-inline: auto; }
+      .pillar { min-height: 220px; }
+      .evidence-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .analysis-hero { min-height: 680px; padding-top: 5rem; }
+      .analysis-brand strong { display: none; }
+      .finding button { grid-template-columns: auto 1fr auto; gap: .7rem; padding: 1rem; }
+      .finding-status { display: none; }
+      .finding-detail p { margin-inline: 1rem; }
+      .before-grid { grid-template-columns: 1fr; }
+      .before-card, .before-card:nth-child(n) { transform: none; }
+      .tour-tabs { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding-inline: .5rem; scrollbar-width: none; }
+      .tour-tabs::-webkit-scrollbar { display: none; }
+      .floating-actions { width: calc(100% - 1rem); }
+      .floating-actions a { flex: 1; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .analysis-page *, .analysis-page *::before, .analysis-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</BaseLayout>

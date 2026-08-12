@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { research } from '../data/research';
+import '../styles/global.css';
+
+const maxInteractions = Math.max(...research.topContent.map((item) => item.interactions));
+const videoShare = Math.round((research.sample.videos / research.profile.sampleSize) * 100);
+---
+
+<BaseLayout
+  title="Análisis de presencia digital | Ivy Loya Real Estate"
+  description="Diagnóstico público de Instagram, Golfia y la oportunidad de conversión digital de Ivy Loya Real Estate."
+  canonicalPath="/analisis/"
+  noindex={true}
+  bodyClass="analysis-page"
+>
+  <header class="analysis-header">
+    <div class="container analysis-header__inner">
+      <a class="brand" href="/analisis/">
+        <span class="brand__mark">IL</span>
+        <span class="brand__text"><strong>Análisis digital</strong><small>{research.capturedAt}</small></span>
+      </a>
+      <a class="button button--light" href="/">Ver propuesta ↗</a>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="analysis-hero">
+      <div class="container analysis-hero__grid">
+        <div>
+          <p class="eyebrow eyebrow--light">Diagnóstico independiente · fuentes públicas</p>
+          <h1 class="display">De contenido atractivo a una ruta de conversión propia.</h1>
+        </div>
+        <aside class="analysis-note">
+          <strong>Alcance del análisis</strong>
+          <p>Perfil público de Instagram, muestra de 30 posts, sitio de Golfia y referencias del mercado. No incluye alcance, leads, ventas, CRM ni mensajes privados.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section--compact">
+      <div class="container metric-grid">
+        <article class="metric"><strong>{research.profile.followers.toLocaleString('es-MX')}</strong><span>seguidores reportados por el perfil</span></article>
+        <article class="metric"><strong>{videoShare}%</strong><span>de la muestra utiliza video: 24 de 30 posts</span></article>
+        <article class="metric"><strong>{research.sample.interactions}</strong><span>Me gusta + comentarios visibles en 30 posts</span></article>
+        <article class="metric"><strong>{research.sample.averageInteractions}</strong><span>interacciones visibles promedio por publicación</span></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="eyebrow">Lectura ejecutiva</p>
+        <div class="section-heading">
+          <h2 class="title">La confianza ya empieza en Instagram. La oportunidad está después del clic.</h2>
+          <p class="lede">Ivy aparece en recorridos, presenta proyectos y colabora con desarrolladores. Esa presencia humana es un activo. Sin una página personal enfocada, cada publicación obliga al prospecto a reconstruir por su cuenta quién es Ivy, qué ofrece y cómo avanzar.</p>
+        </div>
+        <div class="analysis-grid">
+          <article class="finding">
+            <span class="finding__label">Fortaleza 01</span>
+            <h3>Video y presencia personal</h3>
+            <p>24 de 30 piezas son video. Los recorridos y apariciones de Ivy reducen distancia y hacen que la asesoría se perciba antes de la primera conversación.</p>
+          </article>
+          <article class="finding">
+            <span class="finding__label">Fortaleza 02</span>
+            <h3>Respaldo por colaboración</h3>
+            <p>12 publicaciones de la muestra se atribuyen a Golfia o Dreambuilt. La red aporta inventario y legitimidad, y puede convivir con una experiencia personal de Ivy.</p>
+          </article>
+          <article class="finding">
+            <span class="finding__label">Fricción 01</span>
+            <h3>Conversión fragmentada</h3>
+            <p>Las llamadas a la acción observadas alternan entre DM, WhatsApp y Golfia. El perfil extraído no devolvió un enlace externo estructurado: falta una puerta de entrada única y medible.</p>
+          </article>
+          <article class="finding">
+            <span class="finding__label">Fricción 02</span>
+            <h3>Prueba difícil de recorrer</h3>
+            <p>Hay propiedades y señales de clientes reales en el feed, pero no están organizadas por necesidad, ubicación, etapa o intención de compra. El prospecto debe navegar cronológicamente.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section properties">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Señal de contenido</p>
+            <h2 class="title">Lo concreto supera a lo genérico.</h2>
+          </div>
+          <p class="lede">Los resultados son interacciones visibles, no conversiones. Aun así, la muestra sugiere que proyectos específicos, entregas y recorridos generan mejores razones para conversar.</p>
+        </div>
+        <div class="bar-list" aria-label="Interacciones de contenidos destacados">
+          {research.topContent.map((item) => (
+            <div class="bar-row">
+              <span>{item.name}<br /><small>{item.owner}</small></span>
+              <div class="bar"><i style={`width:${(item.interactions / maxInteractions) * 100}%`}></i></div>
+              <b>{item.interactions}</b>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section strategy">
+      <div class="container">
+        <p class="eyebrow">Sistema propuesto</p>
+        <h2 class="title">Un funnel personal conectado con Golfia.</h2>
+        <p class="lede">La recomendación es una arquitectura híbrida: Ivy ocupa el primer plano en comunicación y seguimiento, mientras Golfia funciona como respaldo comercial. No se reemplaza el sitio corporativo sin una decisión de marca.</p>
+        <div class="funnel">
+          <article class="funnel__item"><small>01 · DESCUBRIMIENTO</small><h3>Reels y colaboraciones</h3><p>Recorridos, casos reales, contexto de ubicación y preguntas frecuentes con una CTA consistente.</p></article>
+          <article class="funnel__item"><small>02 · CONTEXTO</small><h3>Landing de Ivy</h3><p>Propuesta personal, selección breve, proceso, preguntas y prueba de respaldo en español e inglés.</p></article>
+          <article class="funnel__item"><small>03 · INTENCIÓN</small><h3>Conversación trazable</h3><p>Un canal oficial confirmado, parámetros UTM y una pregunta inicial que permita clasificar la necesidad.</p></article>
+          <article class="funnel__item"><small>04 · SEGUIMIENTO</small><h3>CRM y contenido útil</h3><p>Registro de origen, propiedad, idioma, plazo y próxima acción. El CMS mantiene la oferta vigente.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Prioridades</p>
+            <h2 class="title">Qué haría primero.</h2>
+          </div>
+          <p class="lede">El sitio local ya materializa las primeras cuatro acciones. Las activaciones que recolectan datos o publican contenido quedan detenidas hasta recibir validación y autorización.</p>
+        </div>
+        <table class="priority-table">
+          <thead><tr><th>Prioridad</th><th>Acción</th><th>Resultado esperado</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td><span class="priority">P0</span></td><td>Confirmar identidad comercial, contacto e idiomas</td><td>Evita contradicciones y contactos perdidos</td><td>Pendiente con Ivy</td></tr>
+            <tr><td><span class="priority">P0</span></td><td>Landing ES/EN con una CTA principal</td><td>Contexto y siguiente paso después de cada Reel</td><td>Demo creada</td></tr>
+            <tr><td><span class="priority">P0</span></td><td>Página de links para bio</td><td>Acceso rápido a propiedades y contacto</td><td>Demo creada</td></tr>
+            <tr><td><span class="priority">P1</span></td><td>Editor de copys y propiedades</td><td>Inventario y mensaje actualizables sin tocar código</td><td>Demo creada</td></tr>
+            <tr><td><span class="priority">P1</span></td><td>Analytics, pixel y eventos con consentimiento</td><td>Medición de interés y atribución</td><td>No activado</td></tr>
+            <tr><td><span class="priority">P2</span></td><td>Fichas por proyecto y contenido SEO local</td><td>Captura de intención específica y búsqueda orgánica</td><td>Siguiente fase</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section properties">
+      <div class="container analysis-grid">
+        <article class="finding">
+          <span class="finding__label">Contenido</span>
+          <h3>Próximos pilares</h3>
+          <p>40% recorridos con criterio de selección; 25% educación del comprador; 20% casos y entregas autorizadas; 15% visión personal y vida en Riviera Maya. Cada pieza debe responder una pregunta y llevar a una sola ruta.</p>
+        </article>
+        <article class="finding">
+          <span class="finding__label">Medición</span>
+          <h3>Eventos mínimos</h3>
+          <p><code>property_view</code>, <code>instagram_click</code>, <code>whatsapp_click</code>, idioma, campaña UTM y envío de diagnóstico. Métricas de negocio: conversaciones calificadas, recorridos y avance por etapa.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="eyebrow">Evidencia y límites</p>
+        <h2 class="title">Datos públicos, conclusiones prudentes.</h2>
+        <p class="lede">La muestra cubre {research.profile.dateRange}. Los posts colaborativos pueden aparecer atribuidos al originador. Sin insights privados no se infieren alcance, guardados, clics, leads, cierres o retorno de inversión.</p>
+        <ul class="source-list">
+          <li><a href="https://www.instagram.com/ivyloyarealestate/" target="_blank" rel="noopener">Instagram de Ivy Loya</a></li>
+          <li><a href="https://golfia.mx/" target="_blank" rel="noopener">Sitio público de Golfia</a></li>
+          <li><a href="https://desarrolladores.casa/" target="_blank" rel="noopener">Referencia pública de red de brokers</a></li>
+          <li><a href="https://console.apify.com/storage/datasets/OpPUM0c7Gs7MLNxqC" target="_blank" rel="noopener">Dataset de 30 publicaciones</a></li>
+          <li><a href="https://console.apify.com/storage/datasets/lr2P1pRD8AhsBacgu" target="_blank" rel="noopener">Dataset de perfil</a></li>
+          <li>Benchmark: GMB, CLRE, Riviera Maya Real Estate y Maya Ocean</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section final-cta">
+      <div class="container final-cta__inner">
+        <p class="eyebrow eyebrow--light">Prototipo funcional</p>
+        <h2 class="title">La recomendación ya se puede recorrer.</h2>
+        <p>Explora la landing bilingüe, las propiedades de muestra y la página de links. Ningún canal de contacto nuevo está activo hasta que Ivy lo confirme.</p>
+        <a class="button button--aqua" href="/">Abrir landing ↗</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

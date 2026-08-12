@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import CTAContacto from '../../components/CTAContacto.astro';
+
+const propiedades = (await getCollection('propiedades')).sort(
+  (a, b) => Number(b.data.destacada) - Number(a.data.destacada)
+);
+---
+
+<BaseLayout
+  titulo="Catálogo de propiedades en la Riviera Maya | Frank Hernández"
+  descripcion="Explora departamentos en preventa, casas y propiedades de inversión en Playa del Carmen, Cancún y Tulum. Filtra por tipo, zona y presupuesto."
+  lang="es"
+  rutaAlterna="/en/properties"
+>
+  <section class="seccion">
+    <div class="contenedor">
+      <span class="etiqueta">Catálogo</span>
+      <h1>Propiedades en la Riviera Maya</h1>
+      <p class="seccion__intro">
+        Cada propiedad pasa por revisión de números y certeza legal: solo propiedad privada,
+        escriturada y no ejidal. Filtra por tipo, zona o presupuesto.
+      </p>
+
+      <div class="filtros">
+        <label>
+          Tipo
+          <select id="filtro-tipo">
+            <option value="">Todos</option>
+            <option value="lote">Lote de inversión</option>
+            <option value="departamento">Departamento</option>
+            <option value="penthouse">Penthouse</option>
+            <option value="casa">Casa</option>
+          </select>
+        </label>
+        <label>
+          Zona
+          <select id="filtro-zona">
+            <option value="">Todas</option>
+            <option value="playa-del-carmen">Playa del Carmen</option>
+            <option value="cancun">Cancún</option>
+            <option value="tulum">Tulum</option>
+          </select>
+        </label>
+        <label>
+          Presupuesto
+          <select id="filtro-precio">
+            <option value="">Cualquiera</option>
+            <option value="0-500000">Hasta $500 mil</option>
+            <option value="500000-2000000">$500 mil – $2 MDP</option>
+            <option value="2000000-8000000">$2 – $8 MDP</option>
+            <option value="8000000-999999999">Más de $8 MDP</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid-propiedades" id="grid-propiedades">
+        {propiedades.map((p) => <PropertyCard propiedad={p} />)}
+      </div>
+      <div class="filtros__vacio" id="sin-resultados">
+        <p style="margin: 0;">
+          <strong>No hay propiedades con esos filtros por ahora.</strong><br />
+          Escríbeme por WhatsApp: es probable que tenga una opción fuera de catálogo para ti.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CTAContacto titulo="¿No encontraste lo que buscas?" />
+
+  <script>
+    const selects = ['filtro-tipo', 'filtro-zona', 'filtro-precio'].map(
+      (id) => document.getElementById(id) as HTMLSelectElement
+    );
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>('#grid-propiedades .card')
+    );
+    const vacio = document.getElementById('sin-resultados')!;
+
+    function aplicarFiltros() {
+      const [tipo, zona, precio] = selects.map((s) => s.value);
+      let visibles = 0;
+      for (const card of cards) {
+        const coincideTipo = !tipo || card.dataset.tipo === tipo;
+        const coincideZona = !zona || card.dataset.zona === zona;
+        let coincidePrecio = true;
+        if (precio) {
+          const [min, max] = precio.split('-').map(Number);
+          const valor = Number(card.dataset.precio);
+          coincidePrecio = valor >= min && valor <= max;
+        }
+        const mostrar = coincideTipo && coincideZona && coincidePrecio;
+        card.style.display = mostrar ? '' : 'none';
+        if (mostrar) visibles++;
+      }
+      vacio.style.display = visibles === 0 ? 'block' : 'none';
+    }
+
+    selects.forEach((s) => s.addEventListener('change', aplicarFiltros));
+  </script>
+</BaseLayout>

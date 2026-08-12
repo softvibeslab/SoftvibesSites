@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Aviso de privacidad | Suemi García · Bienes Raíces Riviera Maya"
+  descripcion="Aviso de privacidad de Suemi García · Bienes Raíces Riviera Maya conforme a la LFPDPPP."
+>
+  <section class="seccion">
+    <div class="contenedor prosa" style="max-width: 760px;">
+      <h1>Aviso de privacidad</h1>
+      <p>
+        <strong>Suemi García · Bienes Raíces Riviera Maya</strong>, con domicilio en {SITE.ubicacion}, es
+        responsable del tratamiento de los datos personales que nos proporciones, conforme a la
+        Ley Federal de Protección de Datos Personales en Posesión de los Particulares
+        (LFPDPPP).
+      </p>
+
+      <h2>Datos que recabamos</h2>
+      <p>
+        Nombre, teléfono, correo electrónico y preferencias de inversión que nos compartes a
+        través de nuestros formularios, WhatsApp o Calendly.
+      </p>
+
+      <h2>Finalidades del tratamiento</h2>
+      <ul>
+        <li>Contactarte para dar seguimiento a tu solicitud de información.</li>
+        <li>Enviarte información sobre propiedades y oportunidades de inversión.</li>
+        <li>Agendar citas y asesorías.</li>
+      </ul>
+
+      <h2>Transferencias</h2>
+      <p>
+        No compartimos tus datos con terceros sin tu consentimiento, salvo con desarrolladores
+        inmobiliarios cuando sea necesario para gestionar tu interés en una propiedad
+        específica, o por requerimiento legal.
+      </p>
+
+      <h2>Derechos ARCO</h2>
+      <p>
+        Puedes ejercer tus derechos de Acceso, Rectificación, Cancelación y Oposición, así como
+        revocar tu consentimiento, escribiendo a
+        <a href={`mailto:${SITE.correo}`}>{SITE.correo}</a>. Responderemos en los plazos que
+        establece la ley.
+      </p>
+
+      <h2>Cambios a este aviso</h2>
+      <p>
+        Cualquier modificación a este aviso se publicará en esta misma página. Última
+        actualización: julio de 2026.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

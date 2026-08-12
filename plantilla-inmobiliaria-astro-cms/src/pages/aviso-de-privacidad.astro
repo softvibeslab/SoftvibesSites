@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout titulo={`Aviso de privacidad | ${SITE.nombre}`} descripcion="Documento demostrativo que debe revisarse antes de publicar.">
+  <article class="seccion"><div class="contenedor contenedor--texto prosa"><span class="kicker">Documento de muestra</span><h1>Aviso de privacidad</h1><aside class="aviso"><strong>No publiques este texto sin revisión.</strong> Debe adaptarse a la entidad responsable, jurisdicción, finalidades y proveedores reales.</aside><h2>Responsable</h2><p>Indica aquí la identidad y domicilio del responsable del tratamiento.</p><h2>Datos y finalidades</h2><p>Describe únicamente los datos solicitados y las finalidades necesarias para responder consultas.</p><h2>Derechos</h2><p>Explica el procedimiento aplicable para ejercer derechos de acceso, rectificación, cancelación u oposición.</p><h2>Contacto</h2><p>Configura un canal válido: <a href={`mailto:${SITE.correo}`}>{SITE.correo}</a>.</p></div></article>
+</BaseLayout>

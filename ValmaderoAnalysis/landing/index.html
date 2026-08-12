@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valeria Soto Madero - Real Estate | Riviera Maya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff385c;
+            --primary-light: #ff7b8a;
+            --secondary: #1a5b7d;
+            --accent: #f4a460;
+            --light-bg: #fafafa;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --border: #e8e8e8;
+            --success: #4caf50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #fff;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav a {
+            font-size: 14px;
+            color: var(--text-dark);
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        .cta-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            padding: 80px 0;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .hero-content h1 .highlight {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 32px;
+            line-height: 1.8;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-4px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-bg);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 48px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .hero-image {
+            position: relative;
+            height: 500px;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #f0f0f0 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .hero-image::before {
+            content: "🏡";
+            font-size: 120px;
+            opacity: 0.3;
+        }
+
+        /* Problem/Solution */
+        .section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 40px;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 48px;
+        }
+
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .problem, .solution {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .problem h3, .solution h3 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .problem ul, .solution ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .problem li, .solution li {
+            font-size: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .problem li::before {
+            content: "✗";
+            color: #e53935;
+            font-weight: 700;
+            min-width: 24px;
+        }
+
+        .solution li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: 700;
+            min-width: 24px;
+        }
+
+        /* Properties Grid */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .property-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--light-bg), #f0f0f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+        }
+
+        .property-tag {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .property-content {
+            padding: 24px;
+        }
+
+        .property-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .property-location {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .property-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .property-features {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .property-feature {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .testimonial {
+            background: var(--light-bg);
+            padding: 32px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+            font-size: 18px;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            font-style: italic;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* How it works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .step-description {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* FAQ */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 24px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+            transition: background 0.3s;
+        }
+
+        .faq-question:hover {
+            background: var(--light-bg);
+        }
+
+        .faq-toggle {
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            background: var(--light-bg);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 24px 24px 24px;
+            max-height: 500px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 40px;
+            margin-bottom: 24px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: #ccc;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 40px 0;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .problem-solution {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .hero-image {
+                height: 350px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .cta-section h2 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Valeria Soto</div>
+                <nav class="nav">
+                    <a href="#propiedades">Propiedades</a>
+                    <a href="#como-funciona">Cómo Funciona</a>
+                    <a href="#faq">Preguntas</a>
+                    <a href="https://wa.me/5212431035553?text=Hola%20Valeria%2C%20me%20interesa%20conocer%20sobre%20propiedades%20en%20Riviera%20Maya" class="cta-header">WhatsApp</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container" style="grid-column: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div class="hero-content">
+                <h1>Encuentra tu <span class="highlight">propiedad ideal</span> en Riviera Maya</h1>
+                <p>Compra, invierte o vive en el caribe. Te ayudo a encontrar la mejor opción para ti, con la experiencia de alguien que vive aquí.</p>
+
+                <div class="hero-cta">
+                    <a href="https://wa.me/5212431035553?text=Hola%20Valeria%2C%20me%20interesa%20conocer%20sobre%20propiedades%20en%20Riviera%20Maya" class="btn-primary">📍 Explorar Propiedades</a>
+                    <button class="btn-secondary" onclick="document.getElementById('lead-magnet').scrollIntoView({behavior: 'smooth'})">📊 Descargar Guía Gratis</button>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">6.6K+</div>
+                        <div class="stat-label">Seguidores confiados</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Propiedades vendidas</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">99%</div>
+                        <div class="stat-label">Clientes satisfechos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image"></div>
+    </section>
+
+    <!-- Problem/Solution -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">¿Dónde está el problema?</h2>
+            <p class="section-subtitle">Entiendo los desafíos que enfrenta al buscar propiedad en Riviera Maya</p>
+
+            <div class="problem-solution">
+                <div class="problem">
+                    <h3>❌ Sin mi ayuda:</h3>
+                    <ul>
+                        <li>Gastar meses buscando la propiedad "correcta"</li>
+                        <li>No saber cuál es el precio justo del mercado</li>
+                        <li>Perder oportunidades a buenos precios</li>
+                        <li>Desconocer el potencial de inversión Airbnb</li>
+                        <li>Lidiar con intermediarios no confiables</li>
+                        <li>Comprar sin entender el barrio/zona</li>
+                    </ul>
+                </div>
+
+                <div class="solution">
+                    <h3>✓ Conmigo:</h3>
+                    <ul>
+                        <li>Acceso a propiedades ANTES que otros</li>
+                        <li>Datos reales del mercado y comps</li>
+                        <li>Negocias desde una posición fuerte</li>
+                        <li>Análisis ROI para inversión Airbnb</li>
+                        <li>Relación directa, sin intermediarios</li>
+                        <li>Insider knowledge de barrios + lifestyle</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Properties -->
+    <section class="section" id="propiedades">
+        <div class="container">
+            <h2 class="section-title">Propiedades Destacadas</h2>
+            <p class="section-subtitle">Selección de propiedades disponibles ahora</p>
+
+            <div class="properties-grid">
+                <div class="property-card">
+                    <div class="property-image">🏢<span class="property-tag">En venta</span></div>
+                    <div class="property-content">
+                        <h3 class="property-title">Departamento Playa del Carmen</h3>
+                        <p class="property-location">📍 Playa del Carmen</p>
+                        <div class="property-price">$350,000</div>
+                        <div class="property-features">
+                            <div class="property-feature">2 🛏️</div>
+                            <div class="property-feature">2 🚿</div>
+                            <div class="property-feature">80m²</div>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-light);">Ideal para inversión Airbnb. ROI proyectado: $30K/año</p>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-image">🏠<span class="property-tag">Disponible</span></div>
+                    <div class="property-content">
+                        <h3 class="property-title">Casa Tulum</h3>
+                        <p class="property-location">📍 Tulum</p>
+                        <div class="property-price">$520,000</div>
+                        <div class="property-features">
+                            <div class="property-feature">3 🛏️</div>
+                            <div class="property-feature">2 🚿</div>
+                            <div class="property-feature">150m²</div>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-light);">Moderna con piscina. Perfecto para vivir + Airbnb</p>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-image">🏘️<span class="property-tag">Nuevo</span></div>
+                    <div class="property-content">
+                        <h3 class="property-title">Terreno Inversión</h3>
+                        <p class="property-location">📍 Puerto Morelos</p>
+                        <div class="property-price">$180,000</div>
+                        <div class="property-features">
+                            <div class="property-feature">1,200m²</div>
+                            <div class="property-feature">Zoning: Comercial</div>
+                            <div class="property-feature">Potencial: Alto</div>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-light);">Oportunidad de inversión estratégica</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Lo que dicen mis clientes</h2>
+            <p class="section-subtitle">Historias de éxito reales</p>
+
+            <div class="testimonials">
+                <div class="testimonial">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Valeria nos ayudó a encontrar el departamento perfecto en Playa del Carmen. En 3 meses ya estamos generando $2,500/mes con Airbnb. ¡Excelente inversión!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JM</div>
+                        <div>
+                            <div>Juan & María</div>
+                            <div style="font-size: 12px; font-weight: 400; color: var(--text-light);">Inversores, CDMX</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Después de viajar 10 años, decidí comprar aquí. Valeria entendió exactamente qué buscaba. Ahora es mi hogar. Gracias!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SA</div>
+                        <div>
+                            <div>Sophie André</div>
+                            <div style="font-size: 12px; font-weight: 400; color: var(--text-light);">Nómada digital, París</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Profesional, confiable, y entiende realmente el mercado de Riviera Maya. La mejor decisión fue confiarle nuestra búsqueda."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">CR</div>
+                        <div>
+                            <div>Carlos Rodríguez</div>
+                            <div style="font-size: 12px; font-weight: 400; color: var(--text-light);">Empresario, Monterrey</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="como-funciona">
+        <div class="container">
+            <h2 class="section-title">Cómo funciona</h2>
+            <p class="section-subtitle">El proceso es simple y transparente</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Consulta inicial</h3>
+                    <p class="step-description">Cuéntame qué buscas: presupuesto, zona, tipo de propiedad, inversión o vivienda. 100% confidencial.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Recomendaciones</h3>
+                    <p class="step-description">Te presento las mejores opciones disponibles. Acceso a off-market deals que no ves en portales.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Visitas guiadas</h3>
+                    <p class="step-description">Visitamos propiedades juntos. Te explico cada detalle: vecindario, potencial, mantenimiento.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Negociación</h3>
+                    <p class="step-description">Negoció el mejor precio por ti. Tengo datos del mercado para apoyar cada oferta.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3 class="step-title">Cierre</h3>
+                    <p class="step-description">Me aseguro que todo esté en orden. Abogados, escrituras, impuestos: todo manejado.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <h3 class="step-title">Post-venta</h3>
+                    <p class="step-description">Seguimiento: renta Airbnb, mantenimiento, impuestos. Te ayudo a maximizar tu inversión.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Magnet CTA -->
+    <section class="section" id="lead-magnet" style="background: var(--light-bg);">
+        <div class="container">
+            <h2 class="section-title">📊 Guía Gratuita: Cómo Invertir en Riviera Maya</h2>
+            <p class="section-subtitle">5 pasos comprobados + checklist exclusivo</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px;">
+                <div>
+                    <h3 style="font-size: 24px; margin-bottom: 24px;">¿Qué incluye la guía?</h3>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px;">
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="color: var(--primary); font-weight: 700;">✓</span>
+                            <span>Análisis del mercado de Riviera Maya 2026</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="color: var(--primary); font-weight: 700;">✓</span>
+                            <span>Los 5 mejores barrios para invertir (+ ROI proyectado)</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="color: var(--primary); font-weight: 700;">✓</span>
+                            <span>Checklist: qué revisar antes de comprar</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="color: var(--primary); font-weight: 700;">✓</span>
+                            <span>Guía de financiamiento + impuestos</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <span style="color: var(--primary); font-weight: 700;">✓</span>
+                            <span>ROI calculator: ¿cuánto generará tu propiedad?</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
+                    <h3 style="font-size: 24px; margin-bottom: 24px;">Recibe la guía + tips semanales</h3>
+                    <form onsubmit="handleSubmit(event)">
+                        <div style="margin-bottom: 16px;">
+                            <input type="text" placeholder="Tu nombre" required style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px;">
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <input type="email" placeholder="Tu email" required style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px;">
+                        </div>
+                        <div style="margin-bottom: 24px;">
+                            <input type="tel" placeholder="Tu WhatsApp" required style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px;">
+                        </div>
+                        <button style="width: 100%; background: var(--primary); color: white; padding: 14px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; font-size: 16px;">Recibir Guía Gratuita 📧</button>
+                        <p style="font-size: 12px; color: var(--text-light); text-align: center; margin-top: 16px;">Sin spam. Solo tips útiles.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+        <div class="container">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <p class="section-subtitle">Todo lo que necesitas saber</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Cuál es mi comisión?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Mi comisión estándar es del 5% de parte del vendedor. En algunos casos negociamos. No hay costos ocultos ni cargos adicionales.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Puedo comprar si soy extranjero?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sí, 100%. En México, los extranjeros pueden comprar propiedad sin restricciones. Te ayudo con el proceso completo de documentación y legales.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Cuánto puedo generar con Airbnb?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Depende de la ubicación, tipo de propiedad, y mantenimiento. En Playa del Carmen, un departamento promedio genera $1,500-$3,000/mes. Te presento análisis reales de propiedades similares.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Cuánto tiempo toma el proceso completo?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>De la consulta inicial al cierre: 30-60 días en promedio. Depende de documentación, financiamiento, y negociación. Te mantengo informado en cada paso.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Ofreces financiamiento?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No directamente, pero conozco a los mejores bancos y prestamistas en México. Te ayudo a presentar tu solicitud y negoció las mejores tasas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Qué incluye el servicio post-venta?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Asesoría en renta Airbnb, recomendaciones de mantenimiento, gestión de impuestos, y soporte continuo. Tu inversión seguirá creciendo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>¿Listo para encontrar tu propiedad ideal?</h2>
+            <p>Contáctame ahora. La consulta inicial es 100% gratis y sin compromiso.</p>
+            <div class="cta-buttons">
+                <a href="https://wa.me/5212431035553?text=Hola%20Valeria%2C%20me%20interesa%20conocer%20sobre%20propiedades%20en%20Riviera%20Maya" class="btn-white">💬 WhatsApp Directo</a>
+                <button class="btn-primary" style="background: white; color: var(--primary);" onclick="alert('Agendar llamada')">📞 Agendar Llamada</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Valeria Soto</h4>
+                    <p>Real Estate Agent & Lifestyle Advisor<br>Riviera Maya, México</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><a href="https://wa.me/5212431035553">WhatsApp</a></li>
+                        <li><a href="https://instagram.com/_valmadero">Instagram</a></li>
+                        <li><a href="mailto:valeria@example.com">Email</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Empresa</h4>
+                    <ul>
+                        <li><a href="#propiedades">Propiedades</a></li>
+                        <li><a href="#como-funciona">Cómo Funciona</a></li>
+                        <li><a href="#faq">Preguntas</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p style="border-top: 1px solid #333; padding-top: 20px;">© 2026 Valeria Soto Madero. Todos los derechos reservados. | Blestyum Real Estate</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFAQ(element) {
+            const item = element.parentElement;
+            item.classList.toggle('active');
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Gracias! Recibirás la guía en tu email en los próximos minutos.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import { SITE, waLink } from '../../data/site';
+
+const propiedades = await getCollection('propiedades');
+const destacadas = propiedades
+  .filter((p) => p.data.destacada)
+  .concat(propiedades.filter((p) => !p.data.destacada))
+  .slice(0, 3);
+---
+
+<BaseLayout
+  titulo="Katya Varela | Real Estate Investment in the Riviera Maya"
+  descripcion={SITE.descripcionEn}
+  lang="en"
+  rutaAlterna="/"
+>
+  <section class="hero">
+    <img
+      src="/img/hero-katya.jpg"
+      alt=""
+      class="hero__media"
+      fetchpriority="high"
+      aria-hidden="true"
+    />
+    <div class="hero__inner" style="min-height: 88vh; display: flex; flex-direction: column; justify-content: center;">
+      <span class="etiqueta anim" style="color: var(--laton-claro); --d: 100ms;">Real Estate · Riviera Maya</span>
+      <h1 class="anim" style="--d: 250ms;">Helping you invest in <em>Mexico</em></h1>
+      <p class="anim" style="--d: 420ms;">Pre-construction condos, homes and rental properties in Cancún, Playa del Carmen and Tulum. A wealth strategy with clear numbers — I walk with you from the first call to the closing table, in English.</p>
+      <div class="hero__cta anim" style="--d: 580ms;">
+        <a href={waLink(SITE.waMensajeEn)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Chat on WhatsApp</a>
+        <a href={waLink("Hi Katya, I'd like to schedule an investment call.")} class="boton boton--claro" target="_blank" rel="noopener">📅 Book a free call</a>
+      </div>
+      <p class="hero__prueba anim" style="--d: 720ms;">"Katya explained the numbers and the legal side with a clarity we hadn't found anywhere else." — Investment client <em>(sample testimonial)</em></p>
+      <div class="hero__badges anim" style="--d: 860ms;">
+        <div><strong>+30%</strong> Projected appreciation in selected pre-construction*</div>
+        <div><strong>100% titled</strong> Private, deeded property only — never ejido land</div>
+        <div><strong>$129k USD and up</strong> Entry points for every investor profile</div>
+      </div>
+      <p class="anim" style="font-size: 0.72rem; opacity: 0.65; margin-top: 1rem; --d: 980ms;">
+        *Developer projection at launch stage; every property deserves its own financial breakdown.
+      </p>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"></div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Opportunities</span>
+        <h2>Featured properties</h2>
+        <p>
+          From pre-construction condos with launch discounts to move-in-ready townhouses.
+          Every opportunity is vetted for numbers and legal certainty before it reaches this
+          catalog.
+        </p>
+      </div>
+      <div class="grid-propiedades">
+        {destacadas.map((p) => <PropertyCard propiedad={p} lang="en" />)}
+      </div>
+      <p style="margin-top: 2rem;">
+        <a href="/en/properties" class="boton boton--primario">Browse the full catalog →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion--oscura" style="padding: 2.25rem 0;">
+    <div
+      class="contenedor"
+      style="display: flex; gap: 2.5rem; flex-wrap: wrap; align-items: center; justify-content: space-between;"
+    >
+      <span class="etiqueta" style="margin: 0; color: var(--laton-claro);">
+        Working with high-growth developments
+      </span>
+      <span style="font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.06em;">Playa del Carmen · Tulum · Puerto Aventuras — pre-construction, beachfront and vacation rental access</span>
+    </div>
+  </section>
+
+  <section class="seccion seccion--alterna" id="about">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <div>
+          <span class="etiqueta">Your advisor</span>
+          <h2>Katya Varela</h2>
+          <p>I'm <strong>Katya Varela</strong> and I live in Playa del Carmen. I help Mexican and international buyers find properties that actually pay for themselves in the Riviera Maya — beachfront condos, pre-construction and units ready for vacation rental. The way I work is simple: first I understand what you're looking for and why, then I show you the real numbers behind each option, and only then do we talk about buying. No rush and no pressure, because a property isn't just an investment: it's a life decision. <em>All with love.</em></p>
+          <ul class="lista-check">
+            <li>A personalized wealth strategy: appreciation, rental income or both</li>
+            <li>Clear financial breakdowns before you decide</li>
+            <li>Private, deeded property only — with legal review</li>
+            <li>Fideicomiso (bank trust) guidance for foreign buyers</li>
+          </ul>
+          <p style="margin-top: 1.5rem;">
+            <a href={waLink("Hi Katya, I'd like an investment consultation.")} class="boton boton--whatsapp" target="_blank" rel="noopener">
+              Talk to Katya
+            </a>
+          </p>
+        </div>
+        <img
+          src="/img/katya.jpg"
+          alt="Katya Varela, real estate advisor in the Riviera Maya"
+          style="border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 1 / 1; object-fit: cover; width: 100%;"
+          width="640"
+          height="640"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Riviera Maya</span>
+        <h2>Why invest here, and why now?</h2>
+      </div>
+      <div class="tarjetas-razones">
+        <div class="razon">
+          <div class="icono">📈</div>
+          <h3>Sustained appreciation</h3>
+          <p>
+            The Riviera Maya has ranked among Mexico's fastest-growing real estate markets for
+            over a decade, driven by tourism and infrastructure.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">⚖️</div>
+          <h3>Legal certainty</h3>
+          <p>
+            Private, titled, non-ejido property only. Your investment is protected before the
+            Public Property Registry — and foreigners can own safely through a fideicomiso.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">✈️</div>
+          <h3>Global connectivity</h3>
+          <p>
+            Two international airports and the Maya Train connect the region to the world and
+            sustain rental demand all year round.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">💰</div>
+          <h3>An entry point for every budget</h3>
+          <p>
+            From USD condos in Tulum to pre-construction in Cancún with developer financing:
+            we build the strategy around your budget and timeline.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="parallax">
+    <h2>Wake up where others <em>vacation</em></h2>
+    <p>
+      Your property in the Mexican Caribbean can be your home, your investment or both.
+      Let's start with a free consultation.
+    </p>
+    <a href={waLink(SITE.waMensajeEn)} class="boton boton--laton" target="_blank" rel="noopener">
+      Start my investment plan
+    </a>
+  </section>
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Clients</span>
+        <h2>What it's like to work with Katya</h2>
+        <p style="font-size: 0.9rem; color: var(--gris);">
+          (Sample testimonials: replace with real client testimonials.)
+        </p>
+      </div>
+      <div class="testimonios">
+        <blockquote class="testimonio">
+          "Katya explained the numbers and the legal side with a clarity we hadn't found with
+          anyone else. We bought our pre-construction unit with total peace of mind."
+          <footer>— Pre-construction client</footer>
+        </blockquote>
+        <blockquote class="testimonio">
+          "He walked with us from the first video call to signing with the notary. The
+          fideicomiso process was far simpler than we expected."
+          <footer>— Foreign buyers</footer>
+        </blockquote>
+        <blockquote class="testimonio">
+          "We wanted a property that would pay for itself in rentals — he showed us exactly
+          that, financial breakdown included."
+          <footer>— Wealth-building investor</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="contact">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Contact</span>
+        <h2>Ready to invest in the Riviera Maya?</h2>
+        <p>
+          WhatsApp is the fastest channel — Katya replies in minutes, not days, in English or
+          Spanish.
+        </p>
+      </div>
+      <p style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href={waLink(SITE.waMensajeEn)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 WhatsApp {SITE.telefono}</a>
+        <a href={waLink("Hi Katya, I'd like to book a free investment consultation.")} class="boton boton--primario" target="_blank" rel="noopener">📅 Book a free consultation</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

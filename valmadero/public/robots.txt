@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+Sitemap: https://lightcoral-heron-899450.hostingersite.com/sitemap-index.xml

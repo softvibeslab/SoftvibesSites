@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Paola Elizabeth — cantante y performer en Cancún. Voz, cabaret, covers y dirección visual con identidad propia.">
+  <meta name="theme-color" content="#09070a">
+  <title>Paola Elizabeth · voz y escena</title>
+  <style>
+    :root {
+      --ink: #09070a;
+      --paper: #eee6dc;
+      --paper-2: #d1c4b7;
+      --acid: #d2ad72;
+      --violet: #5d184f;
+      --coral: #147d79;
+      --line: rgba(238, 230, 220, .17);
+      --muted: #a99b91;
+      --serif: Georgia, 'Times New Roman', serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 78% 4%, rgba(93, 24, 79, .26), transparent 30rem),
+        var(--ink);
+      color: var(--paper);
+      font-family: var(--sans);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    button, input, textarea { font: inherit; }
+    ::selection { background: var(--acid); color: var(--ink); }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .055;
+      z-index: 20;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.75'/%3E%3C/svg%3E");
+    }
+
+    .shell { width: min(1240px, calc(100% - 40px)); margin-inline: auto; }
+    .nav {
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { text-decoration: none; font-weight: 900; letter-spacing: -.04em; font-size: 20px; }
+    .brand span { color: var(--acid); }
+    .nav-links { display: flex; align-items: center; gap: 22px; }
+    .nav-links a { text-decoration: none; font-size: 13px; color: var(--muted); }
+    .nav-links a:hover { color: var(--paper); }
+    .nav-cta {
+      padding: 10px 16px;
+      border: 1px solid var(--paper);
+      border-radius: 999px;
+      color: var(--paper) !important;
+    }
+
+    .hero {
+      min-height: calc(100svh - 84px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(340px, .82fr);
+      gap: clamp(40px, 8vw, 110px);
+      align-items: center;
+      padding-block: 72px;
+    }
+    .eyebrow, .section-label {
+      margin: 0 0 24px;
+      color: var(--acid);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      max-width: 840px;
+      margin: 0;
+      font: 400 clamp(58px, 9.5vw, 142px)/.82 var(--serif);
+      letter-spacing: -.072em;
+    }
+    .hero h1 em { color: var(--acid); font-weight: 400; }
+    .hero-intro {
+      max-width: 610px;
+      margin: 38px 0 0;
+      font-size: clamp(18px, 2vw, 25px);
+      color: var(--paper-2);
+      text-wrap: balance;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 52px;
+      padding: 0 23px;
+      border: 1px solid var(--paper);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform .2s, background .2s, color .2s;
+    }
+    .button:hover { transform: translateY(-3px); }
+    .button.primary { background: var(--acid); border-color: var(--acid); color: var(--ink); }
+    .button.ghost { border-color: var(--line); color: var(--paper-2); }
+
+    .poster {
+      position: relative;
+      aspect-ratio: .77;
+      min-height: 520px;
+      overflow: hidden;
+      border-radius: 2px;
+      background: #120b13;
+      box-shadow: 22px 22px 0 var(--acid);
+      isolation: isolate;
+    }
+    .poster img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center top; filter: saturate(.88) contrast(1.08); }
+    .poster::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(9,7,10,.12), transparent 45%, rgba(9,7,10,.76));
+    }
+    .poster::after {
+      content: 'PAO';
+      position: absolute;
+      right: -17px;
+      bottom: -30px;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,.62);
+      font: 900 clamp(100px, 15vw, 230px)/1 var(--sans);
+      letter-spacing: -.1em;
+      transform: rotate(-90deg) translateX(100%);
+      transform-origin: right bottom;
+    }
+    .poster-copy { position: absolute; inset: 26px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 3; }
+    .poster-copy span { writing-mode: vertical-rl; font-size: 11px; text-transform: uppercase; letter-spacing: .28em; }
+    .poster-word {
+      position: absolute;
+      left: 28px;
+      bottom: 26px;
+      z-index: 3;
+      font: italic 400 clamp(34px, 5vw, 74px)/.9 var(--serif);
+    }
+
+    .marquee { overflow: hidden; border-block: 1px solid var(--line); background: var(--acid); color: var(--ink); }
+    .marquee-track { width: max-content; display: flex; animation: scroll 20s linear infinite; }
+    .marquee span { padding: 16px 22px; font-size: 13px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+
+    .section { padding-block: clamp(88px, 12vw, 156px); }
+    .section-head { display: grid; grid-template-columns: 240px 1fr; gap: 40px; margin-bottom: 58px; }
+    .section-head h2 {
+      max-width: 820px;
+      margin: 0;
+      font: 400 clamp(44px, 6.8vw, 96px)/.95 var(--serif);
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+
+    .editorial { background: #151116; }
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr .88fr;
+      grid-template-rows: minmax(280px, 38vw) minmax(280px, 38vw);
+      gap: 14px;
+    }
+    .editorial-shot { position: relative; overflow: hidden; margin: 0; background: #211b20; }
+    .editorial-shot:first-child { grid-row: 1 / 3; }
+    .editorial-shot:nth-child(4) { grid-column: 2 / 4; }
+    .editorial-shot img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .8s; }
+    .editorial-shot:first-child img { object-position: center top; }
+    .editorial-shot:nth-child(2) img { object-position: center 26%; }
+    .editorial-shot:nth-child(3) img { object-position: center 22%; }
+    .editorial-shot:nth-child(4) img { object-position: center 35%; }
+    .editorial-shot:hover img { transform: scale(1.025); filter: contrast(1.04); }
+    .editorial-shot figcaption {
+      position: absolute;
+      left: 18px;
+      bottom: 16px;
+      padding: 7px 10px;
+      background: rgba(9,7,10,.78);
+      color: var(--paper);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+    }
+
+    .territories { border-top: 1px solid var(--line); }
+    .territory {
+      display: grid;
+      grid-template-columns: 90px 150px 1fr;
+      gap: 26px;
+      padding: 33px 0;
+      border-bottom: 1px solid var(--line);
+      transition: background .2s, padding .2s;
+    }
+    .territory:hover { background: rgba(255,255,255,.03); padding-inline: 16px; }
+    .territory-number { color: var(--acid); font-family: var(--serif); font-style: italic; }
+    .territory-kicker { color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-size: 12px; }
+    .territory h3 { margin: 0 0 9px; font-size: clamp(25px, 3vw, 42px); letter-spacing: -.04em; }
+    .territory p { max-width: 680px; margin: 0; color: var(--muted); font-size: 17px; }
+
+    .work { background: var(--paper); color: var(--ink); }
+    .work .section-label { color: #6d205d; }
+    .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .work-card {
+      display: flex;
+      min-height: 430px;
+      flex-direction: column;
+      padding: 26px;
+      border: 1px solid rgba(10,10,10,.18);
+      text-decoration: none;
+      background: rgba(255,255,255,.25);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .work-card:nth-child(2) { background: var(--violet); color: white; }
+    .work-card:nth-child(3) { background: var(--coral); color: white; }
+    .work-card:hover { transform: translateY(-8px) rotate(-.3deg); box-shadow: 12px 12px 0 var(--ink); }
+    .work-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .16em; opacity: .7; }
+    .work-card h3 { margin: auto 0 18px; font: 400 clamp(34px, 4vw, 59px)/.93 var(--serif); letter-spacing: -.045em; }
+    .work-card p { min-height: 78px; margin: 0; opacity: .76; }
+    .work-meta { display: flex; flex-wrap: wrap; gap: 16px; padding-top: 22px; margin-top: 24px; border-top: 1px solid currentColor; font-size: 12px; font-weight: 800; }
+
+    .stage-section { overflow: hidden; background: linear-gradient(145deg, #160c15, #09070a 58%); }
+    .stage-grid { display: grid; grid-template-columns: minmax(0, .78fr) minmax(320px, .52fr); gap: clamp(44px, 10vw, 140px); align-items: center; }
+    .stage-copy h2 { margin: 0; font: 400 clamp(48px, 7vw, 100px)/.9 var(--serif); letter-spacing: -.06em; }
+    .stage-copy p:not(.section-label) { max-width: 570px; margin: 28px 0 0; color: var(--paper-2); font-size: 18px; }
+    .stage-notes { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 30px; }
+    .stage-notes span { padding: 8px 11px; border: 1px solid rgba(210,173,114,.38); border-radius: 999px; color: var(--acid); font-size: 10px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
+    .video-wrap { position: relative; justify-self: end; width: min(430px, 100%); }
+    .video-wrap::before { content: ''; position: absolute; inset: 20px -20px -20px 20px; border: 1px solid rgba(210,173,114,.6); z-index: 0; }
+    .video-wrap video { position: relative; z-index: 1; width: 100%; display: block; aspect-ratio: 9 / 16; object-fit: cover; background: #000; box-shadow: 0 32px 80px rgba(0,0,0,.45); }
+    .video-caption { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 16px; padding-top: 14px; color: var(--muted); font-size: 11px; }
+
+    .proof-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(44px, 9vw, 130px); align-items: start; }
+    .quote { margin: 0; font: italic 400 clamp(40px, 6vw, 82px)/1.02 var(--serif); letter-spacing: -.05em; }
+    .quote small { display: block; margin-top: 24px; font: 700 12px/1.5 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--acid); }
+    .metric-list { border-top: 1px solid var(--line); }
+    .metric { display: flex; justify-content: space-between; gap: 20px; padding: 23px 0; border-bottom: 1px solid var(--line); }
+    .metric strong { font: 400 35px/1 var(--serif); color: var(--acid); }
+    .metric span { max-width: 245px; color: var(--muted); font-size: 13px; }
+    .method-note { margin: 22px 0 0; color: #77736d; font-size: 12px; }
+
+    .contact { background: linear-gradient(120deg, #4a123f, var(--violet) 62%, #1c0d1a); color: white; }
+    .contact-inner { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: end; }
+    .contact h2 { max-width: 900px; margin: 0; font: 400 clamp(54px, 9vw, 132px)/.84 var(--serif); letter-spacing: -.07em; }
+    .contact .button { background: white; color: var(--ink); border-color: white; white-space: nowrap; }
+
+    .events-section[hidden] { display: none; }
+    .event-list { border-top: 1px solid var(--line); }
+    .event-row { display: grid; grid-template-columns: 180px 1fr auto; gap: 26px; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--line); }
+    .event-row time { color: var(--acid); font: italic 400 22px/1 var(--serif); }
+    .event-row h3 { margin: 0 0 6px; font-size: 25px; letter-spacing: -.035em; }
+    .event-row p { margin: 0; color: var(--muted); }
+    .event-row a { color: var(--acid); font-size: 12px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: .08em; }
+
+    footer { padding-block: 28px; border-top: 1px solid rgba(255,255,255,.22); background: var(--violet); }
+    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 18px; color: rgba(255,255,255,.72); font-size: 12px; }
+    .footer-links { display: flex; gap: 18px; }
+
+    [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    [data-reveal].seen { opacity: 1; transform: none; }
+
+    @media (max-width: 920px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { padding-top: 20px; }
+      .poster { width: min(620px, 90%); min-height: 0; margin-left: auto; }
+      .section-head { grid-template-columns: 1fr; gap: 10px; }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-card { min-height: 350px; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .editorial-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 620px 360px 460px; }
+      .editorial-shot:first-child { grid-row: 1; grid-column: 1 / 3; }
+      .editorial-shot:nth-child(4) { grid-column: 1 / 3; }
+      .stage-grid { grid-template-columns: 1fr; }
+      .video-wrap { justify-self: center; width: min(460px, calc(100% - 22px)); }
+      .contact-inner { grid-template-columns: 1fr; }
+      .event-row { grid-template-columns: 140px 1fr; }
+      .event-row a { grid-column: 2; }
+    }
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 28px, 1240px); }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding-block: 48px 76px; }
+      .hero h1 { font-size: clamp(54px, 17vw, 92px); }
+      .poster { width: calc(100% - 14px); box-shadow: 14px 14px 0 var(--acid); }
+      .territory { grid-template-columns: 54px 1fr; }
+      .territory-kicker { grid-column: 2; }
+      .territory > div:last-child { grid-column: 2; }
+      .editorial-grid { grid-template-columns: 1fr; grid-template-rows: 560px 430px 560px 430px; }
+      .editorial-shot:first-child, .editorial-shot:nth-child(4) { grid-column: 1; grid-row: auto; }
+      .video-wrap::before { inset: 12px -12px -12px 12px; }
+      .contact h2 { font-size: clamp(50px, 17vw, 84px); }
+      .event-row { grid-template-columns: 1fr; gap: 8px; }
+      .event-row a { grid-column: 1; }
+      .footer-inner { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .marquee-track { animation: none; }
+      [data-reveal] { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="shell">
+    <nav class="nav" aria-label="Principal">
+      <a class="brand" href="#inicio">PAOLA<span>•</span></a>
+      <div class="nav-links">
+        <a href="#retratos">Retratos</a>
+        <a href="#universo">Universo</a>
+        <a href="#trabajo">Trabajo</a>
+        <a class="nav-cta" id="nav-cta" href="https://www.instagram.com/hopepaoo/" target="_blank" rel="noreferrer">Instagram ↗</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero shell" id="inicio">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow"><span id="profile-name">Paola Elizabeth</span> · <span id="eyebrow">Cantante · performer · Cancún</span></p>
+        <h1 id="hero-title">Una voz que habita la escena y la transforma.</h1>
+        <p class="hero-intro" id="hero-intro">Cabaret, covers y una narrativa visual donde conviven fuerza, misterio y sensibilidad.</p>
+        <div class="hero-actions">
+          <a class="button primary" id="hero-cta" href="https://www.instagram.com/hopepaoo/" target="_blank" rel="noreferrer">Hablemos por Instagram ↗</a>
+          <a class="button ghost" href="#trabajo">Ver trabajo</a>
+        </div>
+      </div>
+      <div class="poster" aria-label="Paola Elizabeth en escena entre humo violeta" data-reveal>
+        <img src="media/paola-stage-purple.jpg" alt="Paola Elizabeth en un vestuario oscuro, rodeada de humo violeta sobre un escenario" width="832" height="1109" fetchpriority="high">
+        <div class="poster-copy"><span>Voice · stage · image</span><span id="poster-location">Cancún · México</span></div>
+        <div class="poster-word">metamorfosis</div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Voz ✦ escena ✦ cabaret ✦ retrato ✦ símbolo ✦ Cancún ✦</span>
+        <span>Voz ✦ escena ✦ cabaret ✦ retrato ✦ símbolo ✦ Cancún ✦</span>
+      </div>
+    </div>
+
+    <section class="section editorial" id="retratos">
+      <div class="shell">
+        <header class="section-head" data-reveal>
+          <p class="section-label">Dos actos</p>
+          <h2>La intimidad del espejo. La fuerza del personaje.</h2>
+        </header>
+        <div class="editorial-grid">
+          <figure class="editorial-shot" data-reveal>
+            <img src="media/paola-editorial-portrait.jpg" alt="Retrato editorial de cuerpo completo de Paola con camisa marfil, jeans y botas negras" width="1440" height="1920" loading="lazy">
+            <figcaption>Presencia</figcaption>
+          </figure>
+          <figure class="editorial-shot" data-reveal>
+            <img src="media/paola-mirror-bw.jpg" alt="Paola maquillándose frente al espejo en un retrato monocromático" width="1080" height="1080" loading="lazy">
+            <figcaption>Ritual</figcaption>
+          </figure>
+          <figure class="editorial-shot" data-reveal>
+            <img src="media/paola-siren-bw.webp" alt="Autorretrato monocromático de Paola con proyección de líneas y tatuajes visibles" width="864" height="1080" loading="lazy">
+            <figcaption>Símbolo</figcaption>
+          </figure>
+          <figure class="editorial-shot" data-reveal>
+            <img src="media/paola-editorial-lean.jpg" alt="Paola en una pose editorial dinámica con camisa marfil y jeans" width="1440" height="1920" loading="lazy">
+            <figcaption>Movimiento</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="universo">
+      <header class="section-head" data-reveal>
+        <p class="section-label">Universo creativo</p>
+        <h2>No es una sola versión. Es una presencia con capas.</h2>
+      </header>
+      <div class="territories" id="territories"></div>
+    </section>
+
+    <section class="section work" id="trabajo">
+      <div class="shell">
+        <header class="section-head" data-reveal>
+          <p class="section-label">Selección pública</p>
+          <h2>Momentos que explican la propuesta.</h2>
+        </header>
+        <div class="work-grid" id="featured"></div>
+        <p class="method-note">Interacciones visibles al momento del corte de Apify; pueden cambiar en Instagram.</p>
+      </div>
+    </section>
+
+    <section class="section stage-section" id="escena">
+      <div class="shell stage-grid">
+        <div class="stage-copy" data-reveal>
+          <p class="section-label">La voz en escena</p>
+          <h2>Donde la imagen se vuelve sonido.</h2>
+          <p>Un momento en vivo en Chic Cabaret: voz, presencia y una interpretación que sucede a centímetros del público.</p>
+          <div class="stage-notes"><span>Live</span><span>Cabaret</span><span>Cancún</span><span>28 segundos</span></div>
+        </div>
+        <div class="video-wrap" data-reveal>
+          <video controls playsinline preload="metadata" poster="media/paola-live-chic-cabaret-poster.jpg" aria-label="Video de Paola Elizabeth cantando en vivo en Chic Cabaret">
+            <source src="media/paola-live-chic-cabaret.mp4" type="video/mp4">
+            Tu navegador no puede reproducir este video.
+          </video>
+          <div class="video-caption"><span>Chic Cabaret · performance en vivo</span><span>Con audio</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" aria-labelledby="signal-title">
+      <div class="proof-grid">
+        <blockquote class="quote" data-reveal id="signal-title">“En un rincón de la selva… ambas se reconocieron salvajes y libres.”<small>Una voz narrativa además de musical</small></blockquote>
+        <div data-reveal>
+          <p class="section-label">Señales de la muestra</p>
+          <div class="metric-list">
+            <div class="metric"><strong id="metric-posts">28</strong><span>publicaciones propias analizadas</span></div>
+            <div class="metric"><strong id="metric-plays">4,231</strong><span>reproducciones promedio en 8 videos</span></div>
+            <div class="metric"><strong>18</strong><span>carruseles: el formato dominante y más conversacional</span></div>
+          </div>
+          <p class="method-note">Muestra de 30 resultados: 28 propios y 2 de otros autores excluidos. No incluye cifras de seguidores porque Apify no pudo recuperar la ficha del perfil.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell events-section" id="events-section" hidden>
+      <header class="section-head" data-reveal>
+        <p class="section-label">Agenda</p>
+        <h2>Próximas fechas confirmadas.</h2>
+      </header>
+      <div class="event-list" id="event-list"></div>
+    </section>
+
+    <section class="section contact" id="contacto">
+      <div class="shell contact-inner" data-reveal>
+        <h2 id="contact-title">Hagamos algo que se recuerde.</h2>
+        <a class="button" id="contact-cta" href="https://www.instagram.com/hopepaoo/" target="_blank" rel="noreferrer">Abrir Instagram ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span>Paola Elizabeth · <span id="footer-handle">@hopepaoo</span></span>
+      <div class="footer-links"><a href="analisis/">Análisis</a><a href="cms/">CMS local</a><a href="#inicio">Volver arriba ↑</a></div>
+    </div>
+  </footer>
+
+  <script src="site-data.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const clone = window.HOPEPAOO_CLONE;
+      const defaults = clone(window.HOPEPAOO_DEFAULTS);
+      let data = defaults;
+
+      try {
+        const saved = localStorage.getItem(window.HOPEPAOO_STORAGE_KEY);
+        if (saved) data = Object.assign(defaults, JSON.parse(saved));
+      } catch (error) {
+        console.warn('No fue posible leer la configuración local.', error);
+      }
+
+      const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      })[character]);
+      const safeUrl = (value) => {
+        try {
+          const url = new URL(value);
+          return url.protocol === 'https:' ? url.href : '#';
+        } catch { return '#'; }
+      };
+      const formatNumber = (value) => new Intl.NumberFormat('es-MX').format(value || 0);
+
+      document.querySelector('#eyebrow').textContent = data.profile.eyebrow;
+      document.querySelector('#profile-name').textContent = data.profile.name;
+      document.querySelector('#hero-title').textContent = data.profile.title;
+      document.querySelector('#hero-intro').textContent = data.profile.intro;
+      document.querySelector('#poster-location').textContent = data.profile.location.replace(',', ' ·');
+      document.querySelector('#footer-handle').textContent = data.profile.handle;
+      document.title = `${data.profile.name} · voz y escena`;
+
+      ['nav-cta', 'hero-cta', 'contact-cta'].forEach((id) => {
+        document.getElementById(id).href = safeUrl(data.profile.instagramUrl);
+      });
+      document.querySelector('#hero-cta').textContent = `${data.profile.ctaLabel} ↗`;
+
+      document.querySelector('#territories').innerHTML = data.territories.map((item) => `
+        <article class="territory" data-reveal>
+          <span class="territory-number">${escapeHtml(item.number)}</span>
+          <span class="territory-kicker">${escapeHtml(item.kicker)}</span>
+          <div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div>
+        </article>
+      `).join('');
+
+      document.querySelector('#featured').innerHTML = data.featured.map((item) => `
+        <a class="work-card" href="${safeUrl(item.url)}" target="_blank" rel="noreferrer" data-reveal>
+          <span class="work-label">${escapeHtml(item.label)} · Instagram ↗</span>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.excerpt)}</p>
+          <div class="work-meta">
+            <span>♥ ${formatNumber(item.likes)}</span><span>◌ ${formatNumber(item.comments)}</span>${item.plays ? `<span>▶ ${formatNumber(item.plays)}</span>` : ''}
+          </div>
+        </a>
+      `).join('');
+
+      document.querySelector('#metric-posts').textContent = formatNumber(data.research.ownedItems);
+      document.querySelector('#metric-plays').textContent = formatNumber(data.research.averageVideoPlays);
+
+      if (Array.isArray(data.events) && data.events.length) {
+        const eventSection = document.querySelector('#events-section');
+        eventSection.hidden = false;
+        document.querySelector('#event-list').innerHTML = data.events.map((item) => {
+          const date = new Date(`${item.date}T12:00:00`);
+          const label = Number.isNaN(date.getTime()) ? item.date : date.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
+          const link = item.url ? `<a href="${safeUrl(item.url)}" target="_blank" rel="noreferrer">Detalles ↗</a>` : '<span></span>';
+          return `<article class="event-row" data-reveal><time datetime="${escapeHtml(item.date)}">${escapeHtml(label)}</time><div><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.venue)}</p></div>${link}</article>`;
+        }).join('');
+      }
+
+      const observer = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries) => entries.forEach((entry) => {
+            if (entry.isIntersecting) { entry.target.classList.add('seen'); observer.unobserve(entry.target); }
+          }), { threshold: .14 })
+        : null;
+      document.querySelectorAll('[data-reveal]').forEach((element) => observer ? observer.observe(element) : element.classList.add('seen'));
+    })();
+  </script>
+</body>
+</html>

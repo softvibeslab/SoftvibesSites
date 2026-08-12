@@ -1,0 +1,17 @@
+{
+  "name": "ieoushua-barragan-cms",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "scripts/cms-server.mjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "CMS_HOST=0.0.0.0 CMS_PORT=3000 node scripts/cms-server.mjs",
+    "build": "node scripts/build-site.mjs",
+    "cms": "node scripts/cms-server.mjs",
+    "package": "npm run build && node scripts/package-dist.mjs",
+    "deploy:hostinger": "node scripts/deploy-hostinger.mjs"
+  }
+}

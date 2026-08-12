@@ -1,0 +1,20 @@
+name: softvibes-sites-specialist
+version: 1.2.0
+description: "Especialista Hermes para comparar referencias Envato, seleccionar, crear, adaptar, mantener y verificar proyectos de Softvibes Sites, incluyendo handoffs estratégicos validados y aprobación humana para acciones externas."
+hermes_requires: ">=0.14.0"
+author: "Softvibes"
+license: "Proprietary"
+env_requires:
+  - name: SOFTVIBES_SITES_ROOT
+    description: "Ruta absoluta del workspace Softvibes Sites"
+    required: false
+    default: "/Users/rogergv/Documents/SoftvibesLab/SoftvibesSites"
+  - name: AGENCY_AGENTS_ROOT
+    description: "Ruta absoluta del repo agency-agents (biblioteca de playbooks para la skill agency-playbooks)"
+    required: false
+    default: "/Users/rogergv/Documents/SoftvibesLab/LandingVibes/agency-agents"
+distribution_owned:
+  - SOUL.md
+  - README.md
+  - ANALYSIS.md
+  - skills

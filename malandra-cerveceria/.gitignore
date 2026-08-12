@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+.env
+public/admin/storage/backups/*.json
+public/admin/storage/credentials.php
+public/data/*.tmp-*

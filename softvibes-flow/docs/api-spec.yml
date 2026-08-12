@@ -1,0 +1,561 @@
+openapi: 3.1.0
+info:
+  title: Softvibes Flow API
+  version: 1.0.0
+  description: Authenticated project-registry and CRM API for a single private operator workspace.
+servers:
+  - url: /
+tags:
+  - name: Health
+  - name: Authentication
+  - name: Workspace
+  - name: Projects
+  - name: Artifacts
+  - name: Leads
+  - name: Activities
+  - name: Calendar
+paths:
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Verify the service, database connection, and active table counts
+      security: []
+      responses:
+        "200":
+          description: Healthy service
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Create an eight-hour signed operator session
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                  maxLength: 120
+                password:
+                  type: string
+                  maxLength: 500
+      responses:
+        "200":
+          description: Authenticated; also sets the HTTP-only `softvibes_session` cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, data]
+                properties:
+                  ok:
+                    const: true
+                  data:
+                    type: object
+                    required: [user, csrfToken]
+                    properties:
+                      user:
+                        type: object
+                        required: [username]
+                        properties:
+                          username:
+                            type: string
+                      csrfToken:
+                        type: string
+        "401":
+          $ref: "#/components/responses/ApiError"
+  /api/auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Invalidate the browser session cookie
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ApiError"
+        "403":
+          $ref: "#/components/responses/ApiError"
+  /api/bootstrap:
+    get:
+      tags: [Workspace]
+      summary: Read the active projects, artifacts, leads, activities, events, user, and CSRF token
+      responses:
+        "200":
+          description: Complete active workspace snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, data]
+                properties:
+                  ok:
+                    const: true
+                  data:
+                    $ref: "#/components/schemas/Bootstrap"
+        "401":
+          $ref: "#/components/responses/ApiError"
+  /api/projects:
+    post:
+      tags: [Projects]
+      summary: Create a project and its tenant boundary
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Project"
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/ApiError"
+        "403":
+          $ref: "#/components/responses/ApiError"
+        "409":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+  /api/projects/{id}:
+    parameters:
+      - $ref: "#/components/parameters/EntityId"
+    patch:
+      tags: [Projects]
+      summary: Update a project
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Project"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+    delete:
+      tags: [Projects]
+      summary: Soft-archive a project
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "204":
+          description: Archived
+        "404":
+          $ref: "#/components/responses/ApiError"
+  /api/artifacts:
+    post:
+      tags: [Artifacts]
+      summary: Add a scoped artifact to an active project
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Artifact"
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+  /api/artifacts/{id}:
+    parameters:
+      - $ref: "#/components/parameters/EntityId"
+    patch:
+      tags: [Artifacts]
+      summary: Update an artifact
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Artifact"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+    delete:
+      tags: [Artifacts]
+      summary: Soft-archive an artifact
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "204":
+          description: Archived
+        "404":
+          $ref: "#/components/responses/ApiError"
+  /api/leads:
+    post:
+      tags: [Leads]
+      summary: Create a lead in an active project
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Lead"
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+  /api/leads/{id}:
+    parameters:
+      - $ref: "#/components/parameters/EntityId"
+    patch:
+      tags: [Leads]
+      summary: Update a lead; stage changes append an activity
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Lead"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+    delete:
+      tags: [Leads]
+      summary: Soft-archive a lead
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "204":
+          description: Archived
+        "404":
+          $ref: "#/components/responses/ApiError"
+  /api/activities:
+    post:
+      tags: [Activities]
+      summary: Append an activity to a lead
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivityInput"
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+  /api/events:
+    post:
+      tags: [Calendar]
+      summary: Create a project event with an optional same-project lead
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Event"
+      responses:
+        "201":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+  /api/events/{id}:
+    parameters:
+      - $ref: "#/components/parameters/EntityId"
+    patch:
+      tags: [Calendar]
+      summary: Update a calendar event
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      requestBody:
+        $ref: "#/components/requestBodies/Event"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/ApiError"
+        "422":
+          $ref: "#/components/responses/ApiError"
+    delete:
+      tags: [Calendar]
+      summary: Soft-archive a calendar event
+      parameters:
+        - $ref: "#/components/parameters/CsrfToken"
+      responses:
+        "204":
+          description: Archived
+        "404":
+          $ref: "#/components/responses/ApiError"
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: softvibes_session
+  parameters:
+    CsrfToken:
+      name: x-csrf-token
+      in: header
+      required: true
+      schema:
+        type: string
+    EntityId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        maxLength: 64
+  requestBodies:
+    Project:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProjectInput"
+    Artifact:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ArtifactInput"
+    Lead:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LeadInput"
+    Event:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EventInput"
+  responses:
+    Success:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ok, data]
+            properties:
+              ok:
+                const: true
+              data: {}
+    ApiError:
+      description: Safe API error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalError:
+      description: Internal operation failure without sensitive detail
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [ok, error]
+      properties:
+        ok:
+          const: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    HealthResponse:
+      type: object
+      required: [ok, data]
+      properties:
+        ok:
+          const: true
+        data:
+          type: object
+          required: [service, status, database, counts, checkedAt]
+          properties:
+            service:
+              const: softvibes-flow
+            status:
+              const: ok
+            database:
+              const: connected
+            counts:
+              type: object
+              additionalProperties:
+                type: integer
+            checkedAt:
+              type: string
+              format: date-time
+    ProjectInput:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        slug:
+          type: string
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        description:
+          type: string
+          maxLength: 4000
+        status:
+          enum: [discovery, analysis, landing, review, live, paused]
+        niche:
+          type: [string, "null"]
+        city:
+          type: [string, "null"]
+        stack:
+          type: array
+          items:
+            type: string
+        localPath:
+          type: string
+          maxLength: 500
+    ArtifactInput:
+      type: object
+      properties:
+        projectId:
+          type: string
+        type:
+          enum: [research, analysis, proposal, landing, links, cms, preview, deployment, redirect, variant]
+        label:
+          type: string
+          maxLength: 200
+        localPath:
+          type: [string, "null"]
+        publicUrl:
+          type: [string, "null"]
+          format: uri
+        linkStatus:
+          enum: [declared, verified, unavailable, protected]
+        isCanonical:
+          type: boolean
+        notes:
+          type: [string, "null"]
+    LeadInput:
+      type: object
+      properties:
+        projectId:
+          type: string
+        name:
+          type: string
+          maxLength: 200
+        company:
+          type: [string, "null"]
+        email:
+          type: [string, "null"]
+          format: email
+        phone:
+          type: [string, "null"]
+        source:
+          type: string
+        stage:
+          enum: [new, qualifying, qualified, contacted, meeting, proposal, negotiation, won, lost]
+        owner:
+          type: string
+        estimatedValue:
+          type: number
+          minimum: 0
+        probability:
+          type: integer
+          minimum: 0
+          maximum: 100
+        nextAction:
+          type: [string, "null"]
+        nextActionAt:
+          type: [string, "null"]
+          format: date-time
+        notes:
+          type: [string, "null"]
+        consentStatus:
+          enum: [unknown, opted-in, not-required, opted-out]
+        allowedChannels:
+          type: array
+          uniqueItems: true
+          items:
+            enum: [email, phone, whatsapp, instagram]
+    ActivityInput:
+      type: object
+      required: [leadId, activityType, title]
+      properties:
+        leadId:
+          type: string
+        activityType:
+          enum: [note, call, email, meeting]
+        title:
+          type: string
+          maxLength: 300
+        body:
+          type: [string, "null"]
+    EventInput:
+      type: object
+      properties:
+        projectId:
+          type: string
+        leadId:
+          type: [string, "null"]
+        title:
+          type: string
+          maxLength: 300
+        eventType:
+          enum: [meeting, call, follow-up, delivery, review]
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        notes:
+          type: [string, "null"]
+    Bootstrap:
+      type: object
+      required: [user, csrfToken, projects, artifacts, leads, activities, events]
+      properties:
+        user:
+          type: object
+          required: [username]
+          properties:
+            username:
+              type: string
+        csrfToken:
+          type: string
+        projects:
+          type: array
+          items:
+            type: object
+        artifacts:
+          type: array
+          items:
+            type: object
+        leads:
+          type: array
+          items:
+            type: object
+        activities:
+          type: array
+          items:
+            type: object
+        events:
+          type: array
+          items:
+            type: object
+security:
+  - sessionCookie: []

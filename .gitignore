@@ -1,0 +1,80 @@
+# Sistema operativo y herramientas locales
+.DS_Store
+**/.DS_Store
+.playwright-cli/
+.ua/
+tmp/
+**/tmp/
+
+# Credenciales y configuración de ejecución
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+!**/.env.template
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/id_rsa*
+**/*credentials*.json
+**/*service-account*.json
+
+# Dependencias, cachés y compilaciones
+**/node_modules/
+**/vendor/
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.astro/
+**/.next/
+**/.nuxt/
+**/.svelte-kit/
+**/dist/
+**/dist-*/
+**/build/
+**/coverage/
+**/.cache/
+**/.vite/
+**/.turbo/
+**/.vercel/
+**/.netlify/
+**/.wrangler/
+**/graphify-out/
+**/.history/
+**/*.log
+
+# Salidas generadas y respaldos
+output/
+outputs/
+**/output/
+**/outputs/
+**/storage/backups/
+**/qa/
+
+# Archivos comprimidos o empaquetados
+**/*.zip
+**/*.tar
+**/*.tgz
+**/*.gz
+**/*.7z
+**/*.rar
+
+# Material privado o bruto que no pertenece al repositorio fuente
+clientes/
+media-archivo-vivemar/
+**/prospectos/
+**/multimedia/
+**/fuentes/
+**/leads*.csv
+**/leads*.xlsx
+**/leads*.xls
+**/leads*.json
+**/~$*
+
+# Repositorios externos de referencia; se conservan como clones independientes
+MoneyPrinterV2/
+agency-agents/
+awesome-cursorrules/
+codex-design-skill/
+skills/

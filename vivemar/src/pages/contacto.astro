@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Contacto | Vive Mar Real Estate"
+  descripcion={`Contacta a ${SITE.asesora}: WhatsApp ${SITE.telefono}, agenda una asesoría de inversión o envíanos tus datos. Bienes raíces en Cancún y la Riviera Maya.`}
+>
+  <CTAContacto titulo="Hablemos de tu inversión en la Riviera Maya" />
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <h2>Agenda tu asesoría</h2>
+      <p class="seccion__intro">
+        Elige el día y hora que prefieras; la asesoría inicial no tiene costo.
+      </p>
+      <iframe
+        src={`${SITE.calendly}?hide_gdpr_banner=1`}
+        class="calendly-marco"
+        title="Agenda una cita con Vive Mar Real Estate"
+        loading="lazy"></iframe>
+    </div>
+  </section>
+</BaseLayout>

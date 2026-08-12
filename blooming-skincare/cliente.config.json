@@ -1,0 +1,149 @@
+{
+  "slug": "blooming-skincare",
+  "nombre": "Blooming",
+  "marca": "Blooming · Depilación Láser & Skincare",
+  "nicho": "clínica de estética y skincare con local físico (depilación láser, faciales, aparatología, inyectables)",
+  "ciudad": "Playa del Carmen, Quintana Roo",
+  "contacto": {
+    "whatsapp_vigente": "+52 984 315 7426",
+    "whatsapp_antiguo_en_posts": "984 256 0671",
+    "email": "blooming.laserskincare@gmail.com",
+    "instagram": "https://www.instagram.com/blooming_skincare_/",
+    "threads": "https://www.threads.com/@blooming_skincare_",
+    "facebook": "https://www.facebook.com/p/Blooming-100077172775317/",
+    "sitio_actual": "https://bloomingskincare.net/",
+    "google_maps": "Blooming Depilación Láser & Skin Care — 5.0 ★ (38 reseñas)"
+  },
+  "direcciones": {
+    "vigente": "Fraccionamiento Cataluña Mz. 24 Lt. 4, Calle Tihosuco No. 13, CP 77710, Playa del Carmen",
+    "en_bio_instagram": "Av Constituyentes / 60 y 65, Playa del Carmen (DESACTUALIZADA)",
+    "nota": "Publicaron un post de 'NUEVA Ubicación' con la dirección de Tihosuco, pero la bio de Instagram sigue con la anterior."
+  },
+  "bio_actual": "✨Blooming ✨ · Health/beauty · ✨Depilación láser ✨Hollywood peel ✨Faciales ✨Peeling Químico ✨Dermapen ✨Botox/AH ✨Cavitación ✨Remoción de Verrugas ✨Remoción tattoo/microblading · Av Contituyentes / 60 y 65 · Único enlace: Threads",
+  "cifras_reales": {
+    "instagram_publicaciones": 190,
+    "instagram_seguidores": 617,
+    "instagram_seguidos": 453,
+    "google_calificacion": 5.0,
+    "google_resenas": 38,
+    "servicios_en_bio": 9,
+    "destacados_instagram": 10,
+    "enlaces_en_bio_hacia_su_sitio": 0,
+    "competidores_analizados": 12
+  },
+  "diseno_actual": {
+    "plataforma": "WordPress + Elementor (bloomingskincare.net), hecho por 'Desarollowebmx'",
+    "problemas": "La página de Contacto del menú devuelve 404; el sitio no tiene etiqueta <title> ni meta description (en Google aparece solo como 'skincare'); el H1 de la portada dice literalmente 'Inicio'; no se detectó ningún enlace de WhatsApp funcional; las 38 reseñas de 5 estrellas no aparecen por ningún lado.",
+    "estetica": "La identidad visual SÍ está lograda: loto dorado, rosa palo, tipografía script. El problema no es el diseño, es que el embudo no funciona."
+  },
+  "hallazgos": [
+    {
+      "icono": "🚪",
+      "titulo": "La página de Contacto de su sitio no existe",
+      "detalle": "En el menú principal de bloomingskincare.net hay un botón 'Contacto'. Al tocarlo aparece: 'Parece que esta página no existe. Parece que el enlace hasta aquí no sirve.' Los datos de contacto solo sobreviven en el pie de página. Quien llegó hasta el punto de querer escribirles, se topa con un error.",
+      "evidencia": "https://bloomingskincare.net/contacto/ devuelve página de error 404 con el menú visible arriba.",
+      "solucion": "Página de contacto real con WhatsApp precargado, mapa de la ubicación vigente y formulario corto."
+    },
+    {
+      "icono": "📍",
+      "titulo": "Se mudaron, pero su bio de Instagram sigue mandando al local anterior",
+      "detalle": "La bio de Instagram dice 'Av Contituyentes / 60 y 65'. Su sitio, su ficha de Google y su propia publicación de 'NUEVA Ubicación' dicen 'Calle Tihosuco No. 13, Fraccionamiento Cataluña'. Un cliente que copie la dirección del perfil llega a la dirección vieja. Es la fuga más cara porque pierde a la persona que ya iba en camino.",
+      "evidencia": "fuentes/ig-perfil.png (bio con Av Constituyentes) vs. su post 'NUEVA Ubicación' + pie de bloomingskincare.net + ficha de Google Maps.",
+      "solucion": "Dirección única y verificada en todos lados, con enlace directo a Google Maps."
+    },
+    {
+      "icono": "🔗",
+      "titulo": "Tienen sitio web y no lo enlazan desde Instagram",
+      "detalle": "El único enlace de su bio lleva a Threads — otra red social, no a un destino donde se pueda agendar o ver precios. Su propio sitio, bloomingskincare.net, no aparece por ningún lado en el perfil. Pagaron por una web que su audiencia principal no puede encontrar.",
+      "evidencia": "Enlaces externos del perfil: únicamente threads.com/@blooming_skincare_.",
+      "solucion": "Página /links con su marca: carta de servicios, WhatsApp, ubicación y redes en un solo lugar."
+    },
+    {
+      "icono": "🔍",
+      "titulo": "En Google su sitio aparece como \"skincare\" a secas",
+      "detalle": "La portada no tiene etiqueta <title> ni meta description, y su encabezado principal dice literalmente 'Inicio'. Por eso el resultado de búsqueda se ve vacío y sin gancho, mientras la competencia aparece con nombre, servicios y reseñas. Buscar 'blooming skincare' devuelve primero a negocios homónimos de otros países.",
+      "evidencia": "Auditoría del HTML: title vacío, sin meta description, H1 = 'Inicio'. Resultado en Google: 'skincare — bloomingskincare.net'.",
+      "solucion": "Títulos y descripciones por página, encabezados con los servicios reales y SEO local de Playa del Carmen."
+    },
+    {
+      "icono": "⭐",
+      "titulo": "Cinco estrellas con 38 reseñas… escondidas",
+      "detalle": "Su ficha de Google tiene calificación perfecta de 5.0 con 38 reseñas — un activo enorme y difícil de construir. Pero no aparece ni en su sitio ni en su perfil de Instagram. La prueba social que convence a quien duda está guardada donde casi nadie la ve.",
+      "evidencia": "Ficha de Google 'Blooming Depilación Láser & Skin Care': 5.0 (38). Cero menciones de reseñas en bloomingskincare.net.",
+      "solucion": "Reseñas destacadas en la portada y junto a cada botón de agendar."
+    },
+    {
+      "icono": "📱",
+      "titulo": "Dos números distintos circulando, y el vigente escrito de cuatro formas",
+      "detalle": "En sus publicaciones aparece el 984 256 0671; en su ficha de Google y el pie de su sitio, el 984 315 7426. Además, ese mismo número aparece escrito de cuatro maneras diferentes entre publicaciones. Quien intente guardarlo o escribirles no sabe cuál es el bueno.",
+      "evidencia": "Análisis de 190 publicaciones: dos números detectados y cuatro variantes de formato del vigente.",
+      "solucion": "Un solo número, con botón de WhatsApp y mensaje precargado por servicio."
+    },
+    {
+      "icono": "💲",
+      "titulo": "Sus precios viven en promociones que caducan",
+      "detalle": "Publican precios reales y atractivos — limpieza profunda $650, Hollywood Peel $950, masaje + facial $1,299, seis sesiones de axilas y bikini por $2,600 — pero siempre dentro de promociones de un mes concreto. Pasada la fecha, el post se hunde y quien busca cuánto cuesta un facial hoy no tiene dónde verlo.",
+      "evidencia": "Publicaciones de promoción de octubre, aniversario de enero, Navidad y verano, cada una con su propia lista de precios.",
+      "solucion": "Carta de servicios permanente con precios 'desde', y las promociones del mes como sección aparte."
+    }
+  ],
+  "benchmark": {
+    "competidores": [
+      "Timeless Beauty · Medicina Estética — 5.0 (209 reseñas), sitio propio y anuncios pagados en Google Maps",
+      "Bloom Beauty Center — 4.9 (67 reseñas), nombre casi idéntico y los mismos servicios (depilación láser, remoción de tatuajes, Hollywood peel, masajes)",
+      "KUKÚ Spa — 4.8 (194 reseñas), sitio con reserva en línea y anuncios pagados",
+      "Fresha (plataforma de reservas) posiciona por encima de los negocios locales en búsquedas de tratamientos"
+    ],
+    "patrones_ganadores": [
+      "Reserva en línea visible: los tres competidores mejor posicionados tienen botón de agendar, no solo teléfono",
+      "Reseñas al frente: la calificación y el número de opiniones aparecen arriba, no escondidos",
+      "Carta de servicios con precios permanentes y filtro por zona o necesidad"
+    ],
+    "huecos_diferenciacion": [
+      "Ningún competidor local combina la aparatología con el ángulo de bienestar que Blooming ya ofrece (terapia de cuencos sonoros, masajes) — es una experiencia, no solo un tratamiento",
+      "Su contenido educativo (los carruseles de '3 datos que no sabías del Botox') está mejor producido que el de la competencia: ese material ya existe y no está trabajando para su SEO"
+    ]
+  },
+  "paleta_sugerida": {
+    "primario": "#C4899A",
+    "profundo": "#5E3A44",
+    "crema": "#FBF3F1",
+    "acento_cta": "#C9A227",
+    "nota": "Respetar su identidad ya construida: rosa palo, dorado del loto y blanco. No reinventar la marca — solo llevarla a un embudo que funcione."
+  },
+  "servicios": [
+    "Depilación láser diodo (6 sesiones axilas + bikini completo $2,600; 3 áreas pequeñas $900)",
+    "Hollywood Peel — el favorito de sus clientas ($950)",
+    "Faciales personalizados y limpieza profunda ($650; facial $700, con promoción $630)",
+    "Peeling químico",
+    "Dermapen",
+    "Botox y ácido hialurónico",
+    "Cavitación y tratamientos corporales",
+    "BB Glow",
+    "Remoción de verrugas",
+    "Remoción de tatuajes y microblading",
+    "Masajes ($600) y masaje + facial ($1,299)",
+    "Terapia de armonización con cuencos sonoros"
+  ],
+  "gancho_personalizacion": {
+    "principal": "Se mudaron de local y su bio de Instagram sigue con la dirección anterior. Es un arreglo de treinta segundos que evita perder a la clienta que ya iba camino a su cita — y es el regalo más útil que se les puede dar hoy.",
+    "secundario": "El botón 'Contacto' de su propio sitio lleva a una página de error. Alguien les cobró por esa web y quedó rota justo en el paso final.",
+    "reconocimiento": "Tienen 5.0 con 38 reseñas y un contenido educativo mejor diseñado que el de toda su competencia. La marca está construida; lo que falla es el camino del interesado hacia la cita.",
+    "grupos_comunes": "NO confirmados — omitir en todos los mensajes."
+  },
+  "tour": [],
+  "deploy": {
+    "url_sitio": "https://royalblue-quail-326867.hostingersite.com/",
+    "url_servicios": "https://royalblue-quail-326867.hostingersite.com/servicios/",
+    "url_links": "https://royalblue-quail-326867.hostingersite.com/links/",
+    "url_en": "https://royalblue-quail-326867.hostingersite.com/en/",
+    "url_analisis": "",
+    "cms": {
+      "usuario": "roger",
+      "clave": "bloome1a479"
+    },
+    "fecha": "2026-07-28",
+    "hosting": "softvibes-hosting (order 1008508005)"
+  },
+  "estado_pipeline": "demo"
+}

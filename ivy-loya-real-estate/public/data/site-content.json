@@ -1,0 +1,126 @@
+{
+  "brand": {
+    "name": "Ivy Loya",
+    "descriptor": {
+      "es": "Asesoría inmobiliaria en Riviera Maya",
+      "en": "Real estate advisory in Riviera Maya"
+    },
+    "partner": "Golfia Real Estate"
+  },
+  "contact": {
+    "instagram": "https://www.instagram.com/ivyloyarealestate/",
+    "whatsapp": "",
+    "email": ""
+  },
+  "hero": {
+    "eyebrow": {
+      "es": "Riviera Maya · inversión y estilo de vida",
+      "en": "Riviera Maya · investment and lifestyle"
+    },
+    "title": {
+      "es": "Encuentra una propiedad que se sienta tan bien como se proyecta.",
+      "en": "Find a property that feels as good as it performs."
+    },
+    "summary": {
+      "es": "Acompañamiento personal para descubrir, comparar y elegir oportunidades inmobiliarias en Playa del Carmen, Tulum y la Riviera Maya.",
+      "en": "Personal guidance to discover, compare and select real estate opportunities in Playa del Carmen, Tulum and the Riviera Maya."
+    },
+    "primaryCta": {
+      "es": "Explorar propiedades",
+      "en": "Explore properties"
+    },
+    "secondaryCta": {
+      "es": "Hablar con Ivy",
+      "en": "Talk to Ivy"
+    }
+  },
+  "about": {
+    "eyebrow": {
+      "es": "Asesoría con contexto",
+      "en": "Advice with context"
+    },
+    "title": {
+      "es": "Una decisión importante merece una conversación clara.",
+      "en": "An important decision deserves a clear conversation."
+    },
+    "body": {
+      "es": "Ivy Loya se presenta públicamente como asesora inmobiliaria, Master Broker y especialista en Riviera Maya. Su enfoque combina selección de propiedades, conocimiento local y acompañamiento cercano, con el respaldo comercial de Golfia Real Estate.",
+      "en": "Ivy Loya publicly presents herself as a real estate advisor, Master Broker and Riviera Maya specialist. Her approach combines property selection, local knowledge and close guidance, supported by Golfia Real Estate."
+    },
+    "note": {
+      "es": "Atención trilingüe · consulta disponibilidad y condiciones vigentes",
+      "en": "Trilingual service · ask about current availability and terms"
+    }
+  },
+  "propertiesIntro": {
+    "eyebrow": {
+      "es": "Selección reciente",
+      "en": "Recent selection"
+    },
+    "title": {
+      "es": "Tres formas de vivir e invertir en el Caribe Mexicano.",
+      "en": "Three ways to live and invest in the Mexican Caribbean."
+    },
+    "summary": {
+      "es": "Proyectos compartidos recientemente por Ivy. Precios, inventario, características y condiciones deben confirmarse antes de tomar una decisión.",
+      "en": "Projects recently shared by Ivy. Prices, inventory, features and terms must be confirmed before making a decision."
+    }
+  },
+  "properties": [
+    {
+      "id": "the-village",
+      "title": "The Village · Corasol",
+      "location": "Playa del Carmen",
+      "status": {
+        "es": "Comunidad residencial",
+        "en": "Residential community"
+      },
+      "summary": {
+        "es": "Una propuesta residencial dentro del entorno de Corasol, conectada con golf, naturaleza y vida costera.",
+        "en": "A residential proposal within Corasol, connected to golf, nature and coastal living."
+      },
+      "image": "/img/research/the-village.jpg",
+      "link": "https://www.instagram.com/p/DaTUBO6zz4W/"
+    },
+    {
+      "id": "olaya",
+      "title": "Olaya",
+      "location": "Riviera Maya",
+      "status": {
+        "es": "Entrega inmediata por confirmar",
+        "en": "Immediate delivery to be confirmed"
+      },
+      "summary": {
+        "es": "Diseño contemporáneo y una propuesta orientada a quienes buscan una propiedad lista para conocer.",
+        "en": "Contemporary design for buyers looking for a property they can visit now."
+      },
+      "image": "/img/research/olaya.jpg",
+      "link": "https://www.instagram.com/p/DXhBtWPAMyG/"
+    },
+    {
+      "id": "punta-kaan",
+      "title": "Punta Kaan",
+      "location": "Playa del Carmen",
+      "status": {
+        "es": "Departamentos por confirmar",
+        "en": "Apartments to be confirmed"
+      },
+      "summary": {
+        "es": "Espacios contemporáneos para disfrutar Playa del Carmen y explorar una posible estrategia patrimonial.",
+        "en": "Contemporary spaces to enjoy Playa del Carmen and explore a potential wealth-building strategy."
+      },
+      "image": "/img/research/punta-kaan.jpg",
+      "link": "https://www.instagram.com/p/DXR7uT9AIR4/"
+    }
+  ],
+  "seo": {
+    "title": {
+      "es": "Ivy Loya | Bienes raíces en Riviera Maya",
+      "en": "Ivy Loya | Riviera Maya Real Estate"
+    },
+    "description": {
+      "es": "Asesoría inmobiliaria personalizada para descubrir propiedades y oportunidades en Playa del Carmen, Tulum y Riviera Maya.",
+      "en": "Personal real estate advisory to discover properties and opportunities in Playa del Carmen, Tulum and the Riviera Maya."
+    }
+  }
+}

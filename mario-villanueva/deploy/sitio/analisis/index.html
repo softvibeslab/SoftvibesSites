@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Digital | Mario Villanueva - BEAT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2d3436;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --text: #2d3436;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: white;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 16px 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav a {
+            margin-left: 30px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
+        /* HERO ANALISIS */
+        .hero-analysis {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-analysis h1 {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .hero-analysis p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .eyebrow {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* SECTIONS */
+        .section {
+            padding: 80px 20px;
+        }
+
+        .section-dark {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            color: white;
+        }
+
+        .section-light {
+            background: var(--light);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .section-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        /* FINDINGS */
+        .findings {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .finding {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 30px;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .finding-num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .finding h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .finding p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .section-dark .finding {
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+
+        .section-dark .finding h3 {
+            color: white;
+        }
+
+        .section-dark .finding p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* ARCHITECTURE */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        .arch-card {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .arch-card.highlight {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .arch-num {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .arch-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .arch-card p {
+            opacity: 0.9;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        .timeline-item {
+            padding: 30px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.05);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        .timeline-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .timeline-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: white;
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer p {
+            opacity: 0.8;
+            margin: 10px 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .finding {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">Mario Villanueva</div>
+                <nav class="nav">
+                    <a href="/">Landing</a>
+                    <a href="#hallazgos">Hallazgos</a>
+                    <a href="#arquitectura">Arquitectura</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO ANALISIS -->
+    <section class="hero-analysis">
+        <div class="container">
+            <p class="eyebrow">Análisis Digital • 28 julio 2026</p>
+            <h1>El método BEAT existe.<br>La oportunidad es <span class="accent">concentrarlo.</span></h1>
+            <p>Mario es vendedor, empresario, speaker. Tiene un método propio (BEAT). Tiene 3 empresas que lo prueban. Y tiene 11.1K seguidores que lo conocen. Hoy esa autoridad vive dispersa.</p>
+            <div>
+                <a href="/" class="btn btn-primary">Ver Landing →</a>
+                <a href="#hallazgos" class="btn btn-secondary">Leer Hallazgos ↓</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- HALLAZGOS -->
+    <section class="section section-light" id="hallazgos">
+        <div class="container">
+            <h2 class="section-title">El reto no es crear credibilidad.<br>Es darle <em>una ruta clara.</em></h2>
+
+            <div class="findings">
+                <div class="finding">
+                    <div class="finding-num">01</div>
+                    <div>
+                        <h3>El método BEAT es el diferenciador</h3>
+                        <p>BEAT no es genérico. Es propio. Trust → Need → Help → Urgency. Eso es lo que vende. Eso es lo que distingue a Mario de "otro curso de ventas".</p>
+                    </div>
+                </div>
+
+                <div class="finding">
+                    <div class="finding-num">02</div>
+                    <div>
+                        <h3>La narrativa es confusa (hoy)</h3>
+                        <p>Bio de Instagram: "Fundador de hotel, label, club". Pero todo el tráfico va a BEAT. ¿Quién es Mario? ¿Empresario? ¿Educador? La respuesta debe ser: "Mario enseña BEAT" + las empresas son prueba.</p>
+                    </div>
+                </div>
+
+                <div class="finding">
+                    <div class="finding-num">03</div>
+                    <div>
+                        <h3>El pricing es estratégico pero invisible</h3>
+                        <p>$27 entry → BEAT PRO (probable $97/mes) → Consultoría ($500+). Es un funnel clásico. Pero nadie ve el tapiz completo. Una landing clara lo expone.</p>
+                    </div>
+                </div>
+
+                <div class="finding">
+                    <div class="finding-num">04</div>
+                    <div>
+                        <h3>No hay testimonios visibles</h3>
+                        <p>delseralvender.com no muestra estudiantes reales. BEAT tiene 1000+ personas. Eso es oro puro de social proof. Está ahí, solo no se ve.</p>
+                    </div>
+                </div>
+
+                <div class="finding">
+                    <div class="finding-num">05</div>
+                    <div>
+                        <h3>El copy es honesto (es su ventaja)</h3>
+                        <p>"Deja de perseguir clientes" vs. "Serás millonario". Mario evita hype motivacional. Eso atrae personas reales. Es su posicionamiento secreto.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARQUITECTURA -->
+    <section class="section section-dark" id="arquitectura">
+        <div class="container">
+            <h2 class="section-title">Arquitectura recomendada<br><em>Una marca. Un método. Una entrada.</em></h2>
+
+            <div class="architecture-grid">
+                <div class="arch-card">
+                    <div class="arch-num">1</div>
+                    <h3>Mario Villanueva</h3>
+                    <p>Marca personal y puerta de entrada.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-num">2</div>
+                    <h3>Método BEAT</h3>
+                    <p>Propiedad intelectual y diferenciador.</p>
+                </div>
+                <div class="arch-card highlight">
+                    <div class="arch-num">3</div>
+                    <h3>BEAT EXPRESS</h3>
+                    <p>Oferta accesible y conversión inicial.</p>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-num">4</div>
+                    <h3>Escalado</h3>
+                    <p>BEAT PRO, consultoría, retiros, speaking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="section" id="roadmap">
+        <div class="container">
+            <h2 class="section-title">Plan de implementación<br><em>Primero reparar la ruta. Después amplificarla.</em></h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>1. Narrativa Clara</h3>
+                    <p>Landing nueva que posicione "Mario enseña BEAT" como protagonista. Las empresas (Casa Xtao, Xtao Expeditions) son proof of execution, no competidoras.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>2. Testimonios Visibles</h3>
+                    <p>Recolectar 5-10 testimonios reales de estudiantes BEAT. Integrarlos en landing. Social proof es convertidor.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>3. Email Sequences</h3>
+                    <p>Post-compra BEAT EXPRESS: 7 emails que lleven a BEAT PRO. Hoy = probablemente ninguno. Ahí está la retención.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>4. Escalado de Tráfico</h3>
+                    <p>Con landing clara + testimonios + email, lanzar ads. Meta/Google ads a vendedores + coaches. Bajo CAC esperado ($5-10).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="section section-dark">
+        <div class="container">
+            <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+                <p class="eyebrow">Resultado</p>
+                <h2 class="section-title">La landing nueva ya aplica esta arquitectura.</h2>
+                <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 20px; opacity: 0.95;">
+                    Mario no necesita reinventar. Tiene todo. Solo necesita concentrarlo en una narrativa clara: "Enseño BEAT" en el centro. Todo lo demás orbita alrededor.
+                </p>
+                <div style="margin-top: 40px;">
+                    <a href="/" class="btn btn-primary">Ver Landing</a>
+                    <a href="#hallazgos" class="btn btn-secondary">Volver a Hallazgos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p><strong>Mario Villanueva</strong> | Trainer | Empresario | Speaker</p>
+            <p>
+                <a href="https://www.instagram.com/mariovillanueva.mx/" target="_blank">Instagram</a> •
+                <a href="https://www.linkedin.com/in/mario-villanueva-426a7b8a/" target="_blank">LinkedIn</a> •
+                <a href="https://wa.me/529581110768" target="_blank">WhatsApp</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.85rem;">© 2026 Mario Villanueva. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

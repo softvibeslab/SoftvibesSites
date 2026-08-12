@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#082f34">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Inventario de rentas KLH en Playa del Carmen. Filtra por precio, zona y recámaras y consulta cada propiedad por WhatsApp.">
+  <meta property="og:title" content="KLH Rentals | Inventario de Playa del Carmen">
+  <meta property="og:description" content="Encuentra tu próxima renta por precio, zona y recámaras.">
+  <meta property="og:image" content="assets/hero-klh.jpg">
+  <title>KLH Rentals | Inventario en Playa del Carmen</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#inventario" data-i18n="skip">Saltar al inventario</a>
+
+  <header class="site-header" id="inicio">
+    <a class="brand" href="#inicio" aria-label="KLH Rentals, inicio">
+      <span class="brand-mark">K</span>
+      <span class="brand-name">KLH Rentals<small>Playa del Carmen</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#inventario" data-i18n="navInventory">Inventario</a>
+      <a href="#como-funciona" data-i18n="navHow">Cómo funciona</a>
+      <button class="language-toggle" type="button" aria-label="Cambiar idioma"><span class="active">ES</span><span>EN</span></button>
+      <a class="nav-cta" href="https://wa.me/529842341121?text=Hola%2C%20vi%20el%20inventario%20de%20KLH%20y%20busco%20una%20renta%20en%20Playa%20del%20Carmen." target="_blank" rel="noopener noreferrer" data-i18n="navCta">Hablar por WhatsApp</a>
+    </nav>
+    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img src="assets/hero-klh.jpg" alt="Alberca rooftop de una propiedad del inventario KLH" class="hero-image">
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="shell hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="eyebrow">Rentas seleccionadas · Playa del Carmen</p>
+          <h1 data-i18n="heroTitle">Tu próxima renta,<br><em>sin abrir quince carpetas.</em></h1>
+          <p class="hero-lead" data-i18n="heroLead">Compara estudios y departamentos por precio, zona y recámaras. Cuando encuentres uno, WhatsApp se abre con la propiedad exacta ya identificada.</p>
+          <div class="hero-actions">
+            <a class="button button-coral" href="#inventario" data-i18n="explore">Explorar 15 opciones</a>
+            <a class="button button-glass" href="https://wa.me/529842341121?text=Hola%2C%20vi%20el%20inventario%20de%20KLH%20y%20necesito%20ayuda%20para%20encontrar%20una%20renta." target="_blank" rel="noopener noreferrer" data-i18n="help">Quiero recomendación</a>
+          </div>
+          <p class="hero-note" data-i18n="heroNote">Disponibilidad reportada el 5 de agosto de 2026 · Confirma condiciones antes de reservar.</p>
+        </div>
+        <aside class="availability-card">
+          <p data-i18n="quickSearch">Búsqueda rápida</p>
+          <strong data-i18n="fromPrice">Desde $14,000 MXN / mes</strong>
+          <div class="quick-options">
+            <a href="#inventario" data-quick="studio"><b>3</b><span data-i18n="studios">estudios</span></a>
+            <a href="#inventario" data-quick="1"><b>5</b><span data-i18n="oneBeds">de 1 recámara</span></a>
+            <a href="#inventario" data-quick="2"><b>7</b><span data-i18n="twoBeds">de 2 recámaras</span></a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="trust-band" aria-label="Resumen del inventario">
+      <div class="shell trust-grid">
+        <p><strong>15</strong><span data-i18n="statListings">publicaciones vigentes</span></p>
+        <p><strong>$14k–$35k</strong><span data-i18n="statRange">rango mensual</span></p>
+        <p><strong>ES / EN</strong><span data-i18n="statLanguage">atención bilingüe</span></p>
+        <p><strong>1:1</strong><span data-i18n="statContext">WhatsApp con contexto</span></p>
+      </div>
+    </section>
+
+    <section class="catalog-section" id="inventario">
+      <div class="shell">
+        <div class="catalog-head">
+          <div>
+            <p class="eyebrow dark" data-i18n="catalogEyebrow">Inventario estructurado</p>
+            <h2 data-i18n="catalogTitle">Encuentra primero.<br><em>Pregunta después.</em></h2>
+          </div>
+          <p data-i18n="catalogIntro">Precios mensuales en MXN. La electricidad se reporta como adicional en las 15 publicaciones.</p>
+        </div>
+
+        <form class="filters" id="filters" aria-label="Filtros de inventario">
+          <label class="search-field"><span data-i18n="searchLabel">Buscar propiedad</span><input id="search" type="search" placeholder="The City, Lunada…" autocomplete="off"></label>
+          <label><span data-i18n="bedroomsLabel">Recámaras</span><select id="bedrooms"><option value="" data-i18n="all">Todas</option><option value="studio" data-i18n="studio">Estudio</option><option value="1" data-i18n="oneBed">1 recámara</option><option value="2" data-i18n="twoBed">2 recámaras</option></select></label>
+          <label><span data-i18n="zoneLabel">Zona</span><select id="zone"><option value="" data-i18n="allZones">Todas las zonas</option><option value="centro" data-i18n="downtown">Centro</option><option value="calle38" data-i18n="street38">Calle 38</option><option value="playacar">Playacar</option><option value="confirmar" data-i18n="toConfirm">Por confirmar</option></select></label>
+          <label><span data-i18n="priceLabel">Precio mensual</span><select id="price"><option value="" data-i18n="anyPrice">Cualquier precio</option><option value="under20" data-i18n="under20">Hasta $19,999</option><option value="20to29">$20,000–$29,999</option><option value="30plus" data-i18n="over30">$30,000 o más</option></select></label>
+          <label><span data-i18n="availabilityLabel">Disponibilidad</span><select id="availability"><option value="" data-i18n="anyAvailability">Cualquier fecha</option><option value="now" data-i18n="availableNow">Disponible ahora</option><option value="date" data-i18n="availableSoon">Próximamente</option></select></label>
+          <button type="reset" class="reset-button" data-i18n="clear">Limpiar</button>
+        </form>
+
+        <div class="results-bar">
+          <p><strong id="result-count">15</strong> <span data-i18n="results">opciones encontradas</span></p>
+          <label><span class="sr-only" data-i18n="sortLabel">Ordenar resultados</span><select id="sort"><option value="original" data-i18n="sortRecommended">Orden recomendado</option><option value="low" data-i18n="sortLow">Precio: menor a mayor</option><option value="high" data-i18n="sortHigh">Precio: mayor a menor</option></select></label>
+        </div>
+
+        <div class="property-grid" id="property-grid"></div>
+        <div class="empty-state" id="empty-state" hidden><strong data-i18n="emptyTitle">No encontramos una coincidencia exacta.</strong><p data-i18n="emptyText">Prueba quitando un filtro o cuéntanos lo que buscas por WhatsApp.</p><button type="button" id="empty-reset" data-i18n="clearFilters">Limpiar filtros</button></div>
+      </div>
+    </section>
+
+    <section class="system-section" id="como-funciona">
+      <div class="shell system-layout">
+        <div class="system-copy">
+          <p class="eyebrow" data-i18n="howEyebrow">Un proceso más simple</p>
+          <h2 data-i18n="howTitle">De “¿qué tienes?”<br><em>a “quiero esta”.</em></h2>
+          <p data-i18n="howIntro">El hub no reemplaza la atención personal de KLH. La hace más eficiente: el cliente compara por su cuenta y la conversación empieza con una opción concreta.</p>
+        </div>
+        <ol class="steps">
+          <li><span>01</span><div><h3 data-i18n="step1Title">Filtra</h3><p data-i18n="step1Text">Elige presupuesto, zona y número de recámaras.</p></div></li>
+          <li><span>02</span><div><h3 data-i18n="step2Title">Compara</h3><p data-i18n="step2Text">Revisa precio, disponibilidad, foto y carpeta original.</p></div></li>
+          <li><span>03</span><div><h3 data-i18n="step3Title">Pregunta con contexto</h3><p data-i18n="step3Text">Envía la propiedad, fecha de entrada, personas y plazo por WhatsApp.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="concierge">
+      <div class="shell concierge-layout">
+        <div>
+          <p class="eyebrow dark" data-i18n="conciergeEyebrow">¿No sabes cuál elegir?</p>
+          <h2 data-i18n="conciergeTitle">Cuéntanos tu plan.<br><em>KLH filtra contigo.</em></h2>
+          <p data-i18n="conciergeText">Este formulario no almacena datos: prepara un mensaje para enviarlo desde tu propio WhatsApp.</p>
+        </div>
+        <form class="concierge-form" id="concierge-form">
+          <label><span data-i18n="moveIn">Fecha de entrada</span><input type="date" id="move-in" required></label>
+          <label><span data-i18n="people">Personas</span><input type="number" id="people" min="1" max="12" value="2" required></label>
+          <label><span data-i18n="term">Plazo en meses</span><input type="number" id="term" min="1" max="36" value="6" required></label>
+          <label><span data-i18n="budget">Presupuesto máximo</span><select id="budget"><option value="20000">$20,000 MXN</option><option value="25000">$25,000 MXN</option><option value="30000">$30,000 MXN</option><option value="35000">$35,000 MXN</option></select></label>
+          <button class="button button-navy" type="submit" data-i18n="sendSearch">Enviar búsqueda por WhatsApp</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-grid">
+      <div><a class="brand footer-brand" href="#inicio"><span class="brand-mark">K</span><span class="brand-name">KLH Rentals<small>Playa del Carmen</small></span></a><p data-i18n="footerTagline">Inventario organizado para conversar mejor.</p></div>
+      <div><p class="footer-label" data-i18n="contact">Contacto</p><a href="tel:+529842341121">+52 984 234 1121</a><a href="https://www.instagram.com/godivariviera_/" target="_blank" rel="noopener noreferrer">@godivariviera_</a></div>
+      <div><p class="footer-label" data-i18n="information">Información</p><a href="analisis/" data-i18n="digitalAnalysis">Análisis digital</a><a href="data/klh-inventario-actual-2026-08-05.csv" download>CSV fuente</a></div>
+    </div>
+    <div class="shell footer-bottom"><p>© 2026 KLH Rentals · Prototipo de hub de inventario.</p><p data-i18n="disclaimer">Precios y disponibilidad reportados el 5 de agosto de 2026. Electricidad adicional. Depósito, estancia mínima, mascotas, estacionamiento y servicios incluidos deben confirmarse directamente con KLH.</p></div>
+  </footer>
+
+  <a class="floating-wa" href="https://wa.me/529842341121?text=Hola%2C%20vi%20el%20inventario%20de%20KLH%20y%20busco%20una%20renta." target="_blank" rel="noopener noreferrer" aria-label="Consultar a KLH por WhatsApp"><span>WhatsApp</span><b>↗</b></a>
+</body>
+</html>

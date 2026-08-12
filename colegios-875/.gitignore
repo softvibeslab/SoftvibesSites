@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+*.zip
+analisis/
+vapi/.last-*.json
+vapi/.env

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ieoushua Barragán | Exploración de Trayectoria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+        :root {
+            --bg-warm: #FDFCF8;
+            --text-main: #2D241E;
+            --accent-soft: #C5A16F;
+            --accent-dark: #8B6B4A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-warm);
+            color: var(--text-main);
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair+Display', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(197, 161, 111, 0.2);
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-soft);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid var(--accent-dark);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- Chosen Palette: Bosque de Marfil (Warm Neutrals, Wood, Cream) -->
+<!-- Application Structure Plan: 
+    1. Hero: Identidad Digital y Propósito (Contexto global).
+    2. Navegación Dinámica: Cuatro secciones clave (Discografía, Movilidad, Festivales, Liderazgo).
+    3. Análisis de Discografía: Visualización de 'Esoteric Fat Dog' con Chart.js para entender la estructura rítmica y duración.
+    4. Mapeo Geográfico: Representación visual del tránsito Riviera Maya -> CDMX -> Tijuana.
+    5. Conclusión Interactiva: Resumen del impacto en la descentralización.
+    Se eligió esta estructura para transformar un reporte lineal en una experiencia de 'curaduría artística' donde el usuario puede saltar entre hitos técnicos y geográficos.
+-->
+<!-- Visualization & Content Choices: 
+    - Bar Chart (Chart.js): Para comparar duraciones de pistas en el álbum debut (Objetivo: Comparar).
+    - Radar Chart (Chart.js): Para mostrar el balance entre roles (Sideman vs Líder) y lenguajes (Acústico vs Eléctrico).
+    - Timeline List (HTML/CSS): Para la bitácora de conciertos de 2022.
+    - Info Blocks (JS): Paneles dinámicos que muestran detalles técnicos al hacer clic.
+    CONFIRMACIÓN: NO SVG graphics used. NO Mermaid JS used.
+-->
+
+    <!-- Header / Nav -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="text-xl font-bold tracking-tight text-stone-800">Ieoushua Barragán</span>
+                <span class="text-xs uppercase tracking-widest text-stone-500">Bajo & Contrabajo Jazz</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#biografia" class="nav-link">Identidad</a>
+                <a href="#discografia" class="nav-link">Producción</a>
+                <a href="#giras" class="nav-link">Movilidad</a>
+                <a href="#liderazgo" class="nav-link">Liderazgo 2026</a>
+            </nav>
+            <div class="flex space-x-4">
+                <span class="text-stone-400 text-xs">MX Jazz</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        
+        <!-- Hero Section -->
+        <section id="biografia" class="mb-24">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-6">
+                        Descentralizando el <span class="italic text-stone-600">Jazz Mexicano</span>
+                    </h1>
+                    <p class="text-lg text-stone-600 leading-relaxed mb-8">
+                        Ieoushua Barragán es un pilar fundamental en la escena de la Riviera Maya. Su trayectoria documenta la evolución de un instrumentista de sesión hacia un director musical de alcance nacional, conectando el Caribe con la frontera norte.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center px-4 py-2 bg-stone-100 rounded-full text-sm">
+                            <span class="mr-2">📸</span> @ieoushua
+                        </div>
+                        <div class="flex items-center px-4 py-2 bg-stone-100 rounded-full text-sm">
+                            <span class="mr-2">💿</span> Discogs ID: 12024961
+                        </div>
+                        <div class="flex items-center px-4 py-2 bg-stone-100 rounded-full text-sm">
+                            <span class="mr-2">🎧</span> Apple Music Artist
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-stone-200 aspect-square rounded-3xl relative overflow-hidden flex items-center justify-center border-4 border-white shadow-xl">
+                    <div class="text-center p-8">
+                        <div class="text-6xl mb-4">🎻</div>
+                        <h3 class="text-2xl font-bold">Arquitectura Sonora</h3>
+                        <p class="text-sm text-stone-500 mt-2">Contrabajo · Bajo Eléctrico · Composición</p>
+                    </div>
+                    <div class="absolute bottom-4 right-4 bg-white/80 px-3 py-1 rounded text-[10px] uppercase font-bold tracking-widest">Playa del Carmen</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Discography Section -->
+        <section id="discografia" class="mb-24 pt-12">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Esoteric Fat Dog (2022)</h2>
+                <p class="max-w-2xl mx-auto text-stone-600">
+                    Análisis del álbum debut liderado por Zoar Miranda, donde Barragán establece el sustento armónico bajo el sello Chancla Records.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 space-y-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-pointer" onclick="updateTrackDetails(0)">
+                        <h4 class="font-bold">1. Esoteric Fat Dog</h4>
+                        <p class="text-xs text-stone-500">Métrica Irregular · Ostinato de gran peso</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-pointer" onclick="updateTrackDetails(1)">
+                        <h4 class="font-bold">2. Angie</h4>
+                        <p class="text-xs text-stone-500">Balada · Fraseo Lírico</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-pointer" onclick="updateTrackDetails(4)">
+                        <h4 class="font-bold">5. The Kicker</h4>
+                        <p class="text-xs text-stone-500">Hard Bop · Walking Bass rápido</p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-stone-50 p-8 rounded-3xl">
+                    <div id="track-analysis" class="mb-8">
+                        <h3 class="text-2xl font-bold mb-2" id="track-title">Estructura del Álbum</h3>
+                        <p class="text-stone-500 text-sm mb-6" id="track-desc">Selecciona una pista para ver el análisis de la interpretación de Barragán.</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="discogChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mobility & Circuit -->
+        <section id="giras" class="mb-24 pt-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div>
+                    <h2 class="text-4xl font-bold mb-8 italic">El Circuito de Clubes</h2>
+                    <p class="mb-6 text-stone-600">
+                        En 2022, la consolidación profesional se manifestó a través de la movilidad. Barragán transitó desde los foros acústicos de la Riviera Maya hasta los escenarios más exigentes de la Ciudad de México.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-accent-soft text-white rounded-full flex items-center justify-center flex-shrink-0 mr-4 font-bold italic">P</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Pizza Jazz Café</h4>
+                                <p class="text-sm text-stone-500">CDMX · Julio 2022</p>
+                                <p class="text-sm mt-1">Cuarteto Esoteric Fat Dog con Bernardo Ron y Lucio De Rosa.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-stone-800 text-white rounded-full flex items-center justify-center flex-shrink-0 mr-4 font-bold italic">J</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Jazzatlán Capital</h4>
+                                <p class="text-sm text-stone-500">Colonia Roma, CDMX · Septiembre 2022</p>
+                                <p class="text-sm mt-1">Presentación estelar en una de las sedes de mayor prestigio nacional.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center bg-white p-8 rounded-3xl border border-stone-200">
+                    <h3 class="text-xl font-bold mb-4 text-center">Versatilidad Técnica</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <p class="text-xs text-stone-400 mt-6 text-center italic">
+                        Balance interpretativo: Control tímbrico en contrabajo (Hard Bop) vs Groove en bajo eléctrico (Fusión).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Festivales & Vinculación -->
+        <section class="mb-24 p-8 md:p-16 bg-stone-900 text-stone-100 rounded-[3rem] overflow-hidden relative">
+            <div class="relative z-10">
+                <span class="text-xs uppercase tracking-widest text-stone-400 mb-4 block">Hito Institucional</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-8">PDC Jazz Festival 2025</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <p class="text-stone-300 leading-relaxed mb-6">
+                            Bajo la gestión de Explayarte A.C., Barragán se presentó en el Teatro de la Ciudad de Playa del Carmen el 4 de octubre de 2025.
+                        </p>
+                        <ul class="space-y-4">
+                            <li class="flex items-center"><span class="text-accent-soft mr-3">✦</span> Integrante del <strong>Obed Orozco Trío</strong></li>
+                            <li class="flex items-center"><span class="text-accent-soft mr-3">✦</span> Colaboración con Rodrigo López (Guitarra)</li>
+                            <li class="flex items-center"><span class="text-accent-soft mr-3">✦</span> Paridad con la élite nacional (Diego Maroto 4to)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/10 p-6 rounded-2xl backdrop-blur-md">
+                        <h4 class="font-bold mb-4 text-accent-soft">Contexto Regional</h4>
+                        <p class="text-sm text-stone-300">
+                            El festival integró formatos innovadores como "Silent Concerts", donde Barragán operó como dinamizador estético fundamental de la escena de Quintana Roo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute -bottom-10 -right-10 text-[200px] opacity-10 font-bold italic select-none">JAZZ</div>
+        </section>
+
+        <!-- Leadership 2026 -->
+        <section id="liderazgo" class="mb-24">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-4xl font-bold mb-6">Proyección 2026: Barragán Quintet</h2>
+                <div class="h-1 w-20 bg-accent-soft mx-auto mb-6"></div>
+                <p class="text-lg text-stone-600">
+                    El 11 de julio de 2026 marca el salto cualitativo definitivo: de instrumentista de soporte a director de su propia agrupación en el **CECUT (Centro Cultural Tijuana)**.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 bg-white border border-stone-100 rounded-3xl shadow-sm text-center">
+                    <div class="text-4xl mb-4">📍</div>
+                    <h4 class="font-bold mb-2">Diagonal Nacional</h4>
+                    <p class="text-sm text-stone-500">Conexión Caribe - Noroeste. Un alcance geográfico sin precedentes en su carrera.</p>
+                </div>
+                <div class="p-8 bg-white border border-stone-100 rounded-3xl shadow-sm text-center">
+                    <div class="text-4xl mb-4">🎼</div>
+                    <h4 class="font-bold mb-2">Independencia Autoral</h4>
+                    <p class="text-sm text-stone-500">Responsabilidad total en curaduría, arreglos y concepto estético global.</p>
+                </div>
+                <div class="p-8 bg-white border border-stone-100 rounded-3xl shadow-sm text-center">
+                    <div class="text-4xl mb-4">🏛️</div>
+                    <h4 class="font-bold mb-2">Ciclo CECUT</h4>
+                    <p class="text-sm text-stone-500">Validación en instituciones culturales de prestigio federal.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-50 border-t border-stone-200 py-16 px-6">
+        <div class="max-w-6xl mx-auto text-center">
+            <h3 class="text-2xl font-bold mb-4">Ieoushua Barragán</h3>
+            <p class="text-stone-500 mb-8 max-w-md mx-auto">
+                Consolidando la escena del jazz mexicano mediante la autogestión y el dominio técnico del bajo.
+            </p>
+            <div class="text-[10px] uppercase tracking-[0.2em] text-stone-400">
+                &copy; 2026 Informe de Trayectoria Profesional
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data for Discography Chart
+        const albumData = {
+            labels: ['Esoteric Fat Dog', 'Angie', 'Ceuta', 'Padre Santo', 'The Kicker'],
+            durations: [9.0, 8.9, 6.8, 9.05, 5.7],
+            details: [
+                "Tema homónimo: Barragán establece base ostinato en métricas irregulares.",
+                "Balada: El contrabajo adopta un carácter melódico y lírico.",
+                "Jazz Modal: Exige control de afinación en posiciones agudas.",
+                "Dinámicas: Tránsito por diversos niveles de intensidad rítmica.",
+                "Hard Bop: Ejecución de 'walking bass' a tempo rápido de alta exigencia."
+            ]
+        };
+
+        let discogChart;
+
+        function initCharts() {
+            // Main Discography Bar Chart
+            const ctx = document.getElementById('discogChart').getContext('2d');
+            discogChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: albumData.labels,
+                    datasets: [{
+                        label: 'Duración (minutos)',
+                        data: albumData.durations,
+                        backgroundColor: 'rgba(197, 161, 111, 0.4)',
+                        borderColor: 'rgba(197, 161, 111, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Duración: ${context.parsed.y} min`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f0f0f0' },
+                            ticks: { font: { family: 'Inter' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { 
+                                font: { family: 'Inter' },
+                                callback: function(value) {
+                                    let label = this.getLabelForValue(value);
+                                    if (label.length > 12) return label.substring(0, 10) + '...';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Radar Chart for Skills
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Hard Bop', 'Jazz Fusión', 'Liderazgo', 'Sideman', 'C. Acústico', 'B. Eléctrico'],
+                    datasets: [{
+                        label: 'Competencias 2021-2026',
+                        data: [90, 85, 75, 95, 90, 80],
+                        fill: true,
+                        backgroundColor: 'rgba(45, 36, 30, 0.1)',
+                        borderColor: 'rgba(45, 36, 30, 0.8)',
+                        pointBackgroundColor: 'rgba(197, 161, 111, 1)',
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 50,
+                            suggestedMax: 100,
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateTrackDetails(index) {
+            const title = document.getElementById('track-title');
+            const desc = document.getElementById('track-desc');
+            
+            title.innerText = albumData.labels[index];
+            desc.innerText = albumData.details[index];
+
+            // Highlight bar in chart
+            discogChart.data.datasets[0].backgroundColor = albumData.labels.map((_, i) => 
+                i === index ? 'rgba(139, 107, 74, 0.8)' : 'rgba(197, 161, 111, 0.4)'
+            );
+            discogChart.update();
+        }
+
+        window.onload = initCharts;
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VENYR CMS Studio</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23d8a34f'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-size='20' font-family='Arial' font-weight='800' fill='%2315120a'%3EVN%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./admin.css?v=live-20260723-score-1">
+</head>
+<body>
+  <main id="app">
+    <section class="login" id="loginView">
+      <div class="login-shell">
+        <div class="login-copy">
+          <p class="eyebrow">VENYR CMS</p>
+          <h1>Ieoushua Barragán</h1>
+          <p>Studio visual para contenido, media y publicación del EPK.</p>
+        </div>
+        <form class="login-card" id="loginForm">
+          <label>Usuario<input name="username" autocomplete="username" required></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="primary wide" type="submit">Entrar al CMS</button>
+          <p class="message" id="loginMessage" role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="shell hidden" id="cmsView">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <a class="brand" href="./"><span class="brand-mark">VN</span><span>VENYR</span></a>
+          <div class="publish-state" id="publishState">
+            <span class="state-dot" id="dirtyDot"></span>
+            <span id="dirtyText">Todo guardado</span>
+          </div>
+        </div>
+
+        <label class="nav-search">
+          <span>Buscar sección</span>
+          <input id="navSearch" placeholder="Hero, fechas, media...">
+        </label>
+
+        <nav class="side-nav" aria-label="Secciones del CMS">
+          <button class="nav active" data-panel="live"><span class="nav-icon">SE</span><span>Sesión</span></button>
+          <button class="nav" data-panel="overview"><span class="nav-icon">MX</span><span>Mapa</span></button>
+          <p class="nav-label">Contenido</p>
+          <div class="nav-group" id="sectionNav"></div>
+          <p class="nav-label">Herramientas</p>
+          <button class="nav" data-panel="guide"><span class="nav-icon">IA</span><span>Guía IA</span></button>
+          <button class="nav" data-panel="media"><span class="nav-icon">MP</span><span>Media pool</span></button>
+          <button class="nav" data-panel="legacy"><span class="nav-icon">L</span><span>Legacy</span></button>
+          <button class="nav" data-panel="json"><span class="nav-icon">{ }</span><span>JSON</span></button>
+        </nav>
+
+        <div class="side-actions">
+          <a class="side-link" href="../" target="_blank" rel="noopener">Ver sitio publicado</a>
+          <a class="side-link" href="../rhoman/" target="_blank" rel="noopener">Rhomán EPK</a>
+          <button id="logoutBtn">Salir</button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div class="title-stack">
+            <p class="eyebrow" id="panelEyebrow">Editor local</p>
+            <h2 id="panelTitle">Resumen</h2>
+          </div>
+          <div class="top-meta" id="topMeta"></div>
+          <div class="actions">
+            <button id="guideBtn">Guía IA</button>
+            <button id="saveBtn">Guardar sesión</button>
+            <button id="buildBtn" class="primary">Publicar</button>
+            <a class="button" href="../" target="_blank" rel="noopener">Preview</a>
+          </div>
+        </header>
+
+        <div id="notice" class="notice hidden" role="status"></div>
+        <section id="panel" class="panel-canvas"></section>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="mediaPicker">
+    <div class="dialog-head">
+      <div>
+        <p class="eyebrow">Biblioteca</p>
+        <h3>Seleccionar media</h3>
+      </div>
+      <button data-close-picker>Cerrar</button>
+    </div>
+    <input id="mediaSearch" placeholder="Filtrar por nombre o ruta">
+    <div id="mediaPickerGrid" class="media-grid"></div>
+  </dialog>
+
+  <script src="./admin.js?v=live-20260723-score-1" defer></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Zona urbana de demostración</title>
+  <desc id="desc">Paisaje urbano abstracto para reemplazar con fotografía local autorizada.</desc>
+  <rect width="1400" height="900" fill="#d9e5e3"/>
+  <circle cx="1120" cy="170" r="90" fill="#dc8a5f"/>
+  <path d="M0 650 240 510l180 90 280-250 260 210 250-140 190 130v350H0Z" fill="#91a99d"/>
+  <path d="M120 510h210v260H120zm410-210h250v470H530zm430 170h220v300H960z" fill="#f3eee4"/>
+  <path d="M170 570h55v70h-55zm410-200h65v90h-65zm450 160h60v75h-60z" fill="#2e6267"/>
+</svg>

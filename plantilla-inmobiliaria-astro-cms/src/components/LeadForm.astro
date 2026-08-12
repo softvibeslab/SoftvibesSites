@@ -1,0 +1,46 @@
+---
+import { SITE, waLink } from '../config/site';
+
+interface Props {
+  titulo?: string;
+  mensaje?: string;
+}
+
+const {
+  titulo = 'Conversemos sobre lo que estás buscando',
+  mensaje = SITE.waMensaje,
+} = Astro.props;
+---
+
+<section class="seccion contacto" id="contacto">
+  <div class="contenedor contacto__grid">
+    <div data-reveal>
+      <span class="kicker">Contacto</span>
+      <h2>{titulo}</h2>
+      <p>Configura un tiempo de respuesta realista y explica qué ocurrirá después de enviar el formulario.</p>
+      <div class="contacto__canales">
+        <a class="boton boton--acento" href={waLink(mensaje)} target="_blank" rel="noopener" data-cms="cta-contacto-wa">Escribir por WhatsApp</a>
+        <a class="boton boton--fantasma" href={SITE.agenda} target="_blank" rel="noopener" data-cms="cta-contacto-agenda">Agendar conversación</a>
+      </div>
+    </div>
+    <form class="formulario" action="/contact.php" method="POST" data-reveal>
+      <div class="campo-doble">
+        <label>Nombre<input name="nombre" autocomplete="name" required /></label>
+        <label>Teléfono<input name="telefono" type="tel" autocomplete="tel" required /></label>
+      </div>
+      <label>Correo<input name="correo" type="email" autocomplete="email" /></label>
+      <label>¿Qué buscas?
+        <select name="interes">
+          <option value="comprar">Comprar</option>
+          <option value="invertir">Invertir</option>
+          <option value="vender">Vender una propiedad</option>
+          <option value="otro">Otra consulta</option>
+        </select>
+      </label>
+      <label>Mensaje<textarea name="mensaje" rows="4"></textarea></label>
+      <input class="trampa" name="empresa" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <label class="privacidad"><input type="checkbox" name="privacidad" required /> <span>Acepto el <a href="/aviso-de-privacidad">aviso de privacidad</a>.</span></label>
+      <button class="boton boton--oscuro" type="submit" data-cms="cta-formulario">Enviar consulta</button>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+---
+description: "Astro 5, TypeScript, content, SEO, and styling rules for the Vivemar real estate site."
+globs: ["src/**/*", "astro.config.mjs", "tsconfig.json", "package.json"]
+alwaysApply: false
+---
+# Vivemar Astro Project Rules
+
+Use these rules when editing the Vivemar Astro site.
+
+## Project Shape
+
+- This is an Astro 5 static site with TypeScript, content collections, sitemap integration, and project-local CSS.
+- Keep pages in `src/pages/`, reusable UI in `src/components/`, layouts in `src/layouts/`, shared data in `src/data/`, content entries in `src/content/`, and global styles in `src/styles/global.css`.
+- Prefer static generation and build-time data. Add client-side JavaScript only when the interaction genuinely needs it.
+- Match existing Spanish naming and content tone unless the requested change explicitly changes language or market.
+
+## Astro And TypeScript
+
+- Use `.astro` components for presentational UI and page composition.
+- Use `getStaticPaths()` for dynamic content pages and keep slug/data lookup logic simple and typed.
+- Keep TypeScript strictness compatible with `astro/tsconfigs/base`; avoid `any` and prefer narrow interfaces near the data they describe.
+- Import shared site data from `src/data/` instead of duplicating business facts across pages.
+- Preserve the existing `@astrojs/sitemap` setup and `SITE_URL` environment override in `astro.config.mjs`.
+
+## Styling
+
+- Use the existing CSS system in `src/styles/global.css`, including CSS custom properties such as `--oceano`, `--teal`, `--arena`, `--laton`, `--radio`, `--serif`, and `--sans`.
+- Do not introduce Tailwind, CSS frameworks, component libraries, or broad design-system rewrites unless explicitly requested.
+- Favor semantic class names already present in the codebase and keep responsive behavior based on stable layout constraints.
+- Maintain the quiet luxury coastal visual direction documented in the project styles and docs.
+
+## Content, SEO, And Accessibility
+
+- Real estate content should keep property/location facts consistent across content files, listing cards, and detail pages.
+- Maintain useful page titles, meta descriptions, canonical-friendly URLs, semantic headings, and descriptive image alt text.
+- Use the existing `public/img/` assets when they represent the property or place accurately.
+- Keep forms, contact links, and WhatsApp flows accessible and resilient without JavaScript.
+
+## Implementation Checks
+
+- After meaningful changes, run `npm run build` from `vivemar`.
+- Check generated routes for dynamic pages when editing content collections or slug logic.
+- Do not edit `dist/` unless the task is specifically about generated output or deployment artifacts.

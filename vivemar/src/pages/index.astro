@@ -1,0 +1,204 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE, waLink } from '../data/site';
+
+const propiedades = await getCollection('propiedades');
+const destacadas = propiedades
+  .filter((p) => p.data.destacada)
+  .concat(propiedades.filter((p) => !p.data.destacada))
+  .slice(0, 3);
+---
+
+<BaseLayout
+  titulo="Vive Mar · Real Estate | Bienes raíces en Cancún y la Riviera Maya"
+  descripcion={SITE.descripcion}
+>
+  <!-- Hero cinematográfico: foto full-bleed con Ken Burns y entrada escalonada.
+       Para pasar a video de drone: sustituir el <img> por
+       <video class="hero__media" autoplay muted loop playsinline poster="/img/hero-caribe.jpg"> -->
+  <section class="hero">
+    <img
+      src="/img/hero-vivemar.jpg"
+      alt=""
+      class="hero__media"
+      fetchpriority="high"
+      aria-hidden="true"
+    />
+    <div class="hero__inner" style="min-height: 88vh; display: flex; flex-direction: column; justify-content: center;">
+      <span class="etiqueta anim" style="color: var(--laton-claro); --d: 100ms;" data-cms="hero-etiqueta">Bienes raíces · Riviera Maya</span>
+      <h1 class="anim" style="--d: 250ms;" data-cms="hero-titulo">El paraíso de tus sueños, <em>a tu alcance</em></h1>
+      <p class="anim" style="--d: 420ms;" data-cms="hero-descripcion">Penthouses frente al Mar Caribe, departamentos para renta vacacional y lotes de inversión con certeza legal en Playa del Carmen, Cancún y Tulum. Te acompañamos de la asesoría a la escritura.</p>
+      <div class="hero__cta anim" style="--d: 580ms;">
+        <a href={waLink()} class="boton boton--whatsapp" target="_blank" rel="noopener" data-cms="cta-hero-whatsapp">💬 Escríbenos por WhatsApp</a>
+        <a href={SITE.calendly} class="boton boton--claro" target="_blank" rel="noopener" data-cms="cta-hero-agenda">📅 Agenda una asesoría</a>
+      </div>
+      <p class="hero__prueba anim" style="--d: 720ms;" data-cms="hero-testimonio">"Nos explicó los números y la parte legal con una claridad que no habíamos encontrado con nadie." — Cliente de inversión <em>(testimonio de muestra)</em></p>
+      <div class="hero__badges anim" style="--d: 860ms;">
+        <div><strong>8–15%</strong> Rendimiento anual estimado de renta en la región*</div>
+        <div><strong>100% escriturado</strong> Solo propiedad privada, no ejidal</div>
+        <div><strong>$200 mil – $18 MDP</strong> Tickets para cada perfil de inversión</div>
+      </div>
+      <p class="anim" style="font-size: 0.72rem; opacity: 0.65; margin-top: 1rem; --d: 980ms;">
+        *Rango de referencia según análisis públicos del mercado de renta en la Riviera Maya;
+        cada propiedad requiere su propia corrida financiera.
+      </p>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"></div>
+  </section>
+
+  <!-- Propiedades destacadas -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Oportunidades</span>
+        <h2>Propiedades destacadas</h2>
+        <p>
+          Desde lotes de inversión con planes a meses sin intereses hasta penthouses frente al
+          mar. Cada propiedad pasa por revisión legal antes de llegar a este catálogo.
+        </p>
+      </div>
+      <div class="grid-propiedades">
+        {destacadas.map((p) => <PropertyCard propiedad={p} />)}
+      </div>
+      <p style="margin-top: 2rem;">
+        <a href="/propiedades" class="boton boton--primario">Ver todo el catálogo →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Credencial por asociación -->
+  <section class="seccion--oscura" style="padding: 2.25rem 0;">
+    <div
+      class="contenedor"
+      style="display: flex; gap: 2.5rem; flex-wrap: wrap; align-items: center; justify-content: space-between;"
+    >
+      <span class="etiqueta" style="margin: 0; color: var(--laton-claro);">
+        Trabajamos con desarrollos de clase mundial
+      </span>
+      <span style="font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.06em;" data-cms="corasol-texto">Corasol · Playa del Carmen — golf de Nick Price, club de playa privado y residencias frente al mar</span>
+    </div>
+  </section>
+
+  <!-- Sobre Viridiana -->
+  <section class="seccion seccion--alterna" id="nosotros">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <div>
+          <span class="etiqueta">Tu asesora</span>
+          <h2>Viridiana Mar</h2>
+          <p data-cms="nosotros-bio">Detrás de Vive Mar está <strong>Viridiana Mar</strong>, asesora inmobiliaria especializada en <em>inversiones y bienestar</em> en la Riviera Maya — y además mamá y yoguini enamorada del mar. Su filosofía: <em>cuerpo, mente y patrimonio alineados</em>. El enfoque es simple: que cada cliente invierta con certeza legal, números claros y una propiedad que además de rendir, se disfrute.</p>
+          <ul class="lista-check">
+            <li>Asesoría personalizada de principio a escritura</li>
+            <li>Corridas financieras claras antes de decidir</li>
+            <li>Revisión legal de cada desarrollo: solo propiedad privada escriturada</li>
+            <li>Acompañamiento en fideicomiso para compradores extranjeros</li>
+          </ul>
+          <p style="margin-top: 1.5rem;">
+            <a href={waLink('Hola Viridiana, me gustaría una asesoría de inversión.')} class="boton boton--whatsapp" target="_blank" rel="noopener">
+              Hablar con Viridiana
+            </a>
+          </p>
+        </div>
+        <img
+          src="/img/viridiana-penthouse.jpg"
+          alt="Viridiana Mar presentando un penthouse exclusivo frente al mar en Playa del Carmen"
+          style="border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 1 / 1; object-fit: cover; width: 100%;"
+          width="640"
+          height="640"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué invertir -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Riviera Maya</span>
+        <h2>¿Por qué invertir aquí y ahora?</h2>
+      </div>
+      <div class="tarjetas-razones">
+        <div class="razon">
+          <div class="icono">📈</div>
+          <h3>Plusvalía sostenida</h3>
+          <p>
+            La Riviera Maya lleva más de una década entre los mercados inmobiliarios de mayor
+            crecimiento de México, impulsada por turismo e infraestructura.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">⚖️</div>
+          <h3>Certeza legal</h3>
+          <p>
+            Solo trabajamos propiedad privada, escriturada y no ejidal. Tu inversión queda
+            protegida ante el Registro Público de la Propiedad.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">✈️</div>
+          <h3>Conectividad mundial</h3>
+          <p>
+            Dos aeropuertos internacionales y el Tren Maya conectan la región con el mundo y
+            sostienen la demanda de renta todo el año.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">💰</div>
+          <h3>Tickets para cada perfil</h3>
+          <p>
+            Lotes desde ~$200 mil con meses sin intereses hasta penthouses frente al mar:
+            armamos la estrategia según tu presupuesto y horizonte.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banda parallax -->
+  <section class="parallax">
+    <h2 data-cms="parallax-titulo">Despierta donde otros <em>vacacionan</em></h2>
+    <p>
+      Tu propiedad en el Caribe mexicano puede ser tu hogar, tu inversión o ambas. Empecemos
+      con una asesoría sin costo.
+    </p>
+    <a href={waLink()} class="boton boton--laton" target="_blank" rel="noopener">
+      Iniciar mi plan de inversión
+    </a>
+  </section>
+
+  <!-- Testimonios -->
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Clientes</span>
+        <h2>Lo que dicen de trabajar con Vive Mar</h2>
+        <p style="font-size: 0.9rem; color: var(--gris);">
+          (Testimonios de muestra: reemplazar con testimonios reales de clientes.)
+        </p>
+      </div>
+      <div class="testimonios">
+        <blockquote class="testimonio">
+          "Viridiana nos explicó los números y la parte legal con una claridad que no habíamos
+          encontrado con nadie. Compramos nuestro lote con total tranquilidad."
+          <footer>— Cliente de lotes de inversión</footer>
+        </blockquote>
+        <blockquote class="testimonio">
+          "Nos acompañó desde la primera videollamada hasta la firma con el notario. El proceso
+          con fideicomiso fue mucho más simple de lo que esperábamos."
+          <footer>— Compradores extranjeros</footer>
+        </blockquote>
+        <blockquote class="testimonio">
+          "Buscábamos patrimonio frente al mar y nos presentó exactamente lo que pedíamos, con
+          corrida financiera incluida."
+          <footer>— Inversión patrimonial</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <CTAContacto />
+</BaseLayout>

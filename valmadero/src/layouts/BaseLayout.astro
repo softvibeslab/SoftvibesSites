@@ -1,0 +1,148 @@
+---
+import '@fontsource-variable/playfair-display';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { SITE, waLink } from '../config/site';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  imagen?: string;
+  schema?: object | object[];
+  desnudo?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  titulo,
+  descripcion = SITE.descripcion,
+  imagen = '/img/demo/hero.svg',
+  schema,
+  desnudo = false,
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.dominio);
+const esPreview = SITE.dominio.includes('hostingersite.com');
+const schemaOrganizacion = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: SITE.nombre,
+  description: SITE.descripcion,
+  url: SITE.dominio,
+  ...(SITE.telefono ? { telephone: SITE.telefono } : {}),
+  areaServed: SITE.ubicacion,
+  sameAs: Object.values(SITE.redes).filter((url) => url !== '#'),
+};
+---
+
+<!doctype html>
+<html lang={SITE.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    {(noindex || esPreview) && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(imagen, Astro.site ?? SITE.dominio)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#173f3a" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaOrganizacion)} />
+    {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body>
+    <a class="salto" href="#contenido">Saltar al contenido</a>
+
+    {
+      !desnudo && (
+        <header class="header" data-header>
+          <div class="contenedor header__inner">
+            <a href="/" class="marca" aria-label={`${SITE.nombre}, inicio`}>
+              <span class="marca__simbolo" aria-hidden="true">V</span>
+              <span data-cms="marca-nombre">{SITE.nombreCorto}</span>
+            </a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-principal">
+              <span class="sr-only">Abrir navegación</span>
+              <i></i><i></i><i></i>
+            </button>
+            <nav id="nav-principal" class="nav" aria-label="Navegación principal">
+              {SITE.navegacion.map((item) => <a href={item.href}>{item.etiqueta}</a>)}
+              <a class="boton boton--pequeno boton--acento" href={waLink()} target="_blank" rel="noopener" data-cms="cta-nav">
+                WhatsApp
+              </a>
+            </nav>
+          </div>
+        </header>
+      )
+    }
+
+    <main id="contenido"><slot /></main>
+
+    {
+      !desnudo && (
+        <footer class="footer">
+          <div class="contenedor footer__grid">
+            <div>
+              <a href="/" class="marca marca--pie"><span class="marca__simbolo">V</span><span data-cms="footer-marca">{SITE.nombre}</span></a>
+              <p>{SITE.lema}</p>
+              <p><a href={waLink()} target="_blank" rel="noopener">WhatsApp</a></p>
+            </div>
+            <div>
+              <h2>Explora</h2>
+              <ul>{SITE.navegacion.map((item) => <li><a href={item.href}>{item.etiqueta}</a></li>)}</ul>
+            </div>
+            <div>
+              <h2>Información</h2>
+              <ul>
+                <li><a href="/aviso-de-privacidad">Aviso de privacidad</a></li>
+                <li><a href="/links">Enlaces</a></li>
+                <li><a href={SITE.redes.instagram} target="_blank" rel="noopener">Instagram</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="contenedor footer__legal">© {new Date().getFullYear()} {SITE.nombre}. Prototipo; confirma disponibilidad y condiciones antes de decidir.</div>
+        </footer>
+      )
+    }
+
+    {!desnudo && <a class="wa-flotante" href={waLink()} target="_blank" rel="noopener" aria-label="Abrir WhatsApp">WA</a>}
+
+    <script>
+      const header = document.querySelector('[data-header]');
+      const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+      const nav = document.querySelector<HTMLElement>('#nav-principal');
+      const updateHeader = () => header?.classList.toggle('header--scroll', window.scrollY > 12);
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      updateHeader();
+
+      toggle?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('nav--abierta') ?? false;
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+      nav?.addEventListener('click', (event) => {
+        if ((event.target as Element).closest('a')) {
+          nav.classList.remove('nav--abierta');
+          toggle?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          }
+        }, { threshold: 0.12 });
+        document.querySelectorAll('[data-reveal]').forEach((element) => observer.observe(element));
+      }
+    </script>
+  </body>
+</html>

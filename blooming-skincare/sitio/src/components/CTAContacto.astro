@@ -1,0 +1,86 @@
+---
+import { SITE, waLink } from '../data/site';
+
+interface Props {
+  mensaje?: string;
+  titulo?: string;
+}
+
+const {
+  mensaje = SITE.waMensaje,
+  titulo = '¿Lista para consentirte?',
+} = Astro.props;
+---
+
+<section class="seccion" id="contacto">
+  <div class="contenedor">
+    <div class="seccion__intro">
+      <span class="etiqueta">Contacto</span>
+      <h2>{titulo}</h2>
+      <p>
+        Escríbenos por WhatsApp y te confirmamos disponibilidad el mismo día, o déjanos tus datos
+        y nosotras te contactamos.
+      </p>
+    </div>
+
+    <div class="dos-columnas">
+      <form class="formulario" action="/contact.php" method="POST">
+        <label>
+          Nombre
+          <input type="text" name="nombre" required autocomplete="name" />
+        </label>
+        <label>
+          WhatsApp
+          <input type="tel" name="telefono" required autocomplete="tel" />
+        </label>
+        <label>
+          ¿Qué te interesa?
+          <select name="interes">
+            <option value="laser">Depilación láser</option>
+            <option value="facial">Faciales y skincare</option>
+            <option value="inyectable">Botox / ácido hialurónico</option>
+            <option value="corporal">Tratamientos corporales</option>
+            <option value="bienestar">Masajes y bienestar</option>
+            <option value="orientacion">No sé, quiero orientación</option>
+          </select>
+        </label>
+        <input type="text" name="empresa" class="campo-oculto" tabindex="-1" autocomplete="off" />
+        <label
+          style="font-weight: 400; display: flex; gap: 0.5rem; align-items: start; text-transform: none; letter-spacing: 0;"
+        >
+          <input type="checkbox" name="privacidad" required style="margin-top: 0.3rem;" />
+          <span>
+            Acepto el <a href="/aviso-de-privacidad">aviso de privacidad</a> y el uso de mis datos
+            para ser contactada.
+          </span>
+        </label>
+        <button type="submit" class="boton boton--laton">Quiero agendar mi cita</button>
+        <p class="formulario__nota">🔒 Tus datos están seguros. Sin spam, sin compromiso.</p>
+      </form>
+
+      <div>
+        <h3>Respuesta el mismo día</h3>
+        <p>
+          <strong>El canal más rápido es WhatsApp</strong> — te confirmamos horarios disponibles y
+          resolvemos tus dudas antes de que llegues.
+        </p>
+        <a href={waLink(mensaje)} target="_blank" rel="noopener" class="boton boton--whatsapp">
+          💬 WhatsApp {SITE.telefono}
+        </a>
+        <p style="margin-top: 1.75rem;"><strong>¿Prefieres venir directamente?</strong></p>
+        <p style="font-size: 0.95rem;">
+          {SITE.direccion}<br />
+          {SITE.cp}, {SITE.ciudad}<br />
+          <span style="color: var(--gris);">{SITE.horario}</span>
+        </p>
+        <a href={SITE.mapa} target="_blank" rel="noopener" class="boton boton--primario">
+          📍 Cómo llegar
+        </a>
+        <p class="mini-testimonio">
+          "Me encanta sentirme consentida y apapachada en Blooming 💖 100% recomendado."
+          <strong>— Reseña en Google · ⭐ {SITE.resenas.calificacion} con {SITE.resenas.total} opiniones</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

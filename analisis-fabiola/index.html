@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fabiola González · Análisis de presencia digital | Softvibes</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #181319;
+    --ink-soft: #302833;
+    --plum: #624763;
+    --plum-deep: #4a3450;
+    --rose: #b77886;
+    --clay: #a56d5f;
+    --gold: #c9a44e;
+    --gold-soft: #ead8a5;
+    --ivory: #f7f1ea;
+    --paper: #fffaf4;
+    --sage: #789789;
+    --blue: #3d6870;
+    --line: rgba(24, 19, 25, 0.12);
+    --shadow: 0 22px 70px rgba(24, 19, 25, 0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--ivory);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  h1, h2, h3, .serif { font-family: "Cormorant Garamond", Georgia, serif; }
+  .container { width: min(1080px, calc(100% - 32px)); margin: 0 auto; }
+  .eyebrow {
+    color: var(--gold);
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    margin-bottom: 0.85rem;
+    text-transform: uppercase;
+  }
+  .section-head { margin: 0 auto 2.4rem; max-width: 720px; text-align: center; }
+  .section-head h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.05;
+    margin-bottom: 0.85rem;
+  }
+  .section-head p { color: rgba(24, 19, 25, 0.72); font-weight: 300; }
+  section { padding: 5rem 0; }
+
+  .hero {
+    min-height: 88vh;
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    padding: 5rem 1rem 7rem;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    background:
+      linear-gradient(120deg, rgba(24, 19, 25, 0.96), rgba(98, 71, 99, 0.84) 55%, rgba(61, 104, 112, 0.82)),
+      url("img/avatar-sm.jpg") center 22% / cover no-repeat;
+  }
+  .hero::after {
+    background: var(--ivory);
+    bottom: -1px;
+    clip-path: ellipse(62% 100% at 50% 100%);
+    content: "";
+    height: 82px;
+    left: 0;
+    position: absolute;
+    right: 0;
+  }
+  .hero-inner { max-width: 850px; position: relative; z-index: 1; }
+  .logo-pill {
+    align-items: center;
+    background: rgba(255, 250, 244, 0.08);
+    border: 1px solid rgba(234, 216, 165, 0.34);
+    border-radius: 999px;
+    display: inline-flex;
+    gap: 0.7rem;
+    margin-bottom: 1.8rem;
+    padding: 0.48rem 1rem 0.48rem 0.55rem;
+  }
+  .logo-pill img { border-radius: 50%; height: 40px; object-fit: contain; width: 40px; }
+  .logo-pill span {
+    color: var(--gold-soft);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .portrait {
+    border: 3px solid var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.38);
+    height: 128px;
+    margin: 0 auto 1.4rem;
+    object-fit: cover;
+    width: 128px;
+  }
+  .hero h1 {
+    font-size: clamp(2.45rem, 7vw, 5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    margin: 0 auto 1.35rem;
+    max-width: 860px;
+  }
+  .hero h1 em { color: var(--gold-soft); font-style: italic; }
+  .hero .sub {
+    color: rgba(255, 250, 244, 0.82);
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    font-weight: 300;
+    margin: 0 auto;
+    max-width: 700px;
+  }
+  .dedicacion { color: rgba(255, 250, 244, 0.62); font-size: 0.88rem; margin-top: 2rem; }
+
+  .metricas {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: -3.3rem auto 0;
+    max-width: 940px;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 3;
+  }
+  .metrica {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    min-height: 140px;
+    padding: 1.35rem 1rem;
+    text-align: center;
+  }
+  .metrica .num {
+    color: var(--plum);
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .metrica .desc { color: rgba(24, 19, 25, 0.68); font-size: 0.82rem; margin-top: 0.5rem; }
+
+  .evidencia-grid {
+    display: grid;
+    gap: 1.1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .evidencia {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 12px 35px rgba(24, 19, 25, 0.08);
+    overflow: hidden;
+  }
+  .evidencia img {
+    aspect-ratio: 4 / 5;
+    height: auto;
+    object-fit: cover;
+    object-position: top center;
+    width: 100%;
+  }
+  .evidencia figcaption {
+    color: rgba(24, 19, 25, 0.74);
+    font-size: 0.84rem;
+    padding: 0.85rem 0.9rem 1rem;
+  }
+  .evidencia figcaption strong { color: var(--ink); display: block; font-size: 0.9rem; }
+
+  .hallazgos-wrap { max-width: 900px; margin: 0 auto; }
+  .hallazgo {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--rose);
+    border-radius: 8px;
+    box-shadow: 0 10px 34px rgba(24, 19, 25, 0.07);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .hallazgo button {
+    all: unset;
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 1rem;
+    min-height: 72px;
+    padding: 1.15rem 1.2rem;
+    width: 100%;
+  }
+  .hallazgo .icono {
+    align-items: center;
+    background: rgba(183, 120, 134, 0.12);
+    border-radius: 8px;
+    color: var(--plum);
+    display: inline-flex;
+    flex: 0 0 44px;
+    font-size: 1.35rem;
+    height: 44px;
+    justify-content: center;
+  }
+  .hallazgo .titulo { flex: 1; font-weight: 700; }
+  .hallazgo .flecha { color: var(--gold); flex: 0 0 auto; transition: transform 0.3s; }
+  .hallazgo.abierto .flecha { transform: rotate(180deg); }
+  .detalle {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease;
+  }
+  .detalle-inner {
+    color: rgba(24, 19, 25, 0.75);
+    font-size: 0.96rem;
+    font-weight: 300;
+    padding: 0 1.25rem 1.35rem 5.25rem;
+  }
+  .solucion {
+    background: rgba(120, 151, 137, 0.12);
+    border-left: 3px solid var(--sage);
+    border-radius: 0 8px 8px 0;
+    color: rgba(24, 19, 25, 0.78);
+    margin-top: 0.9rem;
+    padding: 0.85rem 1rem;
+  }
+  .solucion strong { color: var(--sage); }
+
+  /* ---------- Transformación (escenas Antes / Propuesta) ---------- */
+  .transformacion {
+    background:
+      linear-gradient(135deg, rgba(24, 19, 25, 0.97), rgba(98, 71, 99, 0.95) 55%, rgba(61, 104, 112, 0.9));
+    color: var(--paper);
+  }
+  .transformacion .section-head p { color: rgba(255, 250, 244, 0.72); }
+  .switch-wrap { display: flex; justify-content: center; margin-bottom: 2.2rem; }
+  .switch {
+    background: rgba(255, 250, 244, 0.1);
+    border: 1px solid rgba(255, 250, 244, 0.18);
+    border-radius: 999px;
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.35rem;
+  }
+  .switch button {
+    all: unset;
+    border-radius: 999px;
+    color: rgba(255, 250, 244, 0.68);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.64rem 1.65rem;
+    transition: background 0.3s, color 0.3s;
+  }
+  .switch button.activo { background: var(--gold); color: var(--ink); }
+
+  @keyframes aparecer { to { opacity: 1; transform: translateY(0); } }
+  .escena { max-width: 980px; margin: 0 auto; }
+  .escena[hidden] { display: none; }
+  .escena > * { opacity: 0; transform: translateY(14px); animation: aparecer 0.5s forwards; }
+  .escena > *:nth-child(2) { animation-delay: 0.15s; }
+  .escena > *:nth-child(3) { animation-delay: 0.3s; }
+  .veredicto {
+    color: var(--gold-soft);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    margin-top: 2.2rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  /* --- Escena ANTES: mockups realistas --- */
+  .caos-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+  .mock {
+    background: var(--paper);
+    border-radius: 10px;
+    overflow: hidden;
+    color: var(--ink);
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.28);
+    text-align: left;
+  }
+  .caos-grid .mock:nth-child(1) { transform: rotate(-1.6deg); }
+  .caos-grid .mock:nth-child(2) { transform: rotate(1deg) translateY(8px); }
+  .caos-grid .mock:nth-child(3) { transform: rotate(-0.7deg); }
+  .caos-grid .mock:nth-child(4) { transform: rotate(1.3deg); }
+  .caos-grid .mock:nth-child(5) { transform: rotate(-1.2deg) translateY(-6px); }
+  .caos-grid .mock:nth-child(6) { transform: rotate(1.1deg); }
+  .app-bar {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 0.75rem; font-size: 0.75rem; font-weight: 700;
+    border-bottom: 1px solid #efe9e1;
+  }
+  .pill-off {
+    margin-left: auto; font-size: 0.58rem; font-weight: 700; color: var(--rose);
+    border: 1px solid rgba(183, 120, 134, 0.45); padding: 0.1rem 0.45rem;
+    border-radius: 99px; white-space: nowrap;
+  }
+  .ig-head { display: flex; gap: 0.6rem; padding: 0.6rem 0.7rem; align-items: center; }
+  .ig-head img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+  .ig-handle { font-size: 0.74rem; font-weight: 700; line-height: 1.3; }
+  .ig-stats { font-size: 0.64rem; color: #777; }
+  .mock .feed { width: 100%; height: 178px; object-fit: cover; object-position: top center; display: block; }
+  .lt-body { background: #2a2130; padding: 0.9rem 0.9rem 1rem; text-align: center; }
+  .lt-body img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; margin: 0 auto; }
+  .lt-pill { background: #fff; color: #222; border-radius: 99px; font-size: 0.66rem; font-weight: 700; padding: 0.42rem 0.4rem; margin-top: 0.42rem; }
+  .wa-body { background: #e7dfd4; padding: 0.85rem 0.7rem 1rem; }
+  .burbuja { max-width: 86%; padding: 0.4rem 0.6rem; border-radius: 10px; font-size: 0.71rem; margin-bottom: 0.45rem; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08); }
+  .burbuja.in { background: #fff; border-top-left-radius: 2px; }
+  .burbuja.out { background: #d9fdd3; margin-left: auto; border-top-right-radius: 2px; }
+  .burbuja .hora { display: block; font-size: 0.54rem; color: #999; text-align: right; }
+  .video-lock { padding: 0.7rem 0.75rem 0.9rem; }
+  .lock-btn { border: 1.5px dashed #cbb8be; border-radius: 8px; padding: 0.6rem; font-size: 0.66rem; color: #9a8790; text-align: center; }
+  .yt-body { padding: 0.7rem 0.75rem 0.95rem; }
+  .yt-item { display: flex; gap: 0.5rem; align-items: center; font-size: 0.68rem; color: #444; padding: 0.34rem 0; border-bottom: 1px solid #efe9e1; }
+  .yt-item:last-of-type { border-bottom: none; }
+  .yt-item .thumb { width: 32px; height: 22px; border-radius: 4px; background: var(--rose); flex: 0 0 auto; display: grid; place-items: center; color: #fff; font-size: 0.6rem; }
+  .yt-note { font-size: 0.62rem; color: var(--rose); font-weight: 700; padding-top: 0.55rem; }
+
+  /* --- Escena PROPUESTA: sitio en vivo --- */
+  .redes-fila { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+  .red-chip {
+    background: rgba(255, 250, 244, 0.08);
+    border: 1px solid rgba(234, 216, 165, 0.42);
+    color: var(--paper);
+    font-size: 0.72rem;
+    padding: 0.34rem 0.75rem;
+    border-radius: 99px;
+  }
+  .convergen { text-align: center; color: var(--gold-soft); font-size: 1.05rem; padding: 0.6rem 0 1rem; }
+  .convergen .linea { display: block; width: 1px; height: 26px; margin: 0.25rem auto 0; background: linear-gradient(var(--gold), transparent); }
+  .disp-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; padding-bottom: 1.4rem; }
+  .disp-tab {
+    all: unset; cursor: pointer; font-size: 0.78rem; font-weight: 700;
+    color: rgba(255, 250, 244, 0.7);
+    border: 1px solid rgba(234, 216, 165, 0.35);
+    padding: 0.45rem 0.95rem; border-radius: 99px; transition: all 0.25s;
+  }
+  .disp-tab.activo { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .dispositivo {
+    width: fit-content; margin: 0 auto; background: #0f0a12; position: relative;
+    box-shadow: 0 34px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(234, 216, 165, 0.25);
+  }
+  .dispositivo .pantalla { overflow: hidden; background: #fff; position: relative; }
+  .dispositivo iframe { border: 0; display: block; background: #fff; transform-origin: top left; }
+  .dispositivo .muesca {
+    display: none; position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+    width: 118px; height: 22px; background: #0f0a12; border-radius: 99px; z-index: 2;
+  }
+  .dispositivo .base { display: none; }
+  .dispositivo.iphone { border-radius: 52px; padding: 12px; }
+  .dispositivo.iphone .pantalla { border-radius: 40px; }
+  .dispositivo.iphone .muesca { display: block; }
+  .dispositivo.tablet { border-radius: 30px; padding: 16px; }
+  .dispositivo.tablet .pantalla { border-radius: 14px; }
+  .dispositivo.laptop { border-radius: 16px 16px 4px 4px; padding: 14px 14px 16px; margin-bottom: 24px; }
+  .dispositivo.laptop .pantalla { border-radius: 6px; }
+  .dispositivo.laptop .base {
+    display: block; position: absolute; left: 50%; transform: translateX(-50%); bottom: -15px;
+    width: calc(100% + 90px); height: 16px; background: linear-gradient(#3a2c40, #160f1a);
+    border-radius: 0 0 18px 18px; box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+  }
+  .dispositivo.laptop .base::after {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 7px; background: #160f1a; border-radius: 0 0 8px 8px;
+  }
+  .tour-tabs {
+    display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
+    overflow-x: auto; padding: 1.6rem 0.2rem 0.3rem; scrollbar-width: none;
+  }
+  .tour-tabs::-webkit-scrollbar { display: none; }
+  .tour-tab {
+    all: unset; cursor: pointer; white-space: nowrap; font-size: 0.78rem; font-weight: 700;
+    color: rgba(255, 250, 244, 0.7); border: 1px solid rgba(234, 216, 165, 0.35);
+    padding: 0.45rem 0.95rem; border-radius: 99px; transition: all 0.25s;
+  }
+  .tour-tab.activo { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+  .tour-nota { text-align: center; font-size: 0.92rem; color: var(--paper); font-weight: 300; padding: 0.9rem 1rem 0; min-height: 2.6em; }
+  .cta-sitio { text-align: center; padding-top: 1.6rem; }
+  .btn-brillo { animation: pulso 2.4s infinite; }
+  @keyframes pulso {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 164, 78, 0.55); }
+    50% { box-shadow: 0 0 0 16px rgba(201, 164, 78, 0); }
+  }
+
+  .mejoras-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .mejora {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--gold);
+    border-radius: 8px;
+    min-height: 180px;
+    padding: 1.35rem;
+  }
+  .mejora .icono { color: var(--plum); font-size: 1.6rem; margin-bottom: 0.55rem; }
+  .mejora h3 { font-size: 1.45rem; line-height: 1; margin-bottom: 0.5rem; }
+  .mejora p { color: rgba(24, 19, 25, 0.7); font-size: 0.92rem; font-weight: 300; }
+
+  .oferta { background: var(--paper); border-top: 1px solid var(--line); }
+  .tiers {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .tier {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .tier.destacado {
+    border-color: rgba(201, 164, 78, 0.9);
+    box-shadow: var(--shadow);
+    transform: translateY(-10px);
+  }
+  .tier .badge {
+    background: var(--gold);
+    border-radius: 999px;
+    color: var(--ink);
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    padding: 0.28rem 0.65rem;
+    width: fit-content;
+  }
+  .tier h3 { font-size: 1.55rem; line-height: 1; margin-bottom: 0.55rem; }
+  .precio {
+    color: var(--plum);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0.75rem 0 0.2rem;
+  }
+  .moneda { color: rgba(24, 19, 25, 0.58); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
+  .tier ul { list-style: none; margin: 1.1rem 0 1.25rem; flex: 1; }
+  .tier li {
+    border-bottom: 1px solid rgba(24, 19, 25, 0.08);
+    color: rgba(24, 19, 25, 0.74);
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    padding: 0.6rem 0;
+  }
+  .tier li:last-child { border-bottom: none; }
+  .tier li span { color: var(--sage); flex: 0 0 auto; font-weight: 800; }
+  .tier li.apagado { color: rgba(24, 19, 25, 0.36); }
+  .tier li.apagado span { color: rgba(24, 19, 25, 0.3); }
+  .tier li strong { color: var(--ink); font-weight: 600; }
+  .btn {
+    align-items: center;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.92rem;
+    font-weight: 800;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 48px;
+    padding: 0.85rem 1.35rem;
+    text-decoration: none;
+    transition: transform 0.22s, box-shadow 0.22s;
+    width: fit-content;
+  }
+  .btn:hover { box-shadow: 0 12px 35px rgba(24, 19, 25, 0.18); transform: translateY(-2px); }
+  .btn-gold { background: var(--gold); color: var(--ink); }
+  .btn-outline { border: 1.5px solid var(--ink); color: var(--ink); }
+  .tier .btn { width: 100%; }
+  .nota {
+    color: rgba(24, 19, 25, 0.62);
+    font-size: 0.88rem;
+    margin: 1.6rem auto 0;
+    max-width: 740px;
+    text-align: center;
+  }
+
+  .cta-final {
+    background:
+      linear-gradient(120deg, rgba(255, 250, 244, 0.95), rgba(247, 241, 234, 0.84)),
+      url("img/avatar-sm.jpg") right center / contain no-repeat;
+    padding: 6rem 0;
+  }
+  .cta-box { max-width: 620px; }
+  .cta-box h2 {
+    font-size: clamp(2.25rem, 5vw, 3.9rem);
+    font-weight: 600;
+    line-height: 0.98;
+    margin-bottom: 1rem;
+  }
+  .cta-box h2 em { color: var(--plum); }
+  .cta-box p { color: rgba(24, 19, 25, 0.72); font-weight: 300; margin-bottom: 1.4rem; }
+  .botones { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+
+  /* ---------- Barra flotante ---------- */
+  .barra-flotante {
+    position: fixed; left: 50%; bottom: 14px; transform: translate(-50%, 160%);
+    display: flex; gap: 0.55rem;
+    background: rgba(24, 19, 25, 0.96);
+    border: 1px solid rgba(234, 216, 165, 0.45);
+    border-radius: 999px; padding: 0.5rem; z-index: 60;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+    transition: transform 0.45s ease;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .barra-flotante.visible { transform: translate(-50%, 0); }
+  .bf-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.72rem 1.4rem; border-radius: 999px;
+    text-decoration: none; font-size: 0.88rem; font-weight: 800; white-space: nowrap;
+  }
+  .bf-sitio { background: var(--gold); color: var(--ink); }
+  .bf-pago { color: var(--paper); border: 1px solid rgba(255, 250, 244, 0.4); }
+
+  footer {
+    background: var(--ink);
+    color: rgba(255, 250, 244, 0.68);
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  footer img { height: 58px; margin: 0 auto 0.8rem; object-fit: contain; width: 58px; }
+  footer .pd { color: rgba(255, 250, 244, 0.52); font-size: 0.82rem; margin: 0.65rem auto 0; max-width: 780px; }
+  footer a { color: var(--gold-soft); text-decoration: none; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    .metricas, .evidencia-grid, .caos-grid, .mejoras-grid, .tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tier.destacado { transform: none; }
+    .cta-final { background-size: 55%; background-position: 120% 50%; }
+  }
+  @media (max-width: 640px) {
+    .hero { min-height: 760px; padding-top: 3.6rem; }
+    .metricas, .evidencia-grid, .caos-grid, .mejoras-grid, .tiers { grid-template-columns: 1fr; }
+    section { padding: 4rem 0; }
+    .detalle-inner { padding-left: 1.25rem; }
+    .hallazgo button { align-items: flex-start; }
+    .switch button { padding-left: 1.05rem; padding-right: 1.05rem; }
+    .caos-grid .mock, .caos-grid .mock:nth-child(n) { transform: none; }
+    .cta-final { background-image: none; }
+    .botones .btn { width: 100%; }
+    .barra-flotante { width: calc(100% - 16px); justify-content: center; }
+    .bf-btn { flex: 1; text-align: center; padding: 0.72rem 0.5rem; font-size: 0.8rem; }
+  }
+  @media (max-width: 560px) {
+    .caos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="logo-pill">
+      <img src="img/logo-fabiola.webp" alt="Logo Fabiola González" />
+      <span>Análisis Softvibes</span>
+    </div>
+    <img class="portrait" src="img/avatar-sm.jpg" alt="Fabiola González, psicóloga y logoterapeuta" />
+    <h1>Fabiola, tu voz ya acompaña.<br /><em>Tu ecosistema digital también puede sostener.</em></h1>
+    <p class="sub">Revisamos tu presencia pública con mucho cuidado: tu landing, Linktree, Instagram, Facebook, LinkedIn visible, CTAs de comentarios y WhatsApp. Encontramos una marca con fuerza emocional, y una oportunidad clara: ordenar el camino para que cada mujer llegue con más confianza, contexto y claridad.</p>
+    <p class="dedicacion">Preparado por <strong>Softvibes</strong> con material público de tus canales.</p>
+  </div>
+</header>
+
+<!-- ===== MÉTRICAS ===== -->
+<div class="metricas">
+  <div class="metrica"><div class="num" data-count="5">0</div><div class="desc">canales públicos revisados</div></div>
+  <div class="metrica"><div class="num" data-count="745">0</div><div class="desc">publicaciones visibles en Instagram</div></div>
+  <div class="metrica"><div class="num" data-count="6.3" data-suffix="k">0</div><div class="desc">seguidores aproximados en Instagram</div></div>
+  <div class="metrica"><div class="num" data-count="6">0</div><div class="desc">fricciones prioritarias encontradas</div></div>
+</div>
+
+<!-- ===== EVIDENCIA ===== -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Evidencia</span>
+      <h2>Lo que vimos en tu ecosistema actual</h2>
+      <p>Tu presencia ya tiene una identidad poderosa. El trabajo ahora es hacer que los caminos no compitan entre sí.</p>
+    </div>
+    <div class="evidencia-grid">
+      <figure class="evidencia reveal">
+        <img src="img/landing-fabiola.png" alt="Landing Mujer Puente a Mujer Montaña" loading="lazy" />
+        <figcaption><strong>Landing propia</strong>La narrativa de Mujer Puente a Mujer Montaña ya está viva en tu dominio.</figcaption>
+      </figure>
+      <figure class="evidencia reveal">
+        <img src="img/linktree-fabiola.png" alt="Linktree de Fabiola González" loading="lazy" />
+        <figcaption><strong>Linktree</strong>Agrupa videos, redes, WhatsApp y email, mientras Instagram también manda a la landing.</figcaption>
+      </figure>
+      <figure class="evidencia reveal">
+        <img src="img/instagram-fabiola.png" alt="Instagram de Fabiola González" loading="lazy" />
+        <figcaption><strong>Instagram</strong>Contenido constante, highlights activos y CTA de comentario como "MONTAÑA".</figcaption>
+      </figure>
+      <figure class="evidencia reveal">
+        <img src="img/facebook-fabiola.png" alt="Facebook de Fabiola González Psicóloga" loading="lazy" />
+        <figcaption><strong>Facebook</strong>Otra puerta de entrada con 4.1 mil seguidores, teléfono y links a Instagram/TikTok/YouTube.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HALLAZGOS ===== -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">El análisis</span>
+      <h2>Seis hallazgos que vale la pena ordenar</h2>
+      <p>No son "errores" aislados. Son pequeñas fugas de claridad en una marca que trabaja con temas donde la confianza lo es todo. Toca cada punto para ver el detalle y cómo lo resolvimos.</p>
+    </div>
+
+    <div class="hallazgos-wrap">
+      <div class="hallazgo reveal">
+        <button type="button">
+          <span class="icono">🪞</span>
+          <span class="titulo">Tu autoridad está repartida entre demasiados nombres</span>
+          <span class="flecha">▾</span>
+        </button>
+        <div class="detalle"><div class="detalle-inner">
+          En el recorrido aparecen FabiolaGonzalezH, fabiolagonzalezpsicologa, fabiholaconsentido, fabiolagh.com, Fabiola González Psicóloga y Mujer Puente a Mujer Montaña. Todo suma, pero para una persona nueva puede sentirse como varias puertas distintas.
+          <div class="solucion"><strong>✓ Resuelto:</strong> tu sitio une todo bajo una sola arquitectura: Fabiola González como autoridad, Mujer Montaña como programa, y cada canal con una función concreta.</div>
+        </div></div>
+      </div>
+
+      <div class="hallazgo reveal">
+        <button type="button">
+          <span class="icono">🔗</span>
+          <span class="titulo">Tu bio tiene dos centros de decisión</span>
+          <span class="flecha">▾</span>
+        </button>
+        <div class="detalle"><div class="detalle-inner">
+          En Instagram aparecen dos enlaces: la landing del programa y Linktree. Facebook prioriza Linktree y muestra teléfono. La intención está, pero la decisión se reparte entre rutas distintas.
+          <div class="solucion"><strong>✓ Resuelto:</strong> creamos tu página <em>/links</em> con tu marca — mismo uso práctico que Linktree, pero en tu propia casa digital y conectada a programa, WhatsApp, agenda y redes.</div>
+        </div></div>
+      </div>
+
+      <div class="hallazgo reveal">
+        <button type="button">
+          <span class="icono">💬</span>
+          <span class="titulo">Los CTAs abren conversación, pero no siempre traen contexto</span>
+          <span class="flecha">▾</span>
+        </button>
+        <div class="detalle"><div class="detalle-inner">
+          En Instagram ya usas CTA de comentario como <em>"comenta MONTAÑA"</em>; Linktree lleva a WhatsApp; Facebook muestra el teléfono. Pero si ese interés no llega con origen, tema e intención, tienes que reconstruir el contexto a mano.
+          <div class="solucion"><strong>✓ Resuelto:</strong> tu página de aplicación arma el mensaje por ti — el WhatsApp te llega ya con nombre, de qué red viene y qué está viviendo. Nunca más un "hola" en frío.</div>
+        </div></div>
+      </div>
+
+      <div class="hallazgo reveal">
+        <button type="button">
+          <span class="icono">📅</span>
+          <span class="titulo">La agenda está demasiado condicionada al final del video</span>
+          <span class="flecha">▾</span>
+        </button>
+        <div class="detalle"><div class="detalle-inner">
+          La landing indica que el botón para agendar se activa al terminar el video. Esto ayuda a filtrar, pero también puede perder mujeres que ya vieron el video antes, vienen referidas o ya están listas para aplicar.
+          <div class="solucion"><strong>✓ Resuelto:</strong> conservamos el video como ruta principal y sumamos una segunda ruta de aplicación breve — tres preguntas y consentimiento — para quien ya está lista.</div>
+        </div></div>
+      </div>
+
+      <div class="hallazgo reveal">
+        <button type="button">
+          <span class="icono">🛡️</span>
+          <span class="titulo">La confianza existe, pero necesita estructura ética más visible</span>
+          <span class="flecha">▾</span>
+        </button>
+        <div class="detalle"><div class="detalle-inner">
+          Hay testimonios, bio profesional y FAQ. Por el tipo de temas que trabajas, conviene que privacidad, alcance del acompañamiento, criterios de admisión y límites del programa aparezcan con la misma claridad que la promesa emocional.
+          <div class="solucion"><strong>✓ Resuelto:</strong> tu sitio incluye bloques de confianza: privacidad, consentimiento, qué incluye/no incluye el programa, criterios de admisión y qué hacer si alguien está en crisis.</div>
+        </div></div>
+      </div>
+
+      <div class="hallazgo reveal">
+        <button type="button">
+          <span class="icono">📚</span>
+          <span class="titulo">Tu contenido todavía no se convierte en biblioteca propia</span>
+          <span class="flecha">▾</span>
+        </button>
+        <div class="detalle"><div class="detalle-inner">
+          Videos como "Capitalizando el Caos", "Significado de la Autoestima" y "Redescubriéndote" son activos de autoridad. Hoy viven como links sueltos. Podrían convertirse en recursos propios para SEO, confianza y nutrición antes de aplicar.
+          <div class="solucion"><strong>✓ Resuelto:</strong> tu sitio queda listo para crecer con una biblioteca en tu dominio: autoestima, dependencia emocional, reconstrucción de identidad, relaciones y programa.</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRANSFORMACIÓN: ANTES / PROPUESTA ===== -->
+<section class="transformacion">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow" style="color:var(--gold-soft);">La transformación</span>
+      <h2>De enlaces sueltos a ruta de claridad</h2>
+      <p>Mueve el interruptor y mira la diferencia 👇</p>
+    </div>
+
+    <div class="switch-wrap">
+      <div class="switch" role="tablist" aria-label="Antes y propuesta">
+        <button type="button" class="activo" id="btn-antes">Antes</button>
+        <button type="button" id="btn-ahora">Propuesta ✨</button>
+      </div>
+    </div>
+
+    <!-- Escena ANTES: mockups realistas -->
+    <div class="escena" id="escena-antes">
+      <div class="caos-grid">
+
+        <div class="mock">
+          <div class="app-bar">📸 Instagram <span class="pill-off">✕ 2 links en bio</span></div>
+          <div class="ig-head">
+            <img src="img/avatar-sm.jpg" alt="@fabiolagonzalezpsicologa" />
+            <div>
+              <div class="ig-handle">@fabiolagonzalezpsicologa</div>
+              <div class="ig-stats"><strong>745</strong> posts · <strong>6.3k</strong> seguidores</div>
+            </div>
+          </div>
+          <img class="feed" src="img/instagram-fabiola.png" alt="Feed de Instagram" loading="lazy" />
+        </div>
+
+        <div class="mock">
+          <div class="app-bar">👥 Facebook <span class="pill-off">✕ otra puerta</span></div>
+          <img class="feed" src="img/facebook-fabiola.png" alt="Facebook de Fabiola" loading="lazy" />
+          <div class="video-lock"><div class="lock-btn">4.1 mil seguidores · teléfono visible · links a IG, TikTok y YouTube</div></div>
+        </div>
+
+        <div class="mock">
+          <div class="app-bar">🔗 Linktree <span class="pill-off">✕ rentado</span></div>
+          <div class="lt-body">
+            <img src="img/logo-fabiola.webp" alt="Fabiola en Linktree" />
+            <div class="lt-pill">Programa Mujer Montaña</div>
+            <div class="lt-pill">WhatsApp</div>
+            <div class="lt-pill">Videos de YouTube</div>
+            <div class="lt-pill">Email</div>
+          </div>
+        </div>
+
+        <div class="mock">
+          <div class="app-bar">💬 WhatsApp <span class="pill-off">✕ sin contexto</span></div>
+          <div class="wa-body">
+            <div class="burbuja in">Comenté "MONTAÑA" en tu post <span class="hora">10:12</span></div>
+            <div class="burbuja out">¡Hola! ¿Me cuentas un poco más? 🤔 <span class="hora">13:40</span></div>
+            <div class="burbuja in">es que ya no sé por dónde empezar… <span class="hora">18:03</span></div>
+          </div>
+        </div>
+
+        <div class="mock">
+          <div class="app-bar">📅 Landing actual <span class="pill-off">✕ agenda al final</span></div>
+          <img class="feed" src="img/landing-fabiola.png" alt="Landing actual" loading="lazy" />
+          <div class="video-lock"><div class="lock-btn">🔒 Agenda disponible solo al terminar el video</div></div>
+        </div>
+
+        <div class="mock">
+          <div class="app-bar">🎬 YouTube <span class="pill-off">✕ links sueltos</span></div>
+          <div class="yt-body">
+            <div class="yt-item"><span class="thumb">▶</span> Capitalizando el Caos</div>
+            <div class="yt-item"><span class="thumb">▶</span> Significado de la Autoestima</div>
+            <div class="yt-item"><span class="thumb">▶</span> Redescubriéndote</div>
+            <div class="yt-note">✕ No viven como biblioteca propia en tu dominio</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="veredicto">"Una marca con mucha fuerza, repartida en demasiadas puertas."</div>
+    </div>
+
+    <!-- Escena PROPUESTA: el sitio vivo, navegable -->
+    <div class="escena" id="escena-ahora" hidden>
+      <div>
+        <div class="redes-fila">
+          <span class="red-chip">📸 Instagram</span>
+          <span class="red-chip">👥 Facebook</span>
+          <span class="red-chip">🎬 YouTube</span>
+          <span class="red-chip">💬 WhatsApp</span>
+        </div>
+        <div class="convergen">todas apuntan a un solo lugar<span class="linea"></span></div>
+      </div>
+
+      <div>
+        <div class="disp-tabs" id="disp-tabs">
+          <button type="button" class="disp-tab" data-disp="laptop">💻 Laptop</button>
+          <button type="button" class="disp-tab" data-disp="tablet">📱 Tablet</button>
+          <button type="button" class="disp-tab activo" data-disp="iphone">📲 iPhone</button>
+        </div>
+        <div class="dispositivo iphone" id="dispositivo">
+          <div class="muesca"></div>
+          <div class="pantalla" id="pantalla">
+            <iframe id="tour-frame" data-src="https://coral-cassowary-633853.hostingersite.com/" src="about:blank" title="Tu sitio Mujer Montaña, en vivo"></iframe>
+          </div>
+          <div class="base"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="tour-tabs" id="tour-tabs">
+          <button type="button" class="tour-tab activo" data-url="https://coral-cassowary-633853.hostingersite.com/" data-nota="🏔️ Tu marca recibe a cada mujer — este es tu sitio REAL, navégalo aquí mismo.">1 · Inicio</button>
+          <button type="button" class="tour-tab" data-url="https://coral-cassowary-633853.hostingersite.com/programa/" data-nota="📖 Tu proceso explicado por etapas, con criterios de admisión y para quién sí y para quién no.">2 · El proceso</button>
+          <button type="button" class="tour-tab" data-url="https://coral-cassowary-633853.hostingersite.com/links/" data-nota="🔗 Adiós Linktree: esto va en tu bio, con tu marca y conectado a todo.">3 · Tus /links</button>
+          <button type="button" class="tour-tab" data-url="https://coral-cassowary-633853.hostingersite.com/aplicar/" data-nota="💬 Aquí aplican con contexto: el WhatsApp te llega ya con nombre, origen y momento.">4 · Aplicar</button>
+        </div>
+        <p class="tour-nota" id="tour-nota">🏔️ Tu marca recibe a cada mujer — este es tu sitio REAL, navégalo aquí mismo.</p>
+        <div class="cta-sitio"><a class="btn btn-gold btn-brillo" href="https://coral-cassowary-633853.hostingersite.com" target="_blank" rel="noopener">🏔️ Ver el sitio completo ↗</a></div>
+      </div>
+
+      <div class="veredicto">"La misma voz, ahora sostenida por una ruta completa de confianza."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MEJORAS ===== -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Lo que ya construimos</span>
+      <h2>Mejoras concretas para tu ecosistema</h2>
+      <p>La meta no es cambiar tu esencia. Es hacer que la tecnología sostenga mejor el proceso que ya comunicas.</p>
+    </div>
+    <div class="mejoras-grid">
+      <div class="mejora reveal"><div class="icono">🏔️</div><h3>Ruta digital unificada</h3><p>Una estructura simple: Fabiola como marca principal, Mujer Montaña como programa y cada canal como entrada medible.</p></div>
+      <div class="mejora reveal"><div class="icono">🔗</div><h3>/links en tu dominio</h3><p>Sustituye Linktree por una página propia con programa, videos, WhatsApp, agenda y redes.</p></div>
+      <div class="mejora reveal"><div class="icono">💬</div><h3>WhatsApp con contexto</h3><p>La aplicación arma el mensaje: origen, tema e intención llegan contigo antes de responder.</p></div>
+      <div class="mejora reveal"><div class="icono">📝</div><h3>Aplicación con filtro</h3><p>Formulario breve para saber si la persona está lista, qué busca y qué espera antes de agendar.</p></div>
+      <div class="mejora reveal"><div class="icono">🛡️</div><h3>Confianza ética</h3><p>Privacidad, alcance, consentimiento, criterios de admisión y qué hacer en crisis, visibles.</p></div>
+      <div class="mejora reveal"><div class="icono">📚</div><h3>Lista para tu biblioteca</h3><p>La base para convertir videos y temas recurrentes en recursos propios que posicionan y preparan.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OFERTA ===== -->
+<section class="oferta" id="planes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Si quieres dar el siguiente paso</span>
+      <h2>Hazla completamente tuya</h2>
+      <p>El sitio y este análisis son un regalo — no cambia nada si lo dejas ahí. Pero si quieres dar el paso, elige cómo quieres vivirla:</p>
+    </div>
+    <div class="tiers reveal">
+      <div class="tier">
+        <h3>🌱 Pruébala</h3>
+        <div class="precio">$1,500</div>
+        <div class="moneda">MXN · pago único</div>
+        <ul>
+          <li><span>✓</span><div><strong>Tu landing funcionando</strong> en subdominio Softvibes.</div></li>
+          <li><span>✓</span><div><strong>Llamada de configuración</strong> para ajustar textos, fotos y CTAs.</div></li>
+          <li><span>✓</span><div><strong>WhatsApp/DM guiado</strong> con mensajes precargados por intención.</div></li>
+          <li><span>✓</span><div><strong>Portal de gestión</strong> para editar textos e imágenes tú misma.</div></li>
+          <li class="apagado"><span>—</span><div>Dominio propio, hosting y correos profesionales.</div></li>
+          <li class="apagado"><span>—</span><div>Pack de contenido mensual.</div></li>
+        </ul>
+        <a class="btn btn-outline" href="https://wa.me/527295493319?text=Roger%2C%20quiero%20el%20plan%20Pru%C3%A9bala%20de%20%241%2C500%20para%20la%20landing%20de%20Fabiola" target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+      <div class="tier destacado">
+        <span class="badge">⭐ Más elegido</span>
+        <h3>🏔️ Hazla tuya</h3>
+        <div class="precio">$3,500</div>
+        <div class="moneda">MXN · pago único</div>
+        <ul>
+          <li><span>✓</span><div><strong>Todo lo de Pruébala</strong>, sin fecha de caducidad.</div></li>
+          <li><span>✓</span><div><strong>Instalación en tu dominio</strong> o subdominio de fabiolagh.com.</div></li>
+          <li><span>✓</span><div><strong>/links propio</strong> para sustituir Linktree sin perder practicidad.</div></li>
+          <li><span>✓</span><div><strong>Agenda/aplicación conectada</strong> al programa Mujer Montaña.</div></li>
+          <li><span>✓</span><div><strong>Correos profesionales</strong> y hosting incluido por 1 año.</div></li>
+          <li><span>✓</span><div>🎁 <strong>Pack de contenido</strong> para 1 mes: CTAs, copies y rutas de comentario.</div></li>
+        </ul>
+        <a class="btn btn-gold" href="https://wa.me/527295493319?text=Roger%2C%20quiero%20el%20plan%20Hazla%20tuya%20de%20%243%2C500%20para%20la%20landing%20de%20Fabiola%20%F0%9F%8F%94%EF%B8%8F" target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+      <div class="tier">
+        <h3>👑 Lidera tu nicho</h3>
+        <div class="precio">$7,000</div>
+        <div class="moneda">MXN · pago único</div>
+        <ul>
+          <li><span>✓</span><div><strong>Todo lo de Hazla tuya.</strong></div></li>
+          <li><span>✓</span><div><strong>Landing + /links + biblioteca inicial</strong> en tu dominio.</div></li>
+          <li><span>✓</span><div><strong>SEO de autoridad</strong> para temas como autoestima, dependencia emocional y reconstrucción.</div></li>
+          <li><span>✓</span><div><strong>Embudo automatizado</strong>: comentario MONTAÑA, DM/WhatsApp, aplicación y agenda.</div></li>
+          <li><span>✓</span><div>🎁 <strong>Pack de contenido por 3 meses</strong> para nutrir el programa.</div></li>
+          <li><span>✓</span><div><strong>Reporte mensual</strong> de visitas, clics y solicitudes por 3 meses.</div></li>
+        </ul>
+        <a class="btn btn-outline" href="https://wa.me/527295493319?text=Roger%2C%20quiero%20el%20plan%20Lidera%20tu%20nicho%20de%20%247%2C000%20para%20Fabiola%20%F0%9F%91%91" target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+    </div>
+    <p class="nota">La landing y este análisis pueden quedarse como una propuesta. Si ya tienes equipo técnico o herramientas internas, adaptamos el alcance sin rehacer lo que ya funciona.</p>
+  </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section class="cta-final">
+  <div class="container">
+    <div class="cta-box reveal">
+      <span class="eyebrow">Cierre</span>
+      <h2>Tu contenido ya abre puertas.<br /><em>Ahora toca ordenar el camino.</em></h2>
+      <p>La oportunidad no es que Fabiola "tenga presencia". Ya la tiene. La oportunidad es que cada mujer que llega desde redes encuentre una ruta clara, segura y coherente hasta el siguiente paso. Míralo funcionando desde tu cel y cuéntanos qué te pareció.</p>
+      <div class="botones">
+        <a class="btn btn-gold" href="https://coral-cassowary-633853.hostingersite.com" target="_blank" rel="noopener">🏔️ Ver mi sitio en vivo</a>
+        <a class="btn btn-outline" href="https://wa.me/527295493319?text=Roger%2C%20ya%20vi%20el%20sitio%20de%20Mujer%20Monta%C3%B1a%20%F0%9F%98%8D" target="_blank" rel="noopener">💬 Contarle a Roger qué me pareció</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BARRA FLOTANTE ===== -->
+<div class="barra-flotante" id="barra-flotante">
+  <a class="bf-btn bf-sitio" href="https://coral-cassowary-633853.hostingersite.com" target="_blank" rel="noopener">🏔️ Ver mi sitio</a>
+  <a class="bf-btn bf-pago" href="#planes">✨ Hacerla mía</a>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <img src="img/logo-fabiola.webp" alt="Logo Fabiola González" />
+  <div>Hecho con 🤍 por <strong>Softvibes</strong> para revisar y ordenar presencia digital con respeto.</div>
+  <div class="pd">P.D. Este análisis usa solo material público visto en <a href="https://fabiolagh.com/mujer-puente-a-montana" target="_blank" rel="noopener">fabiolagh.com</a>, <a href="https://linktr.ee/FabiolaGonzalezH" target="_blank" rel="noopener">Linktree</a>, Instagram y Facebook. Cualquier imagen o texto que quieras ajustar o retirar se cambia de inmediato — tú mandas.</div>
+</footer>
+
+<script>
+  // ----- Reveal al hacer scroll -----
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("visible");
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+  // ----- Acordeón de hallazgos -----
+  document.querySelectorAll(".hallazgo button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".hallazgo");
+      const detalle = card.querySelector(".detalle");
+      const abierto = card.classList.toggle("abierto");
+      detalle.style.maxHeight = abierto ? detalle.scrollHeight + "px" : "0px";
+    });
+  });
+
+  // ----- Interruptor Antes / Propuesta -----
+  const btnAntes = document.getElementById("btn-antes");
+  const btnAhora = document.getElementById("btn-ahora");
+  const escAntes = document.getElementById("escena-antes");
+  const escAhora = document.getElementById("escena-ahora");
+  const tourFrame = document.getElementById("tour-frame");
+
+  function reanimar(escena) {
+    escena.querySelectorAll(":scope > *").forEach((el) => {
+      el.style.animation = "none";
+      void el.offsetWidth;
+      el.style.animation = "";
+    });
+  }
+
+  function mostrarEscena(modo) {
+    const esAhora = modo === "ahora";
+    escAntes.hidden = esAhora;
+    escAhora.hidden = !esAhora;
+    btnAntes.classList.toggle("activo", !esAhora);
+    btnAhora.classList.toggle("activo", esAhora);
+    // Carga diferida del sitio real solo la primera vez que se abre "Propuesta"
+    if (esAhora && tourFrame.getAttribute("src") === "about:blank") {
+      tourFrame.src = tourFrame.dataset.src;
+    }
+    if (esAhora) ajustarDispositivo();
+    reanimar(esAhora ? escAhora : escAntes);
+  }
+  btnAntes.addEventListener("click", () => mostrarEscena("antes"));
+  btnAhora.addEventListener("click", () => mostrarEscena("ahora"));
+
+  // ----- Selector de dispositivo -----
+  const DISPOSITIVOS = {
+    iphone: { ancho: 390, alto: 800, max: 460 },
+    tablet: { ancho: 834, alto: 1024, max: 640 },
+    laptop: { ancho: 1280, alto: 800, max: 920 },
+  };
+  const dispositivo = document.getElementById("dispositivo");
+  const pantalla = document.getElementById("pantalla");
+  const dispTabs = document.querySelectorAll(".disp-tab");
+  let dispActual = "iphone";
+
+  function ajustarDispositivo() {
+    const cfg = DISPOSITIVOS[dispActual];
+    const disponible = Math.min(cfg.max, (escAhora.clientWidth || window.innerWidth) - 40);
+    let s = disponible / cfg.ancho;
+    const altoMax = window.innerHeight * 0.76;
+    if (cfg.alto * s > altoMax) s = altoMax / cfg.alto;
+    tourFrame.style.width = cfg.ancho + "px";
+    tourFrame.style.height = cfg.alto + "px";
+    tourFrame.style.transform = "scale(" + s + ")";
+    pantalla.style.width = Math.round(cfg.ancho * s) + "px";
+    pantalla.style.height = Math.round(cfg.alto * s) + "px";
+  }
+
+  dispTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      dispTabs.forEach((t) => t.classList.remove("activo"));
+      tab.classList.add("activo");
+      dispActual = tab.dataset.disp;
+      dispositivo.className = "dispositivo " + dispActual;
+      ajustarDispositivo();
+    });
+  });
+  window.addEventListener("resize", () => { if (!escAhora.hidden) ajustarDispositivo(); });
+
+  // ----- Visita guiada -----
+  const tourTabs = document.querySelectorAll(".tour-tab");
+  const tourNota = document.getElementById("tour-nota");
+  tourTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tourTabs.forEach((t) => t.classList.remove("activo"));
+      tab.classList.add("activo");
+      tourFrame.src = tab.dataset.url;
+      tourNota.textContent = tab.dataset.nota;
+      tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    });
+  });
+
+  // ----- Barra flotante -----
+  const barra = document.getElementById("barra-flotante");
+  let pasoEmbudo = false, planesVisible = false, footerVisible = false;
+  function actualizarBarra() {
+    barra.classList.toggle("visible", pasoEmbudo && !planesVisible && !footerVisible);
+  }
+  new IntersectionObserver((e) => {
+    if (e[0].isIntersecting) { pasoEmbudo = true; actualizarBarra(); }
+  }, { threshold: 0.2 }).observe(document.querySelector(".transformacion"));
+  new IntersectionObserver((e) => {
+    planesVisible = e[0].isIntersecting; actualizarBarra();
+  }, { threshold: 0.12 }).observe(document.getElementById("planes"));
+  new IntersectionObserver((e) => {
+    footerVisible = e[0].isIntersecting; actualizarBarra();
+  }, { threshold: 0.05 }).observe(document.querySelector("footer"));
+
+  // ----- Contadores animados -----
+  const counters = document.querySelectorAll(".metrica .num");
+  const counterObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = Number(el.dataset.count);
+      const suffix = el.dataset.suffix || "";
+      const decimal = String(target).includes(".");
+      const duration = 1100;
+      const t0 = performance.now();
+      function tick(now) {
+        const progress = Math.min((now - t0) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = target * eased;
+        el.textContent = (decimal ? value.toFixed(1) : Math.round(value)) + (progress === 1 ? suffix : (decimal ? "" : ""));
+        if (progress < 1) requestAnimationFrame(tick); else el.textContent = (decimal ? target.toFixed(1) : Math.round(target)) + suffix;
+      }
+      requestAnimationFrame(tick);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  counters.forEach((counter) => counterObserver.observe(counter));
+</script>
+</body>
+</html>

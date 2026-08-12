@@ -1,0 +1,193 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { SITE, waLink, formatoPrecio } from '../../../data/site';
+
+export async function getStaticPaths() {
+  const propiedades = await getCollection('propiedades');
+  return propiedades
+    .filter((p) => p.data.tituloEn)
+    .map((p) => ({ params: { slug: p.id }, props: { propiedad: p } }));
+}
+
+const { propiedad } = Astro.props;
+const d = propiedad.data;
+const titulo = d.tituloEn ?? d.titulo;
+const resumen = d.resumenEn ?? d.resumen;
+
+const zonaNombre: Record<string, string> = {
+  'playa-del-carmen': 'Playa del Carmen',
+  cancun: 'Cancún',
+  tulum: 'Tulum',
+};
+
+const etiquetaEstatus: Record<string, { texto: string; clase: string } | null> = {
+  venta: null,
+  preventa: { texto: 'Pre-construction', clase: 'badge--preventa' },
+  'entrega-inmediata': { texto: 'Move-in ready', clase: 'badge--entrega' },
+  oportunidad: { texto: 'Opportunity', clase: 'badge--oportunidad' },
+};
+const badgeEstatus = etiquetaEstatus[d.estatus];
+
+const precioM2 = Math.round(d.precio / d.m2);
+const mensajeWa = `Hi Suemi, I'm interested in "${titulo}" that I saw on your website. Could you send me more information?`;
+const mensajeAgenda = `Hi Suemi, I'd like to schedule a showing or video call for "${titulo}".`;
+
+const schemaPropiedad = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: titulo,
+  description: resumen,
+  image: new URL(d.imagen, Astro.site).href,
+  category: 'Real Estate',
+  offers: {
+    '@type': 'Offer',
+    price: d.precio,
+    priceCurrency: d.moneda,
+    availability: 'https://schema.org/InStock',
+    seller: { '@type': 'RealEstateAgent', name: SITE.nombre, telephone: SITE.telefono },
+  },
+};
+---
+
+<BaseLayout
+  titulo={`${titulo} | Suemi García · Bienes Raíces Riviera Maya`}
+  descripcion={resumen}
+  schema={schemaPropiedad}
+  lang="en"
+  rutaAlterna={`/propiedades/${propiedad.id}`}
+>
+  <section
+    class="detalle-hero detalle-hero--banner"
+    style={`background-image: url('${d.imagen}')`}
+  >
+    <div class="contenedor">
+      <nav style="font-size: 0.85rem; margin-bottom: 1rem;" aria-label="Breadcrumbs">
+        <a href="/en/properties">Properties</a> ·
+        <span>{zonaNombre[d.zona]}</span>
+      </nav>
+      <div class="detalle-badges">
+        {badgeEstatus && <span class={`badge ${badgeEstatus.clase}`}>{badgeEstatus.texto}</span>}
+        {d.frenteAlMar && <span class="badge badge--mar">Oceanfront</span>}
+      </div>
+      <h1>{titulo}</h1>
+      <div class="detalle-precio">{formatoPrecio(d.precio, d.moneda)}</div>
+      <div class="detalle-meta">
+        <span>📍 {d.ubicacion}</span>
+        <span>📐 {d.m2} m²</span>
+        {d.recamaras && <span>🛏 {d.recamaras} bedrooms</span>}
+        {d.banos && <span>🛁 {d.banos} bathrooms</span>}
+      </div>
+      {d.unidades && <span class="urgencia">Only {d.unidades} units left in this stage</span>}
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      {
+        d.ejemplo && (
+          <p class="aviso-ejemplo">
+            ⚠️ <strong>Sample listing.</strong> This property card is for demonstration —
+            contact Suemi for current inventory with this profile.
+          </p>
+        )
+      }
+      <div class="detalle-cuerpo">
+        <div>
+          <div class="numeros-inversion" style="margin-top: 0;">
+            <div>
+              <span class="dato">{formatoPrecio(precioM2, d.moneda)}</span>
+              <span class="concepto">Price per m²</span>
+            </div>
+            <div>
+              <span class="dato">{d.m2} m²</span>
+              <span class="concepto">Surface</span>
+            </div>
+            {
+              d.formasPagoEn.length > 0 && (
+                <div>
+                  <span class="dato">{d.formasPagoEn.length > 1 ? `${d.formasPagoEn.length} plans` : 'Direct plan'}</span>
+                  <span class="concepto">Payment options</span>
+                </div>
+              )
+            }
+            {
+              d.unidades && (
+                <div>
+                  <span class="dato">{d.unidades}</span>
+                  <span class="concepto">Units in stage</span>
+                </div>
+              )
+            }
+          </div>
+          {
+            (d.roiEstimadoEn ?? d.roiEstimado) && (
+              <p class="mini-testimonio" style="margin-bottom: 2rem;">
+                📈 <strong style="display: inline;">Investment profile:</strong> {d.roiEstimadoEn ?? d.roiEstimado}
+              </p>
+            )
+          }
+
+          <div class="prosa">
+            {d.parrafosEn.map((p) => <p>{p}</p>)}
+          </div>
+          {
+            d.formasPagoEn.length > 0 && (
+              <>
+                <h2>Payment options</h2>
+                <ul class="lista-check">
+                  {d.formasPagoEn.map((f) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+        </div>
+
+        <aside class="detalle-lateral">
+          <div class="asesora-card">
+            <div class="asesora-card__perfil">
+              <img
+                src="/img/suemi.jpg"
+                alt={`${SITE.asesor}, real estate investment advisor`}
+                class="asesora-card__foto"
+                width="72"
+                height="72"
+              />
+              <div>
+                <div class="asesora-card__nombre">{SITE.asesor}</div>
+                <div class="asesora-card__titulo">Investment advisor · Riviera Maya</div>
+              </div>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--gris);">
+              I'll send you the brochure, availability and a full financial breakdown for this
+              property — in English.
+            </p>
+            <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Request info</a>
+            <a href={waLink(mensajeAgenda)} class="boton boton--primario" target="_blank" rel="noopener">📅 Book a showing / video call</a>
+            <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`} class="boton boton--secundario">
+              📞 {SITE.telefono}
+            </a>
+            <p class="mini-testimonio">
+              "He explained the numbers and the legal side with a clarity we hadn't found with
+              anyone else."
+              <strong>— Investment client (sample testimonial)</strong>
+            </p>
+          </div>
+          <div class="asesora-card" style="border-top-color: var(--teal);">
+            <h3 style="margin: 0; font-size: 1.05rem;">Legal certainty included</h3>
+            <ul class="lista-check" style="font-size: 0.88rem;">
+              {(d.caracteristicasEn.length ? d.caracteristicasEn : d.caracteristicas).slice(0, 6).map((c) => <li>{c}</li>)}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="barra-movil">
+    <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <a href={waLink(mensajeAgenda)} class="boton boton--primario" target="_blank" rel="noopener">📅 Book</a>
+  </div>
+</BaseLayout>

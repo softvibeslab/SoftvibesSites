@@ -1,0 +1,83 @@
+{
+  "brand": {
+    "name": "EMIR//24",
+    "descriptor": "Coaching de entrenamiento · Playa del Carmen + online"
+  },
+  "contact": {
+    "instagram": "https://www.instagram.com/emir24.fit/",
+    "whatsapp": "https://wa.me/529841150027",
+    "location": "Smart Fit Plaza Las Américas · Playa del Carmen"
+  },
+  "hero": {
+    "eyebrow": "Entrenamiento con intención",
+    "title": "Deja de entrenar al tanteo.",
+    "summary": "Una ruta clara para mejorar técnica, organizar tus sesiones y avanzar con seguimiento. Elige atención 1 a 1 en Playa del Carmen o asesoría online.",
+    "primaryCta": "Quiero entrenar 1 a 1",
+    "secondaryCta": "Prefiero asesoría online"
+  },
+  "services": [
+    {
+      "id": "personal",
+      "number": "01",
+      "tag": "Presencial",
+      "title": "Entrenamiento 1 a 1",
+      "summary": "Una hora dedicada contigo para trabajar ejecución, técnica y cargas sin repartir la atención.",
+      "details": [
+        "Smart Fit Plaza Las Américas",
+        "Horario anunciado: 7:00 a 14:00",
+        "Disponibilidad sujeta a confirmación"
+      ],
+      "cta": "Consultar 1 a 1",
+      "message": "Hola Emir, vi tu página y quiero información sobre el entrenamiento 1 a 1. ¿Qué disponibilidad y precio tienes?"
+    },
+    {
+      "id": "online",
+      "number": "02",
+      "tag": "A distancia",
+      "title": "Asesoría online",
+      "summary": "Entrena en tu sucursal y horario con una rutina organizada y seguimiento directo por WhatsApp.",
+      "details": [
+        "Rutina adaptada al objetivo",
+        "Seguimiento por WhatsApp",
+        "Alcance alimentario por confirmar"
+      ],
+      "cta": "Consultar asesoría",
+      "message": "Hola Emir, vi tu página y quiero información sobre la asesoría online. ¿Qué incluye y cuál es el precio?"
+    }
+  ],
+  "about": {
+    "eyebrow": "Tu coach",
+    "title": "Cercano en el piso. Claro con el plan.",
+    "body": "Emir Morales es coach en Playa del Carmen. Su propuesta pública separa con honestidad la atención personalizada del apoyo general de piso: si contratas 1 a 1, la hora está enfocada en ti; si coinciden en su turno de piso, puede ayudarte con dudas puntuales.",
+    "note": "Emir menciona certificaciones comprobables. Los nombres, instituciones y vigencias deben validarse antes de publicarlos aquí."
+  },
+  "faq": [
+    {
+      "question": "¿Dónde son las sesiones presenciales?",
+      "answer": "La ubicación anunciada es Smart Fit Plaza Las Américas, en Playa del Carmen. Confirma con Emir el acceso, disponibilidad y cualquier requisito de la sucursal."
+    },
+    {
+      "question": "¿Qué horario tiene el servicio 1 a 1?",
+      "answer": "Emir publicó atención personalizada de 7:00 a 14:00. El horario y los cupos pueden cambiar; WhatsApp es la fuente para confirmar disponibilidad actual."
+    },
+    {
+      "question": "¿Qué incluye la asesoría online?",
+      "answer": "La publicación menciona rutina, menú y seguimiento por WhatsApp. Solicita por escrito el alcance, frecuencia de ajustes y límites de la parte alimentaria antes de contratar."
+    },
+    {
+      "question": "¿El turno de piso es entrenamiento personal?",
+      "answer": "No. Emir aclaró que de 18:00 a 23:00 trabaja como entrenador de piso: puede resolver dudas y postura, pero no dedicar una hora exclusiva."
+    }
+  ],
+  "finalCta": {
+    "eyebrow": "Tu siguiente sesión empieza aquí",
+    "title": "Primero definimos el objetivo. Luego construimos el plan.",
+    "summary": "Escríbele a Emir, cuenta dónde entrenas y qué quieres conseguir. Te confirmará modalidad, alcance, disponibilidad y precio.",
+    "button": "Hablar con Emir"
+  },
+  "seo": {
+    "title": "Emir Morales | Coach personal en Playa del Carmen",
+    "description": "Entrenamiento personal 1 a 1 en Playa del Carmen y asesoría online con seguimiento por WhatsApp. Consulta modalidad y disponibilidad con Emir."
+  }
+}
+

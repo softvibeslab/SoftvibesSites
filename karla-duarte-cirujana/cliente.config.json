@@ -1,0 +1,121 @@
+{
+  "slug": "karla-duarte-cirujana",
+  "nombre": "Dra. Karla Josefina Duarte Camacho",
+  "marca": "Dra. Karla Duarte — Cirugía Digestiva y Rectal",
+  "nicho": "cirujana general / coloproctología (salud, ticket alto + turismo médico)",
+  "ciudad": "Cancún, Quintana Roo",
+  "contacto": {
+    "whatsapp": "+52 998 227 3633",
+    "telefono": "998 227 3633",
+    "email": "dra_karladuarte@hotmail.com",
+    "instagram": "https://www.instagram.com/drakarladuarte/",
+    "facebook": "https://www.facebook.com/karla.duarte.188478",
+    "sitios": ["https://cirujanocancun.com/", "https://drakarladuarte.com/"],
+    "doctoralia": "https://www.doctoralia.com.mx/karla-josefina-duarte-camacho/cirujano-general/cancun"
+  },
+  "credenciales": [
+    "Médico Cirujano, Universidad Autónoma de Yucatán (2001-2007), Cédula 5869221",
+    "Cirugía General, Escuela Militar de Graduados de Sanidad / UDEFA (2009-2013), Cédula 8284665, Mención Honorífica",
+    "Consejo Mexicano de Cirugía General (certificada, recertificación 2018)",
+    "Consejera Q. Roo, Consejo Mexicano de Cirugía General (2017-2020)",
+    "Vicepresidenta del Colegio de Cirujanos de Cancún Q. Roo (2018-2020)",
+    "ATLS, American College of Surgeons (2015)"
+  ],
+  "cifras_reales": {
+    "doctoralia_opiniones": 922,
+    "consulta_primera_vez_mxn": 1200,
+    "competidor_osorio_opiniones": "560+",
+    "competidor_amerimed_opiniones": 278,
+    "instagram_seguidores": 1243,
+    "instagram_seguidos": 1088,
+    "instagram_publicaciones": 523
+  },
+  "diseno_actual": {
+    "plataforma": "WordPress/Divi",
+    "problemas": "Degradado teal genérico y recargado; fotos quirúrgicas explícitas en el blog (incómodas para un nicho íntimo); booking y 922 reseñas embebidos vía widget de Doctoralia (terreno rentado); layout denso poco premium.",
+    "idioma": "cirujanocancun.com solo español; drakarladuarte.com con inglés parcial"
+  },
+  "hallazgos": [
+    {
+      "icono": "🔀",
+      "titulo": "Marca partida en dos sitios",
+      "detalle": "cirujanocancun.com y drakarladuarte.com conviven con contenido casi idéntico. Google reparte autoridad entre ambos (canibalización) y el paciente no sabe cuál es 'el oficial'.",
+      "evidencia": "Ambos sitios en vivo con mismos servicios y retrato.",
+      "solucion": "Un solo dominio autoritario + redirección 301 del secundario. Consolida SEO y branding."
+    },
+    {
+      "icono": "📍",
+      "titulo": "Dirección distinta en cada plataforma (NAP inconsistente)",
+      "detalle": "cirujanocancun.com dice 'Centro Radiológico, Consultorio 1'; drakarladuarte.com suma 'Torre Kun'; Doctoralia dice 'UNIMED Consultorio 101' + 'Torre Kun 902'. Google penaliza esta inconsistencia y confunde al paciente.",
+      "evidencia": "3 direcciones diferentes entre web/web/Doctoralia.",
+      "solucion": "Dirección única y verificada en todos lados + Google Business Profile bien fichado con mapa."
+    },
+    {
+      "icono": "🏠",
+      "titulo": "La agenda y las 922 reseñas viven en terreno rentado",
+      "detalle": "Sus propios sitios NO tienen calendario funcional (la sección 'Citas' no agenda). Todo el activo (922 opiniones + booking) vive en Doctoralia, que cobra por lead y controla el algoritmo.",
+      "evidencia": "Doctoralia con calendario activo y 922 opiniones; contacto/ de cirujanocancun sin booking.",
+      "solucion": "Agenda propia (WhatsApp precargado + calendario) en su dominio; llevar reseñas a su casa."
+    },
+    {
+      "icono": "💬",
+      "titulo": "WhatsApp sin mensaje precargado (y ausente en un sitio)",
+      "detalle": "La página de contacto de cirujanocancun.com no tiene ningún enlace de WhatsApp: el paciente debe copiar el número. En un tema íntimo (proctología), esa fricción hace que muchos abandonen.",
+      "evidencia": "cirujanocancun.com/contacto sin wa.me; sin mensaje precargado por servicio.",
+      "solucion": "Botón WhatsApp por procedimiento con texto listo ('Hola Dra., me interesa el tratamiento de hemorroides con láser')."
+    },
+    {
+      "icono": "💲",
+      "titulo": "Cero transparencia de precios / paquetes",
+      "detalle": "Ningún procedimiento muestra precio ni 'desde $'. En turismo médico (pacientes de EUA/Canadá) el precio es EL filtro de decisión; sin él, comparan y se van con quien sí publica.",
+      "evidencia": "Sin precios en ambos sitios; solo Doctoralia muestra $1,200 de consulta.",
+      "solucion": "Paquetes con 'desde $' (MXN y USD) por procedimiento estrella."
+    },
+    {
+      "icono": "🌎",
+      "titulo": "Turismo médico desaprovechado",
+      "detalle": "Cancún es hub de turismo médico, pero solo un sitio tiene inglés, sin USD, sin comparativa de costo vs. EUA, sin sección clara de pacientes internacionales.",
+      "evidencia": "cirujanocancun.com solo en español; sin USD ni sección internacional dedicada.",
+      "solucion": "Landing bilingüe con USD, comparativa de ahorro y logística para pacientes internacionales."
+    }
+  ],
+  "benchmark": {
+    "patrones_ganadores": [
+      "Video/TikTok educativo embebido = autoridad cercana (Dr. Osorio)",
+      "Prueba social numérica prominente ('560+ opiniones')",
+      "Múltiples canales de contacto repetidos (WhatsApp + emergencia)"
+    ],
+    "huecos_diferenciacion": [
+      "Nadie en Cancún tiene booking propio + precios transparentes",
+      "Nadie explota turismo médico bilingüe con USD y comparativa de ahorro"
+    ]
+  },
+  "paleta_sugerida": {
+    "primario": "#0F6E6E",
+    "profundo": "#123A4A",
+    "crema": "#F7F3EC",
+    "acento_cta": "#FF6B5E",
+    "nota": "Petróleo/teal médico + crema cálida + coral para CTA. Transmite confianza + calidez ('espacio seguro, sin prejuicios' que ella ya comunica)."
+  },
+  "productos_estrella": [
+    "Hemorroides con láser (mínima invasión, recuperación rápida) — gancho principal",
+    "Vesícula / cálculos biliares (laparoscópica)",
+    "Hernias inguinal/umbilical (laparoscópica)",
+    "Proctología: fístula, fisura y absceso anal",
+    "Apendicitis",
+    "Consulta de valoración ($1,200)"
+  ],
+  "gancho_personalizacion": {
+    "principal": "523 publicaciones en Instagram + 922 opiniones en Doctoralia: produce muchísimo contenido y confianza, pero el embudo no capitaliza ese esfuerzo en su propio dominio.",
+    "reseña_reciente": "Doctoralia — Cecilia Lara (21 jul 2026): 'Hizo un espacio para poder atenderme, fue concisa, resolvió mis dudas'.",
+    "pendiente": "Elegir 1 reel específico de @drakarladuarte para el gancho definitivo del primer WhatsApp (revisar feed manualmente)."
+  },
+  "deploy": {
+    "url_sitio": "https://darkviolet-stingray-426574.hostingersite.com/",
+    "url_analisis": "https://darkviolet-stingray-426574.hostingersite.com/analisis/",
+    "url_links": "https://darkviolet-stingray-426574.hostingersite.com/links/",
+    "fecha": "2026-07-22",
+    "hosting": "softvibes-hosting (order 1008508005)"
+  },
+  "estado_pipeline": "analisis_publicado"
+}

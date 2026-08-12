@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { SITE, waLink } from '../config/site';
+import { LANDING } from '../config/landing';
+
+const propiedades = await getCollection('propiedades');
+const destacadas = propiedades.sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada)).slice(0, 3);
+---
+
+<BaseLayout titulo={`${SITE.nombre} | ${SITE.lema}`} descripcion={SITE.descripcion}>
+  <section class="hero">
+    <img class="hero__imagen" src={LANDING.hero.imagen} alt="Arquitectura contemporánea de demostración" fetchpriority="high" />
+    <div class="hero__velo"></div>
+    <div class="contenedor hero__contenido">
+      <span class="kicker kicker--claro" data-cms="hero-etiqueta">{LANDING.hero.etiqueta}</span>
+      <h1 data-cms="hero-titulo">{LANDING.hero.titulo}</h1>
+      <p data-cms="hero-descripcion">{LANDING.hero.descripcion}</p>
+      <div class="hero__acciones">
+        <a class="boton boton--acento" href="/propiedades" data-cms="cta-hero-catalogo">Explorar propiedades</a>
+        <a class="boton boton--cristal" href={waLink()} target="_blank" rel="noopener" data-cms="cta-hero-wa">Hablar con un asesor</a>
+      </div>
+      <p class="nota-demo">Plantilla de demostración: sustituye inventario, afirmaciones y medios antes de publicar.</p>
+    </div>
+  </section>
+
+  <section class="barra-confianza" aria-label="Principios del servicio">
+    <div class="contenedor barra-confianza__grid">
+      {LANDING.confianza.map((item) => <div><strong>{item.titulo}</strong><span>{item.texto}</span></div>)}
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="cabecera-seccion" data-reveal>
+        <div><span class="kicker">Selección</span><h2>Propiedades destacadas</h2></div>
+        <p>El componente acepta inventario tipado y mantiene una presentación consistente en todo el sitio.</p>
+      </div>
+      <div class="grid-propiedades">{destacadas.map((propiedad) => <PropertyCard propiedad={propiedad} />)}</div>
+      <p class="centrado"><a class="boton" href="/propiedades">Ver catálogo completo</a></p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--tinta">
+    <div class="contenedor proceso">
+      <div class="proceso__intro" data-reveal>
+        <span class="kicker kicker--claro">Una ruta sencilla</span>
+        <h2>Diseñado para convertir información en conversaciones</h2>
+        <p>La experiencia conecta contenido SEO, catálogo y captación sin depender de promesas comerciales.</p>
+      </div>
+      <div class="proceso__pasos">
+        {LANDING.razones.map((razon) => <article data-reveal><span>{razon.numero}</span><h3>{razon.titulo}</h3><p>{razon.texto}</p></article>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor perfil">
+      <img src={SITE.asesor.imagen} alt="Retrato demostrativo del asesor" loading="lazy" width="800" height="900" data-reveal />
+      <div data-reveal>
+        <span class="kicker">Quién acompaña</span>
+        <h2>{SITE.asesor.nombre}</h2>
+        <p class="perfil__cargo">{SITE.asesor.cargo}</p>
+        <p data-cms="asesor-bio">{SITE.asesor.bio}</p>
+        <ul class="lista-check">
+          <li>Explica aquí el proceso de atención.</li>
+          <li>Publica credenciales únicamente si pueden verificarse.</li>
+          <li>Define alcance, honorarios y responsabilidades.</li>
+        </ul>
+        <a class="enlace" href="/contacto">Conocer el proceso →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cita-demo">
+    <div class="contenedor" data-reveal>
+      <span class="kicker">Prueba social</span>
+      <blockquote data-cms="testimonio-cita">“{LANDING.testimonioDemo.cita}”</blockquote>
+      <p data-cms="testimonio-autor">{LANDING.testimonioDemo.autor}</p>
+    </div>
+  </section>
+
+  <LeadForm />
+</BaseLayout>

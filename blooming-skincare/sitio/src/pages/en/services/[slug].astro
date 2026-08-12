@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { SITE, waLink, formatoPrecio, CATEGORIAS_EN } from '../../../data/site';
+
+export async function getStaticPaths() {
+  const servicios = await getCollection('servicios');
+  return servicios
+    .filter((s) => s.data.tituloEn)
+    .map((s) => ({ params: { slug: s.id }, props: { servicio: s } }));
+}
+
+const { servicio } = Astro.props;
+const d = servicio.data;
+const titulo = d.tituloEn ?? d.titulo;
+const resumen = d.resumenEn ?? d.resumen;
+
+const mensajeWa = `Hi Blooming, I'd like to book "${titulo}". Could you share your availability?`;
+const mensajeDuda = `Hi Blooming, I have a question about "${titulo}" before booking.`;
+---
+
+<BaseLayout
+  titulo={`${titulo} in Playa del Carmen | ${SITE.nombre}`}
+  descripcion={resumen}
+  lang="en"
+  rutaAlterna={`/servicios/${servicio.id}`}
+>
+  <section class="detalle-hero detalle-hero--banner" style={`background-image: url('${d.imagen}')`}>
+    <div class="contenedor">
+      <nav style="font-size: 0.85rem; margin-bottom: 1rem;" aria-label="Breadcrumbs">
+        <a href="/en/services">Services</a> · <span>{CATEGORIAS_EN[d.categoria]}</span>
+      </nav>
+      <div class="detalle-badges">
+        {d.favorito && <span class="badge badge--favorito">★ Client favourite</span>}
+      </div>
+      <h1>{titulo}</h1>
+      <div class="detalle-precio">
+        {d.precio > 0 ? <>from {formatoPrecio(d.precio)}</> : 'Quoted at your assessment'}
+      </div>
+      <div class="detalle-meta">
+        {d.duracion && <span>⏱ {d.duracion}</span>}
+        <span>⭐ {SITE.resenas.calificacion} · {SITE.resenas.total} reviews</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="detalle-cuerpo">
+        <div>
+          {
+            (d.paraQuienEn ?? d.paraQuien) && (
+              <p class="mini-testimonio" style="margin-bottom: 2rem;">
+                💗 <strong style="display: inline;">Ideal for:</strong> {d.paraQuienEn ?? d.paraQuien}
+              </p>
+            )
+          }
+
+          <div class="prosa">
+            {d.parrafosEn.map((p) => <p>{p}</p>)}
+          </div>
+
+          {
+            d.beneficiosEn.length > 0 && (
+              <>
+                <h2>Benefits</h2>
+                <ul class="lista-check">
+                  {d.beneficiosEn.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+
+          <h2>What your visit looks like</h2>
+          <ol class="pasos">
+            <li><strong>Assessment.</strong> Before we begin we look at your skin or the area we'll treat: whether it's sensitive, oily or dry, and whether there's any irritation or condition to consider.</li>
+            <li><strong>Your session.</strong> The treatment is adjusted to what we find — we don't apply the same protocol to everyone.</li>
+            <li><strong>Aftercare.</strong> We walk you through what to do over the following days so the result lasts.</li>
+          </ol>
+        </div>
+
+        <aside class="detalle-lateral">
+          <div class="asesora-card">
+            <div class="asesora-card__perfil">
+              <img src="/img/logo-icono.jpg" alt="Blooming" class="asesora-card__foto" width="72" height="72" />
+              <div>
+                <div class="asesora-card__nombre">Blooming</div>
+                <div class="asesora-card__titulo">Laser hair removal & skincare</div>
+              </div>
+            </div>
+            <div class="resenas-mini">
+              <strong>⭐ {SITE.resenas.calificacion}</strong>
+              <span>{SITE.resenas.total} reviews on {SITE.resenas.fuente}</span>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--gris);">
+              Book on WhatsApp and we'll confirm availability the same day — in English.
+            </p>
+            <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Book on WhatsApp</a>
+            <a href={waLink(mensajeDuda)} class="boton boton--primario" target="_blank" rel="noopener">❓ I have a question</a>
+            <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`} class="boton boton--secundario">📞 {SITE.telefono}</a>
+          </div>
+
+          <div class="asesora-card" style="border-top-color: var(--laton);">
+            <h3 style="margin: 0; font-size: 1.05rem;">Find us</h3>
+            <p style="font-size: 0.9rem; margin: 0.5rem 0;">
+              {SITE.direccion}<br />{SITE.cp}, {SITE.ciudad}
+            </p>
+            <p style="font-size: 0.86rem; color: var(--gris); margin: 0 0 0.9rem;">Monday to Saturday, 10:00–20:00</p>
+            <a href={SITE.mapa} class="boton boton--secundario" target="_blank" rel="noopener">📍 Get directions</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="barra-movil">
+    <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Book</a>
+    <a href={SITE.mapa} class="boton boton--primario" target="_blank" rel="noopener">📍 Directions</a>
+  </div>
+</BaseLayout>

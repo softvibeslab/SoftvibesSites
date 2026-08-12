@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { content, localize, type Locale } from '../data/content';
+import '../styles/global.css';
+
+interface Props { locale?: Locale }
+const { locale = 'es' } = Astro.props;
+const t = (value: Record<Locale, string>) => localize(value, locale);
+const isEs = locale === 'es';
+const contactHref = content.contact.whatsapp || content.contact.instagram;
+const labels = isEs ? {
+  navProperties: 'Propiedades', navAbout: 'Acerca de Ivy', navProcess: 'Proceso', navContact: 'Contacto',
+  scroll: 'Descubre', seePost: 'Ver publicación', caveat: 'Información comercial sujeta a confirmación. Las imágenes y referencias provienen de publicaciones públicas recientes.',
+  processEyebrow: 'Una ruta simple', processTitle: 'De la inspiración a una decisión informada.',
+  steps: [
+    ['01', 'Define tu intención', 'Vivir, invertir o diversificar: empezamos por tus prioridades, horizonte y presupuesto.'],
+    ['02', 'Compara con contexto', 'Recibe una selección breve con diferencias reales de ubicación, etapa, uso y operación.'],
+    ['03', 'Avanza con claridad', 'Coordina recorridos, valida información y acompaña cada siguiente paso con especialistas.'],
+  ],
+  partnerEyebrow: 'Respaldo comercial', partnerTitle: 'Marca personal, equipo detrás.',
+  partnerBody: 'La experiencia está diseñada alrededor de Ivy y se conecta con la estructura comercial de Golfia Real Estate. Así, la conversación conserva cercanía sin perder capacidad de seguimiento.',
+  partnerLink: 'Conocer Golfia',
+  faqEyebrow: 'Preguntas frecuentes', faqTitle: 'Antes de comenzar.',
+  faqs: [
+    ['¿La primera conversación tiene costo?', 'Esta demo plantea una conversación inicial para entender objetivos. Ivy debe confirmar el alcance y las condiciones finales del servicio.'],
+    ['¿Puedo comprar desde otro país?', 'La asesoría puede comenzar a distancia. El proceso legal, fiscal y bancario debe revisarse con profesionales autorizados para tu situación.'],
+    ['¿Los proyectos tienen disponibilidad inmediata?', 'La disponibilidad cambia. Cada unidad, precio, forma de pago y fecha de entrega debe confirmarse por escrito antes de decidir.'],
+    ['¿Ivy trabaja únicamente con propiedades de golf?', 'Su comunicación pública incluye golf, residencias, entregas inmediatas y oportunidades en distintos puntos de Riviera Maya. La selección depende de tus objetivos.'],
+  ],
+  ctaEyebrow: 'Tu siguiente propiedad', ctaTitle: 'La búsqueda correcta comienza con buenas preguntas.',
+  ctaBody: 'Cuéntale a Ivy qué quieres lograr y recibe una primera orientación para ordenar opciones.', ctaButton: 'Iniciar conversación',
+  footerNote: 'Prototipo local · Información sujeta a validación antes de publicar.', privacy: 'Aviso de privacidad', analysis: 'Ver análisis',
+} : {
+  navProperties: 'Properties', navAbout: 'About Ivy', navProcess: 'Process', navContact: 'Contact',
+  scroll: 'Discover', seePost: 'View post', caveat: 'Commercial information is subject to confirmation. Images and references come from recent public posts.',
+  processEyebrow: 'A simple path', processTitle: 'From inspiration to an informed decision.',
+  steps: [
+    ['01', 'Define your intent', 'Live, invest or diversify: we start with your priorities, timeline and budget.'],
+    ['02', 'Compare with context', 'Receive a focused selection with meaningful differences in location, stage, use and operation.'],
+    ['03', 'Move forward clearly', 'Coordinate visits, validate information and navigate each next step with specialists.'],
+  ],
+  partnerEyebrow: 'Commercial support', partnerTitle: 'A personal brand, backed by a team.',
+  partnerBody: 'The experience is designed around Ivy and connects to Golfia Real Estate’s commercial structure—keeping the conversation personal while maintaining follow-up capacity.',
+  partnerLink: 'Meet Golfia',
+  faqEyebrow: 'Frequently asked', faqTitle: 'Before we begin.',
+  faqs: [
+    ['Does the first conversation have a cost?', 'This demo proposes an initial conversation to understand your goals. Ivy must confirm the final scope and terms of service.'],
+    ['Can I buy from another country?', 'Advisory can begin remotely. Legal, tax and banking steps must be reviewed with qualified professionals for your situation.'],
+    ['Are the projects immediately available?', 'Availability changes. Every unit, price, payment plan and delivery date must be confirmed in writing before making a decision.'],
+    ['Does Ivy only work with golf properties?', 'Her public content includes golf, residential projects, immediate delivery and opportunities across Riviera Maya. The selection depends on your goals.'],
+  ],
+  ctaEyebrow: 'Your next property', ctaTitle: 'The right search starts with good questions.',
+  ctaBody: 'Tell Ivy what you want to accomplish and receive an initial direction to organize your options.', ctaButton: 'Start a conversation',
+  footerNote: 'Local prototype · Information must be validated before publication.', privacy: 'Privacy notice', analysis: 'View analysis',
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: content.brand.name,
+  description: t(content.brand.descriptor),
+  areaServed: ['Riviera Maya', 'Playa del Carmen', 'Tulum'],
+  sameAs: [content.contact.instagram, 'https://golfia.mx/'],
+};
+---
+
+<BaseLayout title={t(content.seo.title)} description={t(content.seo.description)} locale={locale} canonicalPath={isEs ? '/' : '/en/'}>
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href={isEs ? '/' : '/en/'} aria-label="Ivy Loya, inicio">
+        <span class="brand__mark">IL</span>
+        <span class="brand__text">
+          <strong data-copy="brand.name">{content.brand.name}</strong>
+          <small data-copy="brand.partner">{content.brand.partner}</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label={isEs ? 'Navegación principal' : 'Main navigation'}>
+        <a href="#propiedades">{labels.navProperties}</a>
+        <a href="#ivy">{labels.navAbout}</a>
+        <a href="#proceso">{labels.navProcess}</a>
+        <a href="#contacto">{labels.navContact}</a>
+      </nav>
+      <div class="header-actions">
+        <div class="language" aria-label={isEs ? 'Idioma' : 'Language'}>
+          <a href="/" aria-current={isEs ? 'page' : undefined}>ES</a>
+          <a href="/en/" aria-current={!isEs ? 'page' : undefined}>EN</a>
+        </div>
+        <a class="button button--aqua" href={contactHref} target="_blank" rel="noopener" data-contact-link data-track="contact_header">
+          {labels.navContact} ↗
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow eyebrow--light" data-copy="hero.eyebrow">{t(content.hero.eyebrow)}</p>
+          <h1 class="display" data-copy="hero.title">{t(content.hero.title)}</h1>
+          <p class="hero__summary" data-copy="hero.summary">{t(content.hero.summary)}</p>
+          <div class="hero__actions">
+            <a class="button button--aqua" href="#propiedades" data-copy="hero.primaryCta">{t(content.hero.primaryCta)}</a>
+            <a class="button button--ghost" href={contactHref} target="_blank" rel="noopener" data-contact-link data-copy="hero.secondaryCta" data-track="contact_hero">{t(content.hero.secondaryCta)}</a>
+          </div>
+        </div>
+        <aside class="hero__profile">
+          <img src="/img/research/ivy-loya.jpg" alt="Ivy Loya, asesora inmobiliaria" width="785" height="785" />
+          <p data-copy="brand.descriptor">{t(content.brand.descriptor)}</p>
+        </aside>
+      </div>
+      <span class="hero__scroll">{labels.scroll} ↓</span>
+    </section>
+
+    <section class="trust-strip" aria-label={isEs ? 'Áreas de servicio' : 'Service overview'}>
+      <div class="container trust-strip__inner">
+        <div class="trust-item"><strong>Riviera Maya</strong><span>Playa del Carmen · Tulum · Caribe Mexicano</span></div>
+        <div class="trust-item"><strong>{isEs ? 'Atención trilingüe' : 'Trilingual service'}</strong><span>{isEs ? 'Acompañamiento cercano y multicultural' : 'Close, cross-cultural guidance'}</span></div>
+        <div class="trust-item"><strong data-copy="brand.partner">{content.brand.partner}</strong><span>{isEs ? 'Respaldo de equipo' : 'Team support'}</span></div>
+      </div>
+    </section>
+
+    <section class="section properties" id="propiedades">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow" data-copy="propertiesIntro.eyebrow">{t(content.propertiesIntro.eyebrow)}</p>
+            <h2 class="title" data-copy="propertiesIntro.title">{t(content.propertiesIntro.title)}</h2>
+          </div>
+          <p class="lede" data-copy="propertiesIntro.summary">{t(content.propertiesIntro.summary)}</p>
+        </div>
+        <div class="property-grid">
+          {content.properties.map((property, index) => (
+            <article class="property-card">
+              <img class="property-card__image" src={property.image} alt={`${property.title}, ${property.location}`} width="1080" height="1080" loading="lazy" data-content-src={`properties.${index}.image`} />
+              <div class="property-card__content">
+                <span class="property-card__status" data-copy={`properties.${index}.status`}>{t(property.status)}</span>
+                <h3 data-copy={`properties.${index}.title`}>{property.title}</h3>
+                <p class="property-card__location" data-copy={`properties.${index}.location`}>{property.location}</p>
+                <p class="property-card__summary" data-copy={`properties.${index}.summary`}>{t(property.summary)}</p>
+                <a class="property-card__link" href={property.link} target="_blank" rel="noopener" data-content-href={`properties.${index}.link`} data-track={`property_${property.id}`}>{labels.seePost} ↗</a>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p class="disclaimer">{labels.caveat}</p>
+      </div>
+    </section>
+
+    <section class="section" id="ivy">
+      <div class="container about-grid">
+        <div class="portrait-wrap">
+          <img src="/img/research/ivy-loya.jpg" alt="Retrato profesional de Ivy Loya" width="785" height="785" loading="lazy" />
+          <div class="portrait-badge">Riviera<br />Maya</div>
+        </div>
+        <div class="about-copy">
+          <p class="eyebrow" data-copy="about.eyebrow">{t(content.about.eyebrow)}</p>
+          <h2 class="title" data-copy="about.title">{t(content.about.title)}</h2>
+          <p class="lede" data-copy="about.body">{t(content.about.body)}</p>
+          <p class="about-note"><span>✦</span><span data-copy="about.note">{t(content.about.note)}</span></p>
+          <a class="text-link" href={content.contact.instagram} target="_blank" rel="noopener" data-content-href="contact.instagram" data-track="instagram_about">Instagram @ivyloyarealestate ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process" id="proceso">
+      <div class="container">
+        <p class="eyebrow eyebrow--light">{labels.processEyebrow}</p>
+        <h2 class="title">{labels.processTitle}</h2>
+        <div class="process-grid">
+          {labels.steps.map(([number, title, body]) => (
+            <article class="step">
+              <span class="step__number">{number}</span>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section partnership">
+      <div class="container partnership__card">
+        <div class="partnership__copy">
+          <p class="eyebrow">{labels.partnerEyebrow}</p>
+          <h2 class="title">{labels.partnerTitle}</h2>
+          <p>{labels.partnerBody}</p>
+          <a class="text-link" href="https://golfia.mx/" target="_blank" rel="noopener">{labels.partnerLink} ↗</a>
+        </div>
+        <div class="partnership__visual">
+          <img src="/img/research/the-village.jpg" alt="Vista aérea de una propiedad junto al campo de golf" width="1080" height="608" loading="lazy" />
+          <img class="partnership__logo" src="/img/research/golfia-logo.jpg" alt="Golfia Real Estate" width="512" height="512" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq">
+      <div class="container faq-grid">
+        <div>
+          <p class="eyebrow">{labels.faqEyebrow}</p>
+          <h2 class="title">{labels.faqTitle}</h2>
+        </div>
+        <div class="faq-list">
+          {labels.faqs.map(([question, answer], index) => (
+            <details open={index === 0}>
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section final-cta" id="contacto">
+      <div class="container final-cta__inner">
+        <p class="eyebrow eyebrow--light">{labels.ctaEyebrow}</p>
+        <h2 class="title">{labels.ctaTitle}</h2>
+        <p>{labels.ctaBody}</p>
+        <a class="button button--aqua" href={contactHref} target="_blank" rel="noopener" data-contact-link data-track="contact_final">{labels.ctaButton} ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__top">
+      <a class="brand" href={isEs ? '/' : '/en/'}>
+        <span class="brand__mark">IL</span>
+        <span class="brand__text"><strong>Ivy Loya</strong><small>Real Estate</small></span>
+      </a>
+      <nav class="footer-links" aria-label={isEs ? 'Enlaces del pie' : 'Footer links'}>
+        <a href={content.contact.instagram} target="_blank" rel="noopener" data-content-href="contact.instagram">Instagram</a>
+        <a href="/links/">Links</a>
+        <a href="/aviso-de-privacidad/">{labels.privacy}</a>
+        <a href="/analisis/">{labels.analysis}</a>
+      </nav>
+    </div>
+    <div class="container site-footer__bottom">
+      <span>© {new Date().getFullYear()} Ivy Loya</span>
+      <span>{labels.footerNote}</span>
+    </div>
+  </footer>
+
+  <script is:inline define:vars={{ locale }}>
+    (() => {
+      const readPath = (source, path) => path.split('.').reduce((value, part) => value?.[part], source);
+      const localized = (value) => value && typeof value === 'object' && !Array.isArray(value) ? (value[locale] || value.es || '') : value;
+
+      fetch('/data/site-content.json', { cache: 'no-store' })
+        .then((response) => response.ok ? response.json() : Promise.reject(new Error('Content unavailable')))
+        .then((runtime) => {
+          document.querySelectorAll('[data-copy]').forEach((element) => {
+            const value = localized(readPath(runtime, element.dataset.copy));
+            if (typeof value === 'string') element.textContent = value;
+          });
+          document.querySelectorAll('[data-content-href]').forEach((element) => {
+            const value = readPath(runtime, element.dataset.contentHref);
+            if (typeof value === 'string' && value) element.setAttribute('href', value);
+          });
+          document.querySelectorAll('[data-content-src]').forEach((element) => {
+            const value = readPath(runtime, element.dataset.contentSrc);
+            if (typeof value === 'string' && value.startsWith('/img/')) element.setAttribute('src', value);
+          });
+          const contact = runtime.contact?.whatsapp || runtime.contact?.instagram;
+          if (contact) document.querySelectorAll('[data-contact-link]').forEach((element) => element.setAttribute('href', contact));
+          const seoTitle = localized(runtime.seo?.title);
+          const seoDescription = localized(runtime.seo?.description);
+          if (seoTitle) document.title = seoTitle;
+          if (seoDescription) document.querySelector('[data-runtime-description]')?.setAttribute('content', seoDescription);
+        })
+        .catch(() => {});
+
+      document.querySelectorAll('[data-track]').forEach((element) => {
+        element.addEventListener('click', () => {
+          const event = { event: 'ivy_site_click', action: element.dataset.track, language: locale };
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push(event);
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

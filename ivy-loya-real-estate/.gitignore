@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+public/img/uploads/*
+!public/img/uploads/.gitkeep
+public/data/*.tmp

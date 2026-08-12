@@ -1,0 +1,10 @@
+{
+  "name": "colegios-875",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/prepare-sites-build.mjs",
+    "dev": "python3 -m http.server 8765 --bind 127.0.0.1"
+  }
+}

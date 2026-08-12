@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Colegios 875 · Análisis de presencia digital — Softvibes</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bone:#F2F0E8; --paper:#FBFAF5; --ink:#16211C; --ink-soft:#3b463f; --stone:#8a897c;
+    --gold:#B08A4F; --gold-soft:#e6cf9c; --green:#1F3D34; --green-deep:#132a23;
+    --rojo:#b4553f; --line:rgba(22,33,28,.14); --shadow:0 20px 60px rgba(19,42,35,.15);
+    --ease:cubic-bezier(.19,1,.22,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Archivo",system-ui,sans-serif;background:var(--bone);color:var(--ink);line-height:1.6;overflow-x:hidden;}
+  h1,h2,h3{font-family:"Archivo",sans-serif;}
+  .serif{font-family:"Fraunces",Georgia,serif;}
+  .container{max-width:1000px;margin:0 auto;padding:0 1.5rem;}
+  .eyebrow{display:inline-block;font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:1rem;}
+
+  /* HERO */
+  .hero{background:linear-gradient(160deg,rgba(19,42,35,.92),rgba(31,61,52,.86)),url('img/hero-edificio.jpg') center 30%/cover no-repeat;color:var(--bone);text-align:center;padding:4rem 1.5rem 6.5rem;position:relative;}
+  .hero::after{content:'';position:absolute;inset:auto 0 -1px 0;height:80px;background:var(--bone);clip-path:ellipse(60% 100% at 50% 100%);}
+  .hero .logo{width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);margin-bottom:1.3rem;background:#fff;}
+  .hero .marca{font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:1.6rem;font-weight:700;}
+  .hero h1{font-size:clamp(1.9rem,5vw,3.2rem);font-weight:700;max-width:780px;margin:0 auto 1.3rem;line-height:1.06;text-transform:uppercase;letter-spacing:.01em;}
+  .hero h1 em{font-family:"Fraunces",serif;font-style:italic;font-weight:400;text-transform:none;color:var(--gold-soft);}
+  .hero p.sub{max-width:600px;margin:0 auto;font-weight:300;font-size:1.05rem;opacity:.9;}
+  .hero .dedic{margin-top:2rem;font-size:.84rem;opacity:.7;}
+
+  /* CIFRAS */
+  .cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:-2.5rem auto 0;position:relative;z-index:2;max-width:860px;padding:0 1.5rem;}
+  .cifra{background:var(--paper);border-radius:14px;box-shadow:var(--shadow);padding:1.4rem 1rem;text-align:center;border-top:3px solid var(--gold);}
+  .cifra .num{font-family:"Fraunces",serif;font-size:2.1rem;color:var(--green);font-weight:500;}
+  .cifra .desc{font-size:.78rem;color:var(--ink-soft);margin-top:.2rem;}
+
+  section{padding:4.5rem 0 2rem;}
+  .section-head{text-align:center;max-width:660px;margin:0 auto 3rem;}
+  .section-head h2{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;text-transform:uppercase;line-height:1.05;margin-bottom:.8rem;}
+  .section-head p{color:var(--ink-soft);font-weight:300;}
+
+  /* EVIDENCIA */
+  .evi{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+  .evi figure{background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(19,42,35,.07);}
+  .evi img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top center;display:block;background:#eee;}
+  .evi figcaption{font-size:.8rem;color:var(--ink-soft);padding:.8rem .9rem;}
+  .evi figcaption strong{display:block;color:var(--ink);font-size:.88rem;}
+  @media(max-width:820px){.evi{grid-template-columns:repeat(2,1fr);}}
+
+  /* HALLAZGOS */
+  .hallazgo{background:var(--paper);border-radius:14px;box-shadow:0 6px 24px rgba(19,42,35,.06);margin-bottom:1rem;overflow:hidden;border-left:4px solid var(--rojo);}
+  .hallazgo button{all:unset;display:flex;align-items:center;gap:1rem;width:100%;padding:1.2rem 1.4rem;cursor:pointer;box-sizing:border-box;}
+  .hallazgo .icono{font-size:1.4rem;flex-shrink:0;}
+  .hallazgo .titulo{font-weight:600;flex:1;}
+  .hallazgo .flecha{transition:transform .35s;color:var(--gold);}
+  .hallazgo.abierto .flecha{transform:rotate(180deg);}
+  .hallazgo .detalle{max-height:0;overflow:hidden;transition:max-height .45s ease;}
+  .hallazgo .detalle-inner{padding:0 1.4rem 1.4rem 4rem;color:var(--ink-soft);font-size:.95rem;font-weight:300;}
+  .hallazgo .solucion{margin-top:.8rem;padding:.8rem 1rem;background:rgba(31,61,52,.08);border-left:3px solid var(--green);border-radius:0 8px 8px 0;font-size:.9rem;}
+  .hallazgo .solucion strong{color:var(--green);}
+  @media(max-width:560px){.hallazgo .detalle-inner{padding-left:1.4rem;}}
+
+  /* ANTES / DESPUÉS */
+  .embudo{background:var(--green-deep);color:var(--bone);padding:4.5rem 0;margin-top:3rem;}
+  .embudo .section-head h2{color:var(--bone);}
+  .embudo .section-head p{color:var(--gold-soft);}
+  .switch-wrap{display:flex;justify-content:center;margin-bottom:2.6rem;}
+  .switch{display:flex;background:rgba(242,240,232,.1);border-radius:999px;padding:5px;gap:4px;}
+  .switch button{all:unset;cursor:pointer;padding:.6rem 1.8rem;border-radius:999px;font-size:.88rem;font-weight:700;color:var(--gold-soft);transition:all .3s;}
+  .switch button.activo{background:var(--gold);color:#fff;}
+  @keyframes aparecer{to{opacity:1;transform:translateY(0);}}
+  .escena{max-width:900px;margin:0 auto;padding:0 1.2rem;}
+  .escena[hidden]{display:none;}
+  .escena>*{opacity:0;transform:translateY(14px);animation:aparecer .5s forwards;}
+  .escena>*:nth-child(2){animation-delay:.15s;}.escena>*:nth-child(3){animation-delay:.3s;}
+  .veredicto{text-align:center;margin-top:2.2rem;font-family:"Fraunces",serif;font-size:1.15rem;font-style:italic;color:var(--gold-soft);padding:0 1rem;}
+
+  /* Mockups "antes" */
+  .caos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;}
+  .mock{background:var(--paper);border-radius:12px;overflow:hidden;color:var(--ink);box-shadow:0 16px 40px rgba(0,0,0,.28);text-align:left;}
+  .caos .mock:nth-child(1){transform:rotate(-1.5deg);}.caos .mock:nth-child(2){transform:rotate(1deg) translateY(8px);}
+  .caos .mock:nth-child(3){transform:rotate(-.7deg);}.caos .mock:nth-child(4){transform:rotate(1.3deg);}
+  .caos .mock:nth-child(5){transform:rotate(-1.1deg) translateY(-6px);}.caos .mock:nth-child(6){transform:rotate(1deg);}
+  .app-bar{display:flex;align-items:center;gap:.4rem;padding:.55rem .75rem;font-size:.74rem;font-weight:700;border-bottom:1px solid #ece8df;}
+  .pill-off{margin-left:auto;font-size:.58rem;font-weight:700;color:var(--rojo);border:1px solid rgba(180,85,63,.45);padding:.1rem .45rem;border-radius:99px;white-space:nowrap;}
+  .mock .thumb{width:100%;height:120px;object-fit:cover;object-position:top;display:block;}
+  .mock .body{padding:.8rem .85rem 1rem;font-size:.78rem;color:#555;}
+  .brand3{display:flex;flex-direction:column;gap:.4rem;}
+  .brand3 span{font-size:.72rem;font-weight:700;background:rgba(31,61,52,.07);border-radius:7px;padding:.4rem .6rem;}
+  .dead-btn{margin-top:.5rem;background:var(--green);color:#fff;text-align:center;font-size:.7rem;font-weight:700;padding:.5rem;border-radius:99px;}
+  .g-bar{border:1px solid #ddd;border-radius:99px;padding:.38rem .7rem;font-size:.68rem;color:#444;}
+  .g-res{font-size:.64rem;color:#999;padding-top:.5rem;line-height:1.55;}
+  .g-res .no{color:var(--rojo);font-weight:700;}
+  @media(max-width:640px){.caos{grid-template-columns:repeat(2,1fr);}.caos .mock,.caos .mock:nth-child(n){transform:none;}}
+
+  /* Después: device + tour (adaptado) */
+  .redes-fila{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;}
+  .red-chip{background:rgba(242,240,232,.08);border:1px solid rgba(230,207,156,.4);color:var(--bone);font-size:.72rem;padding:.34rem .75rem;border-radius:99px;}
+  .convergen{text-align:center;color:var(--gold-soft);font-size:1rem;padding:.6rem 0 1rem;}
+  .convergen .linea{display:block;width:1px;height:26px;margin:.25rem auto 0;background:linear-gradient(var(--gold),transparent);}
+  .disp-tabs{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;padding-bottom:1.4rem;}
+  .disp-tab{all:unset;cursor:pointer;font-size:.78rem;font-weight:700;color:var(--gold-soft);border:1px solid rgba(230,207,156,.35);padding:.45rem .95rem;border-radius:99px;transition:all .25s;}
+  .disp-tab.activo{background:var(--bone);color:var(--ink);border-color:var(--bone);}
+  .dispositivo{width:fit-content;margin:0 auto;background:#0a1512;position:relative;box-shadow:0 34px 80px rgba(0,0,0,.5),0 0 0 1px rgba(230,207,156,.25);}
+  .dispositivo .pantalla{overflow:hidden;background:#fff;position:relative;}
+  .dispositivo iframe{border:0;display:block;background:#fff;transform-origin:top left;}
+  .dispositivo .muesca{display:none;position:absolute;top:22px;left:50%;transform:translateX(-50%);width:118px;height:22px;background:#0a1512;border-radius:99px;z-index:2;}
+  .dispositivo .base{display:none;}
+  .dispositivo.iphone{border-radius:52px;padding:12px;}.dispositivo.iphone .pantalla{border-radius:40px;}.dispositivo.iphone .muesca{display:block;}
+  .dispositivo.tablet{border-radius:30px;padding:16px;}.dispositivo.tablet .pantalla{border-radius:14px;}
+  .dispositivo.laptop{border-radius:16px 16px 4px 4px;padding:14px 14px 16px;margin-bottom:24px;}.dispositivo.laptop .pantalla{border-radius:6px;}
+  .dispositivo.laptop .base{display:block;position:absolute;left:50%;transform:translateX(-50%);bottom:-15px;width:calc(100% + 90px);height:16px;background:linear-gradient(#2b4a40,#0a1512);border-radius:0 0 18px 18px;box-shadow:0 16px 30px rgba(0,0,0,.35);}
+  .dispositivo.laptop .base::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:7px;background:#0a1512;border-radius:0 0 8px 8px;}
+  .tour-tabs{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;overflow-x:auto;padding:1.6rem .2rem .3rem;scrollbar-width:none;}
+  .tour-tabs::-webkit-scrollbar{display:none;}
+  .tour-tab{all:unset;cursor:pointer;white-space:nowrap;font-size:.76rem;font-weight:700;color:var(--gold-soft);border:1px solid rgba(230,207,156,.35);padding:.45rem .95rem;border-radius:99px;transition:all .25s;}
+  .tour-tab.activo{background:var(--gold);color:#fff;border-color:var(--gold);}
+  .tour-nota{text-align:center;font-size:.92rem;color:var(--bone);font-weight:300;padding:.9rem 1rem 0;min-height:2.6em;}
+  .cta-sitio{text-align:center;padding-top:1.6rem;}
+  .btn-brillo{animation:pulso 2.4s infinite;}
+  @keyframes pulso{0%,100%{box-shadow:0 0 0 0 rgba(176,138,79,.55);}50%{box-shadow:0 0 0 16px rgba(176,138,79,0);}}
+
+  /* MEJORAS */
+  .mejoras{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;}
+  .mejora{background:var(--paper);border-radius:14px;padding:1.5rem;box-shadow:0 6px 24px rgba(19,42,35,.06);border-top:3px solid var(--gold);}
+  .mejora .icono{font-size:1.6rem;margin-bottom:.6rem;}
+  .mejora h3{font-size:1.15rem;margin-bottom:.4rem;}
+  .mejora p{font-size:.88rem;color:var(--ink-soft);font-weight:300;}
+  @media(max-width:820px){.mejoras{grid-template-columns:1fr;}}
+
+  /* ESCALERA / TIERS */
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;align-items:stretch;}
+  .tier{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.9rem 1.4rem;display:flex;flex-direction:column;text-align:center;box-shadow:0 8px 28px rgba(19,42,35,.07);position:relative;}
+  .tier.destacado{border:2px solid var(--gold);box-shadow:var(--shadow);transform:scale(1.04);z-index:1;}
+  .tier-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .9rem;border-radius:99px;white-space:nowrap;}
+  .tier-nombre{font-family:"Fraunces",serif;font-size:1.3rem;color:var(--ink);}
+  .tier-precio{font-family:"Fraunces",serif;font-size:2.3rem;font-weight:500;color:var(--green);line-height:1.1;padding-top:.5rem;}
+  .tier-moneda{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-bottom:1rem;}
+  .tier ul{list-style:none;text-align:left;font-size:.84rem;color:var(--ink-soft);font-weight:300;flex:1;margin:0 0 1.3rem;}
+  .tier ul li{padding:.44rem 0;border-bottom:1px solid rgba(22,33,28,.06);display:flex;gap:.5rem;line-height:1.45;}
+  .tier ul li .si{color:var(--green);font-weight:800;flex-shrink:0;}
+  .tier ul li:last-child{border-bottom:none;}
+  .tier .mrr{font-size:.7rem;color:var(--gold);font-weight:700;padding-bottom:.6rem;}
+  @media(max-width:860px){.tiers{grid-template-columns:1fr;max-width:420px;margin:0 auto;}.tier.destacado{transform:none;order:-1;}}
+
+  /* Capa de asistentes 24/7 */
+  .capa{margin-top:1.6rem;background:linear-gradient(135deg,var(--green-deep),var(--green) 70%,#2b5647);color:var(--bone);border-radius:20px;padding:2rem 2.1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.7rem;align-items:center;box-shadow:var(--shadow);}
+  .capa-ic{width:66px;height:66px;border-radius:50%;background:rgba(230,207,156,.16);display:grid;place-items:center;font-size:2rem;flex-shrink:0;}
+  .capa h3{font-size:1.5rem;text-transform:uppercase;margin:.2rem 0 .5rem;}
+  .capa p{font-weight:300;font-size:.95rem;color:rgba(242,240,232,.85);max-width:540px;}
+  .capa p b{color:#fff;font-weight:600;}
+  .capa-list{list-style:none;margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.4rem;}
+  .capa-list li{font-size:.72rem;background:rgba(242,240,232,.1);border:1px solid rgba(230,207,156,.25);border-radius:99px;padding:.3rem .7rem;}
+  .capa-precio{text-align:center;flex-shrink:0;}
+  .capa-precio .p{font-family:"Fraunces",serif;font-size:1.7rem;color:var(--gold-soft);line-height:1;}
+  .capa-precio .u{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,240,232,.6);margin:.2rem 0 .9rem;}
+  @media(max-width:820px){.capa{grid-template-columns:1fr;text-align:center;}.capa-ic{margin:0 auto;}.capa-list{justify-content:center;}.capa p{margin:0 auto;}}
+
+  .btn{display:inline-block;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-weight:700;font-size:.92rem;letter-spacing:.03em;transition:transform .25s,box-shadow .25s;cursor:pointer;border:0;font-family:inherit;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(19,42,35,.2);}
+  .btn-oro{background:var(--gold);color:#fff;}
+  .btn-borde{border:1.5px solid var(--ink);color:var(--ink);background:transparent;}
+
+  /* CTA final */
+  .cta-final{text-align:center;padding:5rem 1.5rem 5.5rem;}
+  .cta-final h2{font-size:clamp(1.6rem,4.5vw,2.5rem);font-weight:700;text-transform:uppercase;max-width:640px;margin:0 auto 1rem;line-height:1.05;}
+  .cta-final h2 em{font-family:"Fraunces",serif;font-style:italic;font-weight:400;text-transform:none;color:var(--gold);}
+  .cta-final p{color:var(--ink-soft);font-weight:300;max-width:520px;margin:0 auto 2.2rem;}
+  .botones{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+
+  .barra-flotante{position:fixed;left:50%;bottom:14px;transform:translate(-50%,160%);display:flex;gap:.55rem;background:rgba(19,42,35,.96);border:1px solid rgba(230,207,156,.45);border-radius:999px;padding:.5rem;z-index:60;box-shadow:0 18px 50px rgba(0,0,0,.4);transition:transform .45s ease;backdrop-filter:blur(8px);}
+  .barra-flotante.visible{transform:translate(-50%,0);}
+  .bf-btn{display:inline-block;padding:.72rem 1.4rem;border-radius:999px;text-decoration:none;font-size:.86rem;font-weight:700;white-space:nowrap;}
+  .bf-sitio{background:var(--gold);color:#fff;}.bf-pago{color:var(--bone);border:1px solid rgba(242,240,232,.4);}
+  @media(max-width:560px){.barra-flotante{width:calc(100% - 16px);justify-content:center;}.bf-btn{flex:1;text-align:center;padding:.72rem .5rem;font-size:.8rem;}}
+
+  /* Simulador de agentes */
+  .sim{background:var(--paper);}
+  .sim .switch{background:rgba(22,33,28,.06);}
+  .sim .switch button{color:var(--ink-soft);}
+  .sim .switch button.activo{background:var(--green);color:#fff;}
+  .phone{width:min(360px,100%);margin:0 auto;background:#0a1512;border-radius:38px;padding:12px;box-shadow:0 30px 70px rgba(19,42,35,.3);}
+  .phone .screen{background:#e7dfd4;border-radius:28px;overflow:hidden;height:520px;display:flex;flex-direction:column;}
+  .wa-head{background:var(--green);color:#fff;display:flex;align-items:center;gap:.6rem;padding:.7rem .9rem;flex-shrink:0;}
+  .wa-head .av{width:34px;height:34px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-size:.9rem;}
+  .wa-head .nm{font-size:.82rem;font-weight:700;}.wa-head .st{font-size:.64rem;opacity:.85;}
+  .wa-body{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:.5rem;}
+  .msg{max-width:84%;padding:.5rem .7rem;border-radius:10px;font-size:.8rem;line-height:1.4;box-shadow:0 1px 1px rgba(0,0,0,.08);opacity:0;transform:translateY(8px);animation:msgIn .35s forwards;}
+  .msg.in{background:#fff;align-self:flex-start;border-top-left-radius:2px;}
+  .msg.out{background:#d9fdd3;align-self:flex-end;border-top-right-radius:2px;}
+  .msg .h{display:block;font-size:.56rem;color:#888;text-align:right;margin-top:.2rem;}
+  .msg.sys{align-self:center;background:rgba(19,42,35,.08);color:#5a6b63;font-size:.66rem;border-radius:99px;padding:.28rem .8rem;box-shadow:none;text-align:center;}
+  .msg.stamp{align-self:center;font-weight:700;font-size:.72rem;padding:.45rem .9rem;border-radius:99px;box-shadow:none;text-align:center;}
+  .msg.stamp.bad{background:rgba(180,85,63,.15);color:var(--rojo);}
+  .msg.stamp.good{background:rgba(31,61,52,.13);color:var(--green);}
+  @keyframes msgIn{to{opacity:1;transform:none;}}
+  .typing{align-self:flex-start;background:#fff;border-radius:10px;padding:.55rem .7rem;display:inline-flex;gap:4px;box-shadow:0 1px 1px rgba(0,0,0,.08);}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#9aa;animation:blink 1s infinite;}
+  .typing i:nth-child(2){animation-delay:.2s;}.typing i:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,100%{opacity:.3;}50%{opacity:1;}}
+  .sim-ctrl{text-align:center;margin-top:1.5rem;}
+  .sim-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;max-width:540px;margin:1.6rem auto 0;}
+  .sim-stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.9rem;text-align:center;}
+  .sim-stat .k{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--stone);}
+  .sim-stat .v{font-family:"Fraunces",serif;font-size:1.1rem;color:var(--green);margin-top:.2rem;line-height:1.1;}
+  .sim-stat.bad .v{color:var(--rojo);}
+
+  footer{background:var(--ink);color:var(--gold-soft);text-align:center;padding:2.5rem 1.5rem;font-size:.85rem;font-weight:300;}
+  footer strong{color:var(--bone);}
+  footer .pd{max-width:600px;margin:1rem auto 0;opacity:.7;font-size:.8rem;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s;}
+  .reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="marca">Análisis de presencia digital · Softvibes</div>
+  <img class="logo" src="img/logo-aura.jpg" alt="Aura Residences" />
+  <h1>Colegios 875 ya es un gran proyecto.<br /><em>Su presencia digital todavía no está a su altura.</em></h1>
+  <p class="sub">Revisamos cómo se muestra hoy —Canva, sitio del estudio, redes y marca— y, en lugar de solo señalarlo, construimos la solución para que la veas funcionando en vivo.</p>
+  <div class="dedic">Preparado para <strong>Smooth Group · Aura Residences</strong> por Softvibes</div>
+</header>
+
+<!-- CIFRAS -->
+<div class="cifras">
+  <div class="cifra"><div class="num" data-count="4">0</div><div class="desc">canales digitales revisados</div></div>
+  <div class="cifra"><div class="num" data-count="6">0</div><div class="desc">unidades 100% adaptadas — su diferenciador</div></div>
+  <div class="cifra"><div class="num" data-count="7">0</div><div class="desc">fugas encontradas… y resueltas</div></div>
+  <div class="cifra"><div class="num" data-count="100" data-suffix="%">0</div><div class="desc">del inventario en preventa</div></div>
+</div>
+
+<!-- EVIDENCIA -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">La evidencia</span>
+      <h2>Cómo se muestra hoy</h2>
+      <p>El proyecto tiene renders y planos de calidad. El problema no es el material — es el canal donde vive.</p>
+    </div>
+    <div class="evi">
+      <figure class="reveal"><img src="img/canva-1.jpg" alt="Landing en Canva" /><figcaption><strong>Landing en Canva</strong>La página del proyecto vive en canva.site.</figcaption></figure>
+      <figure class="reveal"><img src="img/canva-2.jpg" alt="Áreas y planos en Canva" /><figcaption><strong>Áreas y planos</strong>Material bueno, presentación estática.</figcaption></figure>
+      <figure class="reveal"><img src="img/render-integrales.jpg" alt="Render del edificio" /><figcaption><strong>Renders premium</strong>Desaprovechados: sin galería ni recorrido.</figcaption></figure>
+      <figure class="reveal"><img src="img/plan-deptos.jpg" alt="Plano de departamentos" /><figcaption><strong>Plantas por tipología</strong>Existen, pero sin interacción.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- HALLAZGOS -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">El análisis</span>
+      <h2>7 fugas que le cuestan ventas</h2>
+      <p>No son errores del proyecto — son fugas de conversión en el canal. Toca cada punto para ver el detalle y cómo ya lo resolvimos.</p>
+    </div>
+    <div id="hallazgos">
+      <div class="hallazgo reveal"><button type="button"><span class="icono">🏗️</span><span class="titulo">La landing vive en Canva — terreno rentado</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">Para un producto de millones, una URL <em>my.canva.site</em> con "Diseñado con Canva" al pie resta autoridad y confianza. No es dominio propio ni patrimonio digital.<div class="solucion"><strong>✓ Resuelto:</strong> casa digital propia, con dominio, marca unificada y diseño de nivel desarrollo de lujo.</div></div></div></div>
+      <div class="hallazgo reveal"><button type="button"><span class="icono">🔍</span><span class="titulo">Invisible en Google</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">Título de la página = "Inicio", sin SEO ni meta descripción, en un subpath de canva.site. Quien busca "departamentos en preventa Cancún" no los encuentra.<div class="solucion"><strong>✓ Resuelto:</strong> estructura SEO, títulos y metadatos listos para posicionar el desarrollo.</div></div></div></div>
+      <div class="hallazgo reveal"><button type="button"><span class="icono">📥</span><span class="titulo">Cero captación de leads</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">Los botones "Adquiere ahora / Más información" no capturan lead ni llevan a un WhatsApp con contexto. El interés que generan los renders se fuga: sin CRM, sin formulario, sin medición.<div class="solucion"><strong>✓ Resuelto:</strong> WhatsApp con contexto precargado y agenda de cita — cada interesado llega calificado y medible.</div></div></div></div>
+      <div class="hallazgo reveal"><button type="button"><span class="icono">🎭</span><span class="titulo">Marca dividida en tres</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">Smooth Group (estudio, Wix) · Aura Residences (marca del desarrollo) · Colegios 875 (proyecto, Canva). Tres nombres, dos plataformas, ninguna arquitectura de marca. El prospecto se pierde.<div class="solucion"><strong>✓ Resuelto:</strong> una jerarquía clara — Colegios 875, un desarrollo Aura Residences, by Smooth Group.</div></div></div></div>
+      <div class="hallazgo reveal"><button type="button"><span class="icono">🕶️</span><span class="titulo">Preventa sin experiencias inmersivas</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">El edificio aún no existe: lo que convierte es hacerlo <em>sentir</em> real. Canva no puede con recorrido 360°, AR ni VR. Se está vendiendo lo intangible con un folleto estático.<div class="solucion"><strong>✓ Resuelto:</strong> recorrido 360°, modelo AR "ve el edificio en tu espacio" y agenda de <em>recorrido VR en oficinas</em>.</div></div></div></div>
+      <div class="hallazgo reveal"><button type="button"><span class="icono">♿</span><span class="titulo">Incoherencia con su mayor diferenciador</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">Presumen <strong>6 unidades 100% adaptadas</strong> para discapacidad motriz — un argumento potentísimo — pero su web no es accesible (sin lectura por voz, contraste ni navegación por teclado). El "sin barreras" no se vive en el canal.<div class="solucion"><strong>✓ Resuelto:</strong> web con accesibilidad real (voz, alto contraste, texto ampliable, teclado) — coherente con el edificio.</div></div></div></div>
+      <div class="hallazgo reveal"><button type="button"><span class="icono">🖼️</span><span class="titulo">Renders y planos desaprovechados</span><span class="flecha">▾</span></button><div class="detalle"><div class="detalle-inner">Hay material de calidad, pero en Canva se ve plano: sin galería ampliable, sin jerarquía editorial que haga desear la unidad.<div class="solucion"><strong>✓ Resuelto:</strong> galería con lightbox y una narrativa editorial de nivel premium.</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANTES / DESPUÉS -->
+<section class="embudo">
+  <div class="section-head">
+    <span class="eyebrow" style="color:var(--gold-soft);">La transformación</span>
+    <h2>Antes / Después</h2>
+    <p>Mueve el interruptor y compara 👇</p>
+  </div>
+  <div class="switch-wrap">
+    <div class="switch"><button type="button" id="btn-antes" class="activo">Antes</button><button type="button" id="btn-ahora">Después ✨</button></div>
+  </div>
+
+  <!-- ANTES -->
+  <div class="escena" id="escena-antes">
+    <div class="caos">
+      <div class="mock">
+        <div class="app-bar">🎨 Canva <span class="pill-off">✕ terreno rentado</span></div>
+        <img class="thumb" src="img/canva-hero.jpg" alt="Landing en Canva" loading="lazy" />
+        <div class="body">smooth-group.my.canva.site · "Diseñado con Canva"</div>
+      </div>
+      <div class="mock">
+        <div class="app-bar">🎭 Marca <span class="pill-off">✕ dividida en 3</span></div>
+        <div class="body brand3"><span>Smooth Group · Wix</span><span>Aura Residences</span><span>Colegios 875 · Canva</span></div>
+      </div>
+      <div class="mock">
+        <div class="app-bar">📥 Captación <span class="pill-off">✕ sin CRM</span></div>
+        <div class="body">"Adquiere ahora"<div class="dead-btn">Adquiere ahora →</div><div style="font-size:.68rem;color:#999;padding-top:.4rem;">no lleva a lead ni WhatsApp</div></div>
+      </div>
+      <div class="mock">
+        <div class="app-bar">🔍 Google <span class="pill-off">✕ invisible</span></div>
+        <div class="body"><div class="g-bar">🔍 departamentos preventa cancún</div><div class="g-res">Desarrollo A — Cancún…<br />Desarrollo B — preventa…<br /><span class="no">Colegios 875 no aparece</span></div></div>
+      </div>
+      <div class="mock">
+        <div class="app-bar">🕶️ Inmersivo <span class="pill-off">✕ estático</span></div>
+        <div class="body">Preventa sin 360° · AR · VR.<br /><span style="color:#999;font-size:.7rem;">Se vende lo intangible con folleto plano.</span></div>
+      </div>
+      <div class="mock">
+        <div class="app-bar">♿ Accesibilidad <span class="pill-off">✕ no accesible</span></div>
+        <div class="body">Edificio 100% adaptado…<br /><span style="color:#999;font-size:.7rem;">…pero la web no. El mensaje no se vive.</span></div>
+      </div>
+    </div>
+    <div class="veredicto">"Un gran desarrollo, mostrado con herramientas de volante."</div>
+  </div>
+
+  <!-- DESPUÉS -->
+  <div class="escena" id="escena-ahora" hidden>
+    <div>
+      <div class="redes-fila"><span class="red-chip">🎨 Canva</span><span class="red-chip">🌐 Wix</span><span class="red-chip">📸 Instagram</span><span class="red-chip">👥 Facebook</span></div>
+      <div class="convergen">todo converge en una sola casa digital<span class="linea"></span></div>
+    </div>
+    <div>
+      <div class="disp-tabs" id="disp-tabs">
+        <button type="button" class="disp-tab" data-disp="laptop">💻 Laptop</button>
+        <button type="button" class="disp-tab" data-disp="tablet">📱 Tablet</button>
+        <button type="button" class="disp-tab activo" data-disp="iphone">📲 iPhone</button>
+      </div>
+      <div class="dispositivo iphone" id="dispositivo">
+        <div class="muesca"></div>
+        <div class="pantalla" id="pantalla"><iframe id="tour-frame" data-src="https://darkseagreen-manatee-364123.hostingersite.com/" src="about:blank" title="Landing Colegios 875 en vivo"></iframe></div>
+        <div class="base"></div>
+      </div>
+    </div>
+    <div>
+      <div class="tour-tabs" id="tour-tabs">
+        <button type="button" class="tour-tab activo" data-url="https://darkseagreen-manatee-364123.hostingersite.com/" data-nota="🏛️ Su marca recibe a cada prospecto — esta es la landing REAL, navégala aquí mismo.">1 · Inicio</button>
+        <button type="button" class="tour-tab" data-url="https://darkseagreen-manatee-364123.hostingersite.com/#accesibilidad" data-nota="♿ Lujo sin barreras: la web se adapta (voz, contraste) — coherente con las 6 unidades adaptadas.">2 · Inclusivo</button>
+        <button type="button" class="tour-tab" data-url="https://darkseagreen-manatee-364123.hostingersite.com/#departamentos" data-nota="📐 Plantas y tipologías con lightbox para ampliar cada plano.">3 · Departamentos</button>
+        <button type="button" class="tour-tab" data-url="https://darkseagreen-manatee-364123.hostingersite.com/#experiencia" data-nota="🕶️ Recorrido 360° + AR: ve el edificio en tu espacio, antes de construirse.">4 · Experiencia</button>
+        <button type="button" class="tour-tab" data-url="https://darkseagreen-manatee-364123.hostingersite.com/#contacto" data-nota="📩 Y aquí el prospecto agenda su recorrido VR en oficinas, con contexto.">5 · Contacto</button>
+      </div>
+      <p class="tour-nota" id="tour-nota">🏛️ Su marca recibe a cada prospecto — esta es la landing REAL, navégala aquí mismo.</p>
+      <div class="cta-sitio"><a class="btn btn-oro btn-brillo" href="https://darkseagreen-manatee-364123.hostingersite.com" target="_blank" rel="noopener">🏛️ Ver la landing completa ↗</a></div>
+    </div>
+    <div class="veredicto">"El mismo proyecto, ahora en una casa digital que captura, mide y hace sentir."</div>
+  </div>
+</section>
+
+<!-- MEJORAS -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Lo que ya está construido</span>
+      <h2>Lo que mejoramos</h2>
+      <p>Aplicamos nuestra metodología al proyecto. Esto ya funciona en la landing en vivo.</p>
+    </div>
+    <div class="mejoras">
+      <div class="mejora reveal"><div class="icono">🏛️</div><h3>Casa digital propia y marca unida</h3><p>Colegios 875 · Aura Residences · by Smooth Group, bajo un mismo techo y con dominio propio.</p></div>
+      <div class="mejora reveal"><div class="icono">📥</div><h3>Captación con WhatsApp inteligente</h3><p>Cada interesado escribe ya calificado, con la unidad y el contexto precargados.</p></div>
+      <div class="mejora reveal"><div class="icono">🕶️</div><h3>Experiencias inmersivas</h3><p>Recorrido 360°, modelo AR en tu espacio y agenda de recorrido VR en oficinas.</p></div>
+      <div class="mejora reveal"><div class="icono">♿</div><h3>Accesibilidad real</h3><p>Lectura por voz, alto contraste y texto ampliable — coherente con el edificio sin barreras.</p></div>
+      <div class="mejora reveal"><div class="icono">🖼️</div><h3>Galería y planos con lightbox</h3><p>Renders y tipologías presentados con narrativa editorial de nivel premium.</p></div>
+      <div class="mejora reveal"><div class="icono">📍</div><h3>SEO local listo</h3><p>Estructura y metadatos para empezar a aparecer en búsquedas de preventa en Cancún.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ESCALERA DE VALOR -->
+<section id="planes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">El siguiente paso</span>
+      <h2>Escalera de valor</h2>
+      <p>La landing es el primer peldaño. De ahí subimos a captación, experiencias inmersivas reales y marketing del desarrollo.</p>
+    </div>
+    <div class="tiers reveal">
+      <div class="tier">
+        <div class="tier-nombre">🚀 Landing + Captación</div>
+        <div class="tier-precio">$55,000</div>
+        <div class="tier-moneda">MXN · único</div>
+        <div class="mrr">+ $8,000 MXN/mes</div>
+        <ul>
+          <li><span class="si">✓</span><div>Todo lo de la Landing</div></li>
+          <li><span class="si">✓</span><div>CRM + captura de leads</div></li>
+          <li><span class="si">✓</span><div>Automatización de WhatsApp</div></li>
+          <li><span class="si">✓</span><div>Integración con pauta + reporte mensual</div></li>
+        </ul>
+        <a class="btn btn-borde" href="https://wa.me/527295493319?text=Roger%2C%20quiero%20la%20Landing%20%2B%20Captaci%C3%B3n%20para%20Colegios%20875" target="_blank" rel="noopener">Cotizar</a>
+      </div>
+      <div class="tier destacado">
+        <div class="tier-badge">⭐ Empezar aquí</div>
+        <div class="tier-nombre">🏛️ Landing de Lanzamiento</div>
+        <div class="tier-precio">$35,000</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <div class="mrr">+ hosting / dominio</div>
+        <ul>
+          <li><span class="si">✓</span><div>Esta landing premium, ya construida</div></li>
+          <li><span class="si">✓</span><div>Accesibilidad + galería + planos</div></li>
+          <li><span class="si">✓</span><div>Demos 360° / AR / agenda VR</div></li>
+          <li><span class="si">✓</span><div>Dominio propio + SEO + WhatsApp</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://wa.me/527295493319?text=Roger%2C%20quiero%20publicar%20la%20Landing%20de%20Colegios%20875%20(%2435%2C000)" target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+      <div class="tier">
+        <div class="tier-nombre">🕶️ Experiencia Inmersiva Real</div>
+        <div class="tier-precio">$80–130k</div>
+        <div class="tier-moneda">MXN · según alcance</div>
+        <div class="mrr">producción 3D/VR</div>
+        <ul>
+          <li><span class="si">✓</span><div>Recorrido 360° / Matterport real</div></li>
+          <li><span class="si">✓</span><div>Modelo 3D/AR real del edificio</div></li>
+          <li><span class="si">✓</span><div>Setup VR en oficinas + video</div></li>
+          <li><span class="si">✓</span><div>Diferenciador de venta premium</div></li>
+        </ul>
+        <a class="btn btn-borde" href="https://wa.me/527295493319?text=Roger%2C%20me%20interesa%20la%20Experiencia%20Inmersiva%20Real%20para%20Colegios%20875" target="_blank" rel="noopener">Cotizar</a>
+      </div>
+    </div>
+    <div class="capa reveal">
+      <div class="capa-ic" aria-hidden="true">🛎️</div>
+      <div class="capa-txt">
+        <span class="eyebrow" style="color:var(--gold-soft);">La capa que lo hace solo</span>
+        <h3>Asistentes que trabajan por ti · 24/7</h3>
+        <p>Un equipo digital que <b>atiende, califica, agenda y da seguimiento</b> a cada prospecto —de día y de noche— y los va <b>guiando en su crecimiento</b> con reportes y siguientes pasos. Fulfillment sin que tu equipo viva pegado al teléfono.</p>
+        <ul class="capa-list">
+          <li>✓ Atiende y califica cada lead al instante</li>
+          <li>✓ Agenda citas y recorridos (incluido el VR)</li>
+          <li>✓ Seguimiento y nutrición hasta el cierre</li>
+          <li>✓ Reportes + recomendaciones de crecimiento</li>
+        </ul>
+      </div>
+      <div class="capa-precio">
+        <div class="p">Setup $20k</div>
+        <div class="u">MXN + mensualidad</div>
+        <a class="btn btn-oro" href="https://wa.me/527295493319?text=Roger%2C%20quiero%20activar%20los%20asistentes%2024%2F7%20para%20Colegios%20875" target="_blank" rel="noopener">Activar asistentes</a>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--ink-soft);font-size:.85rem;font-weight:300;max-width:640px;margin:1.8rem auto 0;">¿Varios desarrollos? El siguiente peldaño es un <strong>retainer de marketing</strong> ($25–45k/mes) con sitio maestro + landing por proyecto + embudo gestionado.</p>
+  </div>
+</section>
+
+<!-- SIMULADOR AGENTES -->
+<section class="sim" id="sim-agentes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">La transformación con agentes</span>
+      <h2>Un mismo lead, dos finales</h2>
+      <p>Así se ve un prospecto <b>sin</b> y <b>con</b> asistentes 24/7. Pulsa reproducir y mira la diferencia.</p>
+    </div>
+    <div class="switch-wrap"><div class="switch"><button type="button" id="sim-antes" class="activo">Sin agentes</button><button type="button" id="sim-despues">Con agentes ✨</button></div></div>
+    <div class="phone">
+      <div class="screen">
+        <div class="wa-head"><span class="av">🏛️</span><div><div class="nm">Colegios 875 · Ventas</div><div class="st" id="wa-st"></div></div></div>
+        <div class="wa-body" id="wa-body"></div>
+      </div>
+    </div>
+    <div class="sim-ctrl"><button type="button" class="btn btn-oro" id="sim-play">▶ Reproducir</button></div>
+    <div class="sim-stats" id="sim-stats"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-final reveal">
+  <h2>Su desarrollo ya vende.<br /><em>La casa digital lo va a vender más rápido.</em></h2>
+  <p>Ya la construimos y está en vivo. Véanla desde el cel, recórranla, y platiquemos cómo la lanzamos.</p>
+  <div class="botones">
+    <a class="btn btn-oro" href="https://darkseagreen-manatee-364123.hostingersite.com" target="_blank" rel="noopener">🏛️ Ver la landing en vivo</a>
+    <a class="btn btn-borde" href="https://wa.me/527295493319?text=Roger%2C%20vimos%20el%20an%C3%A1lisis%20de%20Colegios%20875%20y%20queremos%20platicar" target="_blank" rel="noopener">💬 Agendar llamada</a>
+  </div>
+</section>
+
+<div class="barra-flotante" id="barra-flotante">
+  <a class="bf-btn bf-sitio" href="https://darkseagreen-manatee-364123.hostingersite.com" target="_blank" rel="noopener">🏛️ Ver landing</a>
+  <a class="bf-btn bf-pago" href="#planes">🪜 Escalera de valor</a>
+</div>
+
+<footer>
+  <img src="img/logo-aura.jpg" alt="Aura Residences" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);margin-bottom:1rem;" />
+  <div>Análisis hecho por <strong>Softvibes</strong> — acompañamos a desarrolladores en su salto digital.</div>
+  <div class="pd">P.D. Usamos únicamente material público de sus canales (Canva, smoothgrp.com, redes), con respeto por su marca. Cualquier cosa que quieran ajustar o retirar, se hace de inmediato.</div>
+</footer>
+
+<script>
+  // Acordeón
+  document.querySelectorAll(".hallazgo button").forEach(btn=>btn.addEventListener("click",()=>{
+    const card=btn.closest(".hallazgo"), d=card.querySelector(".detalle");
+    const open=card.classList.toggle("abierto");
+    d.style.maxHeight=open?d.scrollHeight+"px":"0";
+  }));
+
+  // Antes / Después
+  const bA=document.getElementById("btn-antes"), bH=document.getElementById("btn-ahora");
+  const eA=document.getElementById("escena-antes"), eH=document.getElementById("escena-ahora");
+  const frame=document.getElementById("tour-frame");
+  function reanim(s){ s.querySelectorAll(":scope > *").forEach(el=>{el.style.animation="none";void el.offsetWidth;el.style.animation="";}); }
+  function mostrar(m){
+    const ah=m==="ahora";
+    eA.hidden=ah; eH.hidden=!ah;
+    bA.classList.toggle("activo",!ah); bH.classList.toggle("activo",ah);
+    if(ah && frame.getAttribute("src")==="about:blank") frame.src=frame.dataset.src;
+    if(ah) ajustar();
+    reanim(ah?eH:eA);
+  }
+  bA.addEventListener("click",()=>mostrar("antes")); bH.addEventListener("click",()=>mostrar("ahora"));
+
+  // Dispositivos
+  const DISP={iphone:{a:390,h:800,max:460},tablet:{a:834,h:1024,max:640},laptop:{a:1280,h:800,max:920}};
+  const disp=document.getElementById("dispositivo"), pant=document.getElementById("pantalla");
+  let dActual="iphone";
+  function ajustar(){
+    const c=DISP[dActual], disponible=Math.min(c.max,(eH.clientWidth||window.innerWidth)-40);
+    let s=disponible/c.a; const hm=window.innerHeight*.76; if(c.h*s>hm) s=hm/c.h;
+    frame.style.width=c.a+"px"; frame.style.height=c.h+"px"; frame.style.transform="scale("+s+")";
+    pant.style.width=Math.round(c.a*s)+"px"; pant.style.height=Math.round(c.h*s)+"px";
+  }
+  document.querySelectorAll(".disp-tab").forEach(t=>t.addEventListener("click",()=>{
+    document.querySelectorAll(".disp-tab").forEach(x=>x.classList.remove("activo")); t.classList.add("activo");
+    dActual=t.dataset.disp; disp.className="dispositivo "+dActual; ajustar();
+  }));
+  window.addEventListener("resize",()=>{ if(!eH.hidden) ajustar(); });
+
+  // Tour
+  const nota=document.getElementById("tour-nota");
+  document.querySelectorAll(".tour-tab").forEach(t=>t.addEventListener("click",()=>{
+    document.querySelectorAll(".tour-tab").forEach(x=>x.classList.remove("activo")); t.classList.add("activo");
+    frame.src=t.dataset.url; nota.textContent=t.dataset.nota;
+    t.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+  }));
+
+  // Barra flotante
+  const barra=document.getElementById("barra-flotante");
+  let paso=false,planes=false,foot=false;
+  const upd=()=>barra.classList.toggle("visible",paso&&!planes&&!foot);
+  new IntersectionObserver(e=>{if(e[0].isIntersecting){paso=true;upd();}},{threshold:.2}).observe(document.querySelector(".embudo"));
+  new IntersectionObserver(e=>{planes=e[0].isIntersecting;upd();},{threshold:.15}).observe(document.getElementById("planes"));
+  new IntersectionObserver(e=>{foot=e[0].isIntersecting;upd();},{threshold:.05}).observe(document.querySelector("footer"));
+
+  // Reveal
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("visible");io.unobserve(e.target);}}),{threshold:.15});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+  // Contadores
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting)return; obs.unobserve(e.target);
+    const el=e.target, meta=+el.dataset.count, suf=el.dataset.suffix||"", dur=1200, t0=performance.now();
+    (function tick(t){const p=Math.min((t-t0)/dur,1);el.textContent=Math.round(meta*(1-Math.pow(1-p,3)))+(p===1?suf:"");if(p<1)requestAnimationFrame(tick);})(t0);
+  }),{threshold:.4});
+  document.querySelectorAll(".cifra .num").forEach(c=>obs.observe(c));
+
+  // Simulador de agentes
+  const SIM={
+    antes:{st:"suele responder en días",
+      msgs:[
+        {t:"in",x:"Hola, me interesa un depto de Colegios 875 🙌",h:"11:47 p.m."},
+        {t:"sys",x:"Fuera de horario de oficina"},
+        {t:"in",x:"¿Sigue disponible? me urge",h:"día siguiente"},
+        {t:"sys",x:"— respondido 2 días después —"},
+        {t:"out",x:"¡Hola! Perdón la demora 🙈 ¿en qué te ayudo?",h:""},
+        {t:"stamp bad",x:"❌ El lead ya compró en otro desarrollo"}
+      ],
+      stats:[["Respuesta","~2 días"],["Horario","9–18 h"],["Resultado","Lead perdido"]],bad:true},
+    despues:{st:"responde al instante · 24/7",
+      msgs:[
+        {t:"in",x:"Hola, me interesa un depto de Colegios 875 🙌",h:"11:47 p.m."},
+        {t:"typing"},
+        {t:"out",x:"¡Hola! Soy tu asesor de Colegios 875 🏛️ ¿Buscas para vivir o para invertir?",h:"11:47 p.m."},
+        {t:"in",x:"Invertir. Y necesito una unidad accesible, para silla de ruedas",h:""},
+        {t:"typing"},
+        {t:"out",x:"Perfecto ✅ Tenemos 6 unidades 100% adaptadas. ¿Te muestro el recorrido VR en oficinas? Tengo mañana 11am o jueves 5pm.",h:""},
+        {t:"in",x:"Mañana 11am",h:""},
+        {t:"out",x:"¡Agendado! 📅 Te mando recordatorio. Mientras, mira el recorrido 360° del edificio 👉",h:""},
+        {t:"out",x:"👋 Recordatorio: tu cita es hoy a las 11am. ¿La confirmas?",h:"día siguiente"},
+        {t:"stamp good",x:"✅ Cita agendada · lead calificado · seguimiento activo"}
+      ],
+      stats:[["Respuesta","8 segundos"],["Horario","24/7"],["Resultado","Cita agendada"]],bad:false}
+  };
+  const waBody=document.getElementById("wa-body"), waSt=document.getElementById("wa-st"),
+        statsBox=document.getElementById("sim-stats"), playBtn=document.getElementById("sim-play"),
+        bAntes=document.getElementById("sim-antes"), bDespues=document.getElementById("sim-despues");
+  let modo="antes", timer=null;
+  function renderStats(m){ statsBox.innerHTML=SIM[m].stats.map(([k,v])=>`<div class="sim-stat ${SIM[m].bad?'bad':''}"><div class="k">${k}</div><div class="v">${v}</div></div>`).join(""); }
+  function setModo(m){ modo=m; bAntes.classList.toggle("activo",m==="antes"); bDespues.classList.toggle("activo",m==="despues"); waSt.textContent=SIM[m].st; waBody.innerHTML=""; renderStats(m); }
+  function play(){
+    if(timer){ clearTimeout(timer); }
+    waBody.innerHTML=""; const seq=SIM[modo].msgs; let i=0;
+    (function step(){
+      if(i>=seq.length) return;
+      const m=seq[i++];
+      if(m.t==="typing"){
+        const tp=document.createElement("div"); tp.className="typing"; tp.innerHTML="<i></i><i></i><i></i>"; waBody.appendChild(tp);
+        waBody.scrollTop=waBody.scrollHeight;
+        timer=setTimeout(()=>{ tp.remove(); step(); },1000);
+      } else {
+        const el=document.createElement("div"); el.className="msg "+m.t;
+        el.innerHTML=m.x+(m.h?`<span class="h">${m.h}</span>`:"");
+        waBody.appendChild(el); waBody.scrollTop=waBody.scrollHeight;
+        timer=setTimeout(step, m.t.startsWith("stamp")?600:(m.t==="sys"?900:1100));
+      }
+    })();
+  }
+  if(bAntes){
+    bAntes.addEventListener("click",()=>{setModo("antes");play();});
+    bDespues.addEventListener("click",()=>{setModo("despues");play();});
+    playBtn.addEventListener("click",play);
+    setModo("antes");
+    // Auto-play al entrar en pantalla (una vez)
+    new IntersectionObserver((e,o)=>{ if(e[0].isIntersecting){ play(); o.disconnect(); } },{threshold:.4}).observe(document.getElementById("sim-agentes"));
+  }
+</script>
+</body>
+</html>

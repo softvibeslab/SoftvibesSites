@@ -1,0 +1,77 @@
+---
+import { SITE, waLink } from '../data/site';
+
+interface Props {
+  mensaje?: string;
+  titulo?: string;
+}
+
+const {
+  mensaje = SITE.waMensaje,
+  titulo = '¿Lista o listo para invertir en la Riviera Maya?',
+} = Astro.props;
+---
+
+<section class="seccion" id="contacto">
+  <div class="contenedor">
+    <div class="seccion__intro">
+      <span class="etiqueta">Contacto</span>
+      <h2>{titulo}</h2>
+      <p>
+        Escríbeme por WhatsApp para una respuesta inmediata, o déjame tus datos y
+        {SITE.asesor} te contacta en menos de 24 horas.
+      </p>
+    </div>
+
+    <div class="dos-columnas">
+      <form class="formulario" action="/contact.php" method="POST">
+        <label>
+          Nombre
+          <input type="text" name="nombre" required autocomplete="name" />
+        </label>
+        <label>
+          WhatsApp
+          <input type="tel" name="telefono" required autocomplete="tel" />
+        </label>
+        <label>
+          Presupuesto aproximado
+          <select name="presupuesto">
+            <option value="hasta-2m">Hasta $2,000,000 MXN</option>
+            <option value="2m-4m">$2,000,000 – $4,000,000 MXN</option>
+            <option value="4m+">Más de $4,000,000 MXN</option>
+            <option value="usd">Prefiero hablar en USD</option>
+          </select>
+        </label>
+        <!-- Honeypot antispam -->
+        <input type="text" name="empresa" class="campo-oculto" tabindex="-1" autocomplete="off" />
+        <label
+          style="font-weight: 400; display: flex; gap: 0.5rem; align-items: start; text-transform: none; letter-spacing: 0;"
+        >
+          <input type="checkbox" name="privacidad" required style="margin-top: 0.3rem;" />
+          <span>
+            Acepto el <a href="/aviso-de-privacidad">aviso de privacidad</a> y el uso de mis datos
+            para ser contactado.
+          </span>
+        </label>
+        <button type="submit" class="boton boton--laton" data-cms="cta-form-enviar">Quiero más información</button>
+        <p class="formulario__nota">🔒 Tus datos están seguros. Sin spam, sin compromiso.</p>
+      </form>
+
+      <div>
+        <h3>Respuesta inmediata</h3>
+        <p>
+          <strong>El canal más rápido es WhatsApp</strong> — te respondo en minutos, no en
+          días.
+        </p>
+        <a href={waLink(mensaje)} target="_blank" rel="noopener" class="boton boton--whatsapp" data-cms="cta-contacto-whatsapp">💬 WhatsApp {SITE.telefono}</a>
+        <p style="margin-top: 1.75rem;"><strong>¿Prefieres una videollamada?</strong></p>
+        <a href={waLink('Hola Katya, quiero agendar una videollamada de asesoría de inversión.')} target="_blank" rel="noopener" class="boton boton--primario" data-cms="cta-contacto-agenda">📅 Agendar asesoría sin costo</a>
+        <p class="mini-testimonio">
+          "Nos acompañó desde la primera videollamada hasta la firma con el notario. El proceso
+          fue mucho más simple de lo que esperábamos."
+          <strong>— Compradores extranjeros (testimonio de muestra)</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

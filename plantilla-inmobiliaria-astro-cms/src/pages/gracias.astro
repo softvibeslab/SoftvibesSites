@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../config/site';
+---
+
+<BaseLayout titulo={`Gracias | ${SITE.nombre}`} descripcion="Confirmación de recepción del formulario.">
+  <section class="estado"><div class="estado__tarjeta"><span class="estado__icono">✓</span><h1>Recibimos tu consulta</h1><p>Personaliza aquí el tiempo de respuesta real de tu equipo.</p><a class="boton boton--acento" href={waLink()} target="_blank" rel="noopener">Continuar por WhatsApp</a><a class="enlace" href="/">Volver al inicio</a></div></section>
+</BaseLayout>

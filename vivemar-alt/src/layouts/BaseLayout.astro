@@ -1,0 +1,302 @@
+---
+import { SITE, waLink } from '../data/site';
+import '@fontsource-variable/playfair-display';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  ogImage?: string;
+  /** JSON-LD adicional de la página (además del RealEstateAgent global) */
+  schema?: object;
+  /** Oculta header/footer (para /links) */
+  desnudo?: boolean;
+}
+
+const {
+  titulo,
+  descripcion = SITE.descripcion,
+  ogImage = '/img/hero-vivemar.jpg',
+  schema,
+  desnudo = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+
+const schemaAgente = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: SITE.nombre,
+  description: SITE.descripcion,
+  url: SITE.dominio,
+  telephone: SITE.telefono,
+  email: SITE.correo,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Cancún',
+    addressRegion: 'Quintana Roo',
+    addressCountry: 'MX',
+  },
+  areaServed: ['Cancún', 'Playa del Carmen', 'Tulum', 'Riviera Maya'],
+  sameAs: Object.values(SITE.redes),
+};
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content={SITE.nombre} />
+    <meta property="og:image" content={ogImageUrl.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descripcion} />
+    <meta name="twitter:image" content={ogImageUrl.href} />
+    <script type="application/ld+json" set:html={JSON.stringify(schemaAgente)} />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <!-- GA4: reemplazar G-XXXXXXXXXX con el ID real y descomentar -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    -->
+  </head>
+  <body>
+    {
+      !desnudo && (
+        <header class="header">
+          <div class="header__inner">
+            <a href="/" class="logo">
+              <img
+                src="/img/logo-vivemar.png"
+                alt=""
+                class="logo__img"
+                width="40"
+                height="40"
+              />
+              Vive <span>Mar</span>
+            </a>
+            <nav class="nav" aria-label="Navegación principal">
+              <a href="/propiedades">Propiedades</a>
+              <a href="/#nosotros">Nosotros</a>
+              <a href="/blog">Blog</a>
+              <a href="/contacto">Contacto</a>
+              <a href={waLink()} class="boton boton--whatsapp" target="_blank" rel="noopener">
+                WhatsApp
+              </a>
+            </nav>
+          </div>
+        </header>
+      )
+    }
+
+    <slot />
+
+    {
+      !desnudo && (
+        <footer class="footer">
+          <div class="contenedor">
+            <div class="footer__grid">
+              <div>
+                <h3>Vive Mar · Real Estate</h3>
+                <p>
+                  {SITE.lema}. Bienes raíces en {SITE.ubicacion}.
+                </p>
+                <p>
+                  <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`}>{SITE.telefono}</a>
+                  <br />
+                  <a href={`mailto:${SITE.correo}`}>{SITE.correo}</a>
+                </p>
+              </div>
+              <div>
+                <h3>Explora</h3>
+                <ul>
+                  <li>
+                    <a href="/propiedades">Catálogo de propiedades</a>
+                  </li>
+                  <li>
+                    <a href="/zonas/playa-del-carmen">Bienes raíces en Playa del Carmen</a>
+                  </li>
+                  <li>
+                    <a href="/zonas/cancun">Departamentos en Cancún</a>
+                  </li>
+                  <li>
+                    <a href="/zonas/tulum">Lotes de inversión en Tulum</a>
+                  </li>
+                  <li>
+                    <a href="/blog">Blog de inversión</a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3>Síguenos</h3>
+                <ul>
+                  <li>
+                    <a href={SITE.redes.instagram} target="_blank" rel="noopener">
+                      Instagram
+                    </a>
+                  </li>
+                  <li>
+                    <a href={SITE.redes.tiktok} target="_blank" rel="noopener">
+                      TikTok
+                    </a>
+                  </li>
+                  <li>
+                    <a href={SITE.redes.facebook} target="_blank" rel="noopener">
+                      Facebook
+                    </a>
+                  </li>
+                  <li>
+                    <a href={SITE.redes.linkedin} target="_blank" rel="noopener">
+                      LinkedIn
+                    </a>
+                  </li>
+                  <li>
+                    <a href={SITE.redes.pinterest} target="_blank" rel="noopener">
+                      Pinterest
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="footer__legal">
+              <span>© {new Date().getFullYear()} Vive Mar · Real Estate. Todos los derechos reservados.</span>
+              <a href="/aviso-de-privacidad">Aviso de privacidad</a>
+            </div>
+          </div>
+        </footer>
+      )
+    }
+
+    {
+      !desnudo && (
+        <a
+          href={waLink()}
+          class="wa-flotante"
+          target="_blank"
+          rel="noopener"
+          aria-label="Escríbenos por WhatsApp"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+        </a>
+      )
+    }
+
+    <script>
+      // Reveal escalonado al hacer scroll + sombra del header.
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const header = document.querySelector('.header');
+      if (header) {
+        const alScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
+        window.addEventListener('scroll', alScroll, { passive: true });
+        alScroll();
+      }
+
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        const objetivos = document.querySelectorAll(
+          '.seccion .contenedor > *:not(script):not(style), .card, .razon, .testimonio, .numeros-inversion > div, .faq details, .asesora-card'
+        );
+
+        // Stagger: retraso según posición entre hermanos animados
+        const porPadre = new Map<Element, number>();
+        objetivos.forEach((el) => {
+          const padre = el.parentElement!;
+          const i = porPadre.get(padre) ?? 0;
+          porPadre.set(padre, i + 1);
+          (el as HTMLElement).style.setProperty('--d', `${Math.min(i, 7) * 90}ms`);
+          el.classList.add('reveal');
+        });
+
+        const io = new IntersectionObserver(
+          (entradas) => {
+            for (const e of entradas) {
+              if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        );
+        objetivos.forEach((el) => io.observe(el));
+      }
+    </script>
+
+    <script>
+      // Modo edición del CMS: solo se activa dentro del editor visual (/admin/editor.php),
+      // vía postMessage del mismo origen. No tiene efecto en visitas normales.
+      if (window.self !== window.top) {
+        window.addEventListener('message', (ev) => {
+          if (ev.origin !== window.location.origin || ev.data?.tipo !== 'cms-activar') return;
+          if (document.body.dataset.cmsActivo) return;
+          document.body.dataset.cmsActivo = '1';
+
+          // Textos editables in situ
+          document.querySelectorAll('[data-cms]').forEach((el) => {
+            const nodo = el as HTMLElement;
+            nodo.setAttribute('contenteditable', 'true');
+            nodo.setAttribute('spellcheck', 'false');
+            nodo.style.outline = '2px dashed rgba(176, 138, 87, 0.85)';
+            nodo.style.outlineOffset = '3px';
+            nodo.style.cursor = 'text';
+            nodo.addEventListener('input', () => {
+              parent.postMessage(
+                { tipo: 'cms-cambio', id: nodo.getAttribute('data-cms'), valor: nodo.innerHTML },
+                window.location.origin
+              );
+            });
+          });
+
+          // Imágenes reemplazables con un clic
+          document.querySelectorAll('img[src^="/img/"]').forEach((img) => {
+            const nodo = img as HTMLImageElement;
+            nodo.style.outline = '2px dashed rgba(14, 42, 58, 0.45)';
+            nodo.style.outlineOffset = '2px';
+            nodo.style.cursor = 'pointer';
+            nodo.title = 'Clic para reemplazar esta imagen';
+            nodo.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              parent.postMessage(
+                { tipo: 'cms-img', src: nodo.getAttribute('src') },
+                window.location.origin
+              );
+            });
+          });
+
+          // En modo edición los enlaces no navegan (para no perder cambios sin guardar);
+          // la navegación se hace desde la barra del editor.
+          document.addEventListener(
+            'click',
+            (e) => {
+              const a = (e.target as HTMLElement).closest('a');
+              if (a && !a.hasAttribute('data-cms')) e.preventDefault();
+            },
+            true
+          );
+
+          parent.postMessage({ tipo: 'cms-listo' }, window.location.origin);
+        });
+      }
+    </script>
+  </body>
+</html>

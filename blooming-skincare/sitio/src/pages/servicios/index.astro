@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServicioCard from '../../components/ServicioCard.astro';
+import { SITE, CATEGORIAS } from '../../data/site';
+
+const servicios = (await getCollection('servicios')).sort((a, b) => {
+  if (a.data.destacado !== b.data.destacado) return a.data.destacado ? -1 : 1;
+  return a.data.precio - b.data.precio;
+});
+
+const categorias = Array.from(new Set(servicios.map((s) => s.data.categoria)));
+---
+
+<BaseLayout
+  titulo={`Carta de servicios y precios | ${SITE.nombre}`}
+  descripcion="Depilación láser diodo, Hollywood Peel, faciales personalizados, Dermapen, BB Glow, botox y ácido hialurónico en Playa del Carmen. Precios desde, sin promociones que caducan."
+  lang="es"
+  rutaAlterna="/en/services"
+>
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Carta de servicios</span>
+        <h1>Nuestros tratamientos</h1>
+        <p>
+          Todos nuestros precios, siempre disponibles — sin buscar entre publicaciones antiguas.
+          Cada tratamiento inicia con una valoración de tu piel, para trabajar exactamente lo que
+          necesita.
+        </p>
+      </div>
+
+      <div class="filtros" role="group" aria-label="Filtrar por categoría">
+        <button class="filtro filtro--activo" type="button" data-filtro="todos">Todos</button>
+        {
+          categorias.map((c) => (
+            <button class="filtro" type="button" data-filtro={c}>
+              {CATEGORIAS[c]}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="grid-propiedades" id="grid-servicios">
+        {servicios.map((s) => <ServicioCard servicio={s} />)}
+      </div>
+
+      <p class="nota-precios">
+        Los precios mostrados son de referencia y se confirman durante tu valoración, según lo que
+        tu piel necesite. Consulta las promociones vigentes del mes por WhatsApp.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const botones = document.querySelectorAll<HTMLButtonElement>('.filtro');
+    const tarjetas = document.querySelectorAll<HTMLElement>('#grid-servicios .card');
+
+    botones.forEach((b) =>
+      b.addEventListener('click', () => {
+        const f = b.dataset.filtro;
+        botones.forEach((x) => x.classList.toggle('filtro--activo', x === b));
+        tarjetas.forEach((t) => {
+          const visible = f === 'todos' || t.dataset.categoria === f;
+          t.style.display = visible ? '' : 'none';
+        });
+      })
+    );
+  </script>
+</BaseLayout>

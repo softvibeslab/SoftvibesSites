@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Blooming · Depilación Láser & Skincare — Enlaces"
+  descripcion="Todos los enlaces de Blooming: carta de servicios y precios, WhatsApp, ubicación y redes."
+  desnudo={true}
+>
+  <main class="pagina-links">
+    <div class="pagina-links__tarjeta">
+      <a href="/" aria-label="Ir al sitio de Blooming">
+        <img
+          src="/img/logo-icono.jpg"
+          alt="Blooming · Depilación Láser & Skincare"
+          width="112"
+          height="112"
+          style="width: 112px; height: 112px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 2px solid var(--laton-claro); box-shadow: 0 8px 24px rgba(0,0,0,0.3);"
+        />
+      </a>
+      <h1>🌸 {SITE.lema}</h1>
+      <p>✨ Depilación láser & Skincare · 📍 Playa del Carmen</p>
+      <p style="font-size: 0.9rem; opacity: 0.85;">⭐ {SITE.resenas.calificacion} · {SITE.resenas.total} reseñas en Google</p>
+      <nav class="links-lista" aria-label="Enlaces">
+        <a href={waLink()} target="_blank" rel="noopener" data-cms="cta-links-whatsapp">💬 Agenda tu cita · WhatsApp</a>
+        <a href="/servicios">✨ Carta de servicios y precios</a>
+        <a href={SITE.mapa} target="_blank" rel="noopener">📍 Cómo llegar · {SITE.direccionCorta}</a>
+        <a href="/en/services">🌎 Services in English</a>
+        <a href={SITE.redes.instagram} target="_blank" rel="noopener">Instagram</a>
+        <a href={SITE.redes.facebook} target="_blank" rel="noopener">Facebook</a>
+        <a href={`mailto:${SITE.correo}`}>✉️ Escríbenos por correo</a>
+      </nav>
+    </div>
+  </main>
+</BaseLayout>

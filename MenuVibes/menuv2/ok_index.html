@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Localito MX - Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--y:#FFD700;--b:#0D0D0D;--d:#1A1A1A;--g:#2a2a2a;--w:#FFF;--m:#aaa;--gr:#25D366;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--b);color:var(--w);font-family:'Nunito',sans-serif;padding-bottom:100px;overflow-x:hidden;}
+
+  /* HERO */
+  .hero{background:#fff;border-bottom:4px solid var(--y);padding:24px 20px 18px;text-align:center;}
+  .hero img{height:54px;}
+  .hero-tag{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#555;letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
+
+  /* SCHEDULE */
+  .sched{background:var(--d);border-bottom:3px solid var(--y);padding:9px 16px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+  .si{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--y);display:flex;align-items:center;gap:5px;}
+  .si span{color:var(--w);font-weight:600;}
+
+  /* CART BAR */
+  .cart-bar{position:sticky;top:0;z-index:50;background:var(--d);border-bottom:2px solid #333;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .ci{font-size:13px;font-weight:700;color:var(--m);}
+  .ci strong{color:var(--y);font-size:15px;}
+  .cc{font-size:11px;font-weight:700;color:#666;background:none;border:1px solid #444;padding:4px 10px;border-radius:20px;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+  /* SECTION BLOCK */
+  .sec-block{max-width:480px;margin:0 auto;}
+
+  /* COLLAPSIBLE SECTION HEADER */
+  .sec-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 14px;cursor:pointer;user-select:none;border-bottom:1px solid #222;}
+  .sec-header-left{display:flex;flex-direction:column;gap:2px;}
+  .sec-header-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:var(--y);line-height:1;}
+  .sec-header-sub{font-size:11px;color:var(--m);font-weight:600;}
+  .sec-header-right{display:flex;align-items:center;gap:8px;}
+  .sec-badge{background:var(--y);color:var(--b);font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;letter-spacing:1px;white-space:nowrap;}
+  .sec-arrow{font-size:18px;color:var(--y);transition:transform .3s;display:inline-block;}
+  .sec-block.open .sec-arrow{transform:rotate(180deg);}
+
+  /* LOCKED SECTION (fuera de horario) */
+  .sec-header.locked .sec-header-title{color:#555;}
+  .sec-header.locked .sec-badge{background:#333;color:#666;}
+  .sec-header.locked .sec-arrow{color:#555;}
+  .sec-lock-msg{font-size:11px;color:#c00;font-weight:700;margin-top:2px;}
+
+  /* COLLAPSIBLE CONTENT */
+  .sec-content{overflow:hidden;max-height:0;transition:max-height .35s ease;}
+  .sec-block.open .sec-content{max-height:9999px;}
+
+  /* INNER SECTION (subsection inside a block) */
+  .inner-sec{padding:16px 16px 4px;}
+  .inner-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--y);margin-bottom:10px;}
+  .inner-badge{display:inline-block;background:var(--y);color:var(--b);font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;letter-spacing:1px;margin-bottom:10px;}
+  .inner-nota{font-size:12px;color:var(--m);margin-bottom:12px;}
+  .div{height:1px;background:linear-gradient(to right,transparent,#333,transparent);margin:4px 16px 14px;}
+
+  /* MENU ITEM */
+  .mi{background:var(--d);border-radius:12px;margin-bottom:8px;border:2px solid transparent;transition:border-color .15s,background .15s;overflow:hidden;}
+  .mi.sel{border-color:var(--y);background:#1f1c00;}
+  .mim{padding:13px 15px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;user-select:none;}
+  .ml{flex:1;}
+  .mn{font-weight:900;font-size:15px;color:var(--w);line-height:1.2;}
+  .md{font-size:12px;color:var(--m);margin-top:4px;line-height:1.5;}
+  .mt{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;}
+  .tag{background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);color:var(--y);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
+  .mr{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0;}
+  .mp{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--y);white-space:nowrap;}
+  .chk{width:26px;height:26px;border-radius:50%;border:2px solid #444;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+  .mi.sel .chk{background:var(--y);border-color:var(--y);}
+  .chk svg{width:14px;height:14px;opacity:0;transition:opacity .15s;}
+  .mi.sel .chk svg{opacity:1;}
+
+  /* ITEM PHOTO */
+  .mi-photo{width:100%;height:160px;object-fit:cover;display:block;border-bottom:2px solid var(--b);}
+
+  /* PAPAS OPTIONS */
+  .pw{display:none;padding:0 14px 12px;}
+  .mi.sel .pw{display:block;}
+  .pl{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--y);opacity:.7;margin-bottom:7px;}
+  .po{display:flex;gap:7px;}
+  .pb{flex:1;padding:8px 10px;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;border:2px solid #444;background:var(--g);color:var(--m);transition:all .15s;text-align:center;}
+  .pb.on{background:var(--y);border-color:var(--y);color:var(--b);}
+
+  /* QUANTITY SELECTOR */
+  .iq{display:none;padding:0 14px 12px;align-items:center;gap:12px;}
+  .mi.sel .iq{display:flex;}
+  .iq-lbl{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--y);opacity:.7;}
+  .iqc{display:flex;align-items:center;gap:10px;margin-left:auto;}
+  .iqb{width:28px;height:28px;border-radius:50%;background:var(--y);color:var(--b);font-size:18px;font-weight:900;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;}
+  .iqb:active{transform:scale(.9);}
+  .iqn{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--w);min-width:22px;text-align:center;}
+
+  /* OPCIONES MULTI-SELECT */
+  .ow{display:none;padding:0 14px 12px;}
+  .mi.sel .ow{display:block;}
+  .ol{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--y);opacity:.7;margin-bottom:7px;}
+  .oo{display:flex;gap:7px;flex-wrap:wrap;}
+  .ob{padding:8px 10px;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;border:2px solid #444;background:var(--g);color:var(--m);transition:all .15s;text-align:center;}
+  .ob.on{background:var(--y);border-color:var(--y);color:var(--b);}
+
+  /* AGREGAR OTRO */
+  .add-another{width:100%;padding:9px;background:none;border:2px dashed #444;border-radius:10px;color:#666;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;transition:all .15s;margin-bottom:8px;display:none;}
+  .mi.sel + .add-another{display:block;}
+  .mi-dup + .add-another{display:block;}
+  .add-another:hover{border-color:var(--y);color:var(--y);}
+  .mi-dup{background:#141400;border-radius:12px;margin-bottom:4px;border:2px solid #555;overflow:hidden;}
+  .mi-dup.sel-dup{border-color:var(--y);}
+  .dup-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 15px;background:#1a1a00;border-bottom:1px solid #333;}
+  .dup-lbl{font-size:11px;font-weight:800;color:var(--y);opacity:.7;letter-spacing:1px;text-transform:uppercase;}
+  .dup-rm{font-size:13px;color:#666;background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:900;padding:2px 8px;}
+
+  /* PROMO SELECCIONABLE */
+  .promo-sel{cursor:pointer;}
+  .promo-sel.on{border-color:var(--y) !important;background:#1a1500 !important;}
+  .promo-chk{width:24px;height:24px;border-radius:50%;border:2px solid #666;display:flex;align-items:center;justify-content:center;margin-left:auto;margin-top:6px;transition:all .15s;flex-shrink:0;}
+  .promo-sel.on .promo-chk{background:var(--y);border-color:var(--y);}
+  .promo-chk svg{width:13px;height:13px;opacity:0;}
+  .promo-sel.on .promo-chk svg{opacity:1;}
+  .promo-sel.on .promo-iq{display:flex !important;}
+
+
+  /* AUTH MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.hidden{display:none;}
+  .modal{background:var(--d);border-radius:16px;padding:24px;width:100%;max-width:420px;border:2px solid var(--y);}
+  .modal h2{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--y);letter-spacing:2px;margin-bottom:6px;}
+  .modal p{font-size:12px;color:var(--m);margin-bottom:20px;}
+  .modal input{width:100%;background:#111;border:2px solid #333;border-radius:10px;padding:12px 14px;color:var(--w);font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;margin-bottom:12px;outline:none;transition:border-color .15s;}
+  .modal input:focus{border-color:var(--y);}
+  .modal-btn{width:100%;padding:14px;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:900;font-size:15px;cursor:pointer;border:none;transition:all .15s;margin-bottom:8px;}
+  .modal-btn.primary{background:var(--y);color:var(--b);}
+  .modal-btn.secondary{background:none;border:2px solid #444;color:var(--m);}
+  .modal-btn.secondary:hover{border-color:var(--y);color:var(--y);}
+  .modal-error{font-size:12px;color:#ff6b6b;text-align:center;margin-bottom:8px;min-height:18px;}
+
+  /* LOYALTY BAR */
+  .loyalty-bar{background:var(--d);border-bottom:2px solid #222;padding:12px 16px;max-width:480px;margin:0 auto;}
+  .loyalty-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .loyalty-user{font-size:13px;font-weight:700;color:var(--y);}
+  .loyalty-logout{font-size:11px;color:#555;background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
+  .loyalty-progress-wrap{background:#111;border-radius:20px;height:10px;overflow:hidden;margin-bottom:6px;}
+  .loyalty-progress{height:100%;background:var(--y);border-radius:20px;transition:width .5s ease;}
+  .loyalty-info{display:flex;justify-content:space-between;align-items:center;}
+  .loyalty-count{font-size:11px;color:var(--m);font-weight:700;}
+  .loyalty-next{font-size:11px;color:var(--y);font-weight:700;}
+  .cupon-badge{display:inline-block;background:var(--y);color:var(--b);font-family:'Bebas Neue',sans-serif;font-size:18px;padding:4px 14px;border-radius:20px;cursor:pointer;letter-spacing:1px;animation:pulse .8s infinite alternate;}
+  @keyframes pulse{from{transform:scale(1);}to{transform:scale(1.04);}}
+
+  /* LOGIN BTN en hero */
+  .login-btn{display:inline-block;margin-top:10px;background:var(--b);color:var(--y);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;padding:6px 18px;border-radius:20px;cursor:pointer;border:2px solid var(--y);transition:all .15s;}
+  .login-btn:hover{background:var(--y);color:var(--b);}
+
+  /* PROMO */
+  .promo{background:var(--g);border:2px dashed var(--y);border-radius:12px;padding:13px 15px;margin:0 16px 16px;text-align:center;}
+  .promo p{font-weight:700;font-size:14px;color:var(--y);}
+  .promo span{display:block;font-size:12px;color:var(--m);margin-top:3px;}
+
+  /* LOADING / ERROR */
+  .loading{padding:40px 20px;text-align:center;color:var(--m);font-size:14px;}
+
+  /* WHATSAPP BUTTON */
+  .was{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:100;width:calc(100% - 32px);max-width:448px;}
+  .wab{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--gr);color:white;padding:15px 20px;border-radius:50px;font-weight:900;font-size:15px;box-shadow:0 8px 32px rgba(37,211,102,.4);cursor:pointer;border:none;width:100%;font-family:'Nunito',sans-serif;transition:transform .15s,opacity .15s;}
+  .wab:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
+  .wab:not(:disabled):active{transform:scale(.97);}
+  .wab svg{width:24px;height:24px;flex-shrink:0;}
+  .wt{display:flex;flex-direction:column;align-items:flex-start;}
+  .wt small{font-size:11px;font-weight:600;opacity:.9;}
+
+  /* FOOTER */
+  .footer{background:var(--y);padding:22px 20px 28px;text-align:center;margin-top:14px;}
+  .footer h3{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--b);letter-spacing:2px;}
+  .footer p{font-size:12px;font-weight:700;color:var(--b);opacity:.7;margin-top:2px;}
+  .footer .handle{display:inline-block;margin-top:9px;background:var(--b);color:var(--y);font-weight:900;font-size:13px;padding:5px 14px;border-radius:20px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- ============================================================
+  CONFIGURACION DEL RESTAURANTE
+  Modifica solo este bloque para personalizar el menu.
+  ============================================================ -->
+<script>
+var CONFIG = {
+  // URL del logo — sube tu imagen al hosting y pega la URL aqui
+  logo: '//softvibes.com.mx/richi/img/logo.png' ,
+
+  // Texto debajo del logo
+  tagline: 'Aqui se come rico porque se cocina con el corazon',
+
+  // Numero de WhatsApp — 52 (Mexico) + 10 digitos
+  whatsapp: '525652169403',
+
+  // Datos del footer
+  direccion: 'Av. IPN #5105',
+  ciudad: 'Col. Capultitlan, CDMX',
+  horario_footer: 'Lun - Vie · 7:00 - 10:30 h',
+  instagram: '@mxlocalito',
+
+  // Texto de promocion del dia
+  promo_texto: 'Pregunta a tu mesero por el combo especial de hoy',
+
+  // Links CSV de Google Sheets — uno por cada hoja
+  csv_menu:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vSju5_o_Fk8CSue-CP7tWbC5FsXHbo4eTslO1yBLs5NHTPLmQklp21l8e3AlUhAIOKe56kLr099wCWu/pub?gid=40748683&single=true&output=csv',
+  csv_secciones: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSju5_o_Fk8CSue-CP7tWbC5FsXHbo4eTslO1yBLs5NHTPLmQklp21l8e3AlUhAIOKe56kLr099wCWu/pub?gid=1080576999&single=true&output=csv',
+  csv_config:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vSju5_o_Fk8CSue-CP7tWbC5FsXHbo4eTslO1yBLs5NHTPLmQklp21l8e3AlUhAIOKe56kLr099wCWu/pub?gid=1233204709&single=true&output=csv'
+};
+</script>
+<!-- ============================================================
+  FIN DE CONFIGURACION
+  ============================================================ -->
+
+<div class="hero">
+  <img id="logo-img" src="" alt="Logo">
+  <p class="hero-tag" id="hero-tag"></p>
+  <div id="hero-auth"><span class="login-btn" onclick="openAuth()">Iniciar sesion / Registrarse</span></div>
+</div>
+<div class="sched" id="sched-bar"></div>
+<div class="cart-bar">
+  <div class="ci">Seleccionados: <strong id="cnt">0 items</strong></div>
+  <button class="cc" onclick="clearAll()">Limpiar todo</button>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay hidden" id="auth-modal">
+  <div class="modal">
+    <h2 id="auth-title">Bienvenido</h2>
+    <p id="auth-subtitle">Inicia sesion para acumular puntos y obtener descuentos</p>
+    <div class="modal-error" id="auth-error"></div>
+    <input type="text" id="auth-nick" placeholder="Nickname" maxlength="20" autocomplete="off">
+    <input type="password" id="auth-pass" placeholder="Contrasena" maxlength="30">
+    <button class="modal-btn primary" onclick="authSubmit()">Entrar</button>
+    <button class="modal-btn secondary" id="auth-toggle-btn" onclick="toggleAuthMode()">No tengo cuenta, registrarme</button>
+    <button class="modal-btn secondary" onclick="closeAuth()">Cancelar</button>
+  </div>
+</div>
+
+<!-- CUPON MODAL -->
+<div class="modal-overlay hidden" id="cupon-modal">
+  <div class="modal" style="text-align:center;">
+    <h2>Tienes un cupon</h2>
+    <p id="cupon-desc"></p>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--y);margin:16px 0;" id="cupon-pct"></div>
+    <p style="font-size:12px;color:var(--m);">El descuento se aplicara a tu proximo pedido al enviarlo por WhatsApp.</p>
+    <button class="modal-btn primary" onclick="useCupon()">Usar cupon ahora</button>
+    <button class="modal-btn secondary" onclick="closeCuponModal()">Guardar para despues</button>
+  </div>
+</div>
+
+<!-- LOYALTY BAR (solo visible cuando hay sesion) -->
+<div class="loyalty-bar hidden" id="loyalty-bar">
+  <div class="loyalty-top">
+    <span class="loyalty-user" id="loyalty-user-label"></span>
+    
+  </div>
+  <div class="loyalty-progress-wrap">
+    <div class="loyalty-progress" id="loyalty-progress" style="width:0%"></div>
+  </div>
+  <div class="loyalty-info">
+    <span class="loyalty-count" id="loyalty-count"></span>
+    <span class="loyalty-next" id="loyalty-next"></span>
+  </div>
+</div>
+
+<div id="menu-root"><div class="loading">Cargando menu...</div></div>
+<div class="footer" id="footer-root"></div>
+<div class="was">
+  <button class="wab" id="wa-btn" disabled onclick="sendOrder()">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <div class="wt">
+      <span id="wa-lbl">Selecciona un platillo</span>
+      <small id="wa-tot"></small>
+    </div>
+  </button>
+</div>
+
+<script>
+// ── INIT HERO & FOOTER ────────────────────────────────────────────────────────
+// Guardamos el logo original del CONFIG para restaurarlo si el Sheets no tiene uno
+var ORIGINAL_LOGO = CONFIG.logo; // guardamos logo inicial antes de que loadMenu pueda pisarlo
+document.getElementById('logo-img').src = ORIGINAL_LOGO;
+document.getElementById('hero-tag').textContent = CONFIG.tagline;
+document.getElementById('footer-root').innerHTML =
+  '<h3>' + CONFIG.direccion + '</h3>' +
+  '<p>' + CONFIG.ciudad + '</p>' +
+  '<p style="margin-top:4px;">' + CONFIG.horario_footer + '</p>' +
+  '<a class="handle" href="'+(CONFIG.instagram_url||'#')+'" target="_blank" style="text-decoration:none;">' + CONFIG.instagram + '</a>';
+
+// ── CSV PARSER ────────────────────────────────────────────────────────────────
+// Handles quoted fields with commas inside.
+// Skips decorative title rows (row 1 in our Excel has a merged title cell).
+// The real header row is detected by looking for known column names.
+function parseCSV(text) {
+  var lines = text.trim().split('\n');
+
+  // Find the real header row — it must contain at least 3 comma-separated values
+  var headerIdx = 0;
+  for (var h = 0; h < Math.min(5, lines.length); h++) {
+    var cols = lines[h].split(',');
+    if (cols.length >= 3) { headerIdx = h; break; }
+  }
+
+  var headers = lines[headerIdx].split(',').map(function(h){ return h.trim().replace(/\r/g,'').replace(/"/g,''); });
+  var rows = [];
+  for (var i = headerIdx + 1; i < lines.length; i++) {
+    var line = lines[i].replace(/\r/g,'');
+    var cols = [], cur = '', inQ = false;
+    for (var c = 0; c < line.length; c++) {
+      var ch = line[c];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim());
+    var row = {};
+    headers.forEach(function(h, idx){ row[h] = (cols[idx] || '').replace(/"/g,'').trim(); });
+    rows.push(row);
+  }
+  return rows;
+}
+
+// ── TIME HELPERS ──────────────────────────────────────────────────────────────
+// Returns current time as minutes from midnight (e.g. 13:30 = 810)
+function nowMinutes() {
+  var d = new Date();
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+// Parses "HH:MM" string to minutes from midnight
+function toMinutes(str) {
+  if (!str) return -1;
+  var parts = str.split(':');
+  return parseInt(parts[0]) * 60 + parseInt(parts[1] || 0);
+}
+
+// Returns true if current time is within [inicio, fin]
+function isAvailable(inicio, fin) {
+  var now = nowMinutes();
+  return now >= toMinutes(inicio) && now <= toMinutes(fin);
+}
+
+// Formats a time like "12:00" to display
+function fmtTime(t) { return t; }
+
+// ── BUILD MENU ITEM HTML ──────────────────────────────────────────────────────
+function buildItem(row, features) {
+  var hasPapas = row.has_papas === 'si';
+  var attrs = hasPapas
+    ? 'data-hp="1" data-bn="' + row.nombre + '" data-bp="' + row.precio + '" data-pp="' + row.precio_papas + '"'
+    : '';
+
+  var html = '<div class="mi" ' + attrs + ' onclick="toggleItem(this)">';
+
+  // Photo — only if feature enabled and URL exists
+  if (features.mostrar_fotos && row.imagen) {
+    html += '<img class="mi-photo" src="' + row.imagen + '" alt="' + row.nombre + '" onerror="this.style.display=\'none\'">';
+  }
+
+  html += '<div class="mim"><div class="ml">';
+  html += '<div class="mn">' + row.nombre + '</div>';
+  if (row.descripcion) html += '<div class="md">' + row.descripcion + '</div>';
+  if (row.tag) html += '<div class="mt"><span class="tag">' + row.tag + '</span></div>';
+  html += '</div>';
+  html += '<div class="mr"><div class="mp">$' + row.precio + '</div>';
+  html += '<div class="chk"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+  html += '</div></div>';
+
+  if (hasPapas) {
+    html += '<div class="pw"><div class="pl">Con papas?</div><div class="po">';
+    html += '<button class="pb on" onclick="setPapas(event,this,false)">Sin papas $' + row.precio + '</button>';
+    html += '<button class="pb" onclick="setPapas(event,this,true)">Con papas $' + row.precio_papas + '</button>';
+    html += '</div></div>';
+  }
+
+  // Opciones multi-select (topping, complementos, etc.)
+  var opRaw = (row.opciones||'').replace(/"/g,'').trim();
+  if (opRaw) {
+    var sep = opRaw.indexOf('|')>=0 ? '|' : ',';
+    var opts = opRaw.split(sep).map(function(o){return o.trim();});
+    var prRaw = (row.opciones_precio||'').replace(/"/g,'').trim();
+    var prs = prRaw ? prRaw.split(sep).map(function(p){return parseInt(p)||0;}) : [];
+    var lbl = (row.opciones_label||'Elige una opcion').replace(/"/g,'').trim();
+    html += '<div class="ow"><div class="ol">'+lbl+'</div><div class="oo">';
+    opts.forEach(function(o,i){
+      var p = prs[i]!==undefined?prs[i]:(prs[0]||0);
+      html += '<button class="ob" onclick="setOp(event,this,'+p+')">'+(p>0?o+' +$'+p:o)+'</button>';
+    });
+    html += '</div></div>';
+  }
+
+  html += '<div class="iq" onclick="event.stopPropagation()"><span class="iq-lbl">Cantidad</span>';
+  html += '<div class="iqc"><button class="iqb" onclick="itemQty(event,this,-1)">-</button>';
+  html += '<span class="iqn">1</span>';
+  html += '<button class="iqb" onclick="itemQty(event,this,1)">+</button></div></div>';
+  html += '</div>';
+
+  // Boton agregar otro — se oculta si has_agregar === 'no' en el Sheets
+  var haAddAnother = (row.has_agregar || 'si') !== 'no';
+  if (haAddAnother) {
+  html += '<button class="add-another"'
+    +' data-nombre="'+row.nombre+'"'
+    +' data-precio="'+(row.precio||0)+'"'
+    +' data-pp="'+(row.precio_papas||'')+'"'
+    +' data-bp="'+(row.precio||0)+'"'
+    +' data-hp="'+(row.has_papas==='si'?'1':'')+'"'
+    +' data-op="'+opRaw+'"'
+    +' data-opp="'+((row.opciones_precio||'').replace(/"/g,'').trim())+'"'
+    +' data-opl="'+((row.opciones_label||'').replace(/"/g,'').trim())+'"'
+    +' onclick="addAnother(this)">+ Agregar otro '+row.nombre+'</button>';
+  }
+
+  return html;
+}
+
+// ── GROUP SECCIONES INTO MAIN BLOCKS ─────────────────────────────────────────
+// Secciones that share the same horario_inicio are grouped into one collapsible block
+// The first seccion of each group becomes the block's header
+function groupSecciones(secciones) {
+  var blocks = [], currentBlock = null;
+  secciones.forEach(function(sec) {
+    // A section is a "main block" if it's not a subsection (sm !== 'si')
+    if (sec.sm !== 'si') {
+      if (currentBlock) blocks.push(currentBlock);
+      currentBlock = { header: sec, children: [] };
+    } else {
+      if (currentBlock) currentBlock.children.push(sec);
+    }
+  });
+  if (currentBlock) blocks.push(currentBlock);
+  return blocks;
+}
+
+// ── BUILD FULL MENU ───────────────────────────────────────────────────────────
+function buildMenu(menuRows, secRows, features) {
+  // Filter active secciones
+  var secciones = secRows.filter(function(s){ return s.activo === 'si'; });
+
+  // Group items by seccion key, filtering inactive
+  var groups = {};
+  menuRows.forEach(function(row) {
+    if (row.activo !== 'si') return;
+    if (!groups[row.seccion]) groups[row.seccion] = [];
+    groups[row.seccion].push(row);
+  });
+
+  // Build schedule bar from unique horarios
+  var seen = {}, schedHTML = '';
+  secciones.forEach(function(s) {
+    var key = s.horario_inicio + '-' + s.horario_fin;
+    if (!seen[key] && s.horario_inicio && !s.sm) {
+      seen[key] = true;
+      schedHTML += '<div class="si">' + s.titulo + ' <span>' + s.horario_inicio + '-' + s.horario_fin + '</span></div>';
+    }
+  });
+  document.getElementById('sched-bar').innerHTML = schedHTML;
+
+  // Group into collapsible blocks
+  var blocks = groupSecciones(secciones);
+  var html = '';
+
+  blocks.forEach(function(block) {
+    var sec = block.header;
+    var available = !features.verificar_horario || isAvailable(sec.horario_inicio, sec.horario_fin);
+    var collapsed = features.colapsar_secciones && (sec.collapsed === 'si' || !available);
+    var isOpen = !features.colapsar_secciones || (!collapsed && available);
+
+    // Determine block subtitle (time range)
+    var subLabel = sec.horario_inicio && sec.horario_fin
+      ? sec.horario_inicio + ' - ' + sec.horario_fin + ' h'
+      : '';
+
+    html += '<div class="sec-block' + (isOpen ? ' open' : '') + '">';
+
+    // Block header (collapsible trigger)
+    var headerClass = 'sec-header' + (!available && features.verificar_horario ? ' locked' : '');
+    var clickAction = features.colapsar_secciones ? 'onclick="toggleBlock(this)"' : '';
+    html += '<div class="' + headerClass + '" ' + clickAction + '>';
+    html += '<div class="sec-header-left">';
+    html += '<span class="sec-header-title">' + sec.titulo + '</span>';
+    if (subLabel) html += '<span class="sec-header-sub">' + subLabel + '</span>';
+    if (!available && features.verificar_horario) {
+      html += '<span class="sec-lock-msg">Disponible a las ' + fmtTime(sec.horario_inicio) + '</span>';
+    }
+    html += '</div>';
+    html += '<div class="sec-header-right">';
+    if (sec.badge) html += '<span class="sec-badge">' + sec.badge + '</span>';
+    if (features.colapsar_secciones) html += '<span class="sec-arrow">▾</span>';
+    html += '</div></div>';
+
+    // Collapsible content
+    html += '<div class="sec-content">';
+
+    // Main section items
+    if (groups[sec.key] && groups[sec.key].length > 0) {
+      if (sec.nota) html += '<div class="inner-sec"><div class="inner-nota">' + sec.nota + '</div>';
+      else html += '<div class="inner-sec">';
+      groups[sec.key].forEach(function(row){ html += buildItem(row, features); });
+      html += '</div>';
+    }
+
+    // Promo box after desayuno — seleccionable si tiene nombre y precio
+    if (sec.key === 'desayuno') {
+      var pn = CONFIG.promo_nombre||'';
+      var pp = parseInt(CONFIG.promo_precio||0);
+      if (pn) {
+        html += '<div class="promo promo-sel" onclick="togglePromo(this)" data-nombre="'+pn+'" data-precio="'+pp+'">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;">';
+        html += '<div><p>Promocion del dia</p><span>'+CONFIG.promo_texto+'</span>';
+        if (pp>0) html += '<span style="display:block;margin-top:6px;font-family:Bebas Neue,sans-serif;font-size:22px;color:var(--y);">$'+pp+'</span>';
+        html += '</div>';
+        html += '<div class="promo-chk"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+        html += '</div>';
+        html += '<div class="iq promo-iq" onclick="event.stopPropagation()" style="display:none;"><span class="iq-lbl">Cantidad</span>';
+        html += '<div class="iqc"><button class="iqb" onclick="promoQty(event,this,-1)">-</button>';
+        html += '<span class="iqn promo-qn">1</span>';
+        html += '<button class="iqb" onclick="promoQty(event,this,1)">+</button></div></div>';
+        html += '</div>';
+      } else {
+        html += '<div class="promo"><p>Promocion del dia</p><span>'+CONFIG.promo_texto+'</span></div>';
+      }
+    }
+
+    // Children subsections
+    block.children.forEach(function(child) {
+      var childItems = groups[child.key];
+      if (!childItems || childItems.length === 0) return;
+      html += '<div class="div"></div>';
+      html += '<div class="inner-sec">';
+      html += '<div class="inner-title">' + child.titulo + '</div>';
+      if (child.badge) html += '<div class="inner-badge">' + child.badge + '</div>';
+      if (child.nota) html += '<div class="inner-nota">' + child.nota + '</div>';
+      childItems.forEach(function(row){ html += buildItem(row, features); });
+      html += '</div>';
+    });
+
+    html += '</div>'; // sec-content
+    html += '</div>'; // sec-block
+  });
+
+  return html;
+}
+
+// ── TOGGLE COLLAPSIBLE BLOCK ──────────────────────────────────────────────────
+function toggleBlock(headerEl) {
+  var block = headerEl.closest('.sec-block');
+  // If section is locked (fuera de horario), don't open
+  if (headerEl.classList.contains('locked')) return;
+  block.classList.toggle('open');
+}
+
+// ── LOAD ALL DATA ─────────────────────────────────────────────────────────────
+function loadMenu() {
+  Promise.all([
+    fetch(CONFIG.csv_menu).then(function(r){ return r.text(); }),
+    fetch(CONFIG.csv_secciones).then(function(r){ return r.text(); }),
+    fetch(CONFIG.csv_config).then(function(r){ return r.text(); })
+  ])
+  .then(function(results) {
+    var menuRows = parseCSV(results[0]);
+    var secRows  = parseCSV(results[1]);
+    var cfgRows  = parseCSV(results[2]);
+
+
+
+    // Features y branding desde config sheet
+    var features = { colapsar_secciones:false, verificar_horario:false, mostrar_fotos:false };
+    var BRANDING_KEYS = ['logo','tagline','whatsapp','direccion','ciudad','horario_footer','instagram','instagram_url','promo_texto','promo_nombre','promo_precio'];
+    var nivelesSheets = {};
+    cfgRows.forEach(function(r) {
+      if (!r.funcion) return;
+      if (r.activo === 'si') features[r.funcion] = true;
+      if (BRANDING_KEYS.indexOf(r.funcion) >= 0 && r.activo && r.activo !== 'si' && r.activo !== 'no') {
+        CONFIG[r.funcion] = r.activo;
+      }
+      // Leer niveles de lealtad: nivel_1_pedidos, nivel_1_descuento, etc.
+      var mN = r.funcion.match(/^nivel_(\d+)_(pedidos|descuento)$/);
+      if (mN && r.activo) {
+        var idx = parseInt(mN[1]) - 1;
+        var tipo = mN[2];
+        if (!nivelesSheets[idx]) nivelesSheets[idx] = {};
+        nivelesSheets[idx][tipo] = parseInt(r.activo);
+      }
+    });
+    // Aplicar niveles del Sheets si existen
+    var nivelesArr = Object.keys(nivelesSheets).sort().map(function(k){ return nivelesSheets[k]; });
+    if (nivelesArr.length > 0) {
+      // Actualizar NIVELES global
+      NIVELES = nivelesArr.filter(function(n){ return n.pedidos && n.descuento; });
+    }
+    // Aplicar branding al DOM
+    // Logo: el src ya fue seteado al init. Solo actualizar si Sheets da una URL nueva valida
+    // Nunca pisar con valor vacio o placeholder
+    var newLogo = CONFIG.logo || '';
+    if (newLogo && (newLogo.indexOf('http') === 0 || newLogo.indexOf('//') === 0) && newLogo.indexOf('placeholder') < 0) {
+      document.getElementById('logo-img').src = newLogo;
+    }
+    document.getElementById('hero-tag').textContent = CONFIG.tagline;
+    document.getElementById('footer-root').innerHTML =
+      '<h3>'+CONFIG.direccion+'</h3>'+
+      '<p>'+CONFIG.ciudad+'</p>'+
+      '<p style="margin-top:4px;">'+CONFIG.horario_footer+'</p>'+
+      '<a class="handle" href="'+(CONFIG.instagram_url||'#')+'" target="_blank" style="text-decoration:none;">'+CONFIG.instagram+'</a>';
+
+    document.getElementById('menu-root').innerHTML = buildMenu(menuRows, secRows, features);
+    // Restaurar logo después de que buildMenu reconstruye el DOM
+    var logoEl = document.getElementById('logo-img');
+    if (logoEl && ORIGINAL_LOGO) logoEl.src = ORIGINAL_LOGO;
+
+  })
+  .catch(function(err) {
+    document.getElementById('menu-root').innerHTML =
+      '<div class="loading" style="color:#ff6b6b;">' +
+      'Error al cargar el menu.<br><br>' +
+      '<small style="color:#aaa;font-size:11px;word-break:break-all;">' + err.toString() + '</small><br><br>' +
+      '<button onclick="loadMenu()" style="background:var(--y);color:var(--b);border:none;padding:10px 20px;border-radius:20px;font-weight:900;font-size:14px;cursor:pointer;font-family:Nunito,sans-serif;">Reintentar</button>' +
+      '</div>';
+    console.error('Menu load error:', err);
+  });
+}
+
+// ── INTERACTION ───────────────────────────────────────────────────────────────
+function toggleItem(el) {
+  el.classList.toggle('sel');
+  if (!el.classList.contains('sel')) {
+    var qn = el.querySelector('.iqn');
+    if (qn) qn.textContent = '1';
+  }
+  updateCart();
+}
+
+function itemQty(e, btn, d) {
+  e.stopPropagation();
+  var qn = btn.closest('.iqc').querySelector('.iqn');
+  qn.textContent = String(Math.max(1, (parseInt(qn.textContent) || 1) + d));
+  updateCart();
+}
+
+function setPapas(e, btn, withPapas) {
+  e.stopPropagation();
+  btn.closest('.po').querySelectorAll('.pb').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  updateCart();
+}
+
+// Multi-select opciones
+function setOp(e, btn, price) {
+  e.stopPropagation();
+  if (btn.classList.contains('on')) {
+    btn.classList.remove('on'); btn.dataset.extra = '0';
+  } else {
+    btn.classList.add('on'); btn.dataset.extra = String(price);
+  }
+  updateCart();
+}
+
+// Toggle promo seleccionable
+function promoQty(e, btn, d) {
+  e.stopPropagation();
+  var qn = btn.closest('.iqc').querySelector('.promo-qn');
+  qn.textContent = String(Math.max(1, (parseInt(qn.textContent)||1) + d));
+  updateCart();
+}
+
+function togglePromo(el) {
+  el.classList.toggle('on');
+  updateCart();
+}
+
+// Agregar otra copia del mismo item
+function addAnother(btn) {
+  var nombre = btn.dataset.nombre || '';
+  var bp = btn.dataset.bp || '0';
+  var pp = btn.dataset.pp || '';
+  var hp = btn.dataset.hp || '';
+  var opRaw = btn.dataset.op || '';
+  var prRaw = btn.dataset.opp || '';
+  var lbl = btn.dataset.opl || 'Elige una opcion';
+
+  var precio = btn.dataset.precio || btn.dataset.bp || '0';
+  var d = '<div class="mi-dup" data-precio="'+precio+'">';
+  d += '<div class="dup-hdr"><span class="dup-lbl">+ '+nombre+' adicional</span>';
+  d += '<button class="dup-rm" onclick="this.closest(\'.mi-dup\').remove();updateCart()">✕</button></div>';
+  // Papas
+  if (hp) {
+    d += '<div class="pw" style="display:block"><div class="pl">Con papas?</div><div class="po">';
+    d += '<button class="pb on" onclick="setPapas(event,this,false)">Sin papas $'+bp+'</button>';
+    d += '<button class="pb" onclick="setPapas(event,this,true)">Con papas $'+pp+'</button>';
+    d += '</div></div>';
+  }
+  // Opciones
+  if (opRaw) {
+    var sep = opRaw.indexOf('|')>=0?'|':',';
+    var opts = opRaw.split(sep);
+    var prs = prRaw ? prRaw.split(sep).map(function(p){return parseInt(p)||0;}) : [];
+    d += '<div class="ow" style="display:block"><div class="ol">'+lbl+'</div><div class="oo">';
+    opts.forEach(function(o,i){
+      var p = prs[i]!==undefined?prs[i]:(prs[0]||0);
+      d += '<button class="ob" onclick="setOp(event,this,'+p+')">'+(p>0?o.trim()+' +$'+p:o.trim())+'</button>';
+    });
+    d += '</div></div>';
+  }
+  d += '<div class="iq" style="display:flex" onclick="event.stopPropagation()"><span class="iq-lbl">Cantidad</span>';
+  d += '<div class="iqc"><button class="iqb" onclick="itemQty(event,this,-1)">-</button>';
+  d += '<span class="iqn">1</span>';
+  d += '<button class="iqb" onclick="itemQty(event,this,1)">+</button></div></div>';
+  d += '</div>';
+
+  btn.insertAdjacentHTML('beforebegin', d);
+  updateCart();
+}
+
+function clearAll() {
+  document.querySelectorAll('.mi.sel').forEach(function(el) {
+    el.classList.remove('sel');
+    var qn = el.querySelector('.iqn');
+    if (qn) qn.textContent = '1';
+    el.querySelectorAll('.ob.on').forEach(function(b){ b.classList.remove('on'); b.dataset.extra='0'; });
+  });
+  document.querySelectorAll('.mi-dup').forEach(function(el){ el.remove(); });
+  var promoEl = document.querySelector('.promo-sel.on');
+  if (promoEl) {
+    promoEl.classList.remove('on');
+    var pqn = promoEl.querySelector('.promo-qn');
+    if (pqn) pqn.textContent = '1';
+  }
+  updateCart();
+}
+
+function getSelected() {
+  var result = [];
+  document.querySelectorAll('.mi.sel').forEach(function(el) {
+    var qn = el.querySelector('.iqn');
+    var qty = qn ? (parseInt(qn.textContent) || 1) : 1;
+    var name, price;
+    if (el.dataset.hp) {
+      var on = el.querySelector('.pb.on');
+      var con = on && on.textContent.indexOf('Con papas') >= 0;
+      name = el.dataset.bn + (con ? ' con papas' : ' sin papas');
+      price = parseInt(con ? el.dataset.pp : el.dataset.bp);
+    } else {
+      name = el.querySelector('.mn').textContent.trim();
+      price = parseInt(el.querySelector('.mp').textContent.replace('$',''));
+    }
+    // Multi-select opciones
+    el.querySelectorAll('.ob.on').forEach(function(b){
+      price += parseInt(b.dataset.extra||'0');
+      name += ' + ' + b.textContent.replace(/\s*\+\$\d+/,'').trim();
+    });
+    if (qty > 1) name += ' x'+qty;
+    result.push({ name:name, price:price*qty });
+  });
+
+  // Duplicados
+  document.querySelectorAll('.mi-dup').forEach(function(el) {
+    var lbl = el.querySelector('.dup-lbl');
+    var name = lbl ? lbl.textContent.replace('+ ','').replace(' adicional','') : 'Item';
+    var qn = el.querySelector('.iqn');
+    var qty = qn ? (parseInt(qn.textContent)||1) : 1;
+    // Precio base desde data-precio del div (guardado al crear el dup)
+    var price = parseInt(el.dataset.precio || '0');
+    // Si tiene opcion de papas, usar precio del boton seleccionado
+    var onPb = el.querySelector('.pb.on');
+    if (onPb) {
+      var m = onPb.textContent.match(/\$(\d+)/);
+      if (m) price = parseInt(m[1]);
+      name += onPb.textContent.indexOf('Con papas')>=0 ? ' con papas' : ' sin papas';
+    }
+    // Sumar opciones seleccionadas
+    el.querySelectorAll('.ob.on').forEach(function(b){
+      price += parseInt(b.dataset.extra||'0');
+      name += ' + ' + b.textContent.replace(/\s*\+\$\d+/,'').trim();
+    });
+    if (qty>1) name += ' x'+qty;
+    result.push({name:name, price:price*qty});
+  });
+
+  // Promo
+  var promoEl = document.querySelector('.promo-sel.on');
+  if (promoEl) {
+    var promoQn = promoEl.querySelector('.promo-qn');
+    var promoQty = promoQn ? (parseInt(promoQn.textContent)||1) : 1;
+    var promoName = (promoEl.dataset.nombre||'Promocion del dia') + (promoQty > 1 ? ' x'+promoQty : '');
+    result.push({name: promoName, price: parseInt(promoEl.dataset.precio||0) * promoQty});
+  }
+
+  return result;
+}
+
+function updateCart() {
+  var items = getSelected();
+  var total = items.reduce(function(s,i){ return s+i.price; }, 0);
+  var n = items.length;
+  document.getElementById('cnt').textContent = n === 0 ? '0 items' : n + ' item' + (n>1?'s':'') + ' $' + total;
+  var btn = document.getElementById('wa-btn');
+  btn.disabled = n === 0;
+  document.getElementById('wa-lbl').textContent = n === 0 ? 'Selecciona un platillo' : 'Enviar pedido (' + n + ' item' + (n>1?'s':'') + ')';
+  document.getElementById('wa-tot').textContent = n > 0 ? 'Total estimado: $' + total : '';
+}
+
+function sendOrder() {
+  var items = getSelected();
+  if (!items.length) return;
+  var total = items.reduce(function(s,i){ return s+i.price; }, 0);
+  var list = items.map(function(i,n){ return (n+1)+'. '+i.name+' - $'+i.price; }).join('\n');
+  var msg = 'Hola! Quiero hacer el siguiente pedido:\n\n' + list + '\n\nTotal estimado: $' + total + '\n\nMe pueden confirmar disponibilidad? Gracias!';
+  window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+document.addEventListener('DOMContentLoaded', loadMenu);
+</script>
+
+<script>
+// ── SUPABASE ──────────────────────────────────────────────────────────────────
+const _supa = supabase.createClient('https://pteoxuhgppdxletvpsmw.supabase.co', 'sb_publishable_TZbeLlgR9lnxvaRniRAIJQ_gCx7IO_q');
+
+// ── ESTADO DE SESION ──────────────────────────────────────────────────────────
+var SESSION = null; // { id, nickname, pedidos, cupon_activo, descuento_pct }
+
+// Niveles de lealtad — configurables (se pueden leer del Sheets en el futuro)
+var NIVELES = [
+  { pedidos: 10, descuento: 5 },
+  { pedidos: 20, descuento: 10 },
+  { pedidos: 30, descuento: 15 },
+  { pedidos: 50, descuento: 20 },
+  { pedidos: 100, descuento: 25 },
+];
+
+// ── HASH simple de contrasena (SHA-256 via Web Crypto) ────────────────────────
+async function hashPassword(str) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+
+// ── AUTH: abrir/cerrar modal ──────────────────────────────────────────────────
+var authMode = 'login'; // 'login' | 'register'
+
+function openAuth() {
+  document.getElementById('auth-modal').classList.remove('hidden');
+  document.getElementById('auth-nick').value = '';
+  document.getElementById('auth-pass').value = '';
+  document.getElementById('auth-error').textContent = '';
+}
+
+function closeAuth() {
+  document.getElementById('auth-modal').classList.add('hidden');
+}
+
+function toggleAuthMode() {
+  authMode = authMode === 'login' ? 'register' : 'login';
+  document.getElementById('auth-title').textContent = authMode === 'login' ? 'Bienvenido' : 'Crear cuenta';
+  document.getElementById('auth-subtitle').textContent = authMode === 'login'
+    ? 'Inicia sesion para acumular puntos y obtener descuentos'
+    : 'Crea tu cuenta con un nickname y contrasena';
+  document.getElementById('auth-toggle-btn').textContent = authMode === 'login'
+    ? 'No tengo cuenta, registrarme'
+    : 'Ya tengo cuenta, iniciar sesion';
+}
+
+async function authSubmit() {
+  var nick = document.getElementById('auth-nick').value.trim().toLowerCase();
+  var pass = document.getElementById('auth-pass').value;
+  var errEl = document.getElementById('auth-error');
+  errEl.textContent = '';
+
+  if (!nick || !pass) { errEl.textContent = 'Completa todos los campos.'; return; }
+  if (nick.length < 3) { errEl.textContent = 'Nickname muy corto (min 3 caracteres).'; return; }
+  if (pass.length < 4) { errEl.textContent = 'Contrasena muy corta (min 4 caracteres).'; return; }
+
+  var hash = await hashPassword(pass);
+
+  if (authMode === 'register') {
+    // Verificar si ya existe
+    var check = await _supa.from('usuarios').select('id').eq('nickname', nick).maybeSingle();
+    if (check.data) { errEl.textContent = 'Ese nickname ya esta en uso.'; return; }
+    var ins = await _supa.from('usuarios').insert({ nickname: nick, password_hash: hash }).select().single();
+    if (ins.error) { errEl.textContent = 'Error al crear cuenta.'; return; }
+    await loadSession(ins.data.id, nick);
+  } else {
+    var usr = await _supa.from('usuarios').select('*').eq('nickname', nick).maybeSingle();
+    if (!usr.data) { errEl.textContent = 'Nickname no encontrado.'; return; }
+    var checkHash = await hashPassword(pass);
+    if (usr.data.password_hash !== checkHash) { errEl.textContent = 'Contrasena incorrecta.'; return; }
+    await loadSession(usr.data.id, nick);
+  }
+  closeAuth();
+}
+
+async function loadSession(userId, nickname) {
+  // Contar SOLO pedidos confirmados para el contador de lealtad
+  var ped = await _supa.from('pedidos').select('id', { count: 'exact' }).eq('usuario_id', userId).eq('estado', 'confirmado');
+  var total = ped.count || 0;
+
+  // Calcular nivel actual
+  var cupon = null;
+  var descuento = 0;
+  for (var i = NIVELES.length - 1; i >= 0; i--) {
+    if (total >= NIVELES[i].pedidos) {
+      cupon = 'LEALTAD' + NIVELES[i].descuento;
+      descuento = NIVELES[i].descuento;
+      break;
+    }
+  }
+
+  SESSION = { id: userId, nickname: nickname, pedidos: total, cupon: cupon, descuento: descuento };
+  renderLoyalty();
+}
+
+function renderLoyalty() {
+  if (!SESSION) return;
+
+  // Ocultar boton de login, mostrar loyalty bar
+  document.getElementById('hero-auth').innerHTML = '<span style="font-size:12px;color:#555;font-weight:700;">Hola, ' + SESSION.nickname + '! &nbsp;<span class=\"login-btn\" style=\"font-size:13px;\" onclick=\"logout()\">Salir</span></span>';
+  document.getElementById('loyalty-bar').classList.remove('hidden');
+  document.getElementById('loyalty-user-label').textContent = SESSION.nickname + ' — ' + SESSION.pedidos + ' pedido' + (SESSION.pedidos !== 1 ? 's' : '');
+
+  // Calcular progreso al siguiente nivel
+  var nextLevel = null;
+  var prevPedidos = 0;
+  for (var i = 0; i < NIVELES.length; i++) {
+    if (SESSION.pedidos < NIVELES[i].pedidos) {
+      nextLevel = NIVELES[i];
+      break;
+    }
+    prevPedidos = NIVELES[i].pedidos;
+  }
+
+  var pct = 0;
+  var nextText = '';
+  if (nextLevel) {
+    pct = Math.min(100, Math.round(((SESSION.pedidos - prevPedidos) / (nextLevel.pedidos - prevPedidos)) * 100));
+    nextText = 'Faltan ' + (nextLevel.pedidos - SESSION.pedidos) + ' pedidos para ' + nextLevel.descuento + '% de descuento';
+  } else {
+    pct = 100;
+    nextText = 'Nivel maximo alcanzado!';
+  }
+
+  document.getElementById('loyalty-progress').style.width = pct + '%';
+  document.getElementById('loyalty-count').textContent = SESSION.pedidos + ' pedidos acumulados';
+  document.getElementById('loyalty-next').textContent = nextText;
+
+  // Mostrar cupon si tiene
+  if (SESSION.cupon && SESSION.descuento > 0) {
+    document.getElementById('loyalty-next').innerHTML =
+      '<span class=\"cupon-badge\" onclick=\"openCuponModal()\">🎟️ ' + SESSION.descuento + '% OFF — Usar</span>';
+  }
+
+  updateCart(); // Recalcular por si hay descuento activo
+}
+
+function logout() {
+  SESSION = null;
+  // Ocultar barra de lealtad
+  var bar = document.getElementById('loyalty-bar');
+  if (bar) bar.classList.add('hidden');
+  // Resetear progreso visual
+  var prog = document.getElementById('loyalty-progress');
+  if (prog) prog.style.width = '0%';
+  var cnt = document.getElementById('loyalty-count');
+  if (cnt) cnt.textContent = '';
+  var nxt = document.getElementById('loyalty-next');
+  if (nxt) nxt.textContent = '';
+  var lbl = document.getElementById('loyalty-user-label');
+  if (lbl) lbl.textContent = '';
+  // Restaurar boton de login en hero
+  var heroAuth = document.getElementById('hero-auth');
+  if (heroAuth) heroAuth.innerHTML = '<span class="login-btn" onclick="openAuth()">Iniciar sesion / Registrarse</span>';
+  updateCart();
+}
+
+// ── CUPON MODAL ───────────────────────────────────────────────────────────────
+function openCuponModal() {
+  if (!SESSION || !SESSION.cupon) return;
+  document.getElementById('cupon-pct').textContent = SESSION.descuento + '% OFF';
+  document.getElementById('cupon-desc').textContent = 'Tienes ' + SESSION.pedidos + ' pedidos acumulados. Usa tu descuento ahora o sigue acumulando.';
+  document.getElementById('cupon-modal').classList.remove('hidden');
+}
+
+function closeCuponModal() {
+  document.getElementById('cupon-modal').classList.add('hidden');
+}
+
+function useCupon() {
+  closeCuponModal();
+  // El descuento se aplica en el siguiente sendOrder
+  updateCart();
+}
+
+// ── OVERRIDE sendOrder para registrar pedido y aplicar descuento ──────────────
+var _origSendOrder = sendOrder;
+sendOrder = async function() {
+  var items = getSelected();
+  if (!items.length) return;
+
+  var subtotal = items.reduce(function(s,i){return s+i.price;}, 0);
+  var descuento = 0;
+  var cuponUsado = null;
+
+  // Aplicar cupon si tiene sesion y cupon disponible
+  if (SESSION && SESSION.cupon && SESSION.descuento > 0) {
+    descuento = Math.round(subtotal * SESSION.descuento / 100);
+    cuponUsado = SESSION.cupon;
+  }
+
+  var total = subtotal - descuento;
+  var list = items.map(function(i,n){return (n+1)+'. '+i.name+' - $'+i.price;}).join('\n');
+  var msg = 'Hola! Quiero hacer el siguiente pedido:\n\n' + list;
+  if (cuponUsado) msg += '\n\n🎟️ Cupon: ' + cuponUsado + ' (' + SESSION.descuento + '% OFF)\nDescuento: -$' + descuento;
+  msg += '\n\nTotal: $' + total + '\n\nMe pueden confirmar disponibilidad? Gracias!';
+
+  // Registrar pedido en Supabase si hay sesion
+  if (SESSION) {
+    var pedidoData = {
+      usuario_id: SESSION.id,
+      nickname: SESSION.nickname,
+      items: items,
+      total: total,
+      cupon_aplicado: cuponUsado,
+      descuento_pct: SESSION.descuento
+    };
+    var res = await _supa.from('pedidos').insert(pedidoData).select().single();
+
+    // Si uso cupon, registrar en cupones_canjeados y resetear
+    if (cuponUsado && res.data) {
+      await _supa.from('cupones_canjeados').insert({
+        usuario_id: SESSION.id,
+        nickname: SESSION.nickname,
+        cupon_codigo: cuponUsado,
+        descuento_pct: SESSION.descuento,
+        pedido_id: res.data.id
+      });
+      // Resetear cupon del usuario
+      SESSION.cupon = null;
+      SESSION.descuento = 0;
+    }
+
+    // No sumamos automaticamente — el admin debe confirmar el pedido
+    // para que sume al contador de lealtad
+    renderLoyalty();
+  }
+
+  window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(msg), '_blank');
+};
+
+// ── OVERRIDE updateCart para mostrar descuento ────────────────────────────────
+var _origUpdateCart = updateCart;
+updateCart = function() {
+  _origUpdateCart();
+  if (!SESSION || !SESSION.descuento) return;
+  var items = getSelected();
+  if (!items.length) return;
+  var subtotal = items.reduce(function(s,i){return s+i.price;}, 0);
+  var descuento = Math.round(subtotal * SESSION.descuento / 100);
+  var total = subtotal - descuento;
+  document.getElementById('wa-tot').textContent =
+    'Subtotal: $' + subtotal + ' | Descuento ' + SESSION.descuento + '%: -$' + descuento + ' | Total: $' + total;
+};
+</script>
+
+</body>
+</html>

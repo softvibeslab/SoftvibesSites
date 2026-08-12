@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { waLink, formatoPrecio, CATEGORIAS } from '../data/site';
+
+interface Props {
+  servicio: CollectionEntry<'servicios'>;
+}
+
+const { servicio } = Astro.props;
+const d = servicio.data;
+const url = `/servicios/${servicio.id}`;
+const mensajeWa = `Hola Blooming, quiero agendar "${d.titulo}". ¿Me comparten disponibilidad?`;
+---
+
+<article class="card" data-categoria={d.categoria} data-precio={d.precio}>
+  <div class="card__media">
+    <a href={url} aria-label={d.titulo}>
+      <img src={d.imagen} alt={d.titulo} class="card__img" loading="lazy" width="640" height="435" />
+    </a>
+    <div class="card__badges">
+      {d.favorito && <span class="badge badge--favorito">★ El favorito</span>}
+      {d.precioAntes && <span class="badge badge--promo">Promoción</span>}
+    </div>
+  </div>
+  <div class="card__cuerpo">
+    <span class="card__tipo">{CATEGORIAS[d.categoria]}</span>
+    <h3 class="card__titulo"><a href={url} data-cms={`serv-${servicio.id}-titulo`}>{d.titulo}</a></h3>
+    <span class="card__precio">
+      {
+        d.precio > 0 ? (
+          <>
+            desde {formatoPrecio(d.precio)}
+            {d.precioAntes && <small class="card__antes">antes {formatoPrecio(d.precioAntes)}</small>}
+          </>
+        ) : (
+          <span class="card__cotiza">Se cotiza en valoración</span>
+        )
+      }
+    </span>
+    <span class="card__meta">
+      {d.duracion && <>⏱ {d.duracion}</>}
+      {d.duracion && d.sesiones ? ' · ' : ''}
+      {d.sesiones && <>✨ {d.sesiones}</>}
+    </span>
+    <p class="card__resumen" data-cms={`serv-${servicio.id}-resumen`}>{d.resumen}</p>
+    <div class="card__acciones">
+      <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">Agendar</a>
+      <a href={url} class="boton boton--secundario">Ver detalle</a>
+    </div>
+  </div>
+</article>

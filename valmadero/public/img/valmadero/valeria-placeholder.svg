@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" role="img" aria-labelledby="title desc">
+  <title id="title">Marcador visual de Val Madero</title>
+  <desc id="desc">Composición editorial con las iniciales VM; debe reemplazarse por una fotografía autorizada.</desc>
+  <defs>
+    <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4e7d1"/>
+      <stop offset="1" stop-color="#d8a67f"/>
+    </linearGradient>
+    <pattern id="lineas" width="38" height="38" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="38" stroke="#fff" stroke-opacity=".2" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="900" rx="40" fill="url(#fondo)"/>
+  <rect width="800" height="900" rx="40" fill="url(#lineas)"/>
+  <path d="M0 620C190 505 330 700 520 590c115-67 205-60 280-30v340H0Z" fill="#173f3a"/>
+  <circle cx="400" cy="385" r="218" fill="#fffaf2" fill-opacity=".86"/>
+  <text x="400" y="430" text-anchor="middle" fill="#173f3a" font-family="Georgia,serif" font-size="178" letter-spacing="-18">VM</text>
+  <text x="400" y="760" text-anchor="middle" fill="#f7ead8" font-family="Arial,sans-serif" font-size="24" letter-spacing="8">IMAGEN PENDIENTE</text>
+</svg>

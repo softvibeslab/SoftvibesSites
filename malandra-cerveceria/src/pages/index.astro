@@ -1,0 +1,335 @@
+---
+import content from '../../public/data/site-content.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const visibleBatches = content.batches.filter((batch) => batch.visible);
+---
+<BaseLayout title={content.seo.title} description={content.seo.description}>
+  <div class="review-notice">
+    <div class="shell">
+      <span aria-hidden="true"></span>
+      <p data-content="notice">{content.notice}</p>
+      <a href="/admin/">Editar contenido</a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="wordmark" href="#inicio" aria-label="Malandra, volver al inicio">
+        <span class="wordmark-icon">M</span>
+        <span><b data-content="brand.name">{content.brand.name}</b><small data-content="brand.descriptor">{content.brand.descriptor}</small></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#historia">Historia</a>
+        <a href="#cocina">Cocina</a>
+        <a href="#lotes">Lotes</a>
+        <a href="#proceso">Proceso</a>
+      </nav>
+      <a class="header-cta" data-instagram href={content.contact.instagram} target="_blank" rel="noopener">Instagram <span>↗</span></a>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero" id="inicio">
+      <div class="hero-word" aria-hidden="true">MALANDRA</div>
+      <div class="hero-grain" aria-hidden="true"></div>
+      <div class="shell hero-grid">
+        <div class="hero-copy" data-reveal>
+          <p class="eyebrow eyebrow--light"><span>01</span><b data-content="hero.eyebrow">{content.hero.eyebrow}</b></p>
+          <h1><span data-content="hero.title">{content.hero.title}</span><i data-content="hero.emphasis">{content.hero.emphasis}</i></h1>
+          <p class="hero-summary" data-content="hero.summary">{content.hero.summary}</p>
+          <div class="hero-actions">
+            <a class="button button--red" href="#lotes"><span data-content="hero.primaryCta">{content.hero.primaryCta}</span><b>↓</b></a>
+            <a class="button button--line" data-instagram href={content.contact.instagram} target="_blank" rel="noopener"><span data-content="hero.secondaryCta">{content.hero.secondaryCta}</span><b>↗</b></a>
+          </div>
+          <p class="hero-location"><span></span><b data-content="contact.location">{content.contact.location}</b></p>
+        </div>
+
+        <div class="hero-art" data-reveal>
+          <div class="hero-art-ring" aria-hidden="true"></div>
+          <figure class="hero-photo-card">
+            <img src="/media/finished-beer.jpg" width="1080" height="1350" alt="Cerveza artesanal servida junto a una botella ámbar" fetchpriority="high" />
+            <figcaption data-content="media.heroCaption">{content.media.heroCaption}</figcaption>
+          </figure>
+          <div class="hero-logo-seal">
+            <img src="/img/logo.jpg" width="320" height="320" alt="Logotipo de Cervecería Artesanal Malandra" />
+            <span>Marca en construcción</span>
+          </div>
+          <div class="hero-batch-note">
+            <span>03</span>
+            <p>Lotes documentados<br /><b>Disponibilidad pendiente</b></p>
+          </div>
+          <svg class="hop-line" viewBox="0 0 250 220" aria-hidden="true">
+            <path d="M28 204c79-46 86-116 191-171M81 154c-27-8-42-26-45-54 27 5 45 22 52 49m28-36c-25-13-35-34-31-62 26 10 40 29 38 57m30-34c-20-18-25-41-14-66 23 15 32 36 24 62m15 15c26-4 46 6 59 31-25 9-47 2-64-20m-53 42c26-2 45 10 56 35-27 7-47-2-61-25" />
+          </svg>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#historia"><span>Conoce el recorrido</span><i></i></a>
+    </section>
+
+    <section class="fact-strip" aria-label="Resumen de la evidencia disponible">
+      <div class="shell facts">
+        <article><strong>03</strong><span>estilos documentados</span></article>
+        <article><strong>01</strong><span>bitácora pública</span></article>
+        <article><strong>00</strong><span>productos marcados disponibles</span></article>
+        <p>Hechos observados.<br />No equivalen a inventario.</p>
+      </div>
+    </section>
+
+    <section class="section story" id="historia">
+      <div class="shell story-grid">
+        <div class="story-index" aria-hidden="true"><span>02</span><i></i><b>ORIGEN</b></div>
+        <div class="story-copy" data-reveal>
+          <p class="eyebrow"><b data-content="story.eyebrow">{content.story.eyebrow}</b></p>
+          <h2 data-content="story.title">{content.story.title}</h2>
+          <p class="story-body" data-content="story.body">{content.story.body}</p>
+          <div class="truth-note"><span>✓</span><p data-content="story.note">{content.story.note}</p></div>
+        </div>
+        <figure class="story-poster" data-reveal>
+          <img src="/media/brewing-system.jpg" width="1080" height="1350" alt="Equipo de cocción de acero inoxidable de Malandra" loading="lazy" />
+          <div class="story-poster-shade" aria-hidden="true"></div>
+          <span class="poster-kicker">PLAYA DEL CARMEN</span>
+          <strong>LOTE<br />A LOTE</strong>
+          <figcaption data-content="media.storyCaption">{content.media.storyCaption}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section brew-media" id="cocina">
+      <div class="shell">
+        <div class="media-heading" data-reveal>
+          <p class="eyebrow eyebrow--light"><span>03</span><b data-content="media.eyebrow">{content.media.eyebrow}</b></p>
+          <div>
+            <h2 data-content="media.title">{content.media.title}</h2>
+            <p data-content="media.summary">{content.media.summary}</p>
+          </div>
+        </div>
+
+        <div class="motion-grid">
+          {content.media.clips.map((clip, index) => (
+            <figure class:list={["motion-card", { "motion-card--lead": index === 0 }]} data-reveal>
+              <div class="motion-frame">
+                <video data-process-video muted loop playsinline controls preload="metadata" poster={clip.poster} aria-label={clip.title}>
+                  <source src={clip.src} type="video/mp4" />
+                </video>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+              </div>
+              <figcaption>
+                <h3 data-content={`media.clips.${index}.title`}>{clip.title}</h3>
+                <p data-content={`media.clips.${index}.text`}>{clip.text}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div class="photo-journal" aria-label="Archivo fotográfico del proceso">
+          {content.media.photos.map((photo, index) => (
+            <figure class="journal-photo" data-reveal>
+              <img src={photo.src} width="1080" height="1350" alt={photo.alt} loading="lazy" />
+              <figcaption><span>{String(index + 1).padStart(2, '0')}</span><b data-content={`media.photos.${index}.caption`}>{photo.caption}</b></figcaption>
+            </figure>
+          ))}
+        </div>
+        <p class="media-note" data-content="media.note">{content.media.note}</p>
+      </div>
+    </section>
+
+    <section class="section batches" id="lotes">
+      <div class="shell">
+        <div class="section-heading" data-reveal>
+          <div><p class="eyebrow"><span>04</span><b>Lotes en la bitácora</b></p><h2>Tres recetas.<br /><i>Ninguna promesa vacía.</i></h2></div>
+          <p>Estas fichas describen publicaciones del proceso. El estado “documentado” no significa que exista venta, stock o distribución.</p>
+        </div>
+        <div class="batch-grid" data-batch-grid>
+          {visibleBatches.map((batch, index) => (
+            <article class="batch-card" style={`--batch-tone:${batch.tone}`} data-reveal>
+              <div class="batch-head"><span>{String(index + 1).padStart(2, '0')}</span><em>{batch.status}</em></div>
+              <div class="batch-bottle" aria-hidden="true"><span></span><i></i></div>
+              <div class="batch-copy">
+                <p>{batch.style}</p><h3>{batch.name}</h3><small>{batch.description}</small>
+                <dl><div><dt>ABV</dt><dd>{batch.abv}</dd></div><div><dt>Lúpulo</dt><dd>{batch.hops}</dd></div></dl>
+                <a href={batch.sourceUrl} target="_blank" rel="noopener">Ver registro original <span>↗</span></a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section process" id="proceso">
+      <div class="process-watermark" aria-hidden="true">BREW</div>
+      <div class="shell process-grid">
+        <div class="process-title" data-reveal>
+          <p class="eyebrow eyebrow--light"><span>05</span><b>El proceso</b></p>
+          <h2>Lo que pasa entre una idea y el siguiente intento.</h2>
+          <p>La landing no romantiza cifras que todavía no existen: pone el aprendizaje en el centro.</p>
+        </div>
+        <ol class="process-list" data-process-list>
+          {content.process.map((step, index) => <li data-reveal><span>{String(index + 1).padStart(2, '0')}</span><div><h3>{step.title}</h3><p>{step.text}</p></div><i>↘</i></li>)}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section timeline" id="bitacora">
+      <div class="shell">
+        <div class="section-heading" data-reveal>
+          <div><p class="eyebrow"><span>06</span><b>Bitácora</b></p><h2>Una historia corta.<br /><i>Por ahora.</i></h2></div>
+          <p>La cronología se construye únicamente con publicaciones cerveceras visibles en la fuente informativa.</p>
+        </div>
+        <ol class="timeline-list" data-timeline-list>
+          {content.timeline.map((item, index) => <li data-reveal><span>{String(index + 1).padStart(2, '0')}</span><time>{item.date}</time><div><h3>{item.title}</h3><p>{item.text}</p></div></li>)}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section faq" id="preguntas">
+      <div class="shell faq-grid">
+        <div data-reveal><p class="eyebrow"><span>07</span><b>Sin espuma de más</b></p><h2>Lo confirmado.<br />Lo pendiente.</h2><p>Preguntas que impiden convertir una bitácora honesta en una tienda imaginaria.</p></div>
+        <div class="faq-list" data-faq-list>
+          {content.faq.map((item, index) => <details open={index === 0} data-reveal><summary><span>{String(index + 1).padStart(2, '0')}</span>{item.question}<i>+</i></summary><p>{item.answer}</p></details>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="final-marquee" aria-hidden="true">MALANDRA · MALANDRA · MALANDRA ·</div>
+      <div class="shell final-inner" data-reveal>
+        <p class="eyebrow eyebrow--light"><span>08</span><b data-content="finalCta.eyebrow">{content.finalCta.eyebrow}</b></p>
+        <h2 data-content="finalCta.title">{content.finalCta.title}</h2>
+        <p data-content="finalCta.summary">{content.finalCta.summary}</p>
+        <a class="button button--red button--large" data-instagram href={content.contact.instagram} target="_blank" rel="noopener"><span data-content="finalCta.button">{content.finalCta.button}</span><b>↗</b></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-top">
+      <a class="wordmark wordmark--footer" href="#inicio"><span class="wordmark-icon">M</span><span><b data-content="brand.name">{content.brand.name}</b><small data-content="brand.descriptor">{content.brand.descriptor}</small></span></a>
+      <p>Una cervecería artesanal<br />que todavía se está escribiendo.</p>
+    </div>
+    <div class="shell footer-bottom">
+      <span>© 2026 Malandra · Prototipo local para revisión</span>
+      <nav><a data-instagram href={content.contact.instagram} target="_blank" rel="noopener">Instagram ↗</a><a data-source href={content.contact.informationSource} target="_blank" rel="noopener">Fuente informativa ↗</a><a href="/admin/">CMS</a></nav>
+    </div>
+  </footer>
+
+  <a class="floating-instagram" data-instagram href={content.contact.instagram} target="_blank" rel="noopener" aria-label="Abrir Instagram de Malandra"><span>IG</span><b>Seguir</b></a>
+
+  <script>
+    type Batch = { id: string; name: string; style: string; abv: string; hops: string; status: string; description: string; sourceUrl: string; visible: boolean; available: boolean; tone: string };
+    type ProcessStep = { title: string; text: string };
+    type TimelineItem = { date: string; title: string; text: string };
+    type FaqItem = { question: string; answer: string };
+    type SiteContent = {
+      brand: { name: string; descriptor: string };
+      notice: string;
+      hero: Record<string, string>;
+      story: Record<string, string>;
+      media: Record<string, unknown>;
+      contact: { instagram: string; informationSource: string; location: string };
+      batches: Batch[];
+      process: ProcessStep[];
+      timeline: TimelineItem[];
+      faq: FaqItem[];
+      finalCta: Record<string, string>;
+      seo: { title: string; description: string };
+    };
+
+    const make = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') => {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text) element.textContent = text;
+      return element;
+    };
+    const get = (object: unknown, path: string): unknown => path.split('.').reduce<unknown>((value, key) => {
+      if (typeof value !== 'object' || value === null) return undefined;
+      return (value as Record<string, unknown>)[key];
+    }, object);
+    const safeExternalLink = (value: string) => /^https:\/\/www\.instagram\.com\//.test(value) ? value : '#';
+
+    const renderBatches = (batches: Batch[]) => {
+      const grid = document.querySelector<HTMLElement>('[data-batch-grid]');
+      if (!grid) return;
+      const cards = batches.filter((batch) => batch.visible).map((batch, index) => {
+        const card = make('article', 'batch-card is-visible');
+        card.style.setProperty('--batch-tone', batch.tone || '#a3342f');
+        const head = make('div', 'batch-head'); head.append(make('span', '', String(index + 1).padStart(2, '0')), make('em', '', batch.status));
+        const bottle = make('div', 'batch-bottle'); bottle.setAttribute('aria-hidden', 'true'); bottle.append(make('span'), make('i'));
+        const copy = make('div', 'batch-copy'); copy.append(make('p', '', batch.style), make('h3', '', batch.name), make('small', '', batch.description));
+        const specs = document.createElement('dl');
+        for (const [label, value] of [['ABV', batch.abv], ['Lúpulo', batch.hops]]) {
+          const row = make('div'); row.append(make('dt', '', label), make('dd', '', value)); specs.append(row);
+        }
+        const source = make('a', '', 'Ver registro original ') as HTMLAnchorElement; source.href = safeExternalLink(batch.sourceUrl); source.target = '_blank'; source.rel = 'noopener'; source.append(make('span', '', '↗'));
+        copy.append(specs, source); card.append(head, bottle, copy); return card;
+      });
+      grid.replaceChildren(...cards);
+    };
+
+    const renderProcess = (items: ProcessStep[]) => {
+      const list = document.querySelector<HTMLElement>('[data-process-list]');
+      if (!list) return;
+      list.replaceChildren(...items.map((item, index) => {
+        const row = make('li', 'is-visible'); const copy = make('div'); copy.append(make('h3', '', item.title), make('p', '', item.text)); row.append(make('span', '', String(index + 1).padStart(2, '0')), copy, make('i', '', '↘')); return row;
+      }));
+    };
+
+    const renderTimeline = (items: TimelineItem[]) => {
+      const list = document.querySelector<HTMLElement>('[data-timeline-list]');
+      if (!list) return;
+      list.replaceChildren(...items.map((item, index) => {
+        const row = make('li', 'is-visible'); const copy = make('div'); copy.append(make('h3', '', item.title), make('p', '', item.text)); row.append(make('span', '', String(index + 1).padStart(2, '0')), make('time', '', item.date), copy); return row;
+      }));
+    };
+
+    const renderFaq = (items: FaqItem[]) => {
+      const list = document.querySelector<HTMLElement>('[data-faq-list]');
+      if (!list) return;
+      list.replaceChildren(...items.map((item, index) => {
+        const details = document.createElement('details'); details.open = index === 0; details.classList.add('is-visible');
+        const summary = document.createElement('summary'); summary.append(make('span', '', String(index + 1).padStart(2, '0')), document.createTextNode(item.question), make('i', '', '+'));
+        details.append(summary, make('p', '', item.answer)); return details;
+      }));
+    };
+
+    const applyContent = (data: SiteContent) => {
+      document.querySelectorAll<HTMLElement>('[data-content]').forEach((element) => {
+        const value = get(data, element.dataset.content || '');
+        if (typeof value === 'string') element.textContent = value;
+      });
+      const instagram = safeExternalLink(data.contact.instagram);
+      document.querySelectorAll<HTMLAnchorElement>('[data-instagram]').forEach((link) => link.href = instagram);
+      document.querySelectorAll<HTMLAnchorElement>('[data-source]').forEach((link) => link.href = safeExternalLink(data.contact.informationSource));
+      renderBatches(data.batches); renderProcess(data.process); renderTimeline(data.timeline); renderFaq(data.faq);
+      document.title = data.seo.title;
+      document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', data.seo.description);
+    };
+
+    const reveal = () => {
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { targets.forEach((target) => target.classList.add('is-visible')); return; }
+      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+      }), { threshold: 0.12 });
+      targets.forEach((target) => observer.observe(target));
+    };
+
+    const manageProcessVideos = () => {
+      const videos = document.querySelectorAll<HTMLVideoElement>('[data-process-video]');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) video.play().catch(() => undefined);
+        else video.pause();
+      }), { threshold: 0.55 });
+      videos.forEach((video) => observer.observe(video));
+    };
+
+    reveal();
+    manageProcessVideos();
+    fetch('/data/site-content.json', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error('content')))
+      .then((data: SiteContent) => applyContent(data))
+      .catch(() => document.documentElement.dataset.cms = 'fallback');
+  </script>
+</BaseLayout>

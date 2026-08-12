@@ -1,0 +1,280 @@
+---
+const { content } = Astro.props;
+const visibleProducts = content.products.filter((product: any) => product.visible);
+const categories = [...new Set(visibleProducts.map((product: any) => product.category))];
+const whatsappUrl = (number: string, message: string) => {
+  const digits = number.replace(/\D/g, '');
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+};
+const genericMessage = 'Hola, vi el catálogo de Diana Velas Love. Quiero consultar diseños, precios y disponibilidad.';
+---
+
+<div class="preview-notice" data-preview-notice data-whatsapp-number={content.contact.whatsappNumber}>
+  <div class="container"><span></span><p><b>Catálogo demo.</b> <span data-whatsapp-status>{content.contact.whatsappStatus}</span>. Confirma todos los datos antes de pagar.</p><a href="/analisis/">Ver análisis</a></div>
+</div>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#inicio" aria-label="Diana Velas Love, inicio">
+      <span class="brand-flower">✿</span>
+      <span><strong data-content="brand.name">{content.brand.name}</strong><small data-content="brand.descriptor">{content.brand.descriptor}</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#como-pedir">Cómo pedir</a>
+      <a href="#historia">La propuesta</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <a class="header-cta" data-wa-main data-track="whatsapp_click" href={whatsappUrl(content.contact.whatsappNumber, genericMessage)} target="_blank" rel="noopener">Consultar <span>↗</span></a>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="hero" id="inicio">
+    <div class="hero-orbit hero-orbit--one"></div><div class="hero-orbit hero-orbit--two"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow eyebrow--light"><span>01</span> <b data-content="hero.eyebrow">{content.hero.eyebrow}</b></p>
+        <h1><span data-content="hero.title">{content.hero.title}</span><i data-content="hero.emphasis">{content.hero.emphasis}</i></h1>
+        <p class="hero-summary" data-content="hero.summary">{content.hero.summary}</p>
+        <div class="hero-actions">
+          <a class="button button--petal" href="#catalogo"><span data-content="hero.primaryCta">{content.hero.primaryCta}</span> <b>↓</b></a>
+          <a class="button button--ghost" data-wa-main data-track="whatsapp_click" href={whatsappUrl(content.contact.whatsappNumber, genericMessage)} target="_blank" rel="noopener"><span data-content="hero.secondaryCta">{content.hero.secondaryCta}</span> <b>↗</b></a>
+        </div>
+        <div class="hero-signature"><img src="/img/profile.jpg" width="64" height="64" alt="Vela floral usada como imagen del perfil" /><p><strong>Hecho a mano</strong><span data-content="contact.location">{content.contact.location}</span></p></div>
+      </div>
+      <div class="hero-gallery" aria-label="Selección de piezas artesanales">
+        <figure class="hero-card hero-card--main"><img src="/img/products/postre-bayas.jpg" width="720" height="1280" alt="Vela Postre de bayas" /><figcaption><span>01</span><b>Postre de bayas</b><small>Vela · diseño visual</small></figcaption></figure>
+        <figure class="hero-card hero-card--float"><img src="/img/products/regalos-naturaleza.jpg" width="720" height="1280" alt="Vela Regalos de la naturaleza" /><figcaption><b>Flores + fruta</b><small>Una pieza para consultar</small></figcaption></figure>
+        <div class="hero-stamp"><span>12</span><small>piezas<br />en catálogo</small></div>
+      </div>
+    </div>
+    <a class="scroll-note" href="#catalogo"><span>Descubre la colección</span><i></i></a>
+  </section>
+
+  <section class="fact-strip" aria-label="Datos públicos observados">
+    <div class="container facts">
+      <article><strong>26</strong><span>publicaciones en el perfil público</span></article>
+      <article><strong>2</strong><span>familias: velas + jabones</span></article>
+      <article><strong>100%</strong><span>de la muestra está en video</span></article>
+      <p>Datos observados el <time datetime="2026-08-05">05.08.26</time>. No indican inventario ni ventas.</p>
+    </div>
+  </section>
+
+  <section class="section catalog" id="catalogo">
+    <div class="container">
+      <div class="section-heading">
+        <div><p class="eyebrow"><span>02</span> <b data-content="catalog.eyebrow">{content.catalog.eyebrow}</b></p><h2 data-content="catalog.title">{content.catalog.title}</h2></div>
+        <p data-content="catalog.summary">{content.catalog.summary}</p>
+      </div>
+      <div class="catalog-toolbar">
+        <div class="filter-list" data-filter-list role="group" aria-label="Filtrar productos">
+          <button class="active" type="button" data-filter="Todos">Todos</button>
+          {categories.map((category) => <button type="button" data-filter={category}>{category}</button>)}
+        </div>
+        <p><strong data-product-count>{visibleProducts.length}</strong> piezas visibles</p>
+      </div>
+      <div class="product-grid" data-product-grid>
+        {visibleProducts.map((product: any, index: number) => (
+          <article class="product-card" data-category={product.category} data-product-id={product.id} data-message={product.message} style={`--delay:${index % 4}`}>
+            <div class="product-media"><img src={product.image} alt={product.alt} width="720" height="1280" loading={index < 4 ? 'eager' : 'lazy'} /><span>{String(index + 1).padStart(2, '0')}</span><em>{product.category}</em></div>
+            <div class="product-copy">
+              <div><h3>{product.name}</h3><strong>{product.priceLabel}</strong></div>
+              <p>{product.description}</p>
+              <div class="product-actions">
+                <a class="product-order" data-wa-product={product.id} data-track="whatsapp_product_click" href={whatsappUrl(content.contact.whatsappNumber, product.message)} target="_blank" rel="noopener">Pedir por WhatsApp <span>↗</span></a>
+                <a class="product-source" href={product.sourceUrl} target="_blank" rel="noopener">Ver original</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="catalog-empty" data-catalog-empty hidden>{content.catalog.empty}</p>
+      <div class="catalog-note"><span>Importante</span><p>Las imágenes muestran referencias publicadas, no inventario en tiempo real. Las piezas con apariencia de alimento no son comestibles.</p></div>
+    </div>
+  </section>
+
+  <section class="section order-flow" id="como-pedir">
+    <div class="container flow-layout">
+      <div class="flow-title"><p class="eyebrow eyebrow--light"><span>03</span> Cómo pedir</p><h2>De “me gusta”<br /><i>a “lo quiero”.</i></h2><p>Un pedido claro empieza con la pieza correcta y cinco datos confirmados.</p></div>
+      <ol class="flow-steps">
+        {content.steps.map((step: any, index: number) => <li><span>{String(index + 1).padStart(2, '0')}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></li>)}
+      </ol>
+      <div class="order-check"><p>Antes de pagar, confirma:</p><ul><li>Precio y moneda</li><li>Tamaño y aroma</li><li>Material o ingredientes</li><li>Disponibilidad</li><li>Entrega o recolección</li></ul></div>
+    </div>
+  </section>
+
+  <section class="section story" id="historia">
+    <div class="container story-grid">
+      <div class="story-media"><img src="/img/products/jabon-manzanilla.jpg" width="720" height="1278" alt="Persona mostrando un jabón artesanal en una publicación pública" loading="lazy" /><span>Escena del perfil público</span><div class="story-mark">✿</div></div>
+      <div class="story-copy">
+        <p class="eyebrow"><span>04</span> <b data-content="about.eyebrow">{content.about.eyebrow}</b></p>
+        <h2 data-content="about.title">{content.about.title}</h2>
+        <p class="story-body" data-content="about.body">{content.about.body}</p>
+        <div class="truth-note"><span>✓</span><p data-content="about.note">{content.about.note}</p></div>
+        <a class="text-link" data-instagram href={content.contact.instagram} target="_blank" rel="noopener">Explorar @diana_velas_love <span>↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq" id="preguntas">
+    <div class="container faq-layout">
+      <div><p class="eyebrow"><span>05</span> Antes de ordenar</p><h2>Lo bonito atrae.<br />Lo claro convierte.</h2><p>Estas respuestas separan lo observado de lo que todavía necesita confirmación.</p></div>
+      <div class="faq-list" data-faq-list>
+        {content.faq.map((item: any, index: number) => <details open={index === 0}><summary><span>{String(index + 1).padStart(2, '0')}</span>{item.question}<i>+</i></summary><p>{item.answer}</p></details>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="final-bloom">✿</div>
+    <div class="container final-inner">
+      <p class="eyebrow eyebrow--light"><span>06</span> <b data-content="finalCta.eyebrow">{content.finalCta.eyebrow}</b></p>
+      <h2 data-content="finalCta.title">{content.finalCta.title}</h2>
+      <p data-content="finalCta.summary">{content.finalCta.summary}</p>
+      <a class="button button--petal button--large" data-wa-main data-track="whatsapp_click" href={whatsappUrl(content.contact.whatsappNumber, genericMessage)} target="_blank" rel="noopener"><span data-content="finalCta.button">{content.finalCta.button}</span> <b>↗</b></a>
+      <small data-whatsapp-status>{content.contact.whatsappStatus}</small>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-top"><a class="brand" href="#inicio"><span class="brand-flower">✿</span><span><strong data-content="brand.name">{content.brand.name}</strong><small data-content="brand.descriptor">{content.brand.descriptor}</small></span></a><p>Un catálogo para elegir con los ojos<br />y confirmar con preguntas.</p></div>
+  <div class="container footer-bottom"><span>© 2026 Diana Velas Love · Prototipo local</span><nav><a data-instagram href={content.contact.instagram} target="_blank" rel="noopener">Instagram ↗</a><a href="/analisis/">Análisis</a><a href="/admin/">CMS</a></nav></div>
+</footer>
+
+<a class="floating-wa" data-wa-main data-track="whatsapp_click" href={whatsappUrl(content.contact.whatsappNumber, genericMessage)} target="_blank" rel="noopener" aria-label="Consultar por WhatsApp"><span>WA</span><b>Consultar</b></a>
+
+<script>
+  type Product = { id: string; name: string; category: string; image: string; alt: string; description: string; priceLabel: string; sourceUrl: string; message: string; visible: boolean };
+  type FaqItem = { question: string; answer: string };
+  type SiteContent = {
+    contact: { instagram: string; whatsappNumber: string; location: string; whatsappStatus: string };
+    products: Product[];
+    faq: FaqItem[];
+    seo: { title: string; description: string };
+    catalog: { empty: string };
+    [key: string]: unknown;
+  };
+  type DataLayerWindow = Window & { dataLayer?: Array<Record<string, string | undefined>> };
+
+  const genericMessage = 'Hola, vi el catálogo de Diana Velas Love. Quiero consultar diseños, precios y disponibilidad.';
+  const get = (object: unknown, path: string): unknown => path.split('.').reduce<unknown>((value, key) => {
+    if (typeof value !== 'object' || value === null) return undefined;
+    return (value as Record<string, unknown>)[key];
+  }, object);
+  const digits = (value: string) => value.replace(/\D/g, '');
+  const whatsapp = (number: string, message: string) => `https://wa.me/${digits(number)}?text=${encodeURIComponent(message)}`;
+  const make = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text) element.textContent = text;
+    return element;
+  };
+  let currentProducts: Product[] = [];
+  let currentFilter = 'Todos';
+  let currentWhatsapp = '';
+
+  const setWhatsappState = (link: HTMLAnchorElement, message: string) => {
+    const ready = /^\d{10,15}$/.test(digits(currentWhatsapp));
+    link.href = whatsapp(currentWhatsapp, message);
+    link.classList.toggle('wa-unconfigured', !ready);
+    link.title = ready ? 'Abrir conversación en WhatsApp' : 'WhatsApp de la marca pendiente; se abrirá el selector para compartir el mensaje';
+  };
+
+  const createProduct = (product: Product, index: number) => {
+    const article = make('article', 'product-card');
+    article.dataset.category = product.category;
+    article.dataset.productId = product.id;
+    article.style.setProperty('--delay', String(index % 4));
+    const media = make('div', 'product-media');
+    const image = document.createElement('img');
+    image.src = product.image; image.alt = product.alt; image.loading = 'lazy'; image.width = 720; image.height = 1280;
+    media.append(image, make('span', '', String(index + 1).padStart(2, '0')), make('em', '', product.category));
+    const copy = make('div', 'product-copy');
+    const heading = make('div'); heading.append(make('h3', '', product.name), make('strong', '', product.priceLabel));
+    const actions = make('div', 'product-actions');
+    const order = make('a', 'product-order', 'Pedir por WhatsApp ') as HTMLAnchorElement;
+    order.append(make('span', '', '↗')); order.target = '_blank'; order.rel = 'noopener'; order.dataset.waProduct = product.id; order.dataset.track = 'whatsapp_product_click';
+    setWhatsappState(order, product.message);
+    const source = make('a', 'product-source', 'Ver original') as HTMLAnchorElement;
+    source.href = product.sourceUrl; source.target = '_blank'; source.rel = 'noopener';
+    actions.append(order, source);
+    copy.append(heading, make('p', '', product.description), actions);
+    article.append(media, copy);
+    return article;
+  };
+
+  const applyFilter = () => {
+    const matches = currentProducts.filter((product) => currentFilter === 'Todos' || product.category === currentFilter);
+    const grid = document.querySelector<HTMLElement>('[data-product-grid]');
+    if (grid) grid.replaceChildren(...matches.map(createProduct));
+    const count = document.querySelector<HTMLElement>('[data-product-count]');
+    if (count) count.textContent = String(matches.length);
+    const empty = document.querySelector<HTMLElement>('[data-catalog-empty]');
+    if (empty) empty.hidden = matches.length > 0;
+    bindTracking();
+  };
+
+  const bindFilters = () => document.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((button) => button.addEventListener('click', () => {
+    currentFilter = button.dataset.filter || 'Todos';
+    document.querySelectorAll('[data-filter]').forEach((item) => item.classList.toggle('active', item === button));
+    applyFilter();
+  }));
+
+  const renderFilters = () => {
+    const list = document.querySelector<HTMLElement>('[data-filter-list]');
+    if (!list) return;
+    const categories = ['Todos', ...new Set(currentProducts.map((product) => product.category))];
+    list.replaceChildren(...categories.map((category) => {
+      const button = make('button', category === currentFilter ? 'active' : '', category);
+      button.type = 'button'; button.dataset.filter = category;
+      return button;
+    }));
+    bindFilters();
+  };
+
+  const renderFaq = (items: FaqItem[]) => {
+    const list = document.querySelector<HTMLElement>('[data-faq-list]');
+    if (!list) return;
+    list.replaceChildren(...items.map((item, index) => {
+      const details = document.createElement('details'); details.open = index === 0;
+      const summary = document.createElement('summary'); summary.append(make('span', '', String(index + 1).padStart(2, '0')), document.createTextNode(item.question), make('i', '', '+'));
+      details.append(summary, make('p', '', item.answer)); return details;
+    }));
+  };
+
+  const bindTracking = () => document.querySelectorAll<HTMLAnchorElement>('[data-track]:not([data-track-bound])').forEach((link) => {
+    link.dataset.trackBound = 'true';
+    link.addEventListener('click', () => {
+      const trackedWindow = window as DataLayerWindow;
+      trackedWindow.dataLayer = trackedWindow.dataLayer || [];
+      trackedWindow.dataLayer.push({ event: link.dataset.track, destination: link.href, product_id: link.dataset.waProduct });
+    });
+  });
+
+  currentWhatsapp = document.querySelector<HTMLElement>('[data-preview-notice]')?.dataset.whatsappNumber || '';
+  currentProducts = Array.from(document.querySelectorAll<HTMLElement>('[data-product-id]')).map((card) => ({
+    id: card.dataset.productId || '', name: card.querySelector('h3')?.textContent || '', category: card.dataset.category || '', image: card.querySelector('img')?.getAttribute('src') || '', alt: card.querySelector('img')?.getAttribute('alt') || '', description: card.querySelector('.product-copy > p')?.textContent || '', priceLabel: card.querySelector('.product-copy strong')?.textContent || '', sourceUrl: (card.querySelector('.product-source') as HTMLAnchorElement)?.href || '', message: card.dataset.message || '', visible: true,
+  }));
+  bindFilters(); bindTracking();
+
+  fetch('/data/site-content.json', { cache: 'no-store' })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error('content')))
+    .then((content: SiteContent) => {
+      currentWhatsapp = content.contact.whatsappNumber || '';
+      currentProducts = content.products.filter((product) => product.visible);
+      document.querySelectorAll<HTMLElement>('[data-content]').forEach((element) => {
+        const value = get(content, element.dataset.content || '');
+        if (typeof value === 'string') element.textContent = value;
+      });
+      document.querySelectorAll<HTMLElement>('[data-whatsapp-status]').forEach((element) => element.textContent = content.contact.whatsappStatus);
+      document.querySelectorAll<HTMLAnchorElement>('[data-instagram]').forEach((link) => link.href = content.contact.instagram);
+      document.querySelectorAll<HTMLAnchorElement>('[data-wa-main]').forEach((link) => setWhatsappState(link, genericMessage));
+      renderFilters(); applyFilter(); renderFaq(content.faq);
+      const empty = document.querySelector<HTMLElement>('[data-catalog-empty]'); if (empty) empty.textContent = content.catalog.empty;
+      document.title = content.seo.title;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', content.seo.description);
+    })
+    .catch(() => {});
+</script>

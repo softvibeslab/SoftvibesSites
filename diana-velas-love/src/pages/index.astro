@@ -1,0 +1,8 @@
+---
+import content from '../../public/data/site-content.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Landing from '../components/Landing.astro';
+---
+<BaseLayout title={content.seo.title} description={content.seo.description}>
+  <Landing content={content} />
+</BaseLayout>

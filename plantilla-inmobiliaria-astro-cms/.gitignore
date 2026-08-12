@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+.env.*
+!.env.example
+public/admin/config.local.php
+public/admin/storage/*.json
+!public/admin/storage/*.example.json
+*.zip

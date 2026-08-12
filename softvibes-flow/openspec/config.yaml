@@ -1,0 +1,29 @@
+schema: spec-driven
+
+context: |
+  Product: Softvibes Flow, an internal control plane for workflows across independent SoftvibesLab client and product repositories.
+  Stack: Next.js 16 App Router, React 19, TypeScript 5, CSS Modules/global CSS, Vitest, React Testing Library, Playwright for browser verification.
+  Architecture: server-first Next.js application with typed domain modules. The first preview uses deterministic local fixture data; external systems remain sources of truth and future integrations use typed adapters.
+  Tenancy: every domain record and operation must be scoped to a project/tenant. Never mix incompatible domain entities into a universal CRUD table.
+  UX: Spanish user-facing copy for Roger; technical artifacts in English. Optimize for fast comprehension, low emotional load, visible evidence, explicit approvals, accessibility, and mobile use.
+  Safety: no automatic outreach, deployment, publishing, arbitrary command execution, or embedded credentials.
+  Quality: strict TDD for behavior, full typing, small diffs, executable evidence, responsive browser QA, and independent review.
+  Methodology reference: /Users/rogergv/lidr-specboot and the project-local docs/ and ai-specs/ directories.
+
+rules:
+  proposal:
+    - State verified reality, unknowns, trust risks, and measurable outcome.
+    - Separate the preview scope from later Supabase and adapter work.
+  design:
+    - Preserve project/tenant isolation in all models and UI states.
+    - Use existing systems as sources of truth and typed references for external entities.
+    - Include accessibility, responsive behavior, failure states, and security boundaries.
+  specs:
+    - Use concrete Given/When/Then scenarios.
+    - Do not invent business facts or production metrics.
+  tasks:
+    - Step 0 must be branch creation and verification.
+    - Apply tasks one at a time with RED, GREEN, and REFACTOR evidence for behavior.
+    - Include targeted tests, full tests, typecheck, lint, production build, browser E2E, mobile QA, accessibility checks, security audit, independent review, and documentation.
+    - The agent must execute all verification; never delegate testing to the user.
+    - Endpoint and database verification are marked not applicable until those surfaces exist.

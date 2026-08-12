@@ -1,0 +1,188 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, waLink, formatoPrecio } from '../../data/site';
+
+export async function getStaticPaths() {
+  const propiedades = (await getCollection('propiedades')).filter((p) => !p.data.ejemplo);
+  return propiedades.map((p) => ({ params: { slug: p.id }, props: { propiedad: p } }));
+}
+
+const { propiedad } = Astro.props;
+const { Content } = await render(propiedad);
+const d = propiedad.data;
+
+const zonaNombre: Record<string, string> = {
+  'playa-del-carmen': 'Playa del Carmen',
+  cancun: 'Cancún',
+  tulum: 'Tulum',
+};
+
+const etiquetaEstatus: Record<string, { texto: string; clase: string } | null> = {
+  venta: null,
+  preventa: { texto: 'Preventa', clase: 'badge--preventa' },
+  'entrega-inmediata': { texto: 'Entrega inmediata', clase: 'badge--entrega' },
+  oportunidad: { texto: 'Oportunidad', clase: 'badge--oportunidad' },
+};
+const badgeEstatus = etiquetaEstatus[d.estatus];
+
+const precioM2 = Math.round(d.precio / d.m2);
+const mensajeWa = `Hola Viridiana, me interesa "${d.titulo}" que vi en vivemarrealestate.com. ¿Me compartes más información?`;
+
+const schemaPropiedad = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.titulo,
+  description: d.resumen,
+  image: new URL(d.imagen, Astro.site).href,
+  category: 'Real Estate',
+  offers: {
+    '@type': 'Offer',
+    price: d.precio,
+    priceCurrency: d.moneda,
+    availability: 'https://schema.org/InStock',
+    seller: { '@type': 'RealEstateAgent', name: SITE.nombre, telephone: SITE.telefono },
+  },
+};
+---
+
+<BaseLayout
+  titulo={`${d.titulo} | Vive Mar Real Estate`}
+  descripcion={d.resumen}
+  ogImage={d.imagen}
+  schema={schemaPropiedad}
+>
+  <section
+    class="detalle-hero detalle-hero--banner"
+    style={`background-image: url('${d.imagen}')`}
+  >
+    <div class="contenedor">
+      <nav style="font-size: 0.85rem; margin-bottom: 1rem;" aria-label="Migas de pan">
+        <a href="/propiedades">Propiedades</a> ·
+        <a href={`/zonas/${d.zona}`}>{zonaNombre[d.zona]}</a>
+      </nav>
+      <div class="detalle-badges">
+        {badgeEstatus && <span class={`badge ${badgeEstatus.clase}`}>{badgeEstatus.texto}</span>}
+        {d.frenteAlMar && <span class="badge badge--mar">Frente al mar</span>}
+      </div>
+      <h1 data-cms={`prop-${propiedad.id}-titulo`}>{d.titulo}</h1>
+      <div class="detalle-precio">{formatoPrecio(d.precio, d.moneda)}</div>
+      <div class="detalle-meta">
+        <span>📍 {d.ubicacion}</span>
+        <span>📐 {d.m2} m²</span>
+        {d.recamaras && <span>🛏 {d.recamaras} recámaras</span>}
+        {d.banos && <span>🛁 {d.banos} baños</span>}
+      </div>
+      {d.unidades && <span class="urgencia">Solo {d.unidades} unidades en esta etapa</span>}
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="detalle-cuerpo">
+        <div>
+          <div class="numeros-inversion" style="margin-top: 0;">
+            <div>
+              <span class="dato">{formatoPrecio(precioM2, d.moneda)}</span>
+              <span class="concepto">Precio por m²</span>
+            </div>
+            <div>
+              <span class="dato">{d.m2} m²</span>
+              <span class="concepto">Superficie</span>
+            </div>
+            {
+              d.formasPago.length > 0 && (
+                <div>
+                  <span class="dato">{d.formasPago.length > 1 ? `${d.formasPago.length} planes` : 'Plan directo'}</span>
+                  <span class="concepto">Formas de pago</span>
+                </div>
+              )
+            }
+            {
+              d.unidades && (
+                <div>
+                  <span class="dato">{d.unidades}</span>
+                  <span class="concepto">Unidades en etapa</span>
+                </div>
+              )
+            }
+          </div>
+          {
+            d.roiEstimado && (
+              <p class="mini-testimonio" style="margin-bottom: 2rem;">
+                📈 <strong style="display: inline;">Perfil de inversión:</strong> {d.roiEstimado}
+              </p>
+            )
+          }
+
+          <div class="prosa">
+            <Content />
+          </div>
+          {
+            d.formasPago.length > 0 && (
+              <>
+                <h2>Formas de pago</h2>
+                <ul class="lista-check">
+                  {d.formasPago.map((f) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+        </div>
+
+        <aside class="detalle-lateral">
+          <div class="asesora-card">
+            <div class="asesora-card__perfil">
+              <img
+                src="/img/viridiana.jpg"
+                alt={`${SITE.asesora}, asesora inmobiliaria`}
+                class="asesora-card__foto"
+                width="72"
+                height="72"
+              />
+              <div>
+                <div class="asesora-card__nombre">{SITE.asesora}</div>
+                <div class="asesora-card__titulo">Asesora de inversión · Riviera Maya</div>
+              </div>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--gris);">
+              Te comparto brochure, disponibilidad y corrida financiera de esta propiedad.
+            </p>
+            <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">
+              💬 Pedir información
+            </a>
+            <a href={SITE.calendly} class="boton boton--primario" target="_blank" rel="noopener">
+              📅 Agendar visita / videollamada
+            </a>
+            <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`} class="boton boton--secundario">
+              📞 {SITE.telefono}
+            </a>
+            <p class="mini-testimonio">
+              Te ayudamos a pedir y revisar la información clave antes de tomar una decisión:
+              disponibilidad, documentación, forma de pago y gastos de cierre.
+              <strong>Acompañamiento de la primera llamada a la escritura.</strong>
+            </p>
+          </div>
+          <div class="asesora-card" style="border-top-color: var(--teal);">
+            <h3 style="margin: 0; font-size: 1.05rem;">Certeza legal incluida</h3>
+            <ul class="lista-check" style="font-size: 0.88rem;">
+              {d.caracteristicas.slice(0, 6).map((c) => <li>{c}</li>)}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra fija inferior (solo móvil): WhatsApp + Agendar -->
+  <div class="barra-movil">
+    <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener">
+      💬 WhatsApp
+    </a>
+    <a href={SITE.calendly} class="boton boton--primario" target="_blank" rel="noopener">
+      📅 Agendar
+    </a>
+  </div>
+</BaseLayout>

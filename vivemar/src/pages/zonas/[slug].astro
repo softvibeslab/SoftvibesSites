@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import CTAContacto from '../../components/CTAContacto.astro';
+import { ZONAS } from '../../data/zonas';
+
+export async function getStaticPaths() {
+  return ZONAS.map((zona) => ({ params: { slug: zona.slug }, props: { zona } }));
+}
+
+const { zona } = Astro.props;
+const propiedades = (await getCollection('propiedades')).filter(
+  (p) => p.data.zona === zona.slug
+);
+
+const schemaFaq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: zona.faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.pregunta,
+    acceptedAnswer: { '@type': 'Answer', text: f.respuesta },
+  })),
+};
+---
+
+<BaseLayout titulo={zona.titulo} descripcion={zona.descripcion} schema={schemaFaq}>
+  <section class="zona-banner" style={`background-image: url('${zona.imagen}')`}>
+    <div class="contenedor">
+      <span class="etiqueta" style="color: var(--laton-claro);">Zona · Riviera Maya</span>
+      <h1>{zona.h1}</h1>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        {zona.intro.map((parrafo) => <p>{parrafo}</p>)}
+      </div>
+
+      {
+        propiedades.length > 0 && (
+          <>
+            <h2>Propiedades disponibles en {zona.nombre}</h2>
+            <div class="grid-propiedades" style="margin-top: 1.5rem;">
+              {propiedades.map((p) => (
+                <PropertyCard propiedad={p} />
+              ))}
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <h2>Preguntas frecuentes sobre {zona.nombre}</h2>
+      <div class="faq" style="margin-top: 1.5rem; max-width: 760px;">
+        {
+          zona.faqs.map((f) => (
+            <details>
+              <summary>{f.pregunta}</summary>
+              <p>{f.respuesta}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTAContacto
+    titulo={`¿Buscas propiedad en ${zona.nombre}?`}
+    mensaje={`Hola Viridiana, me interesa invertir en ${zona.nombre}. ¿Qué opciones tienes disponibles?`}
+  />
+</BaseLayout>

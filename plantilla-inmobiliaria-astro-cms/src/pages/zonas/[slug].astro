@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { ZONAS } from '../../data/zonas';
+
+export function getStaticPaths() { return ZONAS.map((zona) => ({ params: { slug: zona.slug }, props: { zona } })); }
+const { zona } = Astro.props;
+const propiedades = (await getCollection('propiedades')).filter((p) => p.data.zona === zona.slug);
+const schema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: zona.faqs.map((item) => ({ '@type': 'Question', name: item.pregunta, acceptedAnswer: { '@type': 'Answer', text: item.respuesta } })) };
+---
+
+<BaseLayout titulo={zona.titulo} descripcion={zona.descripcion} imagen={zona.imagen} schema={schema}>
+  <section class="zona-hero" style={`--zona-imagen: url('${zona.imagen}')`}><div class="contenedor"><span class="kicker kicker--claro">Guía de zona</span><h1>{zona.h1}</h1></div></section>
+  <section class="seccion"><div class="contenedor zona-contenido"><div class="prosa">{zona.intro.map((parrafo) => <p>{parrafo}</p>)}</div>{propiedades.length > 0 && <><h2>Propiedades en {zona.nombre}</h2><div class="grid-propiedades">{propiedades.map((propiedad) => <PropertyCard propiedad={propiedad} />)}</div></>}</div></section>
+  <section class="seccion seccion--arena"><div class="contenedor contenedor--texto"><span class="kicker">Preguntas frecuentes</span><h2>Antes de decidir</h2><div class="faq">{zona.faqs.map((item) => <details><summary>{item.pregunta}</summary><p>{item.respuesta}</p></details>)}</div></div></section>
+  <LeadForm titulo={`¿Buscas propiedad en ${zona.nombre}?`} />
+</BaseLayout>

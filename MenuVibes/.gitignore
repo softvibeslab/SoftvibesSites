@@ -1,0 +1,13 @@
+.DS_Store
+.ftpquota
+.env
+.env.*
+*.log
+*.bak
+*.backup
+node_modules/
+graphify-out/
+whitelabel/graphify-out/
+whitelabel/prospectos/
+prospectos/
+whitelabel/marketing/tmp/

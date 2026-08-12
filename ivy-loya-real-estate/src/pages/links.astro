@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { content } from '../data/content';
+import '../styles/global.css';
+
+const featured = content.properties;
+---
+
+<BaseLayout
+  title="Links | Ivy Loya Real Estate"
+  description="Propiedades, asesoría e Instagram de Ivy Loya en Riviera Maya."
+  canonicalPath="/links/"
+>
+  <main id="contenido" class="links-page">
+    <div class="links-shell">
+      <img class="links-avatar" src="/img/research/ivy-loya.jpg" alt="Ivy Loya" width="785" height="785" />
+      <h1>Ivy Loya</h1>
+      <p>Real Estate Advisor · Riviera Maya<br />Golfia Real Estate</p>
+      <div class="link-stack">
+        <a class="bio-link" href="/">
+          <img src="/img/research/the-village.jpg" alt="" width="1080" height="608" />
+          <span><strong>Explora la selección</strong><small>Landing · Español / English</small></span>
+          <span>→</span>
+        </a>
+        {featured.map((property, index) => (
+          <a class="bio-link" href={property.link} target="_blank" rel="noopener" data-link-card data-content-href={`properties.${index}.link`}>
+            <img src={property.image} alt="" width="640" height="640" data-content-src={`properties.${index}.image`} />
+            <span><strong data-content-text={`properties.${index}.title`}>{property.title}</strong><small><span data-content-text={`properties.${index}.location`}>{property.location}</span> · Ver publicación</small></span>
+            <span>↗</span>
+          </a>
+        ))}
+        <a class="bio-link" href={content.contact.instagram} target="_blank" rel="noopener" data-content-href="contact.instagram">
+          <img src="/img/research/ivy-loya.jpg" alt="" width="785" height="785" />
+          <span><strong>Habla con Ivy</strong><small>Instagram @ivyloyarealestate</small></span>
+          <span>↗</span>
+        </a>
+      </div>
+      <p class="links-footer">Información de propiedades sujeta a confirmación · Demo local</p>
+    </div>
+  </main>
+  <script is:inline>
+    (() => {
+      const readPath = (source, path) => path.split('.').reduce((value, part) => value?.[part], source);
+      fetch('/data/site-content.json', { cache: 'no-store' })
+        .then((response) => response.ok ? response.json() : Promise.reject())
+        .then((runtime) => {
+          document.querySelectorAll('[data-content-text]').forEach((element) => {
+            const value = readPath(runtime, element.dataset.contentText);
+            if (typeof value === 'string') element.textContent = value;
+          });
+          document.querySelectorAll('[data-content-href]').forEach((element) => {
+            const value = readPath(runtime, element.dataset.contentHref);
+            if (typeof value === 'string' && value) element.setAttribute('href', value);
+          });
+          document.querySelectorAll('[data-content-src]').forEach((element) => {
+            const value = readPath(runtime, element.dataset.contentSrc);
+            if (typeof value === 'string' && value.startsWith('/img/')) element.setAttribute('src', value);
+          });
+        })
+        .catch(() => {});
+    })();
+  </script>
+</BaseLayout>

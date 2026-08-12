@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuesta C — Hospitalidad cálida (Airbnb)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#ff385c; --primary-a:#e00b41; --ink:#222; --body:#3f3f3f; --mute:#6a6a6a;
+    --hair:#ddd; --hair-soft:#ebebeb; --canvas:#fff; --soft:#f7f7f7; --strong:#f2f2f2; --ok:#008a05; --link:#428bff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--canvas);color:var(--ink);font-family:'Nunito Sans','Circular',-apple-system,sans-serif;}
+  .tag{position:fixed;top:0;left:0;right:0;background:var(--primary);color:#fff;font-size:12px;font-weight:700;text-align:center;padding:6px;letter-spacing:.4px;z-index:99;}
+  .wrap{max-width:1040px;margin:0 auto;padding:52px 20px 40px;}
+
+  .topbar{padding:14px 4px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--hair-soft);margin-bottom:14px;}
+  .logo{font-weight:700;font-size:18px;color:var(--primary);}
+  .logo span{color:var(--ink);}
+  .topbar .neg{color:var(--mute);font-size:14px;}
+  .tb-btns{display:flex;gap:8px;}
+  .btn{border:0;border-radius:8px;padding:11px 20px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;}
+  .btn.p{background:var(--primary);color:#fff;}
+  .btn.g{background:#fff;color:var(--ink);border:1px solid var(--ink);}
+  .tabs{display:flex;gap:6px;margin-bottom:18px;overflow-x:auto;}
+  .tab{padding:9px 16px;border-radius:9999px;font-size:14px;font-weight:600;color:var(--mute);cursor:pointer;white-space:nowrap;border:1px solid transparent;}
+  .tab.on{background:var(--ink);color:#fff;}
+  .tab:not(.on):hover{background:var(--soft);}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+  .kpi{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:16px;box-shadow:rgba(0,0,0,.04) 0 2px 8px;}
+  .kpi .n{font-size:28px;font-weight:700;}
+  .kpi .l{font-size:13px;color:var(--mute);margin-top:3px;}
+  .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:26px;}
+  .card{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:20px;box-shadow:rgba(0,0,0,.05) 0 4px 14px;}
+  .card h3{font-size:16px;font-weight:700;margin-bottom:10px;}
+  .rep-row{display:flex;align-items:baseline;gap:10px;}
+  .rep-big{font-size:42px;font-weight:700;}
+  .rep-meta{font-size:13px;color:var(--mute);}
+  .bar{height:8px;background:var(--strong);border-radius:99px;margin:10px 0 8px;overflow:hidden;}
+  .fill{height:100%;width:100%;background:var(--primary);border-radius:99px;}
+  .msg{font-size:14px;color:var(--body);line-height:1.5;}
+  .msg b{color:var(--ink);font-weight:700;}
+  .msg .ok{color:var(--ok);font-weight:700;}
+  .queja{background:var(--soft);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+  .q-head{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-bottom:3px;}
+  .q-head b{color:var(--primary-a);font-weight:700;}
+  .q-txt{font-size:14px;color:var(--ink);}
+
+  .pos-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--mute);margin:0 0 10px;}
+  .pos{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;}
+  .prods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start;}
+  .prod{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:14px;cursor:pointer;box-shadow:rgba(0,0,0,.04) 0 2px 8px;}
+  .prod:hover{border-color:var(--ink);}
+  .prod .pn{font-size:13.5px;font-weight:600;line-height:1.3;}
+  .prod .pp{font-size:15px;font-weight:700;margin-top:8px;}
+  .prod .pp small{font-weight:400;color:var(--mute);font-size:11px;}
+  .ticket{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:18px;box-shadow:rgba(0,0,0,.08) 0 6px 20px;}
+  .ticket h3{font-size:16px;font-weight:700;margin-bottom:8px;}
+  .t-item{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid var(--hair-soft);color:var(--body);}
+  .t-item span:last-child{font-weight:700;color:var(--ink);}
+  .t-total{display:flex;justify-content:space-between;font-size:20px;font-weight:700;padding-top:10px;}
+  .cobrar{width:100%;margin-top:12px;background:var(--primary);color:#fff;border:0;border-radius:8px;padding:14px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="tag">PROPUESTA C · Hospitalidad cálida · sistema Airbnb · Nunito Sans + Rausch #ff385c sobre blanco</div>
+<div class="wrap">
+  <div class="topbar">
+    <div><span class="logo">Menu<span>Vibes</span></span> <span class="neg">· La Palapa del Mar</span></div>
+    <div class="tb-btns"><button class="btn g">Ver menú ↗</button><button class="btn p">Abrir caja (POS)</button></div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">Inicio</div><div class="tab">Negocio</div><div class="tab">Branding</div><div class="tab">Productos</div><div class="tab">Ventas</div><div class="tab">Reputación</div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="n">$4,320</div><div class="l">Ventas hoy · 11 pedidos</div></div>
+    <div class="kpi"><div class="n">3</div><div class="l">Pedidos activos</div></div>
+    <div class="kpi"><div class="n">8.4</div><div class="l">NPS 7 días</div></div>
+    <div class="kpi"><div class="n">12</div><div class="l">Reseñas 30 días</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Tu reputación</h3>
+      <div class="rep-row"><span class="rep-big">4.5★</span><span class="rep-meta">3,225 reseñas · meta 4.3★</span></div>
+      <div class="bar"><div class="fill"></div></div>
+      <div class="msg"><span class="ok">✓</span> <b>Arriba del umbral.</b> Modo defensa: bastan ~94 reseñas de 1★ para bajarte 0.1★ — el NPS las intercepta.</div>
+    </div>
+    <div class="card">
+      <h3>Quejas privadas recientes</h3>
+      <div class="queja"><div class="q-head"><span>Héctor · hace 2 días</span><b>4/10</b></div><div class="q-txt">Tardaron 40 min con la cuenta…</div></div>
+      <div class="queja"><div class="q-head"><span>Sandra · hace 6 días</span><b>6/10</b></div><div class="q-txt">La música muy fuerte…</div></div>
+    </div>
+  </div>
+
+  <div class="pos-label">La misma marca en el POS</div>
+  <div class="pos">
+    <div class="prods">
+      <div class="prod"><div class="pn">Aguachile de la casa</div><div class="pp">$185</div></div>
+      <div class="prod"><div class="pn">Tacos de pescado (3)</div><div class="pp">$140</div></div>
+      <div class="prod"><div class="pn">Tostada de atún</div><div class="pp">$95</div></div>
+      <div class="prod"><div class="pn">Ceviche de camarón</div><div class="pp">$160</div></div>
+      <div class="prod"><div class="pn">Agua fresca</div><div class="pp">$55</div></div>
+      <div class="prod"><div class="pn">Cerveza</div><div class="pp">$65</div></div>
+    </div>
+    <div class="ticket">
+      <h3>Ticket · Mesa 4</h3>
+      <div class="t-item"><span>1× Aguachile de la casa</span><span>$185</span></div>
+      <div class="t-item"><span>2× Tacos de pescado</span><span>$280</span></div>
+      <div class="t-item"><span>2× Agua fresca</span><span>$110</span></div>
+      <div class="t-total"><span>Total</span><span>$575</span></div>
+      <button class="cobrar">Cobrar $575</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

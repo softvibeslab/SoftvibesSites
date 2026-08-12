@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Estrategia de captación · Mujer Montaña · Fabiola González</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#181319; --plum:#624763; --plum-deep:#4a3450; --rose:#b77886;
+    --clay:#a56d5f; --gold:#c9a44e; --gold-soft:#ead8a5; --paper:#f7f1ea;
+    --paper-2:#fffdf9; --line:#e6ddd0; --ok:#1e6e46;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;line-height:1.15}
+  em{font-style:italic;color:var(--gold)}
+  .container{max-width:1140px;margin:0 auto;padding:0 1.5rem}
+  .eyebrow{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:.6rem}
+
+  /* HERO */
+  header.hero{background:linear-gradient(160deg,var(--plum-deep),var(--plum));color:#fff;padding:4rem 0 3.4rem;position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(201,164,78,.28),transparent 70%)}
+  header.hero h1{font-size:clamp(2.2rem,5vw,3.4rem);margin:.3rem 0 .8rem}
+  header.hero p{max-width:640px;font-size:1.05rem;color:#e9e1ea}
+  .hero-meta{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.8rem;font-size:.85rem;color:var(--gold-soft)}
+  .hero-meta b{color:#fff;font-weight:600}
+
+  section{padding:3.2rem 0}
+  .sec-head{max-width:720px;margin-bottom:2rem}
+  .sec-head h2{font-size:clamp(1.8rem,3.5vw,2.5rem)}
+  .sec-head p{color:#5f5560;margin-top:.5rem}
+
+  /* CARDS */
+  .grid{display:grid;gap:1.1rem}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:1.5rem;box-shadow:0 8px 24px rgba(74,52,80,.05)}
+  .card .ic{font-size:1.6rem;margin-bottom:.5rem}
+  .card h3{font-size:1.35rem;color:var(--plum-deep);margin-bottom:.3rem}
+  .card p{font-size:.9rem;color:#5f5560}
+
+  .band{background:var(--plum-deep);color:#fff}
+  .band .sec-head p{color:#d9cdda}
+
+  /* FUNNEL */
+  .funnel{display:flex;flex-direction:column;gap:.6rem;max-width:760px;margin:0 auto}
+  .step{display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:1rem 1.3rem}
+  .step .n{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--gold);color:var(--plum-deep);font-weight:700;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:1.3rem}
+  .step h3{font-size:1.3rem;color:#fff}
+  .step p{font-size:.86rem;color:#d9cdda}
+  .step.win{border-color:var(--gold);background:rgba(201,164,78,.14)}
+
+  /* CALCULATOR */
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+  .sliders .row{margin-bottom:1.3rem}
+  .sliders label{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--plum-deep);margin-bottom:.45rem}
+  .sliders label span{color:var(--gold);font-weight:700}
+  input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:99px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 2px 8px rgba(74,52,80,.3);border:3px solid #fff}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff}
+  .results{background:linear-gradient(160deg,var(--plum),var(--plum-deep));color:#fff;border-radius:16px;padding:1.8rem;box-shadow:0 16px 40px rgba(74,52,80,.25)}
+  .results .big{text-align:center;padding:.6rem 0 1.2rem;border-bottom:1px solid rgba(255,255,255,.16);margin-bottom:1.2rem}
+  .results .big .num{font-family:'Cormorant Garamond',serif;font-size:3.4rem;font-weight:700;color:var(--gold-soft);line-height:1}
+  .results .big .lbl{font-size:.8rem;text-transform:uppercase;letter-spacing:.14em;color:#d9cdda;margin-top:.3rem}
+  .kpi-row{display:flex;justify-content:space-between;padding:.5rem 0;font-size:.92rem;border-bottom:1px dashed rgba(255,255,255,.12)}
+  .kpi-row:last-child{border:0}
+  .kpi-row b{font-weight:700;color:#fff}
+  .note{font-size:.75rem;color:#8a8089;margin-top:1rem;font-style:italic}
+
+  /* PILLARS */
+  .pillar{position:relative;padding-left:.4rem}
+  .pillar .tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--rose);border-radius:99px;padding:.2rem .6rem;margin-bottom:.5rem}
+  .pillar:nth-child(2) .tag{background:var(--clay)}
+  .pillar:nth-child(3) .tag{background:var(--gold);color:var(--plum-deep)}
+  .pillar:nth-child(4) .tag{background:var(--plum)}
+
+  /* TIMELINE */
+  .timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+  .tl{background:var(--paper-2);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:12px;padding:1.4rem}
+  .tl .d{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold)}
+  .tl h3{font-size:1.25rem;color:var(--plum-deep);margin:.2rem 0 .4rem}
+  .tl p{font-size:.86rem;color:#5f5560}
+
+  /* PACKAGES */
+  .pack{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:1.5rem;text-align:center}
+  .pack.reco{border:2px solid var(--gold);box-shadow:0 12px 30px rgba(201,164,78,.18);position:relative}
+  .pack.reco::before{content:"Recomendado";position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--plum-deep);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:.2rem .8rem;border-radius:99px}
+  .pack h3{font-size:1.4rem;color:var(--plum-deep)}
+  .pack .price{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:700;color:var(--gold);margin:.3rem 0}
+  .pack .price small{font-size:.9rem;color:#5f5560}
+  .pack ul{list-style:none;text-align:left;font-size:.85rem;color:#5f5560;margin-top:.8rem}
+  .pack li{padding:.3rem 0 .3rem 1.3rem;position:relative}
+  .pack li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:700}
+
+  footer{background:var(--plum-deep);color:#d9cdda;text-align:center;padding:2.4rem 1.5rem;font-size:.82rem}
+  footer strong{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem;display:block;margin-bottom:.3rem}
+
+  @media(max-width:860px){
+    .g3,.g4,.calc,.timeline{grid-template-columns:1fr}
+    .g2{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">Softvibes · Estrategia de captación</div>
+    <h1>De contenido disperso a <em>citas calificadas</em></h1>
+    <p>Un sistema para que las mujeres correctas apliquen solas al proceso Mujer Puente → Mujer Montaña — sin perseguir a nadie y sin que tú tengas que aprender marketing.</p>
+    <div class="hero-meta">
+      <div><b>Cliente:</b> Fabiola González</div>
+      <div><b>Meta:</b> citas calificadas → ventas de $1,500 USD</div>
+      <div><b>Fase:</b> prueba de validación</div>
+    </div>
+  </div>
+</header>
+
+<!-- DIAGNÓSTICO -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">El diagnóstico</div>
+      <h2>Tienes todo… pero fragmentado</h2>
+      <p>Buenos seguidores, contenido, webinars, libro, ticket de entrada. El problema no es falta de activos: es que la autoridad y los contactos están repartidos y no convierten en citas.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card"><div class="ic">🧩</div><h3>Autoridad repartida</h3><p>Instagram, Facebook, Linktree, landing y varios nombres de marca. Nada centralizado.</p></div>
+      <div class="card"><div class="ic">📥</div><h3>Todo por mil lados</h3><p>Te escriben por WhatsApp, DM, comentarios. El interés existe pero se pierde el hilo.</p></div>
+      <div class="card"><div class="ic">❄️</div><h3>Leads en frío no cierran</h3><p>Un desconocido no compra $1,500 USD por un mensaje. Se necesita audiencia que ya te conoce.</p></div>
+      <div class="card"><div class="ic">💎</div><h3>Base tibia sin activar</h3><p>Quienes compraron "Amate y Suelta" y asistieron a tus eventos son oro sin explotar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- EMBUDO / SOLUCIÓN -->
+<section class="band">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">La solución</div>
+      <h2>El camino a la cita calificada</h2>
+      <p>Activamos a quienes ya te conocen y los guiamos, paso a paso, hasta una solicitud con contexto. Legal, cálido y con alto cierre.</p>
+    </div>
+    <div class="funnel">
+      <div class="step"><div class="n">1</div><div><h3>Base tibia</h3><p>Compradoras de "Amate y Suelta", lista de correo, asistentes a webinars, seguidoras que interactúan.</p></div></div>
+      <div class="step"><div class="n">2</div><div><h3>Mensaje llave en mano</h3><p>WhatsApp y email listos con tu voz. Tú solo copias y pegas.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h3>Aplican en /aplicar</h3><p>Una solicitud breve filtra a las que sí son tu momento. Llegan con contexto, no en frío.</p></div></div>
+      <div class="step win"><div class="n">4</div><div><h3>Cita calificada → cierre</h3><p>Conversas solo con mujeres listas. Aquí cierras tu programa de alto valor.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA INTERACTIVA -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">Proyección · mueve los números</div>
+      <h2>¿Cuánto puede generar la prueba?</h2>
+      <p>Ajusta los controles según tu realidad. Los valores por defecto son conservadores para base tibia.</p>
+    </div>
+    <div class="calc">
+      <div class="sliders card">
+        <div class="row">
+          <label>Contactos tibios a activar <span id="v-contactos">30</span></label>
+          <input type="range" id="s-contactos" min="10" max="100" value="30" step="5">
+        </div>
+        <div class="row">
+          <label>% que responde <span id="v-resp">50%</span></label>
+          <input type="range" id="s-resp" min="10" max="80" value="50" step="5">
+        </div>
+        <div class="row">
+          <label>% de los que responden que agenda cita <span id="v-cita">40%</span></label>
+          <input type="range" id="s-cita" min="10" max="80" value="40" step="5">
+        </div>
+        <div class="row">
+          <label>% de citas que cierran <span id="v-cierre">30%</span></label>
+          <input type="range" id="s-cierre" min="10" max="70" value="30" step="5">
+        </div>
+        <div class="row">
+          <label>Ticket del programa (USD) <span id="v-ticket">$1,500</span></label>
+          <input type="range" id="s-ticket" min="500" max="3000" value="1500" step="100">
+        </div>
+      </div>
+      <div class="results">
+        <div class="big">
+          <div class="num" id="r-ingreso">$2,700</div>
+          <div class="lbl">Ingreso proyectado de la prueba</div>
+        </div>
+        <div class="kpi-row"><span>Contactos activados</span><b id="r-contactos">30</b></div>
+        <div class="kpi-row"><span>Respuestas</span><b id="r-resp">15</b></div>
+        <div class="kpi-row"><span>Citas calificadas</span><b id="r-cita">6</b></div>
+        <div class="kpi-row"><span>Ventas cerradas</span><b id="r-cierre">2</b></div>
+        <div class="note">Estimación, no garantía. La base tibia convierte mucho más que el contacto en frío porque ya existe confianza previa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 PILARES -->
+<section style="background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">El contenido que magnetiza</div>
+      <h2>Tu método en 4 pilares</h2>
+      <p>Organizamos todo tu conocimiento en una ruta que lleva a la mujer del "no sé qué me pasa" hasta aplicar a tu programa.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card pillar"><span class="tag">Pilar 1</span><h3>Sanar</h3><p>Raíz de la historia: heridas, patrones, descodificación biológica, infancia.</p></div>
+      <div class="card pillar"><span class="tag">Pilar 2</span><h3>Equilibrar</h3><p>Autoestima, límites sanos, culpa del puente, dependencia emocional.</p></div>
+      <div class="card pillar"><span class="tag">Pilar 3</span><h3>Magnetizar</h3><p>Mujer de alto valor, propósito, feminidad, relaciones.</p></div>
+      <div class="card pillar"><span class="tag">Pilar 4</span><h3>Identidad</h3><p>Reconstrucción y raíz propia. Aquí ya está contigo: alto ticket.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAN DE LA PRUEBA -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">El plan</div>
+      <h2>La prueba, en 3 días</h2>
+      <p>Sin que aprendas herramientas. Nosotros preparamos, tú envías, medimos juntos.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl"><div class="d">Día 1</div><h3>Preparación</h3><p>Organizamos tu base tibia y afinamos los mensajes con tu lenguaje. Te entregamos el guion copiar/pegar.</p></div>
+      <div class="tl"><div class="d">Día 2</div><h3>Envío</h3><p>Envías tú los mensajes (WhatsApp + email) a tus contactos calientes. Las respuestas empiezan a llegar.</p></div>
+      <div class="tl"><div class="d">Día 3</div><h3>Citas</h3><p>Agendas a las que aplicaron y ya calificadas. Medimos: mensajes → respuestas → citas → cierre.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAQUETES -->
+<section style="background:var(--paper-2);border-top:1px solid var(--line)">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow">Cómo avanzamos</div>
+      <h2>Empieza pequeño, escala con resultados</h2>
+      <p>La condición es tuya: si la prueba cierra tu primera venta, avanzamos al acompañamiento completo.</p>
+    </div>
+    <div class="grid g3">
+      <div class="pack">
+        <h3>Pruébala</h3>
+        <div class="price">$1,500 <small>MXN · 3 días</small></div>
+        <ul><li>Sitio con dominio y correo</li><li>Editor sin código</li><li>Guion de mensajes + tu base tibia</li><li>Garantía: si no, te lo regresamos</li></ul>
+      </div>
+      <div class="pack reco">
+        <h3>Hazla tuya</h3>
+        <div class="price">$3,500 <small>MXN · 7 días</small></div>
+        <ul><li>Todo lo anterior</li><li>Acompañamiento 1 a 1</li><li>Embudos + captación por opt-in</li><li>SEO y pack de contenido</li><li>Reportes de citas y cierres</li></ul>
+      </div>
+      <div class="pack">
+        <h3>Lidera tu nicho</h3>
+        <div class="price">Continuo</div>
+        <ul><li>Automatización con agentes</li><li>CRM y seguimiento</li><li>Contenido por 3 meses</li><li>Reportes trimestrales</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Fabiola González · Mujer Puente → Mujer Montaña</strong>
+  Estrategia preparada por Softvibes Lab · Documento interno de presentación
+</footer>
+
+<script>
+  const ids = ['contactos','resp','cita','cierre','ticket'];
+  const el = {};
+  ids.forEach(k => el[k] = document.getElementById('s-'+k));
+  const money = n => '$' + Math.round(n).toLocaleString('en-US');
+
+  function render(){
+    const contactos = +el.contactos.value;
+    const resp = +el.resp.value/100;
+    const cita = +el.cita.value/100;
+    const cierre = +el.cierre.value/100;
+    const ticket = +el.ticket.value;
+
+    const nResp = contactos*resp;
+    const nCita = nResp*cita;
+    const nCierre = nCita*cierre;
+    const ingreso = nCierre*ticket;
+
+    document.getElementById('v-contactos').textContent = contactos;
+    document.getElementById('v-resp').textContent = el.resp.value+'%';
+    document.getElementById('v-cita').textContent = el.cita.value+'%';
+    document.getElementById('v-cierre').textContent = el.cierre.value+'%';
+    document.getElementById('v-ticket').textContent = money(ticket);
+
+    document.getElementById('r-contactos').textContent = contactos;
+    document.getElementById('r-resp').textContent = Math.round(nResp);
+    document.getElementById('r-cita').textContent = Math.round(nCita);
+    document.getElementById('r-cierre').textContent = Math.round(nCierre);
+    document.getElementById('r-ingreso').textContent = money(ingreso);
+  }
+  ids.forEach(k => el[k].addEventListener('input', render));
+  render();
+</script>
+</body>
+</html>

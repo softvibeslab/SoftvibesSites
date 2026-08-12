@@ -1,0 +1,76 @@
+{
+  "slug": "mario-villanueva",
+  "nombre": "Mario Villanueva",
+  "marca": "Mario Villanueva · Del Ser al Vender",
+  "nicho": "ventas consultivas, capacitación comercial, turismo y hospitality",
+  "ciudad": "Hermosillo, Sonora, México",
+  "contacto": {
+    "instagram": "https://www.instagram.com/mariovillanueva.mx/",
+    "linkedin": "https://www.linkedin.com/in/mario-villanueva-426a7b8a/",
+    "oferta_principal": "https://delseralvender.com/"
+  },
+  "bio_verificada": "Empresario, speaker y sales trainer. Creador del Método BEAT y de Del Ser al Vender; fundador vinculado con Casa Xtao, Xtao Xounds y Xtao Expeditions.",
+  "cifras_verificadas": {
+    "experiencia_ventas": "15+ años",
+    "beat_express_duracion_minutos": 60,
+    "beat_express_bloques": 4,
+    "beat_express_precio_usd": 27,
+    "beat_express_acceso": "de por vida",
+    "beat_express_garantia_dias": 7
+  },
+  "hallazgos": [
+    {
+      "titulo": "La autoridad existe, pero está distribuida",
+      "detalle": "La historia de ventas, hotelería, expediciones, música y conferencias vive en perfiles y dominios separados.",
+      "solucion": "Usar la marca personal como puerta de entrada, el Método BEAT como propiedad intelectual y BEAT EXPRESS como conversión inicial."
+    },
+    {
+      "titulo": "BEAT EXPRESS ya es una oferta comprable",
+      "detalle": "Cuenta con duración, precio, plataforma, acceso y garantía definidos.",
+      "solucion": "Convertirlo en el CTA principal y separar las propuestas para equipos y conferencias."
+    },
+    {
+      "titulo": "Casa Xtao aporta credibilidad, pero su dominio está suspendido",
+      "detalle": "La cuenta de Instagram continúa activa; el dominio casaxtao.com muestra Account Suspended.",
+      "solucion": "No dirigir tráfico al dominio hasta recuperarlo. Usar temporalmente el perfil oficial de Instagram."
+    },
+    {
+      "titulo": "Xtao Expeditions tiene tres verbos útiles",
+      "detalle": "Viaja, conecta e invierte construyen una narrativa de experiencia y ejecución empresarial.",
+      "solucion": "Presentar el ecosistema como prueba de experiencia, no como cuatro ofertas compitiendo en la portada."
+    }
+  ],
+  "arquitectura_marca": {
+    "marca_personal": "Mario Villanueva",
+    "metodo": "Del Ser al Vender · Método BEAT",
+    "entrada": "BEAT EXPRESS",
+    "alto_valor": [
+      "Conferencias",
+      "Capacitación comercial para equipos",
+      "Experiencias empresariales"
+    ],
+    "credenciales": [
+      "Casa Xtao",
+      "Xtao Expeditions",
+      "Xtao Xounds"
+    ]
+  },
+  "rutas_sitio": [
+    "/",
+    "/programas/",
+    "/programas/beat-express/",
+    "/conferencias/",
+    "/contacto/",
+    "/links/",
+    "/en/",
+    "/analisis/",
+    "/aviso-de-privacidad/",
+    "/gracias/",
+    "/404.html"
+  ],
+  "deploy": {
+    "url": "",
+    "estado": "local"
+  },
+  "estado_pipeline": "segunda_version_local"
+}

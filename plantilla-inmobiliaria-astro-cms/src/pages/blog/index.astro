@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../config/site';
+
+const articulos = (await getCollection('blog')).filter((a) => !a.data.borrador).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+---
+
+<BaseLayout titulo={`Blog | ${SITE.nombre}`} descripcion="Contenido educativo inmobiliario basado en información comprobable.">
+  <section class="encabezado-pagina"><div class="contenedor"><span class="kicker">Recursos</span><h1>Blog inmobiliario</h1><p>Usa este espacio para responder preguntas reales del proceso de compra, venta o inversión.</p></div></section>
+  <section class="seccion"><div class="contenedor grid-articulos">
+    {articulos.map((articulo) => <article data-reveal><img src={articulo.data.imagen ?? '/img/demo/zone.svg'} alt="" loading="lazy" /><div><time datetime={articulo.data.fecha.toISOString()}>{articulo.data.fecha.toLocaleDateString(SITE.idioma, { dateStyle: 'long' })}</time><h2><a href={`/blog/${articulo.id}`}>{articulo.data.titulo}</a></h2><p>{articulo.data.descripcion}</p><a class="enlace" href={`/blog/${articulo.id}`}>Leer artículo →</a></div></article>)}
+  </div></section>
+</BaseLayout>

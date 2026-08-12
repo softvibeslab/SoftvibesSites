@@ -1,0 +1,35 @@
+export const research = {
+  capturedAt: '31 de julio de 2026',
+  profile: {
+    handle: '@ivyloyarealestate',
+    followers: 1181,
+    following: 841,
+    postsReported: 92,
+    sampleSize: 30,
+    dateRange: '17 abr 2024 — 4 jul 2026',
+  },
+  sample: {
+    videos: 24,
+    images: 4,
+    carousels: 2,
+    likes: 675,
+    comments: 92,
+    interactions: 767,
+    averageInteractions: 25.6,
+  },
+  topContent: [
+    { name: 'Monarca · experiencia', interactions: 80, owner: '@dreambuiltmx' },
+    { name: 'Monarca · estilo de vida', interactions: 68, owner: '@dreambuiltmx' },
+    { name: 'Entrega Turix · clientes', interactions: 60, owner: '@ivyloyarealestate' },
+    { name: 'The Village · Corasol', interactions: 53, owner: '@golfia.mx' },
+    { name: 'Olaya', interactions: 48, owner: '@dreambuiltmx' },
+    { name: 'Punta Kaan', interactions: 41, owner: '@dreambuiltmx' },
+  ],
+  hashtags: [
+    ['#rivieramaya', 8],
+    ['#inversion', 7],
+    ['#luxurylifestyle', 7],
+    ['#luxurydestination', 6],
+    ['#mexico', 6],
+  ],
+};

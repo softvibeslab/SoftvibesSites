@@ -1,0 +1,18 @@
+schema: spec-driven
+context: |
+  Product: local analysis and conversion-landing preview for Atelier Noisette, an artisanal pastry business discovered through public social profiles.
+  Stack: static semantic HTML, CSS, minimal vanilla JavaScript, Python standard-library verification.
+  Audience: Spanish-speaking customers ordering desserts for gifts and celebrations; the analysis is a private Softvibes sales artifact.
+  Evidence: public Instagram/Threads metadata observed on 2026-07-23. Unknown catalog, location, prices, contacts, availability, and legal details must remain explicit.
+  Safety: no publishing, outreach, forms, payments, analytics, tracking, credentials, or invented testimonials/business outcomes.
+rules:
+  proposal:
+    - Separate verified facts, platform observations, product hypotheses, and unknowns.
+  design:
+    - Use one primary conversion action and a brand-specific warm editorial visual system.
+    - Preserve mobile usability, accessibility, reduced motion, and public-source attribution.
+  specs:
+    - Use concrete Given/When/Then scenarios.
+  tasks:
+    - Keep specification and research before implementation.
+    - Include deterministic static checks and browser QA executed by the agent.

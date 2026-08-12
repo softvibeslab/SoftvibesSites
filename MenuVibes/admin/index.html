@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{--y:#FFD700;--b:#0D0D0D;--d:#1A1A1A;--g:#2a2a2a;--w:#FFF;--m:#aaa;--gr:#25D366;--red:#ff4444;--blue:#4488ff;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--b);color:var(--w);font-family:'Nunito',sans-serif;min-height:100vh;}
+
+  /* LOGIN */
+  .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+  .login-box{background:var(--d);border:2px solid var(--y);border-radius:16px;padding:32px 24px;width:100%;max-width:380px;text-align:center;}
+  .login-box h1{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--y);letter-spacing:2px;margin-bottom:4px;}
+  .login-box p{font-size:13px;color:var(--m);margin-bottom:24px;}
+  input{width:100%;background:#111;border:2px solid #333;border-radius:10px;padding:12px 14px;color:var(--w);font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;margin-bottom:12px;outline:none;transition:border-color .15s;}
+  input:focus{border-color:var(--y);}
+  .btn{padding:10px 18px;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;cursor:pointer;border:none;transition:all .15s;white-space:nowrap;}
+  .btn.primary{background:var(--y);color:var(--b);}
+  .btn.full{width:100%;padding:14px;font-size:15px;}
+  .btn.danger{background:var(--red);color:var(--w);}
+  .btn.success{background:var(--gr);color:var(--w);}
+  .btn.ghost{background:none;border:2px solid #444;color:var(--m);}
+  .btn.ghost:hover{border-color:var(--y);color:var(--y);}
+  .btn.warn{background:#ff8800;color:var(--w);}
+  .err{font-size:12px;color:var(--red);margin-bottom:10px;min-height:18px;text-align:center;}
+
+  /* TOPBAR */
+  .topbar{background:var(--d);border-bottom:3px solid var(--y);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .topbar h1{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--y);letter-spacing:2px;}
+  .topbar-right{display:flex;align-items:center;gap:8px;}
+  .negocio-tag{font-size:12px;color:var(--m);font-weight:700;}
+
+  /* TABS */
+  .tabs{display:flex;border-bottom:2px solid #222;background:var(--d);overflow-x:auto;}
+  .tab{padding:11px 14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:var(--m);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+  .tab.active{color:var(--y);border-bottom-color:var(--y);}
+
+  /* CONTENT */
+  .content{padding:14px;max-width:680px;margin:0 auto;}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .stat-card{background:var(--d);border-radius:12px;padding:14px;border:1px solid #333;}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--y);line-height:1;}
+  .stat-lbl{font-size:10px;color:var(--m);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:3px;}
+
+  /* FILTROS */
+  .filtros{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+  .filtros select{background:#111;border:2px solid #333;border-radius:8px;padding:7px 10px;color:var(--w);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;outline:none;margin-bottom:0;}
+  .filtros select:focus{border-color:var(--y);}
+
+  /* BADGES */
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:900;letter-spacing:.5px;}
+  .badge.pending{background:rgba(255,200,0,.12);color:#ffcc00;border:1px solid #ffcc0066;}
+  .badge.confirmed{background:rgba(37,211,102,.12);color:var(--gr);border:1px solid #25d36666;}
+  .badge.cancelled{background:rgba(255,68,68,.12);color:var(--red);border:1px solid #ff444466;}
+
+  /* PEDIDO CARD */
+  .pedido-card{background:var(--d);border-radius:12px;margin-bottom:8px;border:2px solid #2a2a2a;overflow:hidden;}
+  .pedido-card.pendiente{border-color:#ffcc0033;}
+  .pedido-card.confirmado{border-color:#25d36633;}
+  .pedido-card.cancelado{border-color:#ff444433;opacity:.6;}
+  .pedido-hdr{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;user-select:none;}
+  .pedido-hdr-left{flex:1;min-width:0;}
+  .pedido-nick{font-weight:900;font-size:14px;color:var(--w);}
+  .pedido-meta{font-size:11px;color:var(--m);margin-top:2px;}
+  .pedido-total{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--y);white-space:nowrap;}
+  .pedido-body{display:none;padding:0 14px 14px;border-top:1px solid #333;}
+  .pedido-body.open{display:block;}
+  .pedido-items{font-size:12px;color:var(--m);line-height:1.9;margin:10px 0;}
+  .pedido-pago{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;}
+  .pago-btn{padding:6px 12px;border-radius:20px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer;border:2px solid #444;background:var(--g);color:var(--m);transition:all .15s;}
+  .pago-btn.on{background:var(--y);border-color:var(--y);color:var(--b);}
+  .pedido-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+  .cupon-tag{font-size:11px;color:var(--y);background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);padding:2px 8px;border-radius:20px;display:inline-block;margin-top:4px;}
+
+  /* USUARIOS */
+  .user-card{background:var(--d);border-radius:12px;padding:13px 14px;margin-bottom:7px;border:1px solid #333;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .user-nick{font-weight:900;font-size:14px;color:var(--w);}
+  .user-meta{font-size:11px;color:var(--m);margin-top:2px;}
+  .user-pedidos{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--y);text-align:right;}
+  .user-ped-lbl{font-size:10px;color:var(--m);text-transform:uppercase;letter-spacing:1px;text-align:right;}
+
+  /* MODAL CONFIRMACION */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.hidden{display:none;}
+  .modal{background:var(--d);border-radius:16px;padding:24px;width:100%;max-width:380px;border:2px solid var(--y);}
+  .modal h2{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--y);letter-spacing:2px;margin-bottom:6px;}
+  .modal p{font-size:13px;color:var(--m);margin-bottom:16px;}
+  .modal .err{margin-bottom:10px;}
+  .modal-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;}
+
+  /* POS */
+  .pos-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+  .pos-item{background:var(--d);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:2px solid transparent;cursor:pointer;transition:all .15s;}
+  .pos-item.sel{border-color:var(--y);background:#1f1c00;}
+  .pos-item-name{font-weight:800;font-size:14px;color:var(--w);}
+  .pos-item-price{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--y);}
+  .pos-qty{display:none;align-items:center;gap:8px;margin-top:8px;}
+  .pos-item.sel .pos-qty{display:flex;}
+  .pos-qb{width:26px;height:26px;border-radius:50%;background:var(--y);color:var(--b);font-size:16px;font-weight:900;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;}
+  .pos-qn{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--w);min-width:20px;text-align:center;}
+  .pos-total-bar{position:sticky;bottom:0;background:var(--d);border-top:3px solid var(--y);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .pos-total-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--y);}
+  .pos-pago-sel{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;}
+  .pos-section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--y);letter-spacing:2px;margin:14px 0 0;border-bottom:2px solid #333;padding:12px 0 8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;}
+  .pos-section-title .pos-arrow{font-size:14px;transition:transform .25s;}
+  .pos-section-body{overflow:hidden;max-height:0;transition:max-height .3s ease;}
+  .pos-section-body.open{max-height:9999px;}
+
+  /* POS OPCIONES (papas, toppings) */
+  .pos-opts-wrap{display:none;padding:0 8px 8px;}
+  .pos-item.sel .pos-opts-wrap{display:block;}
+  .pos-opts-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--y);opacity:.7;margin-bottom:5px;}
+  .pos-opts-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+  .pos-opt-btn{padding:6px 10px;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;cursor:pointer;border:2px solid #444;background:var(--g);color:var(--m);transition:all .15s;}
+  .pos-opt-btn.on{background:var(--y);border-color:var(--y);color:var(--b);}
+
+  /* TICKET MODAL */
+  .ticket{background:#fff;color:#111;border-radius:8px;padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;max-height:70vh;overflow-y:auto;}
+  .ticket h2{font-size:16px;font-weight:900;text-align:center;margin-bottom:4px;}
+  .ticket .t-sep{border:none;border-top:1px dashed #999;margin:8px 0;}
+  .ticket .t-item{display:flex;justify-content:space-between;}
+  .ticket .t-total{font-weight:900;font-size:14px;}
+
+  /* MISC */
+  .loading-msg{text-align:center;color:var(--m);padding:40px 20px;font-size:14px;}
+  .empty{text-align:center;padding:40px 20px;color:var(--m);}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#222;color:var(--w);padding:11px 22px;border-radius:30px;font-size:13px;font-weight:700;z-index:999;border:2px solid var(--y);opacity:0;transition:opacity .3s;pointer-events:none;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ─────────────────────────────────────────────────────────────────── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <h1>Panel Admin</h1>
+    <p>Acceso de administrador</p>
+    <div class="err" id="login-err"></div>
+    <input type="email" id="admin-email" placeholder="Email" autocomplete="email"
+      onkeydown="if(event.key==='Enter')adminLogin()">
+    <input type="password" id="admin-pass" placeholder="Contrasena"
+      onkeydown="if(event.key==='Enter')adminLogin()">
+    <button class="btn primary full" id="login-btn" onclick="adminLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ──────────────────────────────────────────────────────────────── -->
+<div id="dashboard" style="display:none;">
+  <div class="topbar">
+    <h1>Panel Admin</h1>
+    <div class="topbar-right">
+      <span class="negocio-tag" id="negocio-nombre"></span>
+      <button class="btn danger" onclick="adminLogout()">Salir</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('pedidos')">Pedidos</div>
+    <div class="tab" onclick="showTab('pos')">Punto de Venta</div>
+    <div class="tab" onclick="showTab('clientes')">Clientes</div>
+    <div class="tab" onclick="showTab('cupones')">Cupones</div>
+  </div>
+
+  <!-- TAB PEDIDOS -->
+  <div class="content" id="tab-pedidos">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="s-pend">—</div><div class="stat-lbl">Pendientes</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-conf">—</div><div class="stat-lbl">Confirmados hoy</div></div>
+      <div class="stat-card" onclick="toggleDesglose()" style="cursor:pointer;">
+      <div class="stat-num" id="s-total">—</div>
+      <div class="stat-lbl">Total del dia ▾</div>
+      <div id="s-desglose" style="display:none;margin-top:8px;border-top:1px solid #333;padding-top:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--m);margin-bottom:3px;"><span>💵 Efectivo</span><span id="s-efectivo" style="color:var(--w);font-weight:700;">$0</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--m);margin-bottom:3px;"><span>💳 Tarjeta</span><span id="s-tarjeta" style="color:var(--w);font-weight:700;">$0</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--m);"><span>📲 Transferencia</span><span id="s-transferencia" style="color:var(--w);font-weight:700;">$0</span></div>
+      </div>
+    </div>
+      <div class="stat-card"><div class="stat-num" id="s-cli">—</div><div class="stat-lbl">Clientes hoy</div></div>
+    </div>
+    <div class="filtros">
+      <select id="f-estado" onchange="loadPedidos()">
+        <option value="pendiente" selected>Pendientes</option>
+        <option value="confirmado">Confirmados</option>
+        <option value="cancelado">Cancelados</option>
+        <option value="all">Todos</option>
+      </select>
+      <select id="f-fecha" onchange="loadPedidos()">
+        <option value="hoy">Hoy</option>
+        <option value="semana">Esta semana</option>
+        <option value="todo">Todos</option>
+      </select>
+      <button class="btn ghost" onclick="loadPedidos()">↻</button>
+    </div>
+    <div id="pedidos-list"><div class="loading-msg">Cargando...</div></div>
+  </div>
+
+  <!-- TAB POS -->
+  <div id="tab-pos" style="display:none;padding-bottom:120px;">
+    <div class="content" id="pos-menu-root"><div class="loading-msg">Cargando menu...</div></div>
+    <div class="pos-total-bar">
+      <div>
+        <div style="font-size:11px;color:var(--m);font-weight:700;text-transform:uppercase;letter-spacing:1px;">Total</div>
+        <div class="pos-total-num" id="pos-total">$0</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn ghost" onclick="posClear()">Limpiar</button>
+        <button class="btn primary" onclick="posCheckout()" id="pos-checkout-btn" disabled>Cobrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB CLIENTES -->
+  <div class="content" id="tab-clientes" style="display:none;">
+    <div class="filtros">
+      <input type="text" id="buscar-user" placeholder="Buscar nickname..."
+        oninput="filterUsers()" style="flex:1;min-width:180px;margin-bottom:0;">
+    </div>
+    <div id="usuarios-list"><div class="loading-msg">Cargando...</div></div>
+  </div>
+
+  <!-- TAB CUPONES -->
+  <div class="content" id="tab-cupones" style="display:none;">
+    <div id="cupones-list"><div class="loading-msg">Cargando...</div></div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMACION ADMIN (para cancelar/modificar tickets) -->
+<div class="modal-overlay hidden" id="confirm-modal">
+  <div class="modal">
+    <h2 id="cm-title">Confirmar</h2>
+    <p id="cm-desc"></p>
+    <div class="err" id="cm-err"></div>
+    <input type="password" id="cm-pass" placeholder="Contrasena de admin">
+    <div class="modal-btns">
+      <button class="btn ghost" onclick="closeConfirmModal()">Cancelar</button>
+      <button class="btn danger" id="cm-ok" onclick="confirmModalOk()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TICKET -->
+<div class="modal-overlay hidden" id="ticket-modal">
+  <div class="modal" style="max-width:440px;">
+    <h2>Ticket de Venta</h2>
+    <div class="ticket" id="ticket-content"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+      <button class="btn ghost" onclick="shareTicket()">📤 Compartir</button>
+      <button class="btn warn" onclick="cancelTicket()">Cancelar venta</button>
+      <button class="btn ghost" onclick="closeTicketModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+// Cambia estos valores al implementar en un nuevo cliente
+var ADMIN_CONFIG = {
+  supabase_url: 'https://pteoxuhgppdxletvpsmw.supabase.co',
+  supabase_key: 'sb_publishable_TZbeLlgR9lnxvaRniRAIJQ_gCx7IO_q',
+  negocio_nombre: 'Localito MX', // se sobreescribe desde Supabase al login
+  csv_menu: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSju5_o_Fk8CSue-CP7tWbC5FsXHbo4eTslO1yBLs5NHTPLmQklp21l8e3AlUhAIOKe56kLr099wCWu/pub?gid=40748683&single=true&output=csv',
+  csv_config: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSju5_o_Fk8CSue-CP7tWbC5FsXHbo4eTslO1yBLs5NHTPLmQklp21l8e3AlUhAIOKe56kLr099wCWu/pub?gid=1233204709&single=true&output=csv',
+  csv_secciones: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSju5_o_Fk8CSue-CP7tWbC5FsXHbo4eTslO1yBLs5NHTPLmQklp21l8e3AlUhAIOKe56kLr099wCWu/pub?gid=1080576999&single=true&output=csv',
+  whatsapp: '525652169403'
+};
+
+const SUPA = supabase.createClient(ADMIN_CONFIG.supabase_url, ADMIN_CONFIG.supabase_key);
+var todosLosPedidos = [], todosLosUsuarios = [], posItems = [], posMenuData = [];
+var currentTicketId = null;
+
+// Niveles de lealtad — se cargan del Google Sheets config
+// Si el Sheets no tiene niveles configurados, no aplica ningun cupon
+var NIVELES = [];
+
+// ── LOGIN CON SUPABASE AUTH ───────────────────────────────────────────────────
+var NEGOCIO = null; // datos del negocio del admin autenticado
+
+async function adminLogin() {
+  var email = document.getElementById('admin-email').value.trim();
+  var pass = document.getElementById('admin-pass').value;
+  var errEl = document.getElementById('login-err');
+  var btn = document.getElementById('login-btn');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Completa email y contrasena.'; return; }
+
+  btn.textContent = 'Entrando...';
+  btn.disabled = true;
+
+  var { data, error } = await SUPA.auth.signInWithPassword({ email: email, password: pass });
+
+  if (error) {
+    errEl.textContent = 'Credenciales incorrectas.';
+    btn.textContent = 'Entrar';
+    btn.disabled = false;
+    return;
+  }
+
+  // Cargar datos del negocio vinculado a este usuario
+  var neg = await SUPA.from('negocios').select('*').eq('admin_user_id', data.user.id).maybeSingle();
+  if (!neg.data) {
+    errEl.textContent = 'No hay ningun negocio vinculado a este usuario.';
+    await SUPA.auth.signOut();
+    btn.textContent = 'Entrar';
+    btn.disabled = false;
+    return;
+  }
+
+  NEGOCIO = neg.data;
+  // Actualizar config con datos del negocio desde Supabase
+  ADMIN_CONFIG.negocio_nombre = NEGOCIO.nombre;
+  ADMIN_CONFIG.csv_menu = NEGOCIO.csv_menu;
+  ADMIN_CONFIG.csv_secciones = NEGOCIO.csv_secciones;
+  ADMIN_CONFIG.csv_config = NEGOCIO.csv_config;
+  ADMIN_CONFIG.whatsapp = NEGOCIO.whatsapp;
+
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('negocio-nombre').textContent = NEGOCIO.nombre;
+  loadPedidos();
+  loadPosMenu();
+}
+
+async function adminLogout() {
+  await SUPA.auth.signOut();
+  NEGOCIO = null;
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-email').value = '';
+  document.getElementById('admin-pass').value = '';
+  document.getElementById('login-btn').textContent = 'Entrar';
+  document.getElementById('login-btn').disabled = false;
+}
+
+// Verificar si ya hay sesion activa al cargar
+document.addEventListener('DOMContentLoaded', async function() {
+  var { data } = await SUPA.auth.getSession();
+  if (data.session) {
+    var neg = await SUPA.from('negocios').select('*').eq('admin_user_id', data.session.user.id).maybeSingle();
+    if (neg.data) {
+      NEGOCIO = neg.data;
+      ADMIN_CONFIG.negocio_nombre = NEGOCIO.nombre;
+      ADMIN_CONFIG.csv_menu = NEGOCIO.csv_menu;
+      ADMIN_CONFIG.csv_secciones = NEGOCIO.csv_secciones;
+      ADMIN_CONFIG.csv_config = NEGOCIO.csv_config;
+      ADMIN_CONFIG.whatsapp = NEGOCIO.whatsapp;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('negocio-nombre').textContent = NEGOCIO.nombre;
+      loadPedidos();
+      loadPosMenu();
+    }
+  }
+});
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  ['pedidos','pos','clientes','cupones'].forEach(function(t) {
+    document.getElementById('tab-'+t).style.display = t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    el.classList.toggle('active',['pedidos','pos','clientes','cupones'][i]===name);
+  });
+  if (name==='clientes') loadUsuarios();
+  if (name==='cupones') loadCupones();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+function fmtDate(str) {
+  return new Date(str).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function getDateFrom(f) {
+  var n = new Date();
+  if (f==='hoy') return new Date(n.getFullYear(),n.getMonth(),n.getDate()).toISOString();
+  if (f==='semana') { var d=new Date(n); d.setDate(d.getDate()-7); return d.toISOString(); }
+  return null;
+}
+
+// ── PEDIDOS ───────────────────────────────────────────────────────────────────
+async function loadPedidos() {
+  document.getElementById('pedidos-list').innerHTML = '<div class="loading-msg">Cargando...</div>';
+  var estado = document.getElementById('f-estado').value;
+  var fecha = document.getElementById('f-fecha').value;
+  var from = getDateFrom(fecha);
+  var q = SUPA.from('pedidos').select('*').order('created_at',{ascending:false});
+  if (from) q = q.gte('created_at',from);
+  if (estado !== 'all') q = q.eq('estado',estado);
+  var {data,error} = await q;
+  if (error) { document.getElementById('pedidos-list').innerHTML='<div class="loading-msg">Error.</div>'; return; }
+  todosLosPedidos = data||[];
+  // Siempre poblar el mapa con TODOS los pedidos cargados
+  (data||[]).forEach(function(p){ pedidosMap[p.id] = p; });
+  renderPedidos(todosLosPedidos);
+  updateStats(data||[]);
+}
+
+function toggleDesglose() {
+  var d = document.getElementById('s-desglose');
+  d.style.display = d.style.display === 'none' ? 'block' : 'none';
+}
+
+function updateStats(pedidos) {
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+  var hp = pedidos.filter(function(p){return new Date(p.created_at)>=hoy;});
+  var confirmadosHoy = hp.filter(function(p){return p.estado==='confirmado';});
+  var totalDia = confirmadosHoy.reduce(function(s,p){return s+(p.total||0);},0);
+  var efectivo = confirmadosHoy.filter(function(p){return (p.metodo_pago||'efectivo')==='efectivo';}).reduce(function(s,p){return s+(p.total||0);},0);
+  var tarjeta = confirmadosHoy.filter(function(p){return p.metodo_pago==='tarjeta';}).reduce(function(s,p){return s+(p.total||0);},0);
+  var transferencia = confirmadosHoy.filter(function(p){return p.metodo_pago==='transferencia';}).reduce(function(s,p){return s+(p.total||0);},0);
+
+  document.getElementById('s-pend').textContent = pedidos.filter(function(p){return p.estado==='pendiente';}).length;
+  document.getElementById('s-conf').textContent = confirmadosHoy.length;
+  document.getElementById('s-total').textContent = '$'+totalDia;
+  document.getElementById('s-efectivo').textContent = '$'+efectivo;
+  document.getElementById('s-tarjeta').textContent = '$'+tarjeta;
+  document.getElementById('s-transferencia').textContent = '$'+transferencia;
+  document.getElementById('s-cli').textContent = new Set(hp.map(function(p){return p.nickname;})).size;
+}
+
+var pedidosMap = {};
+
+async function confirmarPedidoById(id) {
+  var p = pedidosMap[id];
+  if (!p) {
+    // Intentar cargar el pedido directamente de Supabase
+    var res = await SUPA.from('pedidos').select('*').eq('id', id).maybeSingle();
+    if (res.data) {
+      pedidosMap[id] = res.data;
+      p = res.data;
+    } else {
+      toast('Error: pedido no encontrado');
+      return;
+    }
+  }
+  confirmarPedido(id, p.usuario_id, p.cupon_aplicado||null, p.descuento_pct||0);
+}
+
+function renderPedidos(pedidos) {
+  if (!pedidos.length) {
+    document.getElementById('pedidos-list').innerHTML='<div class="empty">📋<p>Sin pedidos en este filtro</p></div>'; return;
+  }
+  var html='';
+  pedidos.forEach(function(p) {
+    var estado = p.estado||'pendiente';
+    var items = Array.isArray(p.items)?p.items:[];
+    var itemsList = items.map(function(i){return '• '+i.name+' — $'+i.price;}).join('<br>');
+    var cuponHtml = p.cupon_aplicado?'<div class="cupon-tag">🎟️ '+p.cupon_aplicado+' ('+p.descuento_pct+'% OFF)</div>':'';
+    var bClass = estado==='confirmado'?'confirmed':estado==='cancelado'?'cancelled':'pending';
+    var bText = estado==='confirmado'?'✓ Confirmado':estado==='cancelado'?'✕ Cancelado':'⏳ Pendiente';
+    var pagoText = p.metodo_pago ? ' · '+p.metodo_pago : '';
+
+    var acciones = '';
+    if (estado==='pendiente') {
+      acciones += '<button class="btn success" onclick="confirmarPedidoById(\'' + p.id + '\')">&#10003; Confirmar</button>';
+      acciones += '<button class="btn danger" onclick="pedidoConPass(\'cancelar\',\''+p.id+'\')">✕ Cancelar</button>';
+    } else if (estado==='confirmado') {
+      acciones += '<button class="btn ghost" onclick="pedidoConPass(\'cancelar\',\''+p.id+'\')">Cancelar</button>';
+    }
+
+    html += '<div class="pedido-card '+estado+'" id="card-'+p.id+'">';
+    html += '<div class="pedido-hdr" onclick="togglePedido(\''+p.id+'\')">';
+    html += '<div class="pedido-hdr-left"><div class="pedido-nick">'+p.nickname+'</div>';
+    html += '<div class="pedido-meta">'+fmtDate(p.created_at)+pagoText+' &nbsp;<span class="badge '+bClass+'">'+bText+'</span></div>';
+    html += cuponHtml+'</div>';
+    html += '<div class="pedido-total">$'+p.total+'</div></div>';
+    html += '<div class="pedido-body" id="body-'+p.id+'">';
+    html += '<div class="pedido-items">'+itemsList+'</div>';
+    if (acciones) html += '<div class="pedido-actions">'+acciones+'</div>';
+    html += '</div></div>';
+  });
+  document.getElementById('pedidos-list').innerHTML = html;
+}
+
+function togglePedido(id) {
+  document.getElementById('body-'+id).classList.toggle('open');
+}
+
+async function confirmarPedido(id, usuarioId, cuponAplicado, descuentoPct) {
+  try {
+    // Actualizar estado del pedido
+    var upd = await SUPA.from('pedidos').update({estado:'confirmado'}).eq('id',id);
+    if (upd.error) throw new Error(upd.error.message);
+
+    // Si el pedido tenia cupon, verificar que no se haya canjeado ya antes de registrar
+    if (cuponAplicado && usuarioId) {
+      var yaCanjeado = await SUPA.from('cupones_canjeados')
+        .select('id')
+        .eq('usuario_id', usuarioId)
+        .eq('cupon_codigo', cuponAplicado)
+        .maybeSingle();
+      if (!yaCanjeado.data) {
+        // Solo registrar si no existe ya
+        var pedido = todosLosPedidos.find(function(p){return p.id===id;})||{};
+        await SUPA.from('cupones_canjeados').insert({
+          usuario_id: usuarioId,
+          nickname: pedido.nickname||'',
+          cupon_codigo: cuponAplicado,
+          descuento_pct: descuentoPct,
+          pedido_id: id
+        });
+      }
+    }
+
+    toast('Pedido confirmado');
+    loadPedidos();
+  } catch(e) {
+    toast('Error: ' + e.message);
+    console.error('confirmarPedido error:', e);
+  }
+}
+
+// ── MODAL CONFIRMACION CON CONTRASENA ─────────────────────────────────────────
+var confirmCallback = null;
+function pedidoConPass(accion, id) {
+  document.getElementById('cm-title').textContent = accion==='cancelar' ? 'Cancelar pedido' : 'Modificar pedido';
+  document.getElementById('cm-desc').textContent = 'Ingresa la contrasena de admin para continuar.';
+  document.getElementById('cm-err').textContent = '';
+  document.getElementById('cm-pass').value = '';
+  document.getElementById('confirm-modal').classList.remove('hidden');
+  confirmCallback = async function() {
+    if (accion==='cancelar') {
+      var {error} = await SUPA.from('pedidos').update({estado:'cancelado'}).eq('id',id);
+      if (error) { document.getElementById('cm-err').textContent='Error.'; return; }
+      toast('Pedido cancelado');
+      closeConfirmModal();
+      loadPedidos();
+    }
+  };
+}
+function closeConfirmModal() {
+  document.getElementById('confirm-modal').classList.add('hidden');
+  confirmCallback = null;
+}
+async function confirmModalOk() {
+  var pass = document.getElementById('cm-pass').value;
+  // Verificar contrasena re-autenticando con Supabase
+  var { data } = await SUPA.auth.getSession();
+  if (!data.session) { document.getElementById('cm-err').textContent = 'Sesion expirada.'; return; }
+  var check = await SUPA.auth.signInWithPassword({
+    email: data.session.user.email,
+    password: pass
+  });
+  if (check.error) {
+    document.getElementById('cm-err').textContent = 'Contrasena incorrecta.';
+    return;
+  }
+  if (confirmCallback) confirmCallback();
+}
+
+// ── POS — Punto de Venta ─────────────────────────────────────────────────────
+var posSeleccion = {}; // {nombre: {precio, qty, papas, toppings}}
+var posBloques = [];
+var posMetodoPago = 'efectivo';
+
+async function loadPosMenu() {
+  try {
+    var results = await Promise.all([
+      fetch(ADMIN_CONFIG.csv_menu).then(function(r){return r.text();}),
+      fetch(ADMIN_CONFIG.csv_secciones).then(function(r){return r.text();}),
+      ADMIN_CONFIG.csv_config ? fetch(ADMIN_CONFIG.csv_config).then(function(r){return r.text();}) : Promise.resolve('')
+    ]);
+
+    var menuRows = parseCSV(results[0]).filter(function(r){return r.activo==='si';});
+    var secRows = parseCSV(results[1]).filter(function(s){return s.activo==='si';});
+
+    // Cargar niveles de lealtad del config
+    if (results[2]) {
+      var cfgRows = parseCSV(results[2]);
+      var nivelesSheets = {};
+      cfgRows.forEach(function(r) {
+        var mN = r.funcion && r.funcion.match(/^nivel_(\d+)_(pedidos|descuento)$/);
+        if (mN && r.activo) {
+          var idx = parseInt(mN[1])-1;
+          if (!nivelesSheets[idx]) nivelesSheets[idx] = {};
+          nivelesSheets[idx][mN[2]] = parseInt(r.activo);
+        }
+        // Leer datos del negocio
+        if (r.funcion === 'negocio_nombre' && r.activo) ADMIN_CONFIG.negocio_nombre = r.activo;
+      });
+      var arr = Object.keys(nivelesSheets).sort().map(function(k){return nivelesSheets[k];});
+      NIVELES = arr.filter(function(n){return n.pedidos && n.descuento;});
+    }
+
+    // Organizar items por seccion segun orden del sheets secciones
+    var seccionesOrden = [];
+    var seccionesConfig = {};
+    secRows.forEach(function(s) {
+      if (!seccionesConfig[s.key]) {
+        seccionesOrden.push(s.key);
+        seccionesConfig[s.key] = { titulo: s.titulo, sm: s.sm, items: [] };
+      }
+    });
+
+    menuRows.forEach(function(r) {
+      if (seccionesConfig[r.seccion]) {
+        seccionesConfig[r.seccion].items.push(r);
+      }
+    });
+
+    // Agrupar subsecciones bajo su bloque principal (sm:no)
+    var bloques = [];
+    var bloqueActual = null;
+    seccionesOrden.forEach(function(key) {
+      var sec = seccionesConfig[key];
+      if (!sec) return;
+      if (sec.sm !== 'si') {
+        if (bloqueActual) bloques.push(bloqueActual);
+        bloqueActual = { key: key, titulo: sec.titulo, subsecciones: [{key:key, titulo:sec.titulo, items:sec.items}] };
+      } else {
+        if (bloqueActual) bloqueActual.subsecciones.push({key:key, titulo:sec.titulo, items:sec.items});
+      }
+    });
+    if (bloqueActual) bloques.push(bloqueActual);
+
+    posMenuData = menuRows;
+    posBloques = bloques;
+    renderPosMenu();
+  } catch(e) {
+    document.getElementById('pos-menu-root').innerHTML = '<div class="loading-msg">Error al cargar menu: '+e.message+'</div>';
+    console.error(e);
+  }
+}
+
+
+function parseCSV(text) {
+  var lines = text.trim().split('\n');
+  var headers = lines[0].split(',').map(function(h){return h.trim().replace(/\r/g,'').replace(/"/g,'');});
+  var rows = [];
+  for (var i=1;i<lines.length;i++) {
+    var line=lines[i].replace(/\r/g,''), cols=[], cur='', inQ=false;
+    for (var c=0;c<line.length;c++) {
+      var ch=line[c];
+      if (ch==='"') inQ=!inQ;
+      else if (ch===','&&!inQ) {cols.push(cur.trim());cur='';}
+      else cur+=ch;
+    }
+    cols.push(cur.trim());
+    var row={};
+    headers.forEach(function(h,idx){row[h]=(cols[idx]||'').replace(/"/g,'').trim();});
+    rows.push(row);
+  }
+  return rows;
+}
+
+// Secciones abiertas en POS — cerradas por defecto
+var posOpenSections = {};
+
+function renderPosMenu() {
+  var h = '';
+
+  posBloques.forEach(function(bloque) {
+    var isOpen = posOpenSections[bloque.key] === true; // cerrado por defecto
+    h += '<div style="border-bottom:1px solid #222;">';
+    h += '<div class="pos-section-title" onclick="togglePosSection(event,\''+bloque.key+'\')">'+bloque.titulo.toUpperCase();
+    h += '<span id="pos-arrow-'+bloque.key+'" style="font-size:14px;transition:transform .25s;display:inline-block;transform:'+(isOpen?'rotate(180deg)':'rotate(0deg)')+'">&#9662;</span></div>';
+    h += '<div id="pos-sec-'+bloque.key+'" style="overflow:hidden;max-height:'+(isOpen?'9999px':'0')+';transition:max-height .35s ease;padding:0 8px;">';
+
+    bloque.subsecciones.forEach(function(sub) {
+      if (sub.items.length === 0) return;
+      if (bloque.subsecciones.length > 1) {
+        h += '<div style="font-size:11px;font-weight:800;color:var(--m);letter-spacing:1.5px;text-transform:uppercase;padding:10px 0 6px;border-bottom:1px solid #1a1a1a;margin-bottom:4px;">'+sub.titulo+'</div>';
+      }
+      sub.items.forEach(function(r) {
+        var precio = parseInt(r.precio)||0;
+        var key = r.nombre;
+        var sel = posSeleccion[key];
+        var isSel = !!sel;
+        var qty = sel ? sel.qty : 0;
+
+        h += '<div class="pos-item'+(isSel?' sel':'')+'" onclick="posToggle(this,\''+key+'\','+precio+')" data-nombre="'+key+'" data-precio="'+precio+'" data-pp="'+(r.precio_papas||'')+'" data-bp="'+precio+'" data-hp="'+(r.has_papas==='si'?'1':'')+'" data-op="'+((r.opciones||'').replace(/"/g,''))+'" data-opp="'+((r.opciones_precio||'').replace(/"/g,''))+'" data-opl="'+((r.opciones_label||'').replace(/"/g,''))+'">';
+        h += '<div style="flex:1;"><div class="pos-item-name">'+r.nombre+'</div>';
+        if (r.descripcion) h += '<div style="font-size:10px;color:var(--m);margin-top:1px;">'+r.descripcion+'</div>';
+        h += '</div>';
+        h += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">';
+        h += '<div class="pos-item-price">$'+precio+'</div>';
+        h += '<div class="pos-qty" onclick="event.stopPropagation()">';
+        h += '<button class="pos-qb" onclick="posQty(event,\''+key+'\','+precio+',-1)">-</button>';
+        h += '<span class="pos-qn">'+qty+'</span>';
+        h += '<button class="pos-qb" onclick="posQty(event,\''+key+'\','+precio+',1)">+</button>';
+        h += '</div></div>';
+
+        // Papas
+        if (r.has_papas === 'si' && isSel) {
+          var curPapas = sel ? (sel.papas||'sin') : 'sin';
+          h += '<div class="pos-opts-wrap" style="display:block;"><div class="pos-opts-label">Con papas?</div><div class="pos-opts-row">';
+          h += '<button class="pos-opt-btn'+(curPapas==='sin'?' on':'')+'" onclick="setPapasPOS(event,\''+key+'\',\'sin\','+precio+')">Sin papas $'+precio+'</button>';
+          h += '<button class="pos-opt-btn'+(curPapas==='con'?' on':'')+'" onclick="setPapasPOS(event,\''+key+'\',\'con\','+(r.precio_papas||precio)+')">Con papas $'+(r.precio_papas||precio)+'</button>';
+          h += '</div></div>';
+        }
+
+        // Toppings/opciones
+        var opRaw = (r.opciones||'').replace(/"/g,'').trim();
+        if (opRaw && isSel) {
+          var sep = opRaw.indexOf('|')>=0?'|':',';
+          var opts = opRaw.split(sep);
+          var prRaw = (r.opciones_precio||'').replace(/"/g,'').trim();
+          var prs = prRaw ? prRaw.split(sep).map(function(p){return parseInt(p)||0;}) : [];
+          var lbl = (r.opciones_label||'Elige opcion').replace(/"/g,'').trim();
+          var curTops = sel ? (sel.toppings||[]) : [];
+          h += '<div class="pos-opts-wrap" style="display:block;"><div class="pos-opts-label">'+lbl+'</div><div class="pos-opts-row">';
+          opts.forEach(function(opt,i) {
+            var p = prs[i]!==undefined?prs[i]:(prs[0]||0);
+            var isOn = curTops.indexOf(opt.trim()) >= 0;
+            h += '<button class="pos-opt-btn'+(isOn?' on':'')+'" onclick="setToppingPOS(event,\''+key+'\',\''+opt.trim()+'\','+p+')">'+(p>0?opt.trim()+' +$'+p:opt.trim())+'</button>';
+          });
+          h += '</div></div>';
+        }
+
+        h += '</div>'; // pos-item
+      });
+    });
+
+    h += '</div></div>'; // sec body + bloque
+  });
+
+  // Metodo de pago
+  h += '<div class="pos-section-title" style="cursor:default;pointer-events:none;">METODO DE PAGO</div>';
+  h += '<div class="pos-pago-sel" style="padding:8px;">';
+  ['efectivo','tarjeta','transferencia'].forEach(function(m) {
+    h += '<button class="pago-btn'+(posMetodoPago===m?' on':'')+'" onclick="setPosMetodo(\''+m+'\')">'+m.charAt(0).toUpperCase()+m.slice(1)+'</button>';
+  });
+  h += '</div>';
+
+  document.getElementById('pos-menu-root').innerHTML = h;
+  posUpdateTotal();
+}
+
+function togglePosSection(e, key) {
+  e.stopPropagation();
+  posOpenSections[key] = !posOpenSections[key];
+  var body = document.getElementById('pos-sec-'+key);
+  var arrow = document.getElementById('pos-arrow-'+key);
+  var isOpen = posOpenSections[key];
+  if (body) body.style.maxHeight = isOpen ? '9999px' : '0';
+  if (arrow) arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function setPapasPOS(e, key, tipo, precio) {
+  e.stopPropagation();
+  if (!posSeleccion[key]) return;
+  posSeleccion[key].papas = tipo;
+  posSeleccion[key].precio = precio;
+  renderPosMenu();
+}
+
+function setToppingPOS(e, key, topping, precio) {
+  e.stopPropagation();
+  if (!posSeleccion[key]) return;
+  if (!posSeleccion[key].toppings) posSeleccion[key].toppings = [];
+  if (!posSeleccion[key].toppingsPrices) posSeleccion[key].toppingsPrices = {};
+  var idx = posSeleccion[key].toppings.indexOf(topping);
+  if (idx >= 0) {
+    posSeleccion[key].toppings.splice(idx, 1);
+    delete posSeleccion[key].toppingsPrices[topping];
+  } else {
+    posSeleccion[key].toppings.push(topping);
+    posSeleccion[key].toppingsPrices[topping] = precio;
+  }
+  renderPosMenu();
+}
+
+
+function posToggle(el, nombre, precio) {
+  if (posSeleccion[nombre]) {
+    delete posSeleccion[nombre];
+  } else {
+    posSeleccion[nombre] = {precio:precio, qty:1};
+  }
+  renderPosMenu();
+}
+
+function posQty(nombre, precio, d) {
+  if (!posSeleccion[nombre]) posSeleccion[nombre] = {precio:precio,qty:0};
+  posSeleccion[nombre].qty = Math.max(0, posSeleccion[nombre].qty + d);
+  if (posSeleccion[nombre].qty === 0) delete posSeleccion[nombre];
+  renderPosMenu();
+}
+
+function setPosMetodo(m) {
+  posMetodoPago = m;
+  renderPosMenu();
+}
+
+function posUpdateTotal() {
+  var total = Object.keys(posSeleccion).reduce(function(s,k){
+    var item = posSeleccion[k];
+    var basePrice = item.precio;
+    // Sumar toppings
+    var topsTotal = 0;
+    if (item.toppingsPrices) {
+      Object.keys(item.toppingsPrices).forEach(function(t){ topsTotal += item.toppingsPrices[t]; });
+    }
+    return s + ((basePrice + topsTotal) * item.qty);
+  },0);
+  document.getElementById('pos-total').textContent = '$'+total;
+  document.getElementById('pos-checkout-btn').disabled = total === 0;
+}
+
+function posClear() {
+  posSeleccion = {};
+  renderPosMenu();
+}
+
+function posCheckout() {
+  var items = Object.keys(posSeleccion).map(function(k){
+    var item = posSeleccion[k];
+    var name = k;
+    var unitPrice = item.precio;
+    // Agregar papas al nombre
+    if (item.papas) name += item.papas === 'con' ? ' con papas' : ' sin papas';
+    // Agregar toppings
+    var topsTotal = 0;
+    if (item.toppings && item.toppings.length > 0) {
+      name += ' + ' + item.toppings.join(' + ');
+      if (item.toppingsPrices) Object.keys(item.toppingsPrices).forEach(function(t){ topsTotal += item.toppingsPrices[t]; });
+    }
+    unitPrice += topsTotal;
+    return {name:name, price:unitPrice * item.qty, qty:item.qty, unit:unitPrice};
+  });
+  if (!items.length) return;
+  var total = items.reduce(function(s,i){return s+i.price;},0);
+  var now = new Date();
+  var folio = 'T-'+now.getFullYear()%100+''+(now.getMonth()+1)+''+now.getDate()+'-'+Math.floor(Math.random()*9000+1000);
+
+  // Generar ticket
+  var ticket = '<h2>'+ADMIN_CONFIG.negocio_nombre+'</h2>';
+  ticket += '<div style="text-align:center;font-size:11px;color:#666;">'+now.toLocaleString('es-MX')+'</div>';
+  ticket += '<div style="text-align:center;font-size:11px;">Folio: '+folio+'</div>';
+  ticket += '<hr class="t-sep">';
+  items.forEach(function(i){
+    ticket += '<div class="t-item"><span>'+i.qty+'x '+i.name+'</span><span>$'+i.price+'</span></div>';
+  });
+  ticket += '<hr class="t-sep">';
+  ticket += '<div class="t-item t-total"><span>TOTAL</span><span>$'+total+'</span></div>';
+  ticket += '<hr class="t-sep">';
+  ticket += '<div style="text-align:center;font-size:11px;">Pago: '+posMetodoPago.toUpperCase()+'</div>';
+  ticket += '<div style="text-align:center;font-size:11px;margin-top:8px;">Gracias por su preferencia</div>';
+
+  document.getElementById('ticket-content').innerHTML = ticket;
+  document.getElementById('ticket-modal').classList.remove('hidden');
+
+  // Guardar en Supabase como venta confirmada (sin usuario)
+  SUPA.from('pedidos').insert({
+    usuario_id: null,
+    nickname: 'POS-'+folio,
+    items: items,
+    total: total,
+    estado: 'confirmado',
+    metodo_pago: posMetodoPago
+  }).then(function(res){
+    if (res.data && res.data[0]) currentTicketId = res.data[0].id;
+  });
+}
+
+function closeTicketModal() {
+  document.getElementById('ticket-modal').classList.add('hidden');
+  posClear();
+  currentTicketId = null;
+}
+
+function shareTicket() {
+  var content = document.getElementById('ticket-content').innerText;
+  var msg = encodeURIComponent(content);
+  window.open('https://wa.me/?text='+msg,'_blank');
+}
+
+function cancelTicket() {
+  document.getElementById('cm-title').textContent = 'Cancelar ticket';
+  document.getElementById('cm-desc').textContent = 'Ingresa la contrasena de admin para cancelar este ticket.';
+  document.getElementById('cm-err').textContent = '';
+  document.getElementById('cm-pass').value = '';
+  document.getElementById('confirm-modal').classList.remove('hidden');
+  confirmCallback = async function() {
+    if (currentTicketId) {
+      await SUPA.from('pedidos').update({estado:'cancelado'}).eq('id',currentTicketId);
+    }
+    toast('Ticket cancelado');
+    closeConfirmModal();
+    closeTicketModal();
+  };
+}
+
+// ── CLIENTES ──────────────────────────────────────────────────────────────────
+async function loadUsuarios() {
+  document.getElementById('usuarios-list').innerHTML='<div class="loading-msg">Cargando...</div>';
+  var {data:users,error} = await SUPA.from('usuarios').select('*').order('created_at',{ascending:false});
+  if (error) { document.getElementById('usuarios-list').innerHTML='<div class="loading-msg">Error.</div>'; return; }
+  var withCount = await Promise.all((users||[]).map(async function(u){
+    var {count} = await SUPA.from('pedidos').select('id',{count:'exact'}).eq('usuario_id',u.id).eq('estado','confirmado');
+    return Object.assign({},u,{pedidos_confirmados:count||0});
+  }));
+  todosLosUsuarios = withCount;
+  renderUsuarios(withCount);
+}
+
+function filterUsers() {
+  var q = document.getElementById('buscar-user').value.toLowerCase();
+  renderUsuarios(todosLosUsuarios.filter(function(u){return u.nickname.indexOf(q)>=0;}));
+}
+
+function getNivel(n) {
+  for (var i=NIVELES.length-1;i>=0;i--) if (n>=NIVELES[i].pedidos) return NIVELES[i].descuento+'% OFF desbloqueado 🎟️';
+  if (n===0) return 'Sin pedidos aun';
+  var next = NIVELES.find(function(l){return n<l.pedidos;});
+  return next ? 'Faltan '+(next.pedidos-n)+' para '+next.descuento+'%' : 'Nivel maximo';
+}
+
+function renderUsuarios(users) {
+  if (!users.length) { document.getElementById('usuarios-list').innerHTML='<div class="empty">👥<p>Sin clientes</p></div>'; return; }
+  var html='';
+  users.forEach(function(u){
+    html+='<div class="user-card"><div><div class="user-nick">@'+u.nickname+'</div>';
+    html+='<div class="user-meta">Registro: '+fmtDate(u.created_at)+'</div>';
+    html+='<div class="user-meta" style="color:var(--y);margin-top:2px;">'+getNivel(u.pedidos_confirmados)+'</div></div>';
+    html+='<div><div class="user-pedidos">'+u.pedidos_confirmados+'</div><div class="user-ped-lbl">pedidos</div></div></div>';
+  });
+  document.getElementById('usuarios-list').innerHTML = html;
+}
+
+// ── CUPONES ───────────────────────────────────────────────────────────────────
+async function loadCupones() {
+  document.getElementById('cupones-list').innerHTML='<div class="loading-msg">Cargando...</div>';
+  var {data,error} = await SUPA.from('cupones_canjeados').select('*').order('canjeado_at',{ascending:false});
+  if (error||!data||!data.length) {
+    document.getElementById('cupones-list').innerHTML='<div class="empty">🎟️<p>Sin cupones canjeados aun</p></div>'; return;
+  }
+  var html='<div style="margin-bottom:12px;font-size:13px;color:var(--m);">'+data.length+' cupones canjeados en total</div>';
+  data.forEach(function(c){
+    html+='<div class="user-card"><div><div class="user-nick">@'+c.nickname+'</div>';
+    html+='<div class="user-meta">Canjeado: '+fmtDate(c.canjeado_at)+'</div>';
+    html+='<div class="user-meta" style="margin-top:3px;">Cupon: <span style="color:var(--y);font-weight:800;">'+c.cupon_codigo+'</span></div></div>';
+    html+='<div><div class="user-pedidos" style="font-size:28px;">'+c.descuento_pct+'%</div><div class="user-ped-lbl">descuento</div></div></div>';
+  });
+  document.getElementById('cupones-list').innerHTML = html;
+}
+</script>
+</body>
+</html>

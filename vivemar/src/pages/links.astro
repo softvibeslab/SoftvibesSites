@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Vive Mar · Real Estate — Enlaces"
+  descripcion="Todos los enlaces de Vive Mar Real Estate: propiedades, WhatsApp, citas y redes sociales."
+  desnudo={true}
+>
+  <main class="pagina-links">
+    <div class="pagina-links__tarjeta">
+      <a href="/" aria-label="Ir al sitio de Vive Mar">
+        <img
+          src="/img/logo-vivemar.png"
+          alt="Logo de Vive Mar Real Estate"
+          width="112"
+          height="112"
+          style="width: 112px; height: 112px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 2px solid var(--laton-claro); box-shadow: 0 8px 24px rgba(0,0,0,0.3);"
+        />
+      </a>
+      <h1>🌴 {SITE.lema}</h1>
+      <p>🏡 Bienes Raíces · 📍 Cancún, Q. Roo, Mx</p>
+      <nav class="links-lista" aria-label="Enlaces">
+        <a href="/propiedades">🏠 Catálogo de propiedades</a>
+        <a href={waLink()} target="_blank" rel="noopener" data-cms="cta-links-whatsapp">💬 ¡Contáctame! · WhatsApp</a>
+        <a href={SITE.calendly} target="_blank" rel="noopener" data-cms="cta-links-agenda">📅 ¡Agenda una cita!</a>
+        <a href="/blog">📖 Blog de inversión</a>
+        <a href={SITE.redes.instagram} target="_blank" rel="noopener">Instagram</a>
+        <a href={SITE.redes.tiktok} target="_blank" rel="noopener">TikTok</a>
+        <a href={SITE.redes.facebook} target="_blank" rel="noopener">Facebook</a>
+        <a href={SITE.redes.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        <a href={SITE.redes.pinterest} target="_blank" rel="noopener">Pinterest</a>
+      </nav>
+    </div>
+  </main>
+</BaseLayout>

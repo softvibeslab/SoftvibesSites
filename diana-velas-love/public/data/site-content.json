@@ -1,0 +1,225 @@
+{
+  "brand": {
+    "name": "Diana Velas Love",
+    "descriptor": "Jabón y velas artesanales",
+    "monogram": "DVL"
+  },
+  "contact": {
+    "instagram": "https://www.instagram.com/diana_velas_love/",
+    "whatsappNumber": "",
+    "location": "Playa del Carmen, Quintana Roo",
+    "whatsappStatus": "Número de WhatsApp pendiente de confirmar"
+  },
+  "hero": {
+    "eyebrow": "Hecho a mano · Playa del Carmen",
+    "title": "Pequeñas piezas.",
+    "emphasis": "Grandes antojos.",
+    "summary": "Velas con forma de flores, fruta y postres, además de una selección de jabones artesanales. Elige un diseño y consulta sus detalles por WhatsApp.",
+    "primaryCta": "Explorar catálogo",
+    "secondaryCta": "Consultar por WhatsApp"
+  },
+  "catalog": {
+    "eyebrow": "Catálogo visual",
+    "title": "Parece postre. Es una vela.",
+    "summary": "Doce diseños observados en el perfil público. Precio, aroma, tamaño, material y disponibilidad se confirman antes de pedir.",
+    "empty": "No hay piezas visibles en esta categoría."
+  },
+  "products": [
+    {
+      "id": "rosa-manana",
+      "name": "Rosa de mañana",
+      "category": "Flores",
+      "image": "/img/products/rosa-manana.jpg",
+      "alt": "Vela floral rosa presentada en recipiente de vidrio",
+      "description": "Diseño floral presentado en vidrio. Confirma tamaño, aroma, material y disponibilidad.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DbihLamRf7f/",
+      "message": "Hola, vi la Rosa de mañana en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/DbihLamRf7f/",
+      "visible": true
+    },
+    {
+      "id": "regalos-naturaleza",
+      "name": "Regalos de la naturaleza",
+      "category": "Naturaleza",
+      "image": "/img/products/regalos-naturaleza.jpg",
+      "alt": "Vela en vaso con flores rosas y detalles de bayas",
+      "description": "Composición en vaso con flores y detalles frutales. Confirma características y disponibilidad.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/Dbb6AArg9e7/",
+      "message": "Hola, vi Regalos de la naturaleza en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/Dbb6AArg9e7/",
+      "visible": true
+    },
+    {
+      "id": "postre-bayas",
+      "name": "Postre de bayas",
+      "category": "Postres",
+      "image": "/img/products/postre-bayas.jpg",
+      "alt": "Vela rosa con apariencia de helado, bayas y gajos",
+      "description": "Pieza visual inspirada en un postre de bayas. No comestible; confirma detalles antes de pedir.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DbBUwnyAdBs/",
+      "message": "Hola, vi el Postre de bayas en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/DbBUwnyAdBs/",
+      "visible": true
+    },
+    {
+      "id": "manzanilla-arandano",
+      "name": "Manzanilla con arándano",
+      "category": "Naturaleza",
+      "image": "/img/products/manzanilla-arandano.jpg",
+      "alt": "Vela decorativa con flores claras y detalles de arándanos",
+      "description": "Diseño con motivos florales y frutales. El nombre describe su apariencia, no un aroma confirmado.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/Da8uVBrBn42/",
+      "message": "Hola, vi la vela Manzanilla con arándano en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/Da8uVBrBn42/",
+      "visible": true
+    },
+    {
+      "id": "helado-fresa",
+      "name": "Helado de fresa",
+      "category": "Postres",
+      "image": "/img/products/helado-fresa.jpg",
+      "alt": "Vela rosa presentada como una bola de helado en recipiente",
+      "description": "Vela decorativa con apariencia de helado. No comestible; confirma sus especificaciones.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/Da3LbNDydcL/",
+      "message": "Hola, vi la vela Helado de fresa en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/Da3LbNDydcL/",
+      "visible": true
+    },
+    {
+      "id": "rosa-cristal",
+      "name": "Rosa en cristal",
+      "category": "Flores",
+      "image": "/img/products/rosa-cristal.jpg",
+      "alt": "Vela con rosa fucsia dentro de recipiente de vidrio",
+      "description": "Rosa central en un recipiente de vidrio. Confirma medidas, aroma, precio y disponibilidad.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DanV2iWSmJa/",
+      "message": "Hola, vi la Rosa en cristal en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/DanV2iWSmJa/",
+      "visible": true
+    },
+    {
+      "id": "sorbete-mango",
+      "name": "Sorbete de mango",
+      "category": "Postres",
+      "image": "/img/products/sorbete-mango.jpg",
+      "alt": "Vela amarilla con apariencia de sorbete de mango",
+      "description": "Pieza decorativa inspirada en un sorbete. No comestible; confirma aroma y formato.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DaJgVBcgtRY/",
+      "message": "Hola, vi la vela Sorbete de mango en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/DaJgVBcgtRY/",
+      "visible": true
+    },
+    {
+      "id": "rosa-melocotones",
+      "name": "Rosa en melocotones",
+      "category": "Flores",
+      "image": "/img/products/rosa-melocotones.jpg",
+      "alt": "Vela decorativa con una rosa y formas de melocotón",
+      "description": "La pieza con más reproducciones de la muestra pública. Confirma todos sus datos comerciales.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DW_kC-HgMFH/",
+      "message": "Hola, vi la Rosa en melocotones en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/DW_kC-HgMFH/",
+      "visible": true
+    },
+    {
+      "id": "vela-maiz",
+      "name": "Vela de maíz",
+      "category": "Naturaleza",
+      "image": "/img/products/vela-maiz.jpg",
+      "alt": "Vela amarilla modelada con apariencia de mazorca",
+      "description": "Diseño modelado con apariencia de mazorca. Confirma tamaño, material y disponibilidad.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DWWYyY0gGNi/",
+      "message": "Hola, vi la Vela de maíz en tu catálogo. ¿Me compartes precio, tamaño, aroma, material y disponibilidad? Referencia: https://www.instagram.com/p/DWWYyY0gGNi/",
+      "visible": true
+    },
+    {
+      "id": "vela-tulipan",
+      "name": "Vela de tulipán",
+      "category": "Flores",
+      "image": "/img/products/vela-tulipan.jpg",
+      "alt": "Vela modelada con forma de tulipán",
+      "description": "Diseño floral modelado como tulipán. Confirma colores, tamaño, aroma y disponibilidad.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DWWWxWoAJzP/",
+      "message": "Hola, vi la Vela de tulipán en tu catálogo. ¿Me compartes precio, colores, tamaño, aroma y disponibilidad? Referencia: https://www.instagram.com/p/DWWWxWoAJzP/",
+      "visible": true
+    },
+    {
+      "id": "jabon-manzanilla",
+      "name": "Jabón de manzanilla",
+      "category": "Jabones",
+      "image": "/img/products/jabon-manzanilla.jpg",
+      "alt": "Jabón azul con una flor clara en la parte superior",
+      "description": "Jabón artesanal observado en el perfil. Solicita ingredientes, peso, uso y advertencias antes de comprar.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DXZTZyHgCpm/",
+      "message": "Hola, vi el Jabón de manzanilla en tu catálogo. ¿Me compartes precio, peso, ingredientes, uso, advertencias y disponibilidad? Referencia: https://www.instagram.com/p/DXZTZyHgCpm/",
+      "visible": true
+    },
+    {
+      "id": "jabon-rosa",
+      "name": "Jabón rosa roja",
+      "category": "Jabones",
+      "image": "/img/products/jabon-rosa.jpg",
+      "alt": "Jabón artesanal modelado con forma de rosa roja",
+      "description": "Jabón modelado como rosa. Solicita ingredientes, peso, uso y advertencias antes de comprar.",
+      "priceLabel": "Cotizar",
+      "sourceUrl": "https://www.instagram.com/p/DXmixTqAJ8p/",
+      "message": "Hola, vi el Jabón rosa roja en tu catálogo. ¿Me compartes precio, peso, ingredientes, uso, advertencias y disponibilidad? Referencia: https://www.instagram.com/p/DXmixTqAJ8p/",
+      "visible": true
+    }
+  ],
+  "about": {
+    "eyebrow": "La idea detrás del catálogo",
+    "title": "Objetos cotidianos, llevados a otro lugar.",
+    "body": "El perfil público reúne piezas hechas a mano que toman formas reconocibles: flores, fruta, helados y pequeños regalos. Esta tienda organiza ese archivo visual para que cada diseño tenga nombre, contexto y una ruta clara de consulta.",
+    "note": "Materiales, proceso, aromas, tiempos y opciones personalizadas todavía deben ser confirmados por la marca."
+  },
+  "steps": [
+    {
+      "title": "Elige la pieza",
+      "text": "Filtra el catálogo y abre el producto que más te guste."
+    },
+    {
+      "title": "Confirma los detalles",
+      "text": "El mensaje pregunta precio, tamaño, aroma, material y disponibilidad."
+    },
+    {
+      "title": "Acuerda tu entrega",
+      "text": "Valida anticipo, fecha, envío o recolección antes de pagar."
+    }
+  ],
+  "faq": [
+    {
+      "question": "¿Cuánto cuesta cada pieza?",
+      "answer": "Los precios no aparecen en el perfil público. Cada botón abre una consulta del producto para confirmar precio y moneda antes de ordenar."
+    },
+    {
+      "question": "¿Qué aroma y tamaño tienen?",
+      "answer": "Aromas y medidas no están verificados. Pídelos por WhatsApp junto con fotos actuales de la pieza disponible."
+    },
+    {
+      "question": "¿Son comestibles las velas de postre?",
+      "answer": "No. Son piezas decorativas presentadas con apariencia de alimentos. Deben mantenerse fuera del alcance de niñas, niños y mascotas."
+    },
+    {
+      "question": "¿Hacen entregas en Playa del Carmen?",
+      "answer": "La ubicación aparece en publicaciones públicas, pero cobertura, costos y tiempos de entrega siguen pendientes de confirmación."
+    },
+    {
+      "question": "¿Cómo cuido una vela?",
+      "answer": "Solicita instrucciones específicas de la pieza. Como regla general, mantenla en una superficie estable, lejos de materiales inflamables y nunca la dejes encendida sin supervisión."
+    }
+  ],
+  "finalCta": {
+    "eyebrow": "Tu siguiente regalo puede empezar aquí",
+    "title": "Elige una pieza. Pregunta lo importante.",
+    "summary": "Una conversación breve basta para confirmar el diseño, sus características y la entrega.",
+    "button": "Abrir WhatsApp"
+  },
+  "seo": {
+    "title": "Diana Velas Love | Velas y jabones artesanales en Playa del Carmen",
+    "description": "Catálogo visual de velas y jabones artesanales de Diana Velas Love. Consulta precio, detalles y disponibilidad por WhatsApp."
+  }
+}

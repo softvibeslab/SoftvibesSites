@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PropertyCard from '../../../components/PropertyCard.astro';
+import { SITE, waLink } from '../../../data/site';
+
+const propiedades = (await getCollection('propiedades'))
+  .filter((p) => p.data.tituloEn)
+  .sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada));
+---
+
+<BaseLayout
+  titulo="Riviera Maya property catalog | Frank Hernández"
+  descripcion="Browse pre-construction condos, homes and investment properties in Playa del Carmen, Cancún and Tulum. Filter by type, area and budget."
+  lang="en"
+  rutaAlterna="/propiedades"
+>
+  <section class="seccion">
+    <div class="contenedor">
+      <span class="etiqueta">Catalog</span>
+      <h1>Properties in the Riviera Maya</h1>
+      <p class="seccion__intro">
+        Every property is vetted for numbers and legal certainty: private, titled, non-ejido
+        land only. Filter by type, area or budget.
+      </p>
+
+      <div class="filtros">
+        <label>
+          Type
+          <select id="filtro-tipo">
+            <option value="">All</option>
+            <option value="lote">Investment lot</option>
+            <option value="departamento">Condo</option>
+            <option value="penthouse">Penthouse</option>
+            <option value="casa">House</option>
+          </select>
+        </label>
+        <label>
+          Area
+          <select id="filtro-zona">
+            <option value="">All</option>
+            <option value="playa-del-carmen">Playa del Carmen</option>
+            <option value="cancun">Cancún</option>
+            <option value="tulum">Tulum</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid-propiedades" id="grid-propiedades">
+        {propiedades.map((p) => <PropertyCard propiedad={p} lang="en" />)}
+      </div>
+      <div class="filtros__vacio" id="sin-resultados">
+        <p style="margin: 0;">
+          <strong>No properties match those filters right now.</strong><br />
+          Message Frank on WhatsApp — there's probably an off-catalog option for you.
+        </p>
+      </div>
+
+      <p style="margin-top: 2.5rem;">
+        <a href={waLink(SITE.waMensajeEn)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Ask Frank on WhatsApp</a>
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const selects = ['filtro-tipo', 'filtro-zona'].map(
+      (id) => document.getElementById(id) as HTMLSelectElement
+    );
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>('#grid-propiedades .card')
+    );
+    const vacio = document.getElementById('sin-resultados')!;
+
+    function aplicarFiltros() {
+      const [tipo, zona] = selects.map((s) => s.value);
+      let visibles = 0;
+      for (const card of cards) {
+        const mostrar = (!tipo || card.dataset.tipo === tipo) && (!zona || card.dataset.zona === zona);
+        card.style.display = mostrar ? '' : 'none';
+        if (mostrar) visibles++;
+      }
+      vacio.style.display = visibles === 0 ? 'block' : 'none';
+    }
+
+    selects.forEach((s) => s.addEventListener('change', aplicarFiltros));
+  </script>
+</BaseLayout>

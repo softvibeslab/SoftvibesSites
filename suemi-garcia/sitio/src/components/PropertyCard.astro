@@ -1,0 +1,77 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { waLink, formatoPrecio } from '../data/site';
+
+interface Props {
+  propiedad: CollectionEntry<'propiedades'>;
+  lang?: 'es' | 'en';
+}
+
+const { propiedad, lang = 'es' } = Astro.props;
+const {
+  titulo,
+  resumen,
+  precio,
+  moneda,
+  tipo,
+  zona,
+  ubicacion,
+  m2,
+  recamaras,
+  banos,
+  imagen,
+  estatus,
+  frenteAlMar,
+  tituloEn,
+  resumenEn,
+} = propiedad.data;
+
+const en = lang === 'en';
+const tituloMostrar = en && tituloEn ? tituloEn : titulo;
+const resumenMostrar = en && resumenEn ? resumenEn : resumen;
+const url = en ? `/en/properties/${propiedad.id}` : `/propiedades/${propiedad.id}`;
+
+const etiquetaTipo: Record<string, string> = en
+  ? { departamento: 'Condo', penthouse: 'Penthouse', casa: 'House', lote: 'Investment lot' }
+  : { departamento: 'Departamento', penthouse: 'Penthouse', casa: 'Casa', lote: 'Lote de inversión' };
+
+const etiquetaEstatus: Record<string, { texto: string; clase: string } | null> = {
+  venta: null,
+  preventa: { texto: en ? 'Pre-construction' : 'Preventa', clase: 'badge--preventa' },
+  'entrega-inmediata': { texto: en ? 'Move-in ready' : 'Entrega inmediata', clase: 'badge--entrega' },
+  oportunidad: { texto: en ? 'Opportunity' : 'Oportunidad', clase: 'badge--oportunidad' },
+};
+
+const badgeEstatus = etiquetaEstatus[estatus];
+const mensajeWa = en
+  ? `Hi Suemi, I'm interested in "${tituloMostrar}" that I saw on your website. Could you send me more information?`
+  : `Hola Suemi, me interesa "${tituloMostrar}" que vi en tu sitio. ¿Me compartes más información?`;
+---
+
+<article class="card" data-tipo={tipo} data-zona={zona} data-precio={precio}>
+  <div class="card__media">
+    <a href={url} aria-label={tituloMostrar}>
+      <img src={imagen} alt={tituloMostrar} class="card__img" loading="lazy" width="640" height="400" />
+    </a>
+    <div class="card__badges">
+      {badgeEstatus && <span class={`badge ${badgeEstatus.clase}`}>{badgeEstatus.texto}</span>}
+      {frenteAlMar && <span class="badge badge--mar">{en ? 'Oceanfront' : 'Frente al mar'}</span>}
+    </div>
+  </div>
+  <div class="card__cuerpo">
+    <span class="card__tipo">{etiquetaTipo[tipo]}</span>
+    <h3 class="card__titulo"><a href={url} data-cms={`prop-${propiedad.id}-titulo`}>{tituloMostrar}</a></h3>
+    <span class="card__precio">
+      {formatoPrecio(precio, moneda)}
+      <small>· {formatoPrecio(Math.round(precio / m2), moneda)}/m²</small>
+    </span>
+    <span class="card__meta">
+      📍 {ubicacion} · {m2} m²{recamaras ? ` · ${recamaras} ${en ? 'bd' : 'rec'}` : ''}{banos ? ` · ${banos} ${en ? 'ba' : 'baños'}` : ''}
+    </span>
+    <p class="card__resumen" data-cms={`prop-${propiedad.id}-resumen`}>{resumenMostrar}</p>
+    <div class="card__acciones">
+      <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener" data-cms="cta-card-whatsapp">WhatsApp</a>
+      <a href={url} class="boton boton--secundario" data-cms="cta-card-ver">{en ? 'View property' : 'Ver propiedad'}</a>
+    </div>
+  </div>
+</article>

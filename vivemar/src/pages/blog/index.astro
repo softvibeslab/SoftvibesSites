@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const articulos = (await getCollection('blog')).sort(
+  (a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf()
+);
+
+const formatoFecha = new Intl.DateTimeFormat('es-MX', { dateStyle: 'long' });
+---
+
+<BaseLayout
+  titulo="Blog de inversión inmobiliaria en la Riviera Maya | Vive Mar"
+  descripcion="Guías prácticas para invertir con certeza en Cancún, Playa del Carmen y Tulum: plusvalía, certeza legal, fideicomisos y más."
+>
+  <section class="seccion">
+    <div class="contenedor">
+      <span class="etiqueta">Blog</span>
+      <h1>Invierte con información, no con corazonadas</h1>
+      <p class="seccion__intro">
+        Guías claras sobre plusvalía, certeza legal y estrategia de inversión en la Riviera
+        Maya, escritas desde la experiencia en campo.
+      </p>
+      <div class="lista-blog">
+        {
+          articulos.map((a) => (
+            <article class="card">
+              {a.data.imagen && (
+                <a href={`/blog/${a.id}`}>
+                  <img
+                    src={a.data.imagen}
+                    alt={a.data.titulo}
+                    class="card__img"
+                    loading="lazy"
+                    width="640"
+                    height="400"
+                  />
+                </a>
+              )}
+              <div class="card__cuerpo">
+                <span class="fecha">{formatoFecha.format(a.data.fecha)}</span>
+                <h2 class="card__titulo">
+                  <a href={`/blog/${a.id}`}>{a.data.titulo}</a>
+                </h2>
+                <p class="card__resumen">{a.data.descripcion}</p>
+                <a href={`/blog/${a.id}`} class="boton boton--secundario">
+                  Leer artículo
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

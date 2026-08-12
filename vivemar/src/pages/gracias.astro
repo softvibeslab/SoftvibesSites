@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../data/site';
+---
+
+<BaseLayout titulo="¡Gracias! | Vive Mar Real Estate" descripcion="Recibimos tu mensaje.">
+  <section class="seccion" style="text-align: center; min-height: 50vh;">
+    <div class="contenedor" style="max-width: 620px;">
+      <h1>¡Gracias! 🌴</h1>
+      <p>
+        Recibimos tu mensaje. {SITE.asesora} te contactará en menos de 24 horas.
+      </p>
+      <p>¿Prefieres no esperar?</p>
+      <a href={waLink()} class="boton boton--whatsapp" target="_blank" rel="noopener">
+        💬 Escríbenos por WhatsApp ahora
+      </a>
+      <p style="margin-top: 2rem;">
+        <a href="/propiedades">← Seguir viendo propiedades</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

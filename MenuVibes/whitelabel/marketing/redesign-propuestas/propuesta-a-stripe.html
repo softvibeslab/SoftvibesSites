@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuesta A — Premium claro (Stripe)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#533afd; --primary-deep:#4434d4; --dark:#1c1e54; --ink:#0d253d; --ink2:#27395,1;
+    --mute:#64748d; --canvas:#f6f9fc; --card:#fff; --hair:#e3e8ee; --ruby:#ea2261; --ok:#0bab60;
+    --sh1:rgba(0,55,112,.08) 0 1px 3px; --sh2:rgba(0,55,112,.08) 0 8px 24px, rgba(0,55,112,.04) 0 2px 6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--canvas);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;font-feature-settings:'ss01';}
+  .tag{position:fixed;top:0;left:0;right:0;background:var(--dark);color:#fff;font-size:12px;font-weight:500;text-align:center;padding:6px;letter-spacing:.4px;z-index:99;}
+  .wrap{max-width:1040px;margin:0 auto;padding:52px 20px 40px;}
+  .money{font-feature-settings:'tnum';}
+
+  .topbar{background:#fff;border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh1);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .logo{font-weight:600;font-size:17px;letter-spacing:-.4px;color:var(--ink);}
+  .logo b{color:var(--primary);font-weight:600;}
+  .topbar .neg{color:var(--mute);font-size:13px;}
+  .tb-btns{display:flex;gap:8px;}
+  .btn{border:0;border-radius:9999px;padding:8px 16px;font-family:inherit;font-weight:500;font-size:13px;cursor:pointer;}
+  .btn.p{background:var(--primary);color:#fff;box-shadow:var(--sh1);}
+  .btn.g{background:#fff;color:var(--ink);border:1px solid var(--hair);}
+  .tabs{display:flex;gap:2px;background:#fff;border:1px solid var(--hair);border-radius:9999px;box-shadow:var(--sh1);padding:4px;width:max-content;margin-bottom:16px;overflow-x:auto;max-width:100%;}
+  .tab{padding:7px 15px;border-radius:9999px;font-size:12.5px;font-weight:500;color:var(--mute);cursor:pointer;white-space:nowrap;}
+  .tab.on{background:var(--primary);color:#fff;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+  .kpi{background:#fff;border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh1);padding:16px;}
+  .kpi .n{font-size:28px;font-weight:300;letter-spacing:-1px;color:var(--ink);}
+  .kpi .l{font-size:12px;color:var(--mute);margin-top:3px;font-weight:400;}
+  .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:26px;}
+  .card{background:#fff;border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh2);padding:18px;}
+  .card h3{font-size:14px;font-weight:600;letter-spacing:-.2px;margin-bottom:10px;}
+  .rep-row{display:flex;align-items:baseline;gap:10px;}
+  .rep-big{font-size:40px;font-weight:300;letter-spacing:-1.5px;color:var(--ink);}
+  .rep-meta{font-size:12.5px;color:var(--mute);}
+  .bar{height:8px;background:var(--canvas);border-radius:99px;margin:10px 0 8px;overflow:hidden;}
+  .fill{height:100%;width:100%;background:linear-gradient(90deg,var(--primary),#00d4ff);border-radius:99px;}
+  .msg{font-size:13px;color:var(--ink);line-height:1.5;font-weight:400;}
+  .msg b{color:var(--primary);font-weight:600;}
+  .queja{border-left:3px solid var(--ruby);background:var(--canvas);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+  .q-head{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mute);margin-bottom:3px;}
+  .q-head b{color:var(--ruby);font-weight:600;}
+  .q-txt{font-size:13px;font-weight:400;}
+
+  .pos-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--mute);margin:0 0 10px;}
+  .pos{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;}
+  .prods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start;}
+  .prod{background:#fff;border:1px solid var(--hair);border-radius:12px;box-shadow:var(--sh1);padding:12px;cursor:pointer;}
+  .prod .pn{font-size:12.5px;font-weight:500;line-height:1.3;}
+  .prod .pp{font-size:14px;font-weight:600;color:var(--primary);margin-top:8px;}
+  .ticket{background:#fff;border:1px solid var(--hair);border-radius:14px;box-shadow:var(--sh2);padding:16px;}
+  .t-item{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--hair);font-weight:400;}
+  .t-item span:last-child{font-weight:600;}
+  .t-total{display:flex;justify-content:space-between;font-size:19px;font-weight:600;padding-top:10px;letter-spacing:-.4px;}
+  .cobrar{width:100%;margin-top:12px;background:var(--ok);color:#fff;border:0;border-radius:9999px;padding:12px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--sh1);}
+</style>
+</head>
+<body>
+<div class="tag">PROPUESTA A · Premium claro · sistema Stripe · Inter + índigo #533afd</div>
+<div class="wrap">
+  <div class="topbar">
+    <div><span class="logo">Menu<b>Vibes</b></span> <span class="neg">· La Palapa del Mar</span></div>
+    <div class="tb-btns"><button class="btn g">Ver menú ↗</button><button class="btn p">Abrir caja (POS)</button></div>
+  </div>
+  <div class="tabs">
+    <div class="tab on">Inicio</div><div class="tab">Negocio</div><div class="tab">Branding</div><div class="tab">Productos</div><div class="tab">Ventas</div><div class="tab">Reputación</div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="n money">$4,320</div><div class="l">Ventas hoy · 11 pedidos</div></div>
+    <div class="kpi"><div class="n">3</div><div class="l">Pedidos activos</div></div>
+    <div class="kpi"><div class="n">8.4</div><div class="l">NPS 7 días</div></div>
+    <div class="kpi"><div class="n">12</div><div class="l">Reseñas 30 días</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Tu reputación</h3>
+      <div class="rep-row"><span class="rep-big">4.5★</span><span class="rep-meta">3,225 reseñas · meta 4.3★</span></div>
+      <div class="bar"><div class="fill"></div></div>
+      <div class="msg">✓ <b>Arriba del umbral.</b> Modo defensa: bastan ~94 reseñas de 1★ para bajarte 0.1★ — el NPS las intercepta.</div>
+    </div>
+    <div class="card">
+      <h3>Quejas privadas recientes</h3>
+      <div class="queja"><div class="q-head"><span>Héctor · hace 2 días</span><b>4/10</b></div><div class="q-txt">Tardaron 40 min con la cuenta…</div></div>
+      <div class="queja"><div class="q-head"><span>Sandra · hace 6 días</span><b>6/10</b></div><div class="q-txt">La música muy fuerte…</div></div>
+    </div>
+  </div>
+
+  <div class="pos-label">La misma marca en el POS</div>
+  <div class="pos">
+    <div class="prods">
+      <div class="prod"><div class="pn">Aguachile de la casa</div><div class="pp money">$185</div></div>
+      <div class="prod"><div class="pn">Tacos de pescado (3)</div><div class="pp money">$140</div></div>
+      <div class="prod"><div class="pn">Tostada de atún</div><div class="pp money">$95</div></div>
+      <div class="prod"><div class="pn">Ceviche de camarón</div><div class="pp money">$160</div></div>
+      <div class="prod"><div class="pn">Agua fresca</div><div class="pp money">$55</div></div>
+      <div class="prod"><div class="pn">Cerveza</div><div class="pp money">$65</div></div>
+    </div>
+    <div class="ticket">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:6px;">Ticket · Mesa 4</h3>
+      <div class="t-item"><span>1× Aguachile de la casa</span><span class="money">$185</span></div>
+      <div class="t-item"><span>2× Tacos de pescado</span><span class="money">$280</span></div>
+      <div class="t-item"><span>2× Agua fresca</span><span class="money">$110</span></div>
+      <div class="t-total"><span>Total</span><span class="money">$575</span></div>
+      <button class="cobrar">Cobrar $575</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

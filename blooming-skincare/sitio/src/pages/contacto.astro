@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE, waLink } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Contacto | Blooming · Depilación Láser & Skincare"
+  descripcion={`Agenda tu cita en Blooming: WhatsApp ${SITE.telefono}, ${SITE.direccionCorta}, Playa del Carmen. Depilación láser, faciales y skincare.`}
+  lang="es"
+  rutaAlterna="/en/contact"
+>
+  <CTAContacto titulo="Agenda tu cita en Blooming" />
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <h2>Asesoría sin costo, en tu idioma</h2>
+      <p class="seccion__intro">
+        La primera asesoría no tiene costo y puede ser por WhatsApp, llamada o videollamada —
+        en español o inglés. Cuéntame qué buscas (plusvalía, renta o patrimonio) y te preparo
+        opciones con números claros.
+      </p>
+      <p>
+        <a href={waLink('Hola Blooming, quiero agendar una valoración para saber qué tratamiento me conviene.')} class="boton boton--laton" target="_blank" rel="noopener">
+          📅 Agendar mi asesoría por WhatsApp
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

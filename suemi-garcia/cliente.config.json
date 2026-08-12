@@ -1,0 +1,137 @@
+{
+  "slug": "suemi-garcia",
+  "nombre": "Suemi García",
+  "marca": "Suemi García · Bienes Raíces Riviera Maya",
+  "nicho": "asesora inmobiliaria (venta, preventa y renta vacacional; ticket medio-alto, parte del equipo 307 Realtors)",
+  "ciudad": "Playa del Carmen, Quintana Roo (originaria de Chetumal)",
+  "contacto": {
+    "whatsapp": "+52 984 157 9774",
+    "telefono": "984 157 9774",
+    "instagram": "https://www.instagram.com/suemi_garcia_bienes_raices/",
+    "facebook": "https://www.facebook.com/suemi.garcia.5",
+    "tiktok": "https://www.tiktok.com/@suemi.garcia.bienesraice",
+    "sitios": [],
+    "agencia": "307 Realtors — 307realtors.com, tel. corporativo 984 980 0436"
+  },
+  "bio_actual": "IG: 'Suemi García' (sin texto de bio, solo nombre) + link roto de WhatsApp. FB: perfil PERSONAL, sin descripción de negocio. TikTok: 'No bio yet.'. Habla inglés y español (declarado en FB).",
+  "cifras_reales": {
+    "instagram_publicaciones": 169,
+    "instagram_seguidores": 237,
+    "instagram_seguidos": 742,
+    "facebook_amigos": 411,
+    "facebook_tipo": "perfil personal (no página de negocio)",
+    "tiktok_seguidores": 114,
+    "tiktok_siguiendo": 293,
+    "tiktok_likes": 788,
+    "likes_post_penthouse_540k_usd": 3,
+    "competidores_analizados": 17,
+    "propiedades_identificadas_en_feed": 10
+  },
+  "diseno_actual": {
+    "plataforma": "Sin sitio propio. Tres redes sin destino: IG con link roto, FB perfil personal, TikTok sin bio.",
+    "problemas": "Su link-in-bio está doblemente codificado y llega roto; promueve el dominio de la agencia (307realtors.com) donde ella no aparece; vende propiedades de $540K USD desde un perfil personal de Facebook; el mismo penthouse publicado con dos precios distintos en 11 días; invisible en Google.",
+    "idioma": "Contenido en español; declara inglés y español en FB. Inventario en USD dirigido a extranjeros sin un solo activo en inglés."
+  },
+  "hallazgos": [
+    {
+      "icono": "🔗",
+      "titulo": "Su único link está roto: llega como código, no como mensaje",
+      "detalle": "El link de su bio de Instagram lleva el mensaje doblemente codificado: wa.me/529841579774?text=%25F0%259F%2593%25B2%25209841579774%2520. Quien lo toca abre WhatsApp con el texto literal '%F0%9F%93%B2%209841579774%20' en vez de un saludo. Se ve roto incluso en la propia bio. Y peor: el mensaje precargado es su propio número, no la intención del cliente.",
+      "evidencia": "fuentes/ig-perfil.png — la URL truncada visible en el perfil; decodificación verificada (doble unquote → '📲 9841579774').",
+      "solucion": "Link corto a su /links con WhatsApp precargado por propiedad ('Hola Suemi, me interesa el penthouse de Palmares')."
+    },
+    {
+      "icono": "🏗️",
+      "titulo": "Está construyendo la marca de alguien más",
+      "detalle": "En decenas de posts remata con '🌐 307realtors.com' y '👉 Información de contacto: en nuestro perfil'. Pero 307realtors.com no la menciona ni una vez: cero coincidencias de 'Suemi' en todo el sitio. Cada publicación suya alimenta el SEO y la autoridad de un dominio donde ella no existe.",
+      "evidencia": "Auditoría de 307realtors.com (mencionaSuemi: false) + captions con el dominio y el teléfono corporativo 984 980 0436.",
+      "solucion": "Su propio dominio como casa central — sin romper con la agencia, pero con SU nombre, SU catálogo y SU WhatsApp."
+    },
+    {
+      "icono": "👤",
+      "titulo": "Vende propiedades de $540,000 USD desde un perfil personal de Facebook",
+      "detalle": "Su Facebook no es una página de negocio: es un perfil personal con 411 amigos, tope de 5,000, sin botón de contacto, sin reseñas, sin catálogo y sin métricas. Ahí conviven el penthouse de lujo y las fotos familiares. Su post más valioso obtuvo 3 me gusta.",
+      "evidencia": "fuentes/fb-perfil.png — 'Suemi Garcia · 411 amigos · Agregar a amigos'; post del penthouse de $540,000 con 3 reacciones.",
+      "solucion": "Catálogo propio con ficha por propiedad + página de contacto profesional; el perfil personal queda para lo personal."
+    },
+    {
+      "icono": "💲",
+      "titulo": "El mismo penthouse, dos precios distintos en 11 días",
+      "detalle": "El Penthouse de Palmares (224 m², roof privado con jacuzzi) aparece a $520,000 USD el 2 de junio y a $540,000 USD el 13 de junio. Sin una fuente única de verdad, el inventario se contradice solo — y en ticket alto eso cuesta credibilidad.",
+      "evidencia": "fuentes/fb-perfil.png — ambas publicaciones visibles en su muro con los dos precios.",
+      "solucion": "Ficha única por propiedad: se actualiza en un lugar y el precio queda igual en todos lados."
+    },
+    {
+      "icono": "🔍",
+      "titulo": "Invisible en Google: solo aparecen sus redes y posts en grupos",
+      "detalle": "Buscar 'Suemi García bienes raíces Playa del Carmen' devuelve su Instagram, su TikTok y publicaciones sueltas dentro de grupos de Facebook. Ningún resultado propio, ninguna página que ella controle. Competidores locales sí tienen dominio (leonbienesraices.com.mx, entre otros).",
+      "evidencia": "fuentes/google-suemi.png — resultados 26-jul-2026: instagram, tiktok, posts en grupos.",
+      "solucion": "Sitio propio con SEO local por zona (Playa del Carmen, Playacar, Tulum) + Google Business Profile."
+    },
+    {
+      "icono": "📱",
+      "titulo": "TikTok abierto, sin bio y sin link",
+      "detalle": "Su cuenta @suemi.garcia.bienesraice dice literalmente 'No bio yet.' con 114 seguidores y 788 me gusta acumulados. Tercera red sin destino: quien llega ahí no encuentra ni quién es, ni qué vende, ni cómo contactarla.",
+      "evidencia": "fuentes/tiktok-perfil.png — 'No bio yet.', 114 seguidores, 293 siguiendo.",
+      "solucion": "Bio homologada en las tres redes apuntando al mismo /links."
+    },
+    {
+      "icono": "🏚️",
+      "titulo": "Diez propiedades reales atrapadas en posts que caducan",
+      "detalle": "Su feed tiene inventario de sobra — penthouse de $540K USD, villa de 5 recámaras frente al golf, Corasol desde $7.4 MDP, proyecto boutique desde $465K USD, estudio en Tulum desde $1.3 MDP — pero ninguna propiedad tiene ficha compartible. Cada una se promociona una vez y desaparece en el feed.",
+      "evidencia": "169 publicaciones analizadas; 10 propiedades con precio y características identificadas en captions.",
+      "solucion": "Catálogo navegable con badges (preventa / renta / oportunidad), precio 'desde' y WhatsApp por ficha."
+    }
+  ],
+  "benchmark": {
+    "fuente": "vivemar/docs/investigacion-diseno.md (14 sitios: Sotheby's, E&V, The Agency, SIMCA, Corasol, Jaguar Tulum...) + 307realtors.com + leonbienesraices.com.mx",
+    "patrones_ganadores": [
+      "WhatsApp precargado dentro de cada tarjeta de propiedad (72% conversión vs 15% formulario)",
+      "Precio 'desde $X' visible + badges de estatus para escanear inventario en segundos",
+      "La asesora con rostro como CTA: en marca personal ELLA es el diferenciador frente a la agencia sin cara"
+    ],
+    "huecos_diferenciacion": [
+      "Ningún competidor local muestra ROI/yield en tarjeta ni calculadora de plusvalía — ella ya habla de rentas vacacionales y plusvalía en sus captions",
+      "Su contenido de estilo de vida (Latitud 20, La selva, Beach Vibes, correr la Quinta Avenida) es un activo de marca que ninguna agencia local tiene: vende el lugar viviéndolo"
+    ]
+  },
+  "paleta_sugerida": {
+    "primario": "#1B3A2F",
+    "profundo": "#0F241D",
+    "crema": "#F5F1E8",
+    "acento_cta": "#C9A227",
+    "nota": "Verde selva profundo + arena + oro. Derivada de su estética real: sus destacados son 'La selva', 'Latitud 20' y 'Beach Vibes', y su sesión profesional usa dorado sobre fondo oscuro. Distinta del teal de Vive Mar y del azul noche de Frank."
+  },
+  "productos_estrella": [
+    "Penthouse de Lujo Palmares, Centro Playa del Carmen — 224 m², roof privado con jacuzzi, a pasos de la playa, $540,000 USD (gancho: su propiedad más valiosa)",
+    "Villa frente al campo de golf — 5 habitaciones, terraza, alberca privada, beach club y amenidades tipo resort",
+    "Proyecto boutique de 46 residencias — +161 m², 75% de avance (entrega en 6 meses), desde $465,000 USD con 20% de enganche",
+    "Departamentos 2 recámaras en Corasol — amplias terrazas, acceso a playa, desde $7,400,000 MXN",
+    "Estudio en Tulum — listo para escriturar, balcón privado, ventanales, desde $1,300,000 MXN",
+    "Estudio en Quinta Avenida — llave en mano, reventa de oportunidad, ideal para renta vacacional",
+    "Departamento 2 recámaras en Playacar (renta) — alberca, cocina con barra de granito",
+    "Departamento 3 recámaras equipado — desde $2,380,000 MXN",
+    "Departamento 3 recámaras — ciclovía, pet park, estacionamiento para 2 autos, desde $3,490,000 MXN",
+    "Departamento con balcón rodeado de naturaleza — $2,400,000 MXN"
+  ],
+  "gancho_personalizacion": {
+    "principal": "Su penthouse de Palmares ($540,000 USD, 224 m², roof con jacuzzi) — la propiedad más cara de su inventario — vive en su perfil PERSONAL de Facebook, obtuvo 3 me gusta, y aparece con dos precios distintos ($520K el 2 de junio, $540K el 13 de junio). El regalo: una ficha profesional donde ese producto viva bien presentado y con un solo precio.",
+    "secundario": "Su link de bio roto por doble codificación: es un arreglo de 30 segundos que le sirve HOY, aunque no haga nada más.",
+    "estilo_de_vida": "Sus destacados 'La selva', 'Latitud 20' y 'Beach Vibes' + el reel de los 11.30 km corriendo la nueva Quinta Avenida: vende la Riviera Maya viviéndola, no solo listando propiedades.",
+    "grupos_comunes": "NO confirmados — omitir en todos los mensajes. (Dato curioso, no usable: frank.rivieramaya sigue su cuenta.)"
+  },
+  "tour": [],
+  "deploy": {
+    "url_sitio": "https://chocolate-newt-399168.hostingersite.com/",
+    "url_analisis": "https://chocolate-newt-399168.hostingersite.com/analisis/",
+    "url_links": "https://chocolate-newt-399168.hostingersite.com/links/",
+    "url_en": "https://chocolate-newt-399168.hostingersite.com/en/",
+    "cms": {
+      "usuario": "roger",
+      "clave": "suemibe2820"
+    },
+    "fecha": "2026-07-27",
+    "hosting": "softvibes-hosting (order 1008508005)"
+  },
+  "estado_pipeline": "analisis_publicado"
+}

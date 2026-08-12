@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  locale?: 'es' | 'en';
+  canonicalPath?: string;
+  noindex?: boolean;
+  image?: string;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  locale = 'es',
+  canonicalPath = '/',
+  noindex = false,
+  image = '/img/research/the-village.jpg',
+  bodyClass = '',
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL('https://example.com');
+const canonical = new URL(canonicalPath, siteUrl);
+const socialImage = new URL(image, siteUrl);
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} data-runtime-description />
+    <meta name="theme-color" content="#082f2d" />
+    <meta name="color-scheme" content="light" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es" href={new URL('/', siteUrl)} />
+    <link rel="alternate" hreflang="en" href={new URL('/en/', siteUrl)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', siteUrl)} />
+    <link rel="icon" href="/img/research/golfia-logo.jpg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:locale" content={locale === 'es' ? 'es_MX' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{title}</title>
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#contenido">{locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+    <slot />
+  </body>
+</html>

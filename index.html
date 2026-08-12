@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Softvibes Sites — Control de proyectos</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0a0a0c; --panel:#15151a; --line:#2a2a32; --text:#f5f5f7; --muted:#9696a3; --accent:#a78bfa; }
+    * { box-sizing:border-box }
+    body { margin:0; font:15px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif; background:radial-gradient(circle at top left,#241a3a 0,#0a0a0c 32rem); color:var(--text) }
+    main { width:min(1180px,calc(100% - 32px)); margin:auto; padding:56px 0 }
+    header { display:flex; gap:24px; justify-content:space-between; align-items:end; margin-bottom:32px }
+    h1 { margin:0; font-size:clamp(32px,5vw,64px); letter-spacing:-.055em; line-height:1 }
+    header p { max-width:580px; color:var(--muted); margin:16px 0 0 }
+    .count { color:var(--accent); font-size:40px; font-weight:800 }
+    .controls { display:flex; flex-wrap:wrap; gap:10px; margin:24px 0 }
+    input,select { border:1px solid var(--line); border-radius:12px; padding:12px 14px; background:#101014; color:var(--text); font:inherit }
+    input { flex:1; min-width:220px }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px }
+    article { display:flex; flex-direction:column; min-height:210px; padding:20px; border:1px solid var(--line); border-radius:18px; background:color-mix(in srgb,var(--panel) 92%,transparent); transition:.2s }
+    article:hover { transform:translateY(-3px); border-color:#65528c }
+    h2 { margin:10px 0 8px; font-size:21px; letter-spacing:-.025em }
+    article p { color:var(--muted); margin:0 0 18px }
+    .tags { display:flex; gap:7px; flex-wrap:wrap }
+    .tag { border:1px solid var(--line); border-radius:999px; padding:3px 8px; color:#c8c8d2; font-size:12px }
+    a { margin-top:auto; color:#c4b5fd; text-decoration:none; font-weight:700 }
+    a:hover { text-decoration:underline }
+    .empty { color:var(--muted); padding:36px 0 }
+    footer { margin-top:32px; border-top:1px solid var(--line); padding-top:20px; color:var(--muted) }
+    code { color:#ddd6fe }
+    @media(max-width:650px){ header{align-items:start;flex-direction:column}.count{font-size:28px} }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1>Softvibes Sites</h1><p>Mapa operativo de productos, clientes, análisis, agentes y herramientas. El catálogo organiza sin mover las carpetas originales.</p></div>
+    <div><span class="count" id="visibleCount">37</span><br><span style="color:var(--muted)">proyectos visibles</span></div>
+  </header>
+  <div class="controls">
+    <input id="search" type="search" placeholder="Buscar proyecto, stack o descripción…" aria-label="Buscar proyectos">
+    <select id="type" aria-label="Filtrar por tipo"><option value="">Todos los tipos</option></select>
+    <select id="status" aria-label="Filtrar por estado"><option value="">Todos los estados</option></select>
+  </div>
+  <section class="grid" id="grid"></section>
+  <p class="empty" id="empty" hidden>No hay proyectos que coincidan.</p>
+  <footer>Guía del agente: <a href="PROMPT-TELEGRAM.md">PROMPT-TELEGRAM.md</a> · Inventario mantenido en este archivo · Última revisión: 2026-08-08.</footer>
+</main>
+<script id="project-data" type="application/json">
+[
+  {"name":"BeerVibes","type":"producto","status":"idea","stack":"concepto","description":"Concepto de producto para experiencias y operación cervecera.","href":"BeerVibes/README.md"},
+  {"name":"MenuVibes","type":"producto","status":"producción","stack":"HTML · JavaScript · Supabase","description":"Plataforma whitelabel para menús QR, pedidos, lealtad y NPS.","href":"MenuVibes/index.html"},
+  {"name":"MenuVibes Private","type":"producto","status":"desarrollo","stack":"web","description":"Extensiones privadas y operación interna de MenuVibes.","href":"MenuVibes-private/"},
+  {"name":"MoneyPrinterV2","type":"herramienta","status":"referencia","stack":"Python","description":"Automatización de publicación, afiliados y generación de ingresos.","href":"MoneyPrinterV2/README.md"},
+  {"name":"MusicSites","type":"cliente","status":"desarrollo","stack":"web · media","description":"Colección de experiencias web para proyectos musicales.","href":"MusicSites/"},
+  {"name":"Agency Agents","type":"herramienta","status":"referencia","stack":"Markdown","description":"Biblioteca externa de perfiles y procesos para agentes.","href":"agency-agents/README.md"},
+  {"name":"Análisis Atelier Noisette","type":"análisis","status":"análisis","stack":"HTML · CSS","description":"Diagnóstico público y landing de conversión para una propuesta de repostería artesanal.","href":"atelier-noisette/site/analisis/index.html"},
+  {"name":"Análisis Colegios 875","type":"análisis","status":"análisis","stack":"HTML","description":"Diagnóstico y oportunidades digitales para Colegios 875.","href":"analisis-colegios875/index.html"},
+  {"name":"Análisis Fabiola","type":"análisis","status":"análisis","stack":"HTML","description":"Investigación de la oferta Mujer Puente → Mujer Montaña.","href":"analisis-fabiola/index.html"},
+  {"name":"Análisis Vivemar","type":"análisis","status":"análisis","stack":"HTML","description":"Diagnóstico comercial y digital de Vivemar.","href":"analisis-vivemar/index.html"},
+  {"name":"Awesome Cursor Rules","type":"herramienta","status":"referencia","stack":"Markdown · Node.js","description":"Reglas externas para asistentes de código.","href":"awesome-cursorrules/README.md"},
+  {"name":"Codex Design Skill","type":"herramienta","status":"referencia","stack":"Markdown","description":"Habilidad externa para flujos de diseño asistido.","href":"codex-design-skill/README.md"},
+  {"name":"Colegios 875","type":"cliente","status":"desarrollo","stack":"HTML · JavaScript · Vapi","description":"Sitio comercial, conocimiento y agente de voz para el colegio.","href":"colegios-875/index.html"},
+  {"name":"Contenido Fabiola","type":"contenido","status":"desarrollo","stack":"Markdown · media","description":"Mensajes, materiales y activos de la oferta de Fabiola.","href":"contenido-fabiola/"},
+  {"name":"Diana Yoga Life","type":"cliente","status":"desarrollo","stack":"HTML · media","description":"Landing y contenido audiovisual para Diana Yoga Life.","href":"diana-yoga-life/index.html"},
+  {"name":"Diana Velas Love","type":"cliente","status":"desarrollo","stack":"Astro · PHP · CMS","description":"Análisis público, catálogo artesanal, pedidos por WhatsApp y CMS seguro.","href":"diana-velas-love/"},
+  {"name":"Emir24 Fit","type":"cliente","status":"desarrollo","stack":"Astro · PHP · CMS","description":"Análisis público, landing de coaching y CMS seguro para Emir Morales.","href":"emir24-fit/"},
+  {"name":"Fabiola MVP","type":"cliente","status":"desarrollo","stack":"HTML · PHP","description":"MVP web y administrativo de Mujer Puente → Mujer Montaña.","href":"fabiola-mvp/index.html"},
+  {"name":"Hopepaoo","type":"cliente","status":"desarrollo","stack":"HTML · JavaScript · CMS local","description":"Análisis público de Instagram, landing artística y editor local para Paola Elizabeth.","href":"hopepaoo/index.html"},
+  {"name":"Karla Duarte Cirujana","type":"cliente","status":"desarrollo","stack":"HTML · PHP · media","description":"Sitio médico, CMS, enlaces y materiales comerciales.","href":"karla-duarte-cirujana/"},
+  {"name":"KLH · Hub de rentas","type":"cliente","status":"desarrollo","stack":"HTML · CSS · JavaScript","description":"Análisis digital, inventario bilingüe con filtros, fichas permanentes y WhatsApp contextual.","href":"klh-hub-rentas/index.html"},
+  {"name":"Laura Luna Broker · Landing personal","type":"cliente","status":"desarrollo","stack":"HTML · CSS · JavaScript","description":"Análisis de presencia y landing bilingüe con acreditación SEDETUS, respaldo de Grupo 28 y WhatsApp atribuible.","href":"laura-luna-broker/index.html"},
+  {"name":"Media Vivemar","type":"archivo","status":"archivo","stack":"imágenes · video","description":"Archivo de recursos audiovisuales de Vivemar.","href":"media-archivo-vivemar/"},
+  {"name":"Mónica Arteaga × DK del Karibe","type":"cliente","status":"desarrollo","stack":"HTML · CSS · JavaScript","description":"Marca personal bilingüe en sinergia con DK del Karibe, con DK44 como campaña destacada y WhatsApp atribuible.","href":"monica-arteaga-dkdelkaribe/index.html"},
+  {"name":"Ocean Caribbean Mexico · Playacar","type":"cliente","status":"desarrollo","stack":"HTML · CSS · JavaScript","description":"Análisis digital y landing bilingüe individual para una residencia premium en Playacar.","href":"ocean-caribbean-playacar/index.html"},
+  {"name":"Output","type":"archivo","status":"archivo","stack":"entregables","description":"Salidas y entregables generados por procesos locales.","href":"output/"},
+  {"name":"Outputs","type":"archivo","status":"archivo","stack":"entregables","description":"Segunda carpeta histórica de resultados generados.","href":"outputs/"},
+  {"name":"Playbook MVP","type":"documentación","status":"referencia","stack":"Markdown","description":"Guía para diseñar y lanzar MVP de Softvibes.","href":"playbook-mvp/README.md"},
+  {"name":"Propuesta Colegios 875","type":"análisis","status":"análisis","stack":"HTML","description":"Propuesta comercial navegable para Colegios 875.","href":"propuesta-colegios875/index.html"},
+  {"name":"Redirect Vivemar","type":"infraestructura","status":"producción","stack":"HTML","description":"Redirección ligera del dominio o rutas de Vivemar.","href":"redirect-vivemar/index.html"},
+  {"name":"Skills","type":"herramienta","status":"referencia","stack":"Markdown · scripts","description":"Colección externa de habilidades reutilizables para agentes.","href":"skills/README.md"},
+  {"name":"Smooth Group","type":"cliente","status":"desarrollo","stack":"HTML","description":"Sitio web de Smooth Group.","href":"smooth-group/index.html"},
+  {"name":"Softvibes Agentes","type":"agente","status":"activo","stack":"Markdown · Hermes","description":"Identidad SER y arquitectura padre-hijo de agentes Softvibes.","href":"softvibes-agentes/softvibes-ser.md"},
+  {"name":"Softvibes Funnel","type":"producto","status":"desarrollo","stack":"web","description":"Activos y experimentos del embudo comercial de Softvibes.","href":"softvibes-funnel/"},
+  {"name":"Tania G.O. · Inventario bilingüe","type":"cliente","status":"desarrollo","stack":"HTML · CSS · JavaScript","description":"Micrositio personal con 16 publicaciones, filtros bilingües y WhatsApp contextual por propiedad.","href":"tania-go-inventario/index.html"},
+  {"name":"Vivemar","type":"cliente","status":"desarrollo","stack":"Astro · TypeScript · PHP","description":"Sitio inmobiliario con propiedades, zonas SEO, blog y contacto.","href":"vivemar/README.md"},
+  {"name":"Vivemar Alt","type":"cliente","status":"revisión","stack":"Astro · TypeScript","description":"Implementación alternativa; falta decidir cuál versión será canónica.","href":"vivemar-alt/README.md"}
+]
+</script>
+<script>
+  const projects = JSON.parse(document.querySelector('#project-data').textContent);
+  const grid = document.querySelector('#grid'), search = document.querySelector('#search'), type = document.querySelector('#type'), status = document.querySelector('#status');
+  const options = (select, values) => [...new Set(values)].sort().forEach(v => select.add(new Option(v[0].toUpperCase()+v.slice(1),v)));
+  options(type,projects.map(p=>p.type)); options(status,projects.map(p=>p.status));
+  function render(){
+    const q=search.value.toLowerCase().trim();
+    const filtered=projects.filter(p=>(!q||Object.values(p).join(' ').toLowerCase().includes(q))&&(!type.value||p.type===type.value)&&(!status.value||p.status===status.value));
+    grid.innerHTML=filtered.map(p=>`<article><div class="tags"><span class="tag">${p.type}</span><span class="tag">${p.status}</span></div><h2>${p.name}</h2><p>${p.description}</p><div class="tags"><span class="tag">${p.stack}</span></div><a href="${p.href}">Abrir proyecto →</a></article>`).join('');
+    visibleCount.textContent=filtered.length; empty.hidden=filtered.length>0;
+  }
+  [search,type,status].forEach(el=>el.addEventListener('input',render));
+  console.assert(projects.length===37,'El catálogo debe contener 37 proyectos');
+  render();
+</script>
+</body>
+</html>

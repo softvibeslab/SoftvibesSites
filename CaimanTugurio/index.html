@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Caimán Tugurio · Menú Digital</title>
+<meta name="description" content="Menú de Caimán Tugurio — el bar de los locales en Playa del Carmen. Desayunos, comida, coctelería y bebidas." />
+<meta name="theme-color" content="#0f3d33" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* Brand Codex — Caimán Tugurio */
+    --teal-firma:#1b8a83;
+    --teal-sombra:#0f5c57;
+    --verde-selva:#0f3d33;
+    --verde-selva-2:#134a3b;
+    --verde:#7cb342;
+    --teal:#22a99f;
+    --brass:#c9a24b;
+    --coral:#e8552d;
+    --amarillo:#f2c230;
+    --crema:#f3ead3;
+    --papel:#fffdf7;
+    --tinta:#20302b;
+    --tinta-suave:#5c6b64;
+    --linea:rgba(15,61,51,.12);
+    --sombra:0 10px 30px rgba(15,61,51,.10);
+    --radio:18px;
+    /* grano/motas vintage del codex */
+    --grano:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito',system-ui,sans-serif;
+    color:var(--tinta);
+    background:var(--crema);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  /* ------------------------------------------------------------- HERO */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(90% 60% at 85% -5%, rgba(201,162,75,.38), transparent 55%),
+      radial-gradient(120% 80% at 0% 110%, rgba(124,179,66,.40), transparent 55%),
+      linear-gradient(165deg,var(--teal-firma) 0%, var(--teal-sombra) 70%, var(--verde-selva) 100%);
+    color:#fff;
+    padding:36px 22px 32px;
+    text-align:center;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  /* textura de grano de película + motas crema (codex) */
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background-image:var(--grano);background-size:180px;
+    mix-blend-mode:overlay;opacity:.35;pointer-events:none;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 22%, rgba(243,234,211,.9), transparent),
+      radial-gradient(1.2px 1.2px at 78% 15%, rgba(243,234,211,.8), transparent),
+      radial-gradient(1.6px 1.6px at 55% 60%, rgba(243,234,211,.7), transparent),
+      radial-gradient(1.2px 1.2px at 30% 78%, rgba(243,234,211,.8), transparent),
+      radial-gradient(1.3px 1.3px at 88% 72%, rgba(243,234,211,.7), transparent),
+      radial-gradient(1.1px 1.1px at 68% 40%, rgba(243,234,211,.6), transparent);
+    opacity:.7;
+  }
+  .hero .leaf{position:absolute;font-size:150px;opacity:.14;line-height:1;z-index:-1;user-select:none;filter:saturate(.7)}
+  .hero .leaf.l1{top:-34px;left:-30px;transform:rotate(-18deg)}
+  .hero .leaf.l2{bottom:-50px;right:-32px;transform:rotate(160deg)}
+  .hero .leaf.l3{top:40%;right:-38px;font-size:120px;transform:rotate(70deg)}
+  .hero__mascota{font-size:2.6rem;line-height:1;margin-bottom:6px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+  .hero__eyebrow{
+    display:inline-block;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+    font-size:.62rem;color:var(--amarillo);margin-bottom:10px;
+  }
+  .hero__codex{
+    margin-top:10px;font-style:italic;font-size:.9rem;letter-spacing:.02em;
+    color:var(--amarillo);font-weight:600;
+  }
+  .hero__logo{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(3.1rem,17vw,5rem);
+    line-height:.86;letter-spacing:.02em;text-transform:uppercase;
+    color:var(--amarillo);
+    text-shadow:0 3px 0 rgba(0,0,0,.18);
+  }
+  .hero__sub{
+    font-family:'Anton',sans-serif;font-size:clamp(1rem,5vw,1.4rem);
+    letter-spacing:.42em;text-transform:uppercase;color:#fff;
+    margin-top:2px;padding-left:.42em;
+  }
+  .hero__tag{margin-top:14px;font-size:.9rem;color:rgba(255,255,255,.85);font-style:italic}
+  .hero__music{
+    margin-top:14px;display:inline-block;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25);padding:7px 14px;border-radius:999px;
+    font-size:.78rem;font-weight:700;backdrop-filter:blur(4px);
+  }
+  .hero__info{
+    margin-top:16px;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;
+    font-size:.78rem;color:rgba(255,255,255,.82);
+  }
+  .hero__info span{display:inline-flex;align-items:center;gap:5px}
+  .hero__actions{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:.82rem;
+    padding:11px 16px;border-radius:999px;text-decoration:none;transition:transform .12s ease,filter .12s ease;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn--wa{background:#25d366;color:#08351b}
+  .btn--map{background:#fff;color:var(--verde-selva)}
+  .btn--ig{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)}
+
+  /* ---------------------------------------------------- NAV STICKY */
+  .nav{
+    position:sticky;top:0;z-index:50;background:var(--papel);
+    border-bottom:1px solid var(--linea);box-shadow:0 4px 16px rgba(15,61,51,.06);
+  }
+  .nav__inner{display:flex;gap:8px;overflow-x:auto;padding:11px 14px;scrollbar-width:none}
+  .nav__inner::-webkit-scrollbar{display:none}
+  .tab{
+    flex:0 0 auto;border:1.5px solid var(--linea);background:#fff;color:var(--tinta-suave);
+    font-family:'Nunito',sans-serif;font-weight:800;font-size:.86rem;
+    padding:9px 16px;border-radius:999px;cursor:pointer;transition:all .15s ease;white-space:nowrap;
+  }
+  .tab .em{margin-right:5px}
+  .tab.is-active{background:var(--verde-selva);color:#fff;border-color:var(--verde-selva)}
+
+  /* ---------------------------------------------------- CONTENIDO */
+  main{max-width:720px;margin:0 auto;padding:20px 16px 40px}
+  .grupo{display:none;animation:fade .3s ease}
+  .grupo.is-active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .seccion{margin-bottom:26px}
+  .seccion__head{display:flex;align-items:baseline;gap:10px;margin:0 4px 12px}
+  .seccion__title{
+    font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.03em;
+    font-size:1.5rem;color:var(--verde-selva);position:relative;
+  }
+  .seccion__title::after{
+    content:"";position:absolute;left:0;bottom:-4px;width:42px;height:4px;border-radius:4px;
+    background:var(--coral);
+  }
+  .seccion:nth-of-type(4n+2) .seccion__title::after{background:var(--brass)}
+  .seccion:nth-of-type(4n+3) .seccion__title::after{background:var(--verde)}
+  .seccion:nth-of-type(4n+4) .seccion__title::after{background:var(--teal)}
+  .seccion__nota{font-size:.78rem;font-style:italic;color:var(--tinta-suave)}
+
+  .card{
+    background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+    box-shadow:var(--sombra);overflow:hidden;
+  }
+  .item{
+    display:flex;gap:12px;align-items:baseline;padding:13px 16px;
+    border-bottom:1px dashed var(--linea);
+  }
+  .item:last-child{border-bottom:none}
+  .item__main{flex:1;min-width:0}
+  .item__name{font-weight:800;font-size:.98rem;color:var(--tinta);letter-spacing:.01em}
+  .item__desc{font-size:.82rem;color:var(--tinta-suave);margin-top:2px}
+  .item__dots{flex:1;border-bottom:1.5px dotted var(--linea);transform:translateY(-4px);min-width:14px}
+  .item__price{
+    font-family:'Anton',sans-serif;font-size:1.02rem;color:var(--coral);
+    white-space:nowrap;letter-spacing:.02em;
+  }
+  .item__price.consulta{font-family:'Nunito';font-size:.74rem;font-weight:800;color:var(--teal)}
+
+  /* ---------------------------------------------------- FOOTER */
+  footer{
+    background:var(--verde-selva);color:rgba(255,255,255,.9);text-align:center;
+    padding:30px 22px calc(30px + env(safe-area-inset-bottom));
+  }
+  footer .f-logo{font-family:'Anton',sans-serif;font-size:1.8rem;color:var(--amarillo);letter-spacing:.04em}
+  footer p{font-size:.82rem;margin-top:8px;color:rgba(255,255,255,.75)}
+  footer .f-social{margin-top:16px;display:flex;gap:14px;justify-content:center}
+  footer .f-social a{color:#fff;text-decoration:none;font-weight:800;font-size:.82rem;
+    border:1.5px solid rgba(255,255,255,.35);padding:8px 14px;border-radius:999px}
+  .disclaimer{font-size:.7rem;color:rgba(255,255,255,.5);margin-top:18px}
+
+  /* floating whatsapp */
+  .fab{
+    position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:60;
+    width:56px;height:56px;border-radius:50%;background:#25d366;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:26px;
+    box-shadow:0 8px 22px rgba(37,211,102,.5);text-decoration:none;transition:transform .12s ease;
+  }
+  .fab:active{transform:scale(.92)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="leaf l1">🌴</span>
+  <span class="leaf l2">🌴</span>
+  <span class="leaf l3">🍃</span>
+  <div class="hero__mascota">🐊🥁</div>
+  <span class="hero__eyebrow">Playa del Carmen · desde 2010</span>
+  <h1 class="hero__logo">Caimán</h1>
+  <div class="hero__sub">Tugurio</div>
+  <p class="hero__codex">« Donde el caimán toca la batería »</p>
+  <p class="hero__tag" id="tag"></p>
+  <div class="hero__music" id="music"></div>
+  <div class="hero__info">
+    <span id="i-horario"></span>
+    <span id="i-dir"></span>
+  </div>
+  <div class="hero__actions">
+    <a class="btn btn--wa" id="a-wa" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <a class="btn btn--map" id="a-map" target="_blank" rel="noopener">📍 Cómo llegar</a>
+    <a class="btn btn--ig" id="a-ig" target="_blank" rel="noopener">📷 Instagram</a>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="nav__inner" id="tabs"></div>
+</nav>
+
+<main id="menu"></main>
+
+<footer>
+  <div class="f-logo">CAIMÁN TUGURIO</div>
+  <p id="f-dir"></p>
+  <p id="f-tel"></p>
+  <div class="f-social">
+    <a id="f-ig" target="_blank" rel="noopener">Instagram</a>
+    <a id="f-fb" target="_blank" rel="noopener">Facebook</a>
+  </div>
+  <p class="disclaimer">Precios en pesos mexicanos (MXN). Sujetos a cambio sin previo aviso.</p>
+</footer>
+
+<a class="fab" id="fab" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+<script src="data.js"></script>
+<script>
+  const I = MENU.info;
+  const wa = "https://wa.me/" + I.whatsapp + "?text=" + encodeURIComponent("¡Hola Caimán Tugurio! Quiero hacer una reservación 🐊");
+
+  // header
+  document.getElementById('tag').textContent = I.lema;
+  document.getElementById('music').textContent = I.musica;
+  document.getElementById('i-horario').innerHTML = "🕒 " + I.horario;
+  document.getElementById('i-dir').innerHTML = "📍 Calle 24 Nte · Playa del Carmen";
+  document.getElementById('a-wa').href = wa;
+  document.getElementById('a-map').href = I.maps;
+  document.getElementById('a-ig').href = I.instagram;
+  document.getElementById('fab').href = wa;
+  // footer
+  document.getElementById('f-dir').textContent = I.direccion;
+  document.getElementById('f-tel').innerHTML = '☎ <a href="tel:' + I.telefono.replace(/\s/g,'') + '" style="color:#fff">' + I.telefono + '</a>';
+  document.getElementById('f-ig').href = I.instagram;
+  document.getElementById('f-fb').href = I.facebook;
+
+  const money = (p) => p === null || p === undefined
+    ? '<span class="item__price consulta">Consultar</span>'
+    : '<span class="item__price">$' + p + '</span>';
+
+  // tabs + grupos
+  const tabsEl = document.getElementById('tabs');
+  const menuEl = document.getElementById('menu');
+
+  MENU.grupos.forEach((g, gi) => {
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (gi === 0 ? ' is-active' : '');
+    tab.dataset.target = g.id;
+    tab.innerHTML = '<span class="em">' + g.icono + '</span>' + g.nombre;
+    tabsEl.appendChild(tab);
+
+    const grupo = document.createElement('section');
+    grupo.className = 'grupo' + (gi === 0 ? ' is-active' : '');
+    grupo.id = g.id;
+
+    g.secciones.forEach(sec => {
+      const s = document.createElement('div');
+      s.className = 'seccion';
+      let html = '<div class="seccion__head"><h2 class="seccion__title">' + sec.nombre + '</h2>';
+      if (sec.nota) html += '<span class="seccion__nota">' + sec.nota + '</span>';
+      html += '</div><div class="card">';
+      sec.items.forEach(it => {
+        html += '<div class="item"><div class="item__main">' +
+          '<div class="item__name">' + it.n + '</div>' +
+          (it.d ? '<div class="item__desc">' + it.d + '</div>' : '') +
+          '</div><span class="item__dots"></span>' + money(it.p) + '</div>';
+      });
+      html += '</div>';
+      s.innerHTML = html;
+      grupo.appendChild(s);
+    });
+
+    menuEl.appendChild(grupo);
+  });
+
+  // interacción de tabs
+  tabsEl.addEventListener('click', e => {
+    const tab = e.target.closest('.tab');
+    if (!tab) return;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('is-active'));
+    document.querySelectorAll('.grupo').forEach(g => g.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    document.getElementById(tab.dataset.target).classList.add('is-active');
+    window.scrollTo({ top: document.querySelector('.nav').offsetTop - 1, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

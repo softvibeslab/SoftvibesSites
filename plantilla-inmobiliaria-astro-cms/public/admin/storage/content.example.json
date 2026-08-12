@@ -1,0 +1,35 @@
+{
+  "properties": {
+    "residencia-demostracion": {
+      "title": "Residencia de demostración",
+      "summary": "Ficha de ejemplo para mostrar la estructura del catálogo.",
+      "price": 2500000,
+      "currency": "MXN",
+      "type": "residencia",
+      "zone": "centro",
+      "location": "Zona Centro, Ciudad de ejemplo",
+      "area": 120,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "image": "/img/demo/property.svg",
+      "featured": true,
+      "demo": true,
+      "status": "venta",
+      "features": ["Característica demostrativa", "Información por confirmar"],
+      "payment": ["Consultar opciones vigentes"],
+      "body": "Este contenido demuestra el formato de una ficha inmobiliaria.",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  "blog": {
+    "guia-demostracion": {
+      "title": "Cómo preparar una ficha inmobiliaria útil",
+      "description": "Ejemplo editorial para organizar información verificable.",
+      "date": "2026-01-01",
+      "image": "/img/demo/zone.svg",
+      "draft": false,
+      "body": "Incluye ubicación, superficie, precio vigente y condiciones confirmadas.",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  }
+}

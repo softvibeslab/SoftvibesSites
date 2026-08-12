@@ -1,0 +1,136 @@
+{
+  "slug": "katya-varela",
+  "nombre": "Katya Varela",
+  "marca": "Katya Varela · Inversiones inmobiliarias Riviera Maya",
+  "nicho": "asesora inmobiliaria de inversión (preventa, frente al mar y renta vacacional; compradores nacionales y extranjeros)",
+  "ciudad": "Playa del Carmen, Quintana Roo",
+  "contacto": {
+    "whatsapp": "+52 477 787 3992",
+    "telefono": "477 787 3992",
+    "instagram_negocio": "https://www.instagram.com/katyavarela.inversiones/",
+    "instagram_personal": "https://www.instagram.com/katya_varela/",
+    "facebook": "https://www.facebook.com/profile.php?id=61557004452446",
+    "sitios": []
+  },
+  "bio_actual": "IG negocio: 'Real Estate · Inversiones inmobiliarias en Riviera Maya · Ayudo a mexicanos y extranjeros a comprar propiedades rentables. Todo con amor 🌎🩷 · 📩 Agenda asesoría aquí' — SIN NINGÚN LINK. FB: perfil personal, 'Inversiones inmobiliarias en Riviera Maya · Te ayudo a comprar propiedades rentables. Todo con amor🌎🩷'. Agente inmobiliaria desde el 1 de octubre de 2024.",
+  "cifras_reales": {
+    "ig_negocio_publicaciones": 27,
+    "ig_negocio_seguidores": 359,
+    "ig_negocio_seguidos": 1,
+    "ig_personal_publicaciones": 94,
+    "ig_personal_seguidores": 6513,
+    "ig_personal_seguidos": 465,
+    "facebook_amigos": 2123,
+    "facebook_tipo": "perfil personal (no página de negocio)",
+    "reacciones_reel_educativo": 30,
+    "reacciones_reel_campo_golf": 18,
+    "reacciones_foto_perfil_personal": 309,
+    "meses_como_agente": 21,
+    "competidores_analizados": 17,
+    "propiedades_identificadas_en_feed": 7
+  },
+  "diseno_actual": {
+    "plataforma": "Sin sitio propio, sin link-in-bio, sin agenda, sin número de contacto público.",
+    "problemas": "Su bio promete 'Agenda asesoría aquí' pero no hay ningún enlace; su audiencia real (6,513) está en la cuenta personal y desemboca en la cuenta de negocio (359) que no lleva a ningún lado; no publica WhatsApp ni teléfono en ninguna red; vende inmuebles desde un perfil personal de Facebook; invisible en Google.",
+    "idioma": "Contenido en español. Su propuesta dice explícitamente 'mexicanos y extranjeros', pero no hay ni una pieza en inglés."
+  },
+  "hallazgos": [
+    {
+      "icono": "📩",
+      "titulo": "Su bio dice \"Agenda asesoría aquí\"… y no hay ningún aquí",
+      "detalle": "El último renglón de su biografía de Instagram es una invitación directa: '📩 Agenda asesoría aquí'. Pero la bio no tiene una sola URL: ni agenda, ni WhatsApp, ni sitio. La persona que sí quiso agendar lee la promesa, busca dónde tocar… y no encuentra nada. Es la fuga más cara del embudo porque ocurre justo en el momento de mayor intención.",
+      "evidencia": "fuentes/ig-perfil.png — bio expandida con el texto visible y cero enlaces externos en el encabezado del perfil.",
+      "solucion": "Página /links con agenda y WhatsApp precargado, y la bio apuntando ahí — la promesa por fin cumple."
+    },
+    {
+      "icono": "🔀",
+      "titulo": "Su audiencia real está en la cuenta equivocada, y esa cuenta no lleva a ningún lado",
+      "detalle": "Su cuenta personal @katya_varela tiene 6,513 seguidores; la de negocio @katyavarela.inversiones tiene 359 — 18 veces menos. El único enlace de la personal manda a la de negocio, que a su vez no tiene ningún destino. El recorrido termina en un callejón sin salida: 6,513 personas que podrían llegar y no tienen a dónde ir.",
+      "evidencia": "fuentes/ig-secundaria.png — @katya_varela con 6,513 seguidores y su link-in-bio apuntando a @katyavarela.inversiones.",
+      "solucion": "Un solo destino para ambas cuentas: su sitio, con catálogo, agenda y contacto."
+    },
+    {
+      "icono": "📵",
+      "titulo": "Ni un solo dato de contacto público en ninguna red",
+      "detalle": "No hay WhatsApp, ni teléfono, ni correo, ni calendario en Instagram, en Facebook ni en los pies de sus publicaciones. Todo depende de que la persona escriba por privado ('escríbeme por privado', 'DM y te mando ficha técnica'). El interesado que prefiere no escribir un DM —o que quiere llamar— simplemente no tiene cómo.",
+      "evidencia": "Búsqueda automatizada de teléfonos y enlaces wa.me/calendly en su perfil y publicaciones de Facebook: 0 resultados.",
+      "solucion": "WhatsApp precargado por propiedad y contacto visible en cada página."
+    },
+    {
+      "icono": "👤",
+      "titulo": "Vende inversiones inmobiliarias desde un perfil personal de Facebook",
+      "detalle": "Su Facebook no es una página de negocio: es un perfil personal con 2,123 amigos, con tope de 5,000, sin botón de contacto, sin reseñas, sin catálogo y sin estadísticas. Ahí conviven las propiedades de inversión y la vida personal.",
+      "evidencia": "fuentes/fb-perfil.png — 'Katya Varela · 2.1 mil amigos · Agregar a amigos'; empleo 'Real Estate Agent/Salesperson' desde octubre de 2024.",
+      "solucion": "Catálogo propio con ficha por propiedad; el perfil personal queda para lo personal."
+    },
+    {
+      "icono": "🔍",
+      "titulo": "Invisible en Google salvo sus propios perfiles",
+      "detalle": "Buscar 'Katya Varela inversiones' devuelve su Instagram, sus reels, su cuenta personal y una publicación suelta dentro de un grupo de Facebook. Ningún resultado que ella controle: quien busca 'departamentos de inversión en Playa del Carmen' se encuentra con agencias que sí tienen dominio.",
+      "evidencia": "fuentes/google-katya.png — resultados del 27-jul-2026.",
+      "solucion": "Sitio propio con SEO local por zona (Playa del Carmen, Tulum, Puerto Aventuras) + Google Business Profile."
+    },
+    {
+      "icono": "🎬",
+      "titulo": "Hace el contenido más difícil… y lo suelta sin destino",
+      "detalle": "Su reel 'No compres una casa sin antes saber estos pasos' logró 30 reacciones y el de la comunidad cerrada con campo de golf, 18. Produce contenido educativo y bien grabado —lo más difícil de sostener— pero al final del video no hay a dónde mandar a quien quedó convencido. El interés se evapora en el scroll.",
+      "evidencia": "Publicaciones de Facebook del 2026 con esas reacciones; ningún enlace de destino en ellas.",
+      "solucion": "Cada pieza cierra con un link a la ficha o a la agenda: el contenido deja de ser sólo alcance y empieza a ser embudo."
+    },
+    {
+      "icono": "🏚️",
+      "titulo": "Siete propiedades reales que solo existen mientras el post es reciente",
+      "detalle": "En su feed hay inventario concreto: departamentos amueblados con vista al mar desde $2.6 MDP, un proyecto en Aldea Zamá con 12 amenidades, una inversión llave en mano en Playa del Carmen, unidades marcadas como 'LOS ÚLTIMOS' y lista de precios de preventa. Nada de eso tiene ficha compartible: se promociona una vez y se hunde en el feed.",
+      "evidencia": "27 publicaciones analizadas; 7 propiedades con características o precio identificadas en los pies de foto.",
+      "solucion": "Catálogo navegable con badges (preventa / frente al mar / oportunidad), precio 'desde' y WhatsApp por ficha."
+    }
+  ],
+  "benchmark": {
+    "fuente": "vivemar/docs/investigacion-diseno.md (14 sitios: Sotheby's, E&V, The Agency, SIMCA, Corasol, Jaguar Tulum...) + revisión de agencias locales de Playa del Carmen",
+    "patrones_ganadores": [
+      "WhatsApp precargado dentro de cada tarjeta de propiedad (72% de conversión frente a 15% con formulario)",
+      "Precio 'desde $X' visible + escasez verificable — ella ya usa 'LOS ÚLTIMOS' y 'lista de precio cero' en sus reels",
+      "La asesora con rostro como llamada a la acción: su marca personal ya carga el peso, solo le falta la casa"
+    ],
+    "huecos_diferenciacion": [
+      "Nadie en la zona combina inversión inmobiliaria con el lenguaje de bienestar y consciencia que ella ya usa ('Todo con amor', su cuenta personal sobre despertar y equilibrio): es un ángulo de marca que ninguna agencia puede copiar",
+      "Ningún competidor local publica contenido educativo tipo 'los pasos antes de comprar' con destino a una guía o calculadora propia"
+    ]
+  },
+  "paleta_sugerida": {
+    "primario": "#7A5343",
+    "profundo": "#3D2B24",
+    "crema": "#F7F1E8",
+    "acento_cta": "#C97B6A",
+    "nota": "Tierra cálida + arena + terracota rosada. Derivada de su estética real (arcos beige, palma, lino, luz dorada, verde selva) y de su 'Todo con amor 🩷' traducido a un acento premium. Distinta del teal de Vive Mar, el azul noche de Frank y el verde selva de Suemi."
+  },
+  "productos_estrella": [
+    "Departamentos en Playa del Carmen con vista al mar — totalmente equipados y amueblados, desde $2,600,000 MXN",
+    "Proyecto en Aldea Zamá, Tulum — 12 amenidades y mantenimiento con margen real de ganancia (ficha técnica y precios bajo solicitud)",
+    "Departamento frente al mar Caribe — enfocado en renta vacacional: alta ocupación en plataformas y plusvalía",
+    "Inversión llave en mano en Playa del Carmen (publicada en grupo de propiedades de la Riviera Maya)",
+    "Residencia en comunidad cerrada con campo de golf",
+    "Unidades finales de desarrollo — su reel 'LOS ÚLTIMOS'",
+    "Preventa con lista de precios inicial — su reel 'todavía tenemos lista de precio cero'"
+  ],
+  "gancho_personalizacion": {
+    "principal": "El último renglón de su bio dice '📩 Agenda asesoría aquí' — y no hay ningún 'aquí'. Es la promesa más clara de todo su embudo y la única que no puede cumplir. El regalo: construirle ese 'aquí'.",
+    "secundario": "6,513 seguidores en @katya_varela contra 359 en @katyavarela.inversiones: su audiencia real ya existe, solo que el camino termina en una cuenta sin salida.",
+    "reconocimiento": "Lleva 21 meses como agente y ya produce lo más difícil de sostener: contenido educativo grabado y editado ('No compres una casa sin antes saber estos pasos'). El problema no es el esfuerzo, es que no tiene dónde aterrizar.",
+    "grupos_comunes": "NO confirmados — omitir en todos los mensajes. (Facebook muestra '1 amigo en común' con varios contactos suyos, pero no hay grupo compartido verificado.)"
+  },
+  "tour": [],
+  "deploy": {
+    "url_sitio": "https://mediumaquamarine-elk-522949.hostingersite.com/",
+    "url_links": "https://mediumaquamarine-elk-522949.hostingersite.com/links/",
+    "url_en": "https://mediumaquamarine-elk-522949.hostingersite.com/en/",
+    "url_analisis": "https://mediumaquamarine-elk-522949.hostingersite.com/analisis/",
+    "cms": {
+      "usuario": "roger",
+      "clave": "katya60f0ed"
+    },
+    "fecha": "2026-07-27",
+    "hosting": "softvibes-hosting (order 1008508005)"
+  },
+  "estado_pipeline": "analisis_publicado"
+}

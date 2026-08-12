@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>CMS local · @hopepaoo</title>
+  <style>
+    :root { --bg:#111; --panel:#191919; --panel-2:#202020; --text:#f1ede5; --muted:#99938b; --line:#34312e; --acid:#d7ff3f; --violet:#7750ff; --danger:#ff6b5b; --sans:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.45; }
+    button,input,textarea,select { font:inherit; }
+    button,a { -webkit-tap-highlight-color:transparent; }
+    a { color:inherit; }
+    .app { min-height:100svh; display:grid; grid-template-columns:250px 1fr; }
+    aside { position:sticky; top:0; height:100svh; padding:26px 18px; border-right:1px solid var(--line); background:#0c0c0c; display:flex; flex-direction:column; }
+    .logo { padding:8px 10px 26px; font-size:20px; font-weight:900; letter-spacing:-.04em; }
+    .logo span { color:var(--acid); }
+    .local-badge { display:inline-flex; width:max-content; margin-top:8px; padding:4px 7px; border:1px solid #4a463f; border-radius:99px; color:var(--muted); font-size:9px; letter-spacing:.12em; text-transform:uppercase; }
+    .nav { display:grid; gap:5px; }
+    .nav button { width:100%; padding:11px 12px; border:0; border-radius:8px; background:transparent; color:var(--muted); text-align:left; cursor:pointer; }
+    .nav button:hover,.nav button.active { background:var(--panel); color:var(--text); }
+    .nav button.active::before { content:'●'; color:var(--acid); margin-right:9px; font-size:8px; }
+    .aside-foot { margin-top:auto; display:grid; gap:10px; }
+    .preview { padding:11px 12px; border:1px solid var(--line); border-radius:8px; text-decoration:none; text-align:center; font-size:12px; font-weight:800; }
+    .preview:hover { border-color:var(--acid); }
+    main { min-width:0; padding:32px clamp(20px,5vw,68px) 80px; }
+    .topbar { min-height:58px; display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:48px; border-bottom:1px solid var(--line); }
+    .topbar p { margin:0 0 20px; color:var(--muted); font-size:12px; }
+    .status { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:11px; }
+    .status i { width:8px; height:8px; border-radius:50%; background:var(--acid); box-shadow:0 0 0 5px rgba(215,255,63,.1); }
+    .view { display:none; }
+    .view.active { display:block; }
+    .view-head { max-width:780px; margin-bottom:35px; }
+    .eyebrow { margin:0 0 10px; color:var(--acid); font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.16em; }
+    h1 { margin:0; font-size:clamp(36px,5vw,62px); line-height:1; letter-spacing:-.055em; }
+    .view-head > p:last-child { margin:16px 0 0; color:var(--muted); }
+    .notice { margin-bottom:24px; padding:15px 17px; border:1px solid #554d2b; border-radius:10px; background:#29230e; color:#e8d99b; font-size:12px; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .stat { min-height:150px; padding:20px; border:1px solid var(--line); border-radius:12px; background:var(--panel); display:flex; flex-direction:column; justify-content:space-between; }
+    .stat strong { font-size:42px; letter-spacing:-.06em; }
+    .stat span { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.1em; }
+    .stat:nth-child(2) strong { color:var(--acid); }
+    .stat:nth-child(3) strong { color:#947cff; }
+    .stat:nth-child(4) strong { color:#ff7a68; }
+    .panel { padding:24px; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+    .panel + .panel { margin-top:14px; }
+    .panel h2 { margin:0 0 21px; font-size:18px; letter-spacing:-.025em; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .field.full { grid-column:1/-1; }
+    label { display:block; margin-bottom:7px; color:#c7c1b8; font-size:11px; font-weight:800; }
+    input,textarea,select { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px 13px; background:#0f0f0f; color:var(--text); }
+    textarea { min-height:104px; resize:vertical; }
+    input:focus,textarea:focus,select:focus { outline:2px solid var(--acid); outline-offset:1px; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:21px; }
+    .button { border:1px solid var(--line); border-radius:8px; padding:11px 16px; background:var(--panel-2); color:var(--text); cursor:pointer; font-weight:800; font-size:12px; text-decoration:none; }
+    .button:hover { border-color:#666159; }
+    .button.primary { border-color:var(--acid); background:var(--acid); color:#101010; }
+    .button.danger { border-color:#6b3630; color:#ff8b7d; }
+    .items { display:grid; gap:10px; }
+    .item { display:grid; grid-template-columns:1fr auto; gap:18px; padding:17px; border:1px solid var(--line); border-radius:10px; background:#121212; }
+    .item small { color:var(--acid); text-transform:uppercase; letter-spacing:.12em; }
+    .item h3 { margin:6px 0; font-size:16px; }
+    .item p { margin:0; color:var(--muted); font-size:13px; }
+    .item-meta { display:flex; flex-wrap:wrap; gap:10px; margin-top:9px; color:#77716a; font-size:11px; }
+    .icon-button { width:34px; height:34px; border:1px solid #542f2a; border-radius:8px; background:transparent; color:var(--danger); cursor:pointer; }
+    .empty { padding:26px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); text-align:center; font-size:13px; }
+    .drop { padding:28px; border:1px dashed #56514a; border-radius:10px; text-align:center; }
+    .drop input { max-width:420px; margin-top:14px; }
+    .toast { position:fixed; right:24px; bottom:24px; z-index:20; max-width:360px; padding:13px 17px; border-radius:9px; background:var(--acid); color:#111; font-size:12px; font-weight:900; box-shadow:0 16px 50px rgba(0,0,0,.35); transform:translateY(20px); opacity:0; pointer-events:none; transition:.2s; }
+    .toast.show { transform:none; opacity:1; }
+    @media(max-width:900px){ .app{grid-template-columns:1fr} aside{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--line)}.nav{display:flex;overflow:auto}.nav button{width:auto;white-space:nowrap}.aside-foot{display:none}.stats{grid-template-columns:1fr 1fr}main{padding-top:24px}.grid-2{grid-template-columns:1fr} }
+    @media(max-width:560px){ .stats,.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.topbar{align-items:start}.status span{display:none}.panel{padding:18px}.item{grid-template-columns:1fr}.icon-button{justify-self:end} }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="logo">PAOLA<span>•</span><div class="local-badge">CMS local · prototipo</div></div>
+      <nav class="nav" aria-label="Secciones del CMS">
+        <button class="active" data-view="dashboard">Resumen</button>
+        <button data-view="identity">Identidad</button>
+        <button data-view="territories">Territorios</button>
+        <button data-view="featured">Trabajo</button>
+        <button data-view="events">Eventos</button>
+        <button data-view="backup">Respaldo</button>
+      </nav>
+      <div class="aside-foot"><a class="preview" href="../landing.html" target="_blank">Vista previa ↗</a></div>
+    </aside>
+
+    <main>
+      <header class="topbar"><p>Contenido guardado en este navegador</p><div class="status"><i></i><span id="save-status">Sin cambios pendientes</span></div></header>
+
+      <section class="view active" id="dashboard">
+        <header class="view-head"><p class="eyebrow">Panel editorial</p><h1>Control de contenido</h1><p>Edita la identidad, los territorios creativos, el trabajo destacado y las próximas fechas de la landing.</p></header>
+        <div class="notice">Este CMS usa <strong>localStorage</strong>: no tiene usuarios, servidor, autenticación ni sincronización. Es adecuado para edición y demostración local, no para producción.</div>
+        <div class="stats">
+          <article class="stat"><strong id="stat-territories">3</strong><span>Territorios</span></article>
+          <article class="stat"><strong id="stat-featured">3</strong><span>Piezas destacadas</span></article>
+          <article class="stat"><strong id="stat-events">0</strong><span>Eventos publicados</span></article>
+          <article class="stat"><strong>28</strong><span>Posts analizados</span></article>
+        </div>
+        <div class="panel" style="margin-top:14px"><h2>Conexión con la landing</h2><p style="margin:0;color:var(--muted)">Los cambios aparecen en <a href="../landing.html" target="_blank">la vista previa</a> cuando ambos archivos se abren desde el mismo servidor local. Exporta un respaldo antes de limpiar datos del navegador.</p></div>
+      </section>
+
+      <section class="view" id="identity">
+        <header class="view-head"><p class="eyebrow">Identidad</p><h1>Mensaje principal</h1><p>Controla el hero y el CTA sin alterar el diseño.</p></header>
+        <form class="panel" id="identity-form">
+          <div class="form-grid">
+            <div class="field"><label for="name">Nombre</label><input id="name" name="name" required maxlength="80"></div>
+            <div class="field"><label for="handle">Handle</label><input id="handle" name="handle" required maxlength="40"></div>
+            <div class="field full"><label for="eyebrow">Descriptor breve</label><input id="eyebrow" name="eyebrow" required maxlength="100"></div>
+            <div class="field full"><label for="title">Titular</label><input id="title" name="title" required maxlength="140"></div>
+            <div class="field full"><label for="intro">Introducción</label><textarea id="intro" name="intro" required maxlength="320"></textarea></div>
+            <div class="field"><label for="location">Ubicación</label><input id="location" name="location" maxlength="80"></div>
+            <div class="field"><label for="ctaLabel">Texto del CTA</label><input id="ctaLabel" name="ctaLabel" maxlength="80"></div>
+            <div class="field full"><label for="instagramUrl">URL de Instagram (HTTPS)</label><input id="instagramUrl" name="instagramUrl" type="url" required></div>
+          </div>
+          <div class="actions"><button class="button primary" type="submit">Guardar identidad</button></div>
+        </form>
+      </section>
+
+      <section class="view" id="territories">
+        <header class="view-head"><p class="eyebrow">Arquitectura</p><h1>Territorios creativos</h1><p>Son los tres argumentos que organizan la propuesta pública.</p></header>
+        <div class="grid-2">
+          <div class="panel"><h2>Publicados</h2><div class="items" id="territory-items"></div></div>
+          <form class="panel" id="territory-form"><h2>Agregar territorio</h2>
+            <div class="field"><label for="territory-kicker">Etiqueta</label><input id="territory-kicker" required maxlength="40"></div>
+            <div class="field" style="margin-top:14px"><label for="territory-title">Título</label><input id="territory-title" required maxlength="80"></div>
+            <div class="field" style="margin-top:14px"><label for="territory-description">Descripción</label><textarea id="territory-description" required maxlength="280"></textarea></div>
+            <div class="actions"><button class="button primary" type="submit">Agregar</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="view" id="featured">
+        <header class="view-head"><p class="eyebrow">Portafolio</p><h1>Trabajo destacado</h1><p>Publica enlaces a piezas verificables. Las métricas son un corte histórico y no se actualizan solas.</p></header>
+        <div class="grid-2">
+          <div class="panel"><h2>Selección actual</h2><div class="items" id="featured-items"></div></div>
+          <form class="panel" id="featured-form"><h2>Agregar pieza</h2>
+            <div class="field"><label for="work-label">Categoría</label><input id="work-label" required maxlength="50"></div>
+            <div class="field" style="margin-top:14px"><label for="work-title">Título</label><input id="work-title" required maxlength="100"></div>
+            <div class="field" style="margin-top:14px"><label for="work-excerpt">Lectura breve</label><textarea id="work-excerpt" required maxlength="300"></textarea></div>
+            <div class="field" style="margin-top:14px"><label for="work-url">URL pública (HTTPS)</label><input id="work-url" type="url" required></div>
+            <div class="form-grid" style="margin-top:14px"><div class="field"><label for="work-likes">Likes</label><input id="work-likes" type="number" min="0" value="0"></div><div class="field"><label for="work-comments">Comentarios</label><input id="work-comments" type="number" min="0" value="0"></div><div class="field"><label for="work-plays">Reproducciones</label><input id="work-plays" type="number" min="0" placeholder="Opcional"></div></div>
+            <div class="actions"><button class="button primary" type="submit">Agregar</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="view" id="events">
+        <header class="view-head"><p class="eyebrow">Agenda</p><h1>Próximas fechas</h1><p>Solo publica eventos confirmados. Si no hay fechas, la landing oculta toda la sección.</p></header>
+        <div class="grid-2">
+          <div class="panel"><h2>Eventos publicados</h2><div class="items" id="event-items"></div></div>
+          <form class="panel" id="event-form"><h2>Agregar evento</h2>
+            <div class="field"><label for="event-date">Fecha</label><input id="event-date" type="date" required></div>
+            <div class="field" style="margin-top:14px"><label for="event-name">Nombre</label><input id="event-name" required maxlength="100"></div>
+            <div class="field" style="margin-top:14px"><label for="event-venue">Venue / ciudad</label><input id="event-venue" required maxlength="120"></div>
+            <div class="field" style="margin-top:14px"><label for="event-url">URL oficial (HTTPS, opcional)</label><input id="event-url" type="url"></div>
+            <div class="actions"><button class="button primary" type="submit">Publicar fecha</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="view" id="backup">
+        <header class="view-head"><p class="eyebrow">Portabilidad</p><h1>Respaldo y restauración</h1><p>El archivo exportado contiene únicamente la configuración editorial del sitio.</p></header>
+        <div class="panel"><h2>Exportar</h2><p style="color:var(--muted)">Descarga el estado actual antes de cambiar de navegador o limpiar datos.</p><div class="actions"><button class="button primary" id="export-button" type="button">Descargar JSON</button></div></div>
+        <div class="panel"><h2>Importar</h2><div class="drop">Selecciona un respaldo JSON de Hopepaoo.<br><input id="import-file" type="file" accept="application/json,.json"></div></div>
+        <div class="panel"><h2>Restablecer template</h2><p style="color:var(--muted)">Elimina los cambios locales y vuelve al contenido verificado del 5 de agosto de 2026.</p><div class="actions"><button class="button danger" id="reset-button" type="button">Restablecer datos</button></div></div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../site-data.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      const key = window.HOPEPAOO_STORAGE_KEY;
+      const clone = window.HOPEPAOO_CLONE;
+      const defaults = window.HOPEPAOO_DEFAULTS;
+      let state = readState();
+
+      function readState() {
+        try { return localStorage.getItem(key) ? Object.assign(clone(defaults), JSON.parse(localStorage.getItem(key))) : clone(defaults); }
+        catch { return clone(defaults); }
+      }
+      function save(message) {
+        state.updatedAt = new Date().toISOString();
+        localStorage.setItem(key, JSON.stringify(state));
+        document.querySelector('#save-status').textContent = `Guardado ${new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}`;
+        render();
+        toast(message || 'Cambios guardados');
+      }
+      function toast(message) {
+        const element = document.querySelector('#toast');
+        element.textContent = message;
+        element.classList.add('show');
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => element.classList.remove('show'), 2600);
+      }
+      function escapeHtml(value) { return String(value ?? '').replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+      function safeHttps(value, optional) {
+        if (optional && !value) return '';
+        try { const url = new URL(value); if (url.protocol !== 'https:') throw new Error(); return url.href; }
+        catch { throw new Error('La URL debe ser HTTPS.'); }
+      }
+      function uid(prefix) { return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`; }
+
+      document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => {
+        document.querySelectorAll('[data-view]').forEach((item) => item.classList.toggle('active', item === button));
+        document.querySelectorAll('.view').forEach((view) => view.classList.toggle('active', view.id === button.dataset.view));
+      }));
+
+      const identityForm = document.querySelector('#identity-form');
+      identityForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const values = Object.fromEntries(new FormData(identityForm));
+        try { values.instagramUrl = safeHttps(values.instagramUrl); state.profile = values; save('Identidad actualizada'); }
+        catch (error) { toast(error.message); }
+      });
+
+      document.querySelector('#territory-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        state.territories.push({ id:uid('territory'), number:String(state.territories.length + 1).padStart(2,'0'), kicker:document.querySelector('#territory-kicker').value.trim(), title:document.querySelector('#territory-title').value.trim(), description:document.querySelector('#territory-description').value.trim() });
+        event.target.reset(); save('Territorio agregado');
+      });
+
+      document.querySelector('#featured-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        try {
+          state.featured.push({ id:uid('work'), label:document.querySelector('#work-label').value.trim(), title:document.querySelector('#work-title').value.trim(), excerpt:document.querySelector('#work-excerpt').value.trim(), url:safeHttps(document.querySelector('#work-url').value), likes:Number(document.querySelector('#work-likes').value || 0), comments:Number(document.querySelector('#work-comments').value || 0), plays:document.querySelector('#work-plays').value ? Number(document.querySelector('#work-plays').value) : null });
+          event.target.reset(); save('Pieza agregada');
+        } catch (error) { toast(error.message); }
+      });
+
+      document.querySelector('#event-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        try {
+          state.events.push({ id:uid('event'), date:document.querySelector('#event-date').value, name:document.querySelector('#event-name').value.trim(), venue:document.querySelector('#event-venue').value.trim(), url:safeHttps(document.querySelector('#event-url').value, true) });
+          state.events.sort((a,b) => a.date.localeCompare(b.date)); event.target.reset(); save('Evento publicado');
+        } catch (error) { toast(error.message); }
+      });
+
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-delete]');
+        if (!button) return;
+        const [collection,id] = button.dataset.delete.split(':');
+        if (!confirm('¿Eliminar este elemento del contenido local?')) return;
+        state[collection] = state[collection].filter((item) => item.id !== id);
+        if (collection === 'territories') state.territories.forEach((item,index) => item.number = String(index + 1).padStart(2,'0'));
+        save('Elemento eliminado');
+      });
+
+      document.querySelector('#export-button').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob); const link = document.createElement('a');
+        link.href = url; link.download = `hopepaoo-contenido-${new Date().toISOString().slice(0,10)}.json`; link.click(); URL.revokeObjectURL(url);
+        toast('Respaldo descargado');
+      });
+      document.querySelector('#import-file').addEventListener('change', async (event) => {
+        const file = event.target.files[0]; if (!file) return;
+        try {
+          const imported = JSON.parse(await file.text());
+          if (!imported.profile || !Array.isArray(imported.territories) || !Array.isArray(imported.featured) || !Array.isArray(imported.events)) throw new Error('El archivo no tiene la estructura esperada.');
+          state = Object.assign(clone(defaults), imported); save('Respaldo importado'); event.target.value = '';
+        } catch (error) { toast(error.message || 'No fue posible importar el archivo'); }
+      });
+      document.querySelector('#reset-button').addEventListener('click', () => {
+        if (!confirm('Esto reemplazará todos los cambios locales por el contenido inicial. ¿Continuar?')) return;
+        state = clone(defaults); save('Template restablecido');
+      });
+
+      function render() {
+        Object.entries(state.profile).forEach(([field,value]) => { const input = identityForm.elements[field]; if (input) input.value = value; });
+        document.querySelector('#stat-territories').textContent = state.territories.length;
+        document.querySelector('#stat-featured').textContent = state.featured.length;
+        document.querySelector('#stat-events').textContent = state.events.length;
+        document.querySelector('#territory-items').innerHTML = state.territories.length ? state.territories.map((item) => `<article class="item"><div><small>${escapeHtml(item.number)} · ${escapeHtml(item.kicker)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div><button class="icon-button" type="button" aria-label="Eliminar ${escapeHtml(item.title)}" data-delete="territories:${escapeHtml(item.id)}">×</button></article>`).join('') : '<div class="empty">No hay territorios publicados.</div>';
+        document.querySelector('#featured-items').innerHTML = state.featured.length ? state.featured.map((item) => `<article class="item"><div><small>${escapeHtml(item.label)}</small><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.excerpt)}</p><div class="item-meta"><span>♥ ${escapeHtml(item.likes)}</span><span>◌ ${escapeHtml(item.comments)}</span>${item.plays ? `<span>▶ ${escapeHtml(item.plays)}</span>` : ''}</div></div><button class="icon-button" type="button" aria-label="Eliminar ${escapeHtml(item.title)}" data-delete="featured:${escapeHtml(item.id)}">×</button></article>`).join('') : '<div class="empty">No hay piezas publicadas.</div>';
+        document.querySelector('#event-items').innerHTML = state.events.length ? state.events.map((item) => {
+          const eventDate = new Date(String(item.date) + 'T12:00:00');
+          const dateLabel = Number.isNaN(eventDate.getTime()) ? item.date : eventDate.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+          return `<article class="item"><div><small>${escapeHtml(dateLabel)}</small><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.venue)}</p></div><button class="icon-button" type="button" aria-label="Eliminar ${escapeHtml(item.name)}" data-delete="events:${escapeHtml(item.id)}">×</button></article>`;
+        }).join('') : '<div class="empty">Sin próximas fechas. La landing oculta esta sección.</div>';
+      }
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+(function () {
+  'use strict';
+
+  const defaults = {
+    version: 2,
+    updatedAt: '2026-08-05T23:18:51Z',
+    profile: {
+      name: 'Paola Elizabeth',
+      handle: '@hopepaoo',
+      eyebrow: 'Cantante · performer · Cancún',
+      title: 'Una voz que habita la escena y la transforma.',
+      intro: 'Cabaret, covers y una narrativa visual donde conviven fuerza, misterio y sensibilidad.',
+      location: 'Cancún, México',
+      ctaLabel: 'Hablemos por Instagram',
+      instagramUrl: 'https://www.instagram.com/hopepaoo/'
+    },
+    territories: [
+      {
+        id: 'scene',
+        number: '01',
+        kicker: 'Escena',
+        title: 'Presencia en vivo',
+        description: 'Cabaret, show y personajes que convierten cada aparición en una imagen memorable.'
+      },
+      {
+        id: 'voice',
+        number: '02',
+        kicker: 'Voz',
+        title: 'Covers con identidad',
+        description: 'Canciones reconocibles llevadas hacia lenguajes de jazz, pop, ópera y dramatismo escénico.'
+      },
+      {
+        id: 'image',
+        number: '03',
+        kicker: 'Imagen',
+        title: 'Retrato y símbolo',
+        description: 'Una dirección visual editorial que cruza feminidad, naturaleza, oscuridad y metamorfosis.'
+      }
+    ],
+    featured: [
+      {
+        id: 'woman',
+        label: 'Retrato editorial',
+        title: 'A beautiful day to be a woman',
+        excerpt: 'La colaboración visual con Pamela Berlanga concentra la conversación más alta de la muestra.',
+        url: 'https://www.instagram.com/p/DXfA31FgZrT/',
+        likes: 213,
+        comments: 25,
+        plays: null
+      },
+      {
+        id: 'whitney',
+        label: 'Performance vocal',
+        title: 'Whitney Houston cover',
+        excerpt: 'Una pieza breve y directa que conecta voz, escenario y posicionamiento como cantante mexicana en Cancún.',
+        url: 'https://www.instagram.com/p/DSsp7RdgaUX/',
+        likes: 137,
+        comments: 14,
+        plays: 5896
+      },
+      {
+        id: 'cabaret',
+        label: 'Cabaret',
+        title: 'Un vampiro en Chic Cabaret',
+        excerpt: 'Personaje, vestuario y venue construyen una prueba clara de experiencia escénica.',
+        url: 'https://www.instagram.com/p/DPPXE1jgY80/',
+        likes: 125,
+        comments: 7,
+        plays: null
+      }
+    ],
+    events: [],
+    research: {
+      requestedItems: 30,
+      ownedItems: 28,
+      excludedItems: 2,
+      dateFrom: '2023-01-20',
+      dateTo: '2026-05-26',
+      averageLikes: 103.3,
+      averageComments: 7.5,
+      averageVideoPlays: 4231,
+      videos: 8,
+      carousels: 18,
+      images: 2,
+      runId: 'BmnT50ZEmpAs20lUp',
+      datasetId: 'GyJ0Q59hMyAlJNIGN'
+    }
+  };
+
+  window.HOPEPAOO_STORAGE_KEY = 'hopepaoo-site-v2';
+  window.HOPEPAOO_DEFAULTS = defaults;
+  window.HOPEPAOO_CLONE = function (value) {
+    return JSON.parse(JSON.stringify(value));
+  };
+})();

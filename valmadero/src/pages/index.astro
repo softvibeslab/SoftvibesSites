@@ -1,0 +1,226 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { SITE, waLink } from '../config/site';
+import { LANDING } from '../config/landing';
+
+const propiedades = await getCollection('propiedades');
+const destacadas = propiedades.sort((a, b) => Number(b.data.destacada) - Number(a.data.destacada)).slice(0, 3);
+
+const intenciones = [
+  {
+    numero: '01',
+    titulo: 'Quiero vivir aquí',
+    texto: 'Buscamos ubicación, distribución y mensualidad compatibles con tu vida cotidiana.',
+    mensaje: 'Hola Val, estoy buscando una propiedad para vivir en Riviera Maya.',
+  },
+  {
+    numero: '02',
+    titulo: 'Quiero invertir',
+    texto: 'Ordenamos presupuesto, plazo y estrategia antes de hablar de proyectos específicos.',
+    mensaje: 'Hola Val, quiero conocer opciones de inversión en Riviera Maya.',
+  },
+  {
+    numero: '03',
+    titulo: 'Quiero entender mi crédito',
+    texto: 'Revisamos enganche, financiamiento y gastos complementarios para definir una búsqueda realista.',
+    mensaje: 'Hola Val, quiero entender qué opciones inmobiliarias se ajustan a mi presupuesto.',
+  },
+];
+
+const reels = [
+  {
+    etiqueta: 'Primer departamento',
+    titulo: 'Un espacio para imaginar tu siguiente etapa',
+    texto: 'Recorrido por un departamento muestra y sus espacios interiores.',
+    video: '/media/valmadero/reel-03-primer-departamento.mp4',
+    poster: '/media/valmadero/reel-03-primer-departamento.jpg',
+  },
+  {
+    etiqueta: 'Amenidades',
+    titulo: 'La experiencia también se vive fuera del departamento',
+    texto: 'Una mirada a las áreas comunes que forman parte de la propuesta.',
+    video: '/media/valmadero/reel-04-amenidades.mp4',
+    poster: '/media/valmadero/reel-04-amenidades.jpg',
+  },
+  {
+    etiqueta: 'Residencia premium',
+    titulo: 'Arquitectura, escala y acabados en detalle',
+    texto: 'Visita guiada por una casa de alto valor en Riviera Maya.',
+    video: '/media/valmadero/reel-02-casa-premium.mp4',
+    poster: '/media/valmadero/reel-02-casa-premium.jpg',
+  },
+  {
+    etiqueta: 'Tulum',
+    titulo: 'Terrenos para proyectos con objetivos distintos',
+    texto: 'Presentación de lotes residenciales y comerciales en la zona.',
+    video: '/media/valmadero/reel-05-lotes-tulum.mp4',
+    poster: '/media/valmadero/reel-05-lotes-tulum.jpg',
+  },
+  {
+    etiqueta: 'Recorrido',
+    titulo: 'Conocer el acceso también cuenta',
+    texto: 'La llegada y distribución empiezan a contar la historia de una propiedad.',
+    video: '/media/valmadero/reel-06-recorrido.mp4',
+    poster: '/media/valmadero/reel-06-recorrido.jpg',
+  },
+  {
+    etiqueta: 'Tour de propiedad',
+    titulo: 'Los detalles se entienden mejor en movimiento',
+    texto: 'Una explicación cercana desde el interior de un departamento.',
+    video: '/media/valmadero/reel-07-tour-departamento.mp4',
+    poster: '/media/valmadero/reel-07-tour-departamento.jpg',
+  },
+  {
+    etiqueta: 'El lado humano',
+    titulo: 'La persona que también vive cada historia',
+    texto: 'Un momento personal que aporta cercanía a la presencia digital de Val.',
+    video: '/media/valmadero/reel-01-lado-humano.mp4',
+    poster: '/media/valmadero/reel-01-lado-humano.jpg',
+  },
+];
+---
+
+<BaseLayout titulo={`${SITE.nombre} | ${SITE.lema}`} descripcion={SITE.descripcion} imagen={LANDING.hero.imagen}>
+  <section class="hero hero--val">
+    <img class="hero__imagen" src={LANDING.hero.imagen} alt="Residencia tropical conceptual inspirada en Riviera Maya; no representa una propiedad disponible" fetchpriority="high" />
+    <div class="hero__velo"></div>
+    <div class="contenedor hero__contenido">
+      <span class="kicker kicker--claro" data-cms="hero-etiqueta">{LANDING.hero.etiqueta}</span>
+      <h1 data-cms="hero-titulo">{LANDING.hero.titulo}</h1>
+      <p data-cms="hero-descripcion">{LANDING.hero.descripcion}</p>
+      <div class="hero__acciones">
+        <a class="boton boton--acento" href={waLink()} target="_blank" rel="noopener" data-cms="cta-hero-wa">Cuéntame qué buscas</a>
+        <a class="boton boton--cristal" href="#como-trabajamos" data-cms="cta-hero-proceso">Ver cómo te acompaño</a>
+      </div>
+      <p class="nota-demo">Imagen conceptual generada para este prototipo; no representa inventario.</p>
+    </div>
+  </section>
+
+  <section class="barra-confianza" aria-label="Principios del servicio">
+    <div class="contenedor barra-confianza__grid">
+      {LANDING.confianza.map((item) => <div><strong>{item.titulo}</strong><span>{item.texto}</span></div>)}
+    </div>
+  </section>
+
+  <section class="seccion seccion--arena" id="empieza">
+    <div class="contenedor">
+      <div class="cabecera-seccion" data-reveal>
+        <div><span class="kicker">Empieza por ti</span><h2>¿Qué quieres resolver?</h2></div>
+        <p>No necesitas llegar con una propiedad elegida. Una conversación breve ayuda a definir qué vale la pena comparar.</p>
+      </div>
+      <div class="grid-intenciones">
+        {intenciones.map((item) => (
+          <article class="intencion-card" data-reveal>
+            <span>{item.numero}</span>
+            <h3>{item.titulo}</h3>
+            <p>{item.texto}</p>
+            <a class="enlace" href={waLink(item.mensaje)} target="_blank" rel="noopener">Hablar con Val →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="cabecera-seccion" data-reveal>
+        <div><span class="kicker">Referencia pública</span><h2>Una opción compartida recientemente</h2></div>
+        <p>Esta ficha proviene de una publicación de Instagram. Precio, disponibilidad, superficie y condiciones deben confirmarse directamente antes de tomar decisiones.</p>
+      </div>
+      <div class="grid-propiedades grid-propiedades--referencia">{destacadas.map((propiedad) => <PropertyCard propiedad={propiedad} />)}</div>
+      <p class="centrado"><a class="boton" href="/propiedades">Ver referencias</a></p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--tinta" id="como-trabajamos">
+    <div class="contenedor proceso">
+      <div class="proceso__intro" data-reveal>
+        <span class="kicker kicker--claro">Una ruta sencilla</span>
+        <h2>De “quiero algo en Playa” a una decisión con contexto</h2>
+        <p>La propuesta traduce el tono cercano de Instagram en un proceso comercial fácil de seguir.</p>
+      </div>
+      <div class="proceso__pasos">
+        {LANDING.razones.map((razon) => <article data-reveal><span>{razon.numero}</span><h3>{razon.titulo}</h3><p>{razon.texto}</p></article>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor perfil">
+      <div class="perfil__media" data-reveal>
+        <img src={SITE.asesor.imagen} alt="Retrato de Valeria Soto Madero" loading="lazy" width="900" height="900" />
+        <small>Valeria Soto Madero</small>
+      </div>
+      <div data-reveal>
+        <span class="kicker">Tu asesora</span>
+        <h2>{SITE.asesor.nombre}</h2>
+        <p class="perfil__cargo">{SITE.asesor.cargo}</p>
+        <p data-cms="asesor-bio">{SITE.asesor.bio}</p>
+        <ul class="lista-check">
+          <li>Conversación centrada en tu objetivo y presupuesto.</li>
+          <li>Opciones en Playa del Carmen, Tulum y Riviera Maya.</li>
+          <li>Condiciones y disponibilidad confirmadas antes de avanzar.</li>
+        </ul>
+        <a class="enlace" href={SITE.redes.instagram} target="_blank" rel="noopener">Conocer a Val en Instagram →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--arena" id="videos">
+    <div class="contenedor">
+      <div class="cabecera-seccion" data-reveal>
+        <div><span class="kicker">Val en movimiento</span><h2>Recorridos, ideas y vida en Riviera Maya</h2></div>
+        <p>Una selección de videos compartidos por Val: toca cualquier pieza para reproducirla. Los datos de cada propiedad deben confirmarse antes de tomar decisiones.</p>
+      </div>
+      <div class="reels-rail" aria-label="Videos de Val Madero" data-reveal>
+        {reels.map((item) => (
+          <figure class="reel-card">
+            <div class="reel-card__media">
+              <video
+                controls
+                playsinline
+                preload="none"
+                poster={item.poster}
+                aria-label={`${item.etiqueta}: ${item.titulo}`}
+                data-reel
+              >
+                <source src={item.video} type="video/mp4" />
+                Tu navegador no puede reproducir este video.
+              </video>
+            </div>
+            <figcaption>
+              <span>{item.etiqueta}</span>
+              <h3>{item.titulo}</h3>
+              <p>{item.texto}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="reels-pie"><a class="enlace" href={SITE.redes.instagram} target="_blank" rel="noopener">Ver más contenido en Instagram →</a></p>
+    </div>
+  </section>
+
+  <section class="cita-demo cita-demo--val">
+    <div class="contenedor" data-reveal>
+      <span class="kicker">Una idea para empezar</span>
+      <blockquote data-cms="manifiesto-cita">“{LANDING.manifiesto.cita}”</blockquote>
+      <p data-cms="manifiesto-autor">{LANDING.manifiesto.autor}</p>
+    </div>
+  </section>
+
+  <LeadForm titulo="Cuéntame en qué punto estás" />
+
+  <script>
+    const videos = [...document.querySelectorAll<HTMLVideoElement>('[data-reel]')];
+    videos.forEach((video) => {
+      video.addEventListener('play', () => {
+        videos.forEach((otro) => {
+          if (otro !== video) otro.pause();
+        });
+      });
+    });
+  </script>
+</BaseLayout>

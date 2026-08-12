@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { SITE, formatoPrecio, waLink } from '../../config/site';
+
+export async function getStaticPaths() {
+  return (await getCollection('propiedades')).map((propiedad) => ({ params: { slug: propiedad.id }, props: { propiedad } }));
+}
+
+const { propiedad } = Astro.props;
+const { Content } = await render(propiedad);
+const d = propiedad.data;
+const mensaje = `Hola, me interesa "${d.titulo}". ¿Sigue disponible?`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.titulo,
+  description: d.resumen,
+  image: new URL(d.imagen, Astro.site ?? SITE.dominio),
+  offers: { '@type': 'Offer', price: d.precio, priceCurrency: d.moneda, availability: 'https://schema.org/InStock' },
+};
+---
+
+<BaseLayout titulo={`${d.titulo} | ${SITE.nombre}`} descripcion={d.resumen} imagen={d.imagen} schema={schema}>
+  <section class="detalle-hero" style={`--detalle-imagen: url('${d.imagen}')`}>
+    <div class="contenedor detalle-hero__contenido">
+      <nav class="migas"><a href="/propiedades">Propiedades</a><span>/</span><a href={`/zonas/${d.zona}`}>{d.zona}</a></nav>
+      <div class="detalle-hero__badges"><span class="badge">{d.estatus}</span>{d.demostracion && <span class="badge badge--demo">Contenido demostrativo</span>}</div>
+      <h1 data-cms={`prop-${propiedad.id}-titulo`}>{d.titulo}</h1>
+      <p class="detalle-hero__precio">{formatoPrecio(d.precio, d.moneda)}</p>
+      <p>{d.ubicacion} · {d.m2} m²{d.recamaras !== undefined ? ` · ${d.recamaras} recámaras` : ''}{d.banos !== undefined ? ` · ${d.banos} baños` : ''}</p>
+    </div>
+  </section>
+  <section class="seccion">
+    <div class="contenedor detalle-grid">
+      <article class="prosa" data-reveal>
+        {d.demostracion && <aside class="aviso"><strong>Propiedad de demostración.</strong> Sustituye esta ficha por inventario real antes de publicar.</aside>}
+        <Content />
+        {d.caracteristicas.length > 0 && <><h2>Características</h2><ul>{d.caracteristicas.map((item) => <li>{item}</li>)}</ul></>}
+        {d.formasPago.length > 0 && <><h2>Condiciones comerciales</h2><ul>{d.formasPago.map((item) => <li>{item}</li>)}</ul></>}
+      </article>
+      <aside class="tarjeta-contacto" data-reveal>
+        <img src={SITE.asesor.imagen} alt="Retrato demostrativo del asesor" width="96" height="108" />
+        <h2>{SITE.asesor.nombre}</h2>
+        <p>Solicita disponibilidad, documentos y condiciones vigentes de esta propiedad.</p>
+        <a class="boton boton--acento" href={waLink(mensaje)} target="_blank" rel="noopener">Consultar por WhatsApp</a>
+        <a class="boton" href={SITE.agenda} target="_blank" rel="noopener">Agendar conversación</a>
+      </aside>
+    </div>
+  </section>
+  <LeadForm mensaje={mensaje} titulo={`¿Quieres conocer ${d.titulo}?`} />
+</BaseLayout>

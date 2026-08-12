@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatoPrecio, waLink } from '../config/site';
+
+interface Props {
+  propiedad: CollectionEntry<'propiedades'>;
+}
+
+const { propiedad } = Astro.props;
+const d = propiedad.data;
+const url = `/propiedades/${propiedad.id}`;
+const mensaje = `Hola, me interesa "${d.titulo}". ¿Me comparten información actualizada?`;
+const etiquetaEstatus: Record<string, string> = {
+  venta: 'Disponible',
+  preventa: 'Preventa',
+  'entrega-inmediata': 'Entrega inmediata',
+  reservada: 'Reservada',
+};
+---
+
+<article class="propiedad-card" data-tipo={d.tipo} data-zona={d.zona} data-precio={d.precio} data-reveal>
+  <a class="propiedad-card__media" href={url} aria-label={`Ver ${d.titulo}`}>
+    <img src={d.imagen} alt={d.titulo} loading="lazy" width="720" height="480" />
+    <span class="badge">{etiquetaEstatus[d.estatus]}</span>
+    {d.demostracion && <span class="badge badge--demo">Demostración</span>}
+  </a>
+  <div class="propiedad-card__cuerpo">
+    <div class="propiedad-card__meta"><span>{d.tipo}</span><span>{d.m2} m²</span></div>
+    <h3><a href={url} data-cms={`prop-${propiedad.id}-titulo`}>{d.titulo}</a></h3>
+    <p class="precio">{formatoPrecio(d.precio, d.moneda)}</p>
+    <p data-cms={`prop-${propiedad.id}-resumen`}>{d.resumen}</p>
+    <div class="acciones">
+      <a class="boton boton--pequeno" href={url}>Ver propiedad</a>
+      <a class="enlace" href={waLink(mensaje)} target="_blank" rel="noopener">Preguntar →</a>
+    </div>
+  </div>
+</article>

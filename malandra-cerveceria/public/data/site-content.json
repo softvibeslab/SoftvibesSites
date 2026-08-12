@@ -1,0 +1,190 @@
+{
+  "brand": {
+    "name": "Malandra",
+    "descriptor": "Cervecería artesanal · Playa del Carmen"
+  },
+  "notice": "Versión de revisión · Los lotes mostrados pertenecen a una bitácora pública; su venta y disponibilidad no están confirmadas.",
+  "hero": {
+    "eyebrow": "Una cerveza en construcción",
+    "title": "Aprender el oficio",
+    "emphasis": "lote a lote.",
+    "summary": "Una bitácora de cerveza artesanal hecha en Playa del Carmen: recetas que evolucionan, procesos que se documentan y estilos que todavía tienen historia por escribir.",
+    "primaryCta": "Explorar los lotes",
+    "secondaryCta": "Seguir el proyecto"
+  },
+  "story": {
+    "eyebrow": "El origen",
+    "title": "Primero fue la curiosidad. Después, la siguiente cocción.",
+    "body": "La historia pública empieza con un kit y una West Coast IPA que terminó convertida en una Imperial de 9% ABV. Desde ahí aparecen nuevas cocinadas, una Session IPA y una Hazy IPA con Citra y Cascade. Esta landing presenta ese recorrido sin convertir los experimentos en inventario comercial.",
+    "note": "Todo dato técnico visible conserva una publicación de origen. Precios, stock, venta y puntos de distribución permanecerán ocultos hasta ser confirmados."
+  },
+  "media": {
+    "eyebrow": "Archivo de cocción",
+    "title": "Medir, ajustar, volver a cocinar.",
+    "summary": "El archivo compartido muestra el trabajo detrás de cada lote: densidad, temperatura, lúpulo, levadura, fermentación y una cerveza finalmente servida.",
+    "note": "Material del proceso proporcionado para esta landing. Documenta elaboración y aprendizaje; no confirma venta ni disponibilidad.",
+    "heroCaption": "Cerveza terminada · Archivo Malandra",
+    "storyCaption": "El equipo con el que empieza una nueva etapa",
+    "clips": [
+      {
+        "title": "Lectura de densidad",
+        "text": "La probeta y el hidrómetro convierten una observación visual en un dato para la bitácora.",
+        "src": "/media/hydrometer-reading.mp4",
+        "poster": "/media/hydrometer-reading-poster.jpg"
+      },
+      {
+        "title": "Control de temperatura",
+        "text": "El equipo registra la cocción mientras el mosto circula y la receta toma forma.",
+        "src": "/media/mash-temperature.mp4",
+        "poster": "/media/mash-temperature-poster.jpg"
+      },
+      {
+        "title": "Pesado de lúpulo",
+        "text": "Una dosis medida antes de entrar a la receta: una decisión pequeña que cambia el lote completo.",
+        "src": "/media/hops-weighing.mp4",
+        "poster": "/media/hops-weighing-poster.jpg"
+      }
+    ],
+    "photos": [
+      {
+        "src": "/media/beer-sample-sunlight.jpg",
+        "alt": "Muestra de cerveza artesanal en una probeta junto a un vaso",
+        "caption": "Muestra a contraluz"
+      },
+      {
+        "src": "/media/gravity-reading.jpg",
+        "alt": "Hidrómetro dentro de una probeta con una muestra de cerveza",
+        "caption": "La medición antes de seguir"
+      },
+      {
+        "src": "/media/tasting-two-batches.jpg",
+        "alt": "Dos vasos con cervezas de distinto color durante una comparación",
+        "caption": "Comparar también es aprender"
+      },
+      {
+        "src": "/media/wort-sample.jpg",
+        "alt": "Probeta y vaso con una muestra turbia de mosto",
+        "caption": "Otra lectura, otro lote"
+      },
+      {
+        "src": "/media/kveik-yeast.jpg",
+        "alt": "Paquete de levadura Kveik Ale Yeast listo para la elaboración",
+        "caption": "Levadura Kveik preparada"
+      },
+      {
+        "src": "/media/cold-fermentation.jpg",
+        "alt": "Recipiente de fermentación aislado dentro de un refrigerador",
+        "caption": "Tiempo y control en frío"
+      }
+    ]
+  },
+  "contact": {
+    "instagram": "https://www.instagram.com/cerveceria.malandra/",
+    "informationSource": "https://www.instagram.com/valle.malandra/",
+    "location": "Playa del Carmen, México"
+  },
+  "batches": [
+    {
+      "id": "hazy-ipa",
+      "name": "Hazy IPA",
+      "style": "Hazy IPA",
+      "abv": "6.0%",
+      "hops": "Citra + Cascade",
+      "status": "Cocción documentada",
+      "description": "Doble dry hop y una receta compartida como parte del proceso de aprendizaje.",
+      "sourceUrl": "https://www.instagram.com/p/DUa1Y2hjhgS/",
+      "visible": true,
+      "available": false,
+      "tone": "#c87935"
+    },
+    {
+      "id": "session-ipa",
+      "name": "Session IPA",
+      "style": "Session IPA",
+      "abv": "Por confirmar",
+      "hops": "Por confirmar",
+      "status": "En bitácora",
+      "description": "Mencionada dentro de una recopilación de las últimas cocinadas del proyecto.",
+      "sourceUrl": "https://www.instagram.com/p/DRaGSMWjqoM/",
+      "visible": true,
+      "available": false,
+      "tone": "#d8a04d"
+    },
+    {
+      "id": "imperial-west-coast-ipa",
+      "name": "Imperial West Coast IPA",
+      "style": "West Coast IPA experimental",
+      "abv": "9.0%",
+      "hops": "Por confirmar",
+      "status": "Primer experimento",
+      "description": "El primer kit buscaba una West Coast IPA y terminó dando una versión Imperial.",
+      "sourceUrl": "https://www.instagram.com/p/DQVPEU3jqb0/",
+      "visible": true,
+      "available": false,
+      "tone": "#9d3a2f"
+    }
+  ],
+  "process": [
+    {
+      "title": "Receta",
+      "text": "Una idea de estilo, ingredientes por confirmar y objetivos para la siguiente cocción."
+    },
+    {
+      "title": "Cocción",
+      "text": "El proceso se documenta para aprender de cada cambio y de cada resultado."
+    },
+    {
+      "title": "Fermentación",
+      "text": "Tiempo, control y observación antes de decidir qué merece repetirse."
+    },
+    {
+      "title": "Bitácora",
+      "text": "Cada lote deja datos, fotografías y preguntas para la receta que sigue."
+    }
+  ],
+  "timeline": [
+    {
+      "date": "Oct · 2025",
+      "title": "El primer experimento",
+      "text": "Un kit pensado como West Coast IPA termina en una Imperial de 9% ABV."
+    },
+    {
+      "date": "Nov · 2025",
+      "title": "Más cocinadas",
+      "text": "La bitácora reúne nuevas pruebas y menciona una Session IPA."
+    },
+    {
+      "date": "Feb · 2026",
+      "title": "Hazy IPA",
+      "text": "Una receta de 6.0% ABV con doble dry hop de Citra y Cascade."
+    }
+  ],
+  "faq": [
+    {
+      "question": "¿Las cervezas están a la venta?",
+      "answer": "La información pública revisada no confirma venta ni disponibilidad. La landing se actualizará cuando exista un canal comercial verificado."
+    },
+    {
+      "question": "¿Dónde se encuentra Malandra?",
+      "answer": "El perfil informativo ubica el proyecto en Playa del Carmen, México. No se encontró una dirección comercial pública."
+    },
+    {
+      "question": "¿Qué estilos aparecen en la bitácora?",
+      "answer": "Hazy IPA, Session IPA e Imperial West Coast IPA. Son elaboraciones documentadas, no un catálogo de stock."
+    },
+    {
+      "question": "¿Cómo puedo seguir el proyecto?",
+      "answer": "A través del perfil oficial de Malandra en Instagram. No se mostrará WhatsApp, correo o formulario hasta confirmar un canal autorizado."
+    }
+  ],
+  "finalCta": {
+    "eyebrow": "Lo siguiente todavía se está cocinando",
+    "title": "Sigue la bitácora de Malandra.",
+    "summary": "Nuevas recetas, ajustes y futuros lotes se comunicarán primero desde el perfil oficial.",
+    "button": "Ir a Instagram"
+  },
+  "seo": {
+    "title": "Malandra · Cervecería artesanal en Playa del Carmen",
+    "description": "Conoce la bitácora de Malandra: un proyecto de cerveza artesanal en Playa del Carmen con Hazy IPA, Session IPA e Imperial West Coast IPA en desarrollo."
+  }
+}

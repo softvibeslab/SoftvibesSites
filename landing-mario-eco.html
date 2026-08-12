@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiencia Transformadora | Mario Villanueva Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2d3436;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --gold: #daa520;
+            --text: #2d3436;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: white;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 60px 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero .highlight {
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 48px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            margin-left: 15px;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* ===== TRIPLE VALUE PROPOSITION ===== */
+        .value-trio {
+            padding: 80px 20px;
+            background: var(--light);
+        }
+
+        .value-trio h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--primary);
+        }
+
+        .trio-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .value-card .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .value-card p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--primary);
+        }
+
+        .steps-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            padding: 30px;
+            border-left: 4px solid var(--accent);
+            background: var(--light);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .step p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* ===== SOCIAL PROOF ===== */
+        .social-proof {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            color: white;
+        }
+
+        .social-proof h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+        }
+
+        .testimonials {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .testimonial-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* ===== PRICING ===== */
+        .pricing {
+            padding: 80px 20px;
+            background: var(--light);
+        }
+
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .pricing-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 60px;
+        }
+
+        .pricing-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .price-tag {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0;
+        }
+
+        .price-description {
+            color: #666;
+            margin: 20px 0 40px;
+            font-size: 1rem;
+        }
+
+        .guarantee {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 4px solid var(--gold);
+        }
+
+        .guarantee strong {
+            color: var(--gold);
+        }
+
+        .included-list {
+            text-align: left;
+            max-width: 500px;
+            margin: 30px auto;
+            list-style: none;
+        }
+
+        .included-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        .included-list li::before {
+            content: '✓ ';
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* ===== COMMUNITY ===== */
+        .community {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .community h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--primary);
+        }
+
+        .community-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .community p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .benefit-item {
+            padding: 30px;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .benefit-item h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a1a 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+        }
+
+        .final-cta p {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .cta-secondary {
+                display: block;
+                margin: 15px 0 0 0;
+            }
+
+            .value-trio h2,
+            .how-it-works h2,
+            .social-proof h2,
+            .pricing h2,
+            .community h2,
+            .final-cta h2 {
+                font-size: 1.8rem;
+            }
+
+            .pricing-container {
+                padding: 40px 20px;
+            }
+
+            .price-tag {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>De la <span class="highlight">experiencia</span> a la <span class="highlight">transformación</span></h1>
+            <p>Viaja, conecta e invierte en un ecosistema diseñado para ti</p>
+            <div>
+                <a href="#pricing" class="cta-button">Accede Ahora</a>
+                <a href="#how" class="cta-button cta-secondary">Más Información</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRIPLE VALUE -->
+    <section class="value-trio">
+        <h2>Tres Pilares de Valor</h2>
+        <div class="trio-container">
+            <div class="value-card">
+                <div class="icon">✈️</div>
+                <h3>Viaja</h3>
+                <p>Acceso a experiencias premium en destinos seleccionados. No solo hospedaje, sino memoria que dura de por vida.</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">🤝</div>
+                <h3>Conecta</h3>
+                <p>Red de personas con mentalidad similar. Networking que abre puertas, negocios y amistades duraderas.</p>
+            </div>
+            <div class="value-card">
+                <div class="icon">💰</div>
+                <h3>Invierte</h3>
+                <p>Oportunidades de crecimiento económico. Desde membresías hasta opciones de negocio escalables.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how">
+        <h2>Cómo Funciona</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Comienza</h3>
+                <p>Acceso inmediato al ecosistema y primeros recursos en 60 minutos.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Aprende</h3>
+                <p>Marcos teóricos + aplicaciones reales de otros miembros de la red.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Crece</h3>
+                <p>Utiliza herramientas probadas + red de apoyo para escalar tu negocio/vida.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Expande</h3>
+                <p>Acceso a niveles premium: viajes, inversiones y oportunidades exclusivas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section class="social-proof">
+        <h2>Lo Dicen Nuestros Miembros</h2>
+        <div class="testimonials">
+            <div class="testimonial">
+                <div class="testimonial-text">"La experiencia en Casa Xtao no fue solo hospedaje, fue un reset. Volví con claridad y nuevas conexiones."</div>
+                <div class="testimonial-author">María Rodríguez</div>
+                <div class="testimonial-role">Emprendedora, Mexico City</div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-text">"Las herramientas que aprendí aquí transformaron mi forma de vender. De 2 clientes a 8 en un mes."</div>
+                <div class="testimonial-author">Carlos López</div>
+                <div class="testimonial-role">Coach de Vida, Guadalajara</div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-text">"No esperaba que la inversión en membresía se recuperara tan rápido. La red aquí es real."</div>
+                <div class="testimonial-author">Patricia Gómez</div>
+                <div class="testimonial-role">Inversionista, Cancún</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing" id="pricing">
+        <h2>Acceso al Ecosistema</h2>
+        <p class="pricing-subtitle">Inversión inicial mínima, retorno máximo</p>
+        <div class="pricing-container">
+            <div style="font-size: 0.9rem; color: #999; margin-bottom: 20px;">ACCESO VITALICIO</div>
+            <div class="price-tag">$27 USD</div>
+            <p style="color: #999; font-size: 0.9rem;">Pago único • Sin suscripción</p>
+
+            <div class="guarantee">
+                <strong>✓ Garantía 100% sin riesgo</strong><br>
+                Si no te encanta en los primeros 14 días, te devolvemos el dinero. Sin preguntas.
+            </div>
+
+            <h3 style="margin: 40px 0 20px; color: var(--primary);">Incluye:</h3>
+            <ul class="included-list">
+                <li>Acceso a marcos teóricos + microherramientas</li>
+                <li>Comunidad privada + network de miembros</li>
+                <li>Recursos actualizados de por vida</li>
+                <li>Descuentos en experiencias premium (Casa Xtao, tours)</li>
+                <li>Acceso a webinars + sesiones en vivo</li>
+                <li>Ruta clara hacia nivel PREMIUM (opcional)</li>
+            </ul>
+
+            <a href="https://checkout.example.com" class="cta-button" style="margin-top: 40px;">Acceso Ahora • $27</a>
+        </div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="community">
+        <h2>Más Que Un Producto</h2>
+        <div class="community-content">
+            <p>Te unes a un movimiento. Somos personas que creemos que el lujo real es la libertad: de tiempo, dinero y pensamientos.</p>
+            <p style="font-size: 1rem; color: #999;">Desde Casa Xtao en Huatulco hasta emprendimientos en Sonora, nuestros miembros están creando impacto.</p>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <h4>📍 3+ Destinos</h4>
+                    <p>Acceso a locaciones premium para conectar en persona</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>👥 1000+ Miembros</h4>
+                    <p>Red activa creciendo cada mes</p>
+                </div>
+                <div class="benefit-item">
+                    <h4>🚀 2+ Años</h4>
+                    <p>Trayectoria probada + casos de éxito documentados</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <h2>Tu Transformación Comienza Hoy</h2>
+        <p>No esperes al "momento perfecto". El momento es ahora. Invierte $27 en ti.</p>
+        <a href="https://checkout.example.com" class="cta-button">Acceder Ahora</a>
+        <p style="margin-top: 30px; font-size: 0.9rem; opacity: 0.7;">Garantía 14 días | Acceso vitalicio | Sin riesgos</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Mario Villanueva Ecosystem. Todos los derechos reservados.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">
+            <a href="#">Términos</a> •
+            <a href="#">Privacidad</a> •
+            <a href="#">Contacto</a>
+        </p>
+    </footer>
+
+</body>
+</html>

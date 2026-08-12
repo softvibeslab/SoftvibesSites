@@ -1,0 +1,60 @@
+{
+  "source": {
+    "profile_url": "https://www.instagram.com/_valmadero",
+    "actor": "apify/instagram-profile-scraper",
+    "run_id": "IwBqusGIdbugwY6dN",
+    "dataset_id": "9Ht8Q0LJdfjpIMt6S",
+    "collected_at": "2026-08-03",
+    "note": "Normalized public-data snapshot; expiring media URLs were intentionally omitted."
+  },
+  "profile": {
+    "full_name": "Valeria Soto Madero",
+    "username": "_valmadero",
+    "category": "Real Estate Agent",
+    "public": true,
+    "verified": false,
+    "followers": 6547,
+    "following": 2712,
+    "posts": 66,
+    "highlights": 37,
+    "public_contact_url": "https://wa.link/d8vvwr",
+    "positioning_summary": "Vida en el Caribe, bienes raíces y Airbnb; ayuda para encontrar una propiedad en Riviera Maya."
+  },
+  "sample": {
+    "posts": 12,
+    "date_range": ["2025-07-25", "2026-06-24"],
+    "videos": 10,
+    "carousels": 2,
+    "total_likes": 1439,
+    "average_likes": 119.92,
+    "median_likes": 71.5,
+    "total_comments": 18,
+    "average_comments": 1.5,
+    "total_video_views": 13148,
+    "average_video_views": 1314.8,
+    "proxy_engagement_rate_percent": 1.85,
+    "real_estate_posts": {
+      "count": 8,
+      "average_likes": 58.88,
+      "total_video_views": 10117
+    },
+    "personal_lifestyle_posts": {
+      "count": 4,
+      "average_likes": 242
+    }
+  },
+  "posts": [
+    {"date":"2026-06-24","shortcode":"DZ8sl9QudCV","category":"personal","likes":154,"comments":3,"views":1298,"topic":"Cinco años viviendo en Playa del Carmen"},
+    {"date":"2026-06-21","shortcode":"DZ2rX7ouGiZ","category":"personal","likes":222,"comments":4,"views":1733,"topic":"Familia y colaboración profesional"},
+    {"date":"2026-06-18","shortcode":"DZtVYxuOehX","category":"real_estate","likes":58,"comments":0,"views":623,"topic":"Casa en Zona Diamante por $4.2 M MXN; vigencia por confirmar"},
+    {"date":"2026-06-03","shortcode":"DZITavNOzOL","category":"real_estate","likes":27,"comments":0,"views":395,"topic":"Crédito, enganche y gastos para primer comprador"},
+    {"date":"2026-04-24","shortcode":"DXhsrXvjv_d","category":"real_estate","likes":48,"comments":0,"views":632,"topic":"Lotes residenciales y financiamiento directo"},
+    {"date":"2026-01-31","shortcode":"DUMORzMEk8b","category":"real_estate","likes":44,"comments":2,"views":1179,"topic":"Lotes de uso mixto"},
+    {"date":"2026-02-12","shortcode":"DUq-GokktSK","category":"real_estate","likes":112,"comments":1,"views":2777,"topic":"Villas en Tulum y financiamiento"},
+    {"date":"2025-09-01","shortcode":"DODBWz5DUxU","category":"personal","likes":286,"comments":0,"views":null,"topic":"Recapitulación personal de agosto"},
+    {"date":"2025-11-28","shortcode":"DRnJJ6Ikld0","category":"real_estate","likes":52,"comments":1,"views":1112,"topic":"Criterios de un departamento para Airbnb"},
+    {"date":"2026-02-10","shortcode":"DUjzuGtDihd","category":"real_estate","likes":45,"comments":0,"views":1687,"topic":"Costo de esperar para invertir"},
+    {"date":"2025-08-04","shortcode":"DM8DFvgsxZU","category":"real_estate","likes":85,"comments":3,"views":1712,"topic":"Departamento en preventa"},
+    {"date":"2025-07-25","shortcode":"DMgy9Tms-nh","category":"personal","likes":306,"comments":4,"views":null,"topic":"Viaje a Río de Janeiro"}
+  ]
+}

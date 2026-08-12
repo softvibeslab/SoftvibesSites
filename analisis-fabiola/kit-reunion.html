@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Kit de reunión · Fabiola González · Softvibes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#181319; --plum:#624763; --plum-deep:#4a3450; --rose:#b77886;
+    --clay:#a56d5f; --gold:#c9a44e; --gold-soft:#ead8a5; --paper:#f7f1ea;
+    --paper-2:#fffdf9; --line:#e6ddd0; --ok:#1e6e46;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;line-height:1.15}
+  em{font-style:italic;color:var(--gold)}
+  .container{max-width:960px;margin:0 auto;padding:0 1.4rem}
+  .eyebrow{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:.5rem}
+
+  header.hero{background:linear-gradient(160deg,var(--plum-deep),var(--plum));color:#fff;padding:3rem 0 2.6rem;position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;right:-100px;top:-100px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(201,164,78,.28),transparent 70%)}
+  header.hero h1{font-size:clamp(2rem,4.5vw,3rem);margin:.2rem 0 .6rem}
+  header.hero p{max-width:600px;color:#e9e1ea}
+  .hero-meta{margin-top:1.2rem;font-size:.85rem;color:var(--gold-soft)}
+  .hero-meta b{color:#fff}
+
+  section{padding:2.6rem 0}
+  .sec-head{margin-bottom:1.6rem}
+  .sec-head h2{font-size:clamp(1.7rem,3.2vw,2.3rem);color:var(--plum-deep)}
+  .sec-head p{color:#5f5560;margin-top:.35rem;font-size:.95rem}
+  .num-badge{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--plum-deep);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.2rem;margin-right:.6rem;vertical-align:middle}
+
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:1.5rem;box-shadow:0 8px 24px rgba(74,52,80,.05);margin-bottom:1.1rem}
+  .card h3{color:var(--plum-deep);font-size:1.35rem;margin-bottom:.7rem}
+
+  .howto{background:rgba(201,164,78,.12);border:1px solid var(--gold-soft);border-radius:10px;padding:.85rem 1.1rem;font-size:.88rem;color:#6a5320;margin-bottom:1.2rem}
+  .howto b{color:var(--plum-deep)}
+
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--plum);font-weight:700}
+  td.dato{color:#5f5560;width:38%}
+  td.accion{color:#8a8089;font-size:.82rem;font-style:italic;width:32%}
+  input.fld{width:100%;border:1px solid var(--line);border-radius:7px;padding:.45rem .6rem;font-family:inherit;font-size:.9rem;background:#fff;color:var(--ink)}
+  input.fld:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,164,78,.15)}
+
+  /* Script boxes */
+  .script{position:relative;background:#fff;border:1px solid var(--line);border-left:4px solid var(--rose);border-radius:8px;padding:1rem 3rem 1rem 1.1rem;margin:.7rem 0;font-size:.95rem;color:#302833}
+  .script .quote{font-style:italic}
+  .copy-btn{position:absolute;top:.6rem;right:.6rem;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:.28rem .5rem;font-size:.7rem;font-weight:600;color:var(--plum);cursor:pointer;transition:.15s}
+  .copy-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+  .step-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--gold)}
+
+  .obj{border-left:4px solid var(--clay)}
+  .obj .q{font-weight:600;color:var(--plum-deep)}
+  .obj .a{color:#5f5560}
+  .obj .a::before{content:"→ ";color:var(--clay);font-weight:700}
+
+  /* Checklist */
+  .check{display:flex;align-items:flex-start;gap:.8rem;background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:1rem 1.2rem;margin-bottom:.7rem;cursor:pointer;transition:.15s}
+  .check:hover{border-color:var(--gold)}
+  .check input{margin-top:.25rem;width:20px;height:20px;accent-color:var(--gold);cursor:pointer;flex:0 0 auto}
+  .check .t{font-size:.95rem}
+  .check .t b{color:var(--plum-deep)}
+  .check.done{background:rgba(30,110,70,.06);border-color:var(--ok)}
+  .check.done .t{color:#8a8089}
+
+  .toolbar{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.4rem}
+  .btn{border:0;border-radius:8px;padding:.65rem 1.2rem;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+  .btn-gold{background:var(--gold);color:#fff}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--plum)}
+  .saved-note{font-size:.78rem;color:var(--ok);margin-top:.6rem;height:1rem}
+
+  footer{background:var(--plum-deep);color:#d9cdda;text-align:center;padding:2rem 1.4rem;font-size:.82rem}
+  footer strong{color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.15rem;display:block;margin-bottom:.3rem}
+
+  @media(max-width:640px){ td.accion{display:none} th:last-child{display:none} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="eyebrow">Softvibes · Guía interna</div>
+    <h1>Kit de reunión — <em>Fabiola González</em></h1>
+    <p>Analiza su audiencia en vivo y consigue su base tibia para arrancar la prueba hoy. Rellena los campos durante la llamada; se guardan solos en este navegador.</p>
+    <div class="hero-meta"><b>Hoy · 13:00</b> · Meta: cerrar la primera venta de $1,500 USD</div>
+  </div>
+</header>
+
+<!-- 1. INSIGHTS -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="num-badge">1</span>Análisis de audiencia — en vivo</div>
+      <h2>Insights de Instagram</h2>
+      <p>Su propia cuenta, datos agregados. Cero scraping, cero riesgo de baneo.</p>
+    </div>
+
+    <div class="howto">
+      <b>Cómo hacerlo:</b> pídele compartir pantalla → Instagram → menú ☰ → <b>Insights</b> → <b>Total de seguidores</b> (necesita cuenta profesional). Llenen la tabla juntos.
+    </div>
+
+    <div class="card">
+      <h3>A. Demografía de sus seguidores</h3>
+      <table>
+        <tr><th>Dato</th><th>Captura</th><th>Decisión de targeting</th></tr>
+        <tr><td class="dato">Rango de edad dominante</td><td><input class="fld" data-k="edad1" placeholder="ej. 35–44"></td><td class="accion">Edad base para Ads</td></tr>
+        <tr><td class="dato">2º rango de edad</td><td><input class="fld" data-k="edad2"></td><td class="accion">Público de expansión</td></tr>
+        <tr><td class="dato">Género (% mujeres)</td><td><input class="fld" data-k="genero" placeholder="ej. 88%"></td><td class="accion">Confirmar segmentación</td></tr>
+        <tr><td class="dato">Ciudad #1</td><td><input class="fld" data-k="ciudad1"></td><td class="accion">Ubicación prioritaria</td></tr>
+        <tr><td class="dato">Ciudad #2</td><td><input class="fld" data-k="ciudad2"></td><td class="accion">2ª ubicación</td></tr>
+        <tr><td class="dato">Ciudad #3</td><td><input class="fld" data-k="ciudad3"></td><td class="accion">3ª ubicación</td></tr>
+        <tr><td class="dato">País #1</td><td><input class="fld" data-k="pais1"></td><td class="accion">Mercado inicial de la prueba</td></tr>
+        <tr><td class="dato">País #2 / #3</td><td><input class="fld" data-k="pais2"></td><td class="accion">Fases siguientes</td></tr>
+        <tr><td class="dato">Horario más activo</td><td><input class="fld" data-k="horario"></td><td class="accion">Cuándo enviar y publicar</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>B. Qué contenido funciona (30–90 días)</h3>
+      <table>
+        <tr><th>Post / Reel</th><th>Guardados</th><th>Tema / pilar</th></tr>
+        <tr><td><input class="fld" data-k="post1" placeholder="Top 1"></td><td><input class="fld" data-k="g1"></td><td><input class="fld" data-k="t1"></td></tr>
+        <tr><td><input class="fld" data-k="post2" placeholder="Top 2"></td><td><input class="fld" data-k="g2"></td><td><input class="fld" data-k="t2"></td></tr>
+        <tr><td><input class="fld" data-k="post3" placeholder="Top 3"></td><td><input class="fld" data-k="g3"></td><td><input class="fld" data-k="t3"></td></tr>
+      </table>
+      <p style="font-size:.82rem;color:#8a8089;margin-top:.7rem;font-style:italic">Los temas con más <b>guardados</b> son los ganchos para anuncios y lead magnet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. GUION -->
+<section style="background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="num-badge">2</span>Guion de 5 minutos</div>
+      <h2>Pedir su base tibia</h2>
+      <p>Enmárcalo como <em>aprovechar el oro que ya tiene</em>, no como carencia. Toca "Copiar" para tener la frase a la mano.</p>
+    </div>
+
+    <div class="card">
+      <div class="step-lbl">Paso 1 · Reencuadre (30s)</div>
+      <div class="script"><button class="copy-btn">Copiar</button><span class="quote">"Fabiola, antes de traer gente nueva, déjame mostrarte algo: lo más rentable no está afuera, está en las mujeres que ya te compraron y ya confían en ti. Empezar por ahí es lo que hace que la prueba cierre rápido."</span></div>
+
+      <div class="step-lbl">Paso 2 · La pregunta clave (1 min)</div>
+      <div class="script"><button class="copy-btn">Copiar</button><span class="quote">"¿Tienes identificadas a las mujeres que compraron Amate y Suelta? Ellas ya dieron el primer paso contigo. Son el mejor punto de partida para Mujer Montaña. ¿Y tienes lista de correo de tus webinars o eventos?"</span></div>
+
+      <div class="step-lbl">Paso 3 · Bajar la fricción (1 min)</div>
+      <div class="script"><button class="copy-btn">Copiar</button><span class="quote">"No necesitas ordenarlo tú. Mándamelo como lo tengas —Excel, captura, export de Hotmart— y yo lo dejo listo en el tablero. Tú solo copias y pegas los mensajes que ya te preparé."</span></div>
+
+      <div class="step-lbl">Paso 4 · Conectar con su condición (1 min)</div>
+      <div class="script"><button class="copy-btn">Copiar</button><span class="quote">"Con estos contactos y el guion, la meta de la prueba es clara: que salga tu primera venta de $1,500 USD. Ese es justo el disparador para pasar al paquete de acompañamiento."</span></div>
+
+      <div class="step-lbl">Paso 5 · Cerrar el siguiente paso (30s)</div>
+      <div class="script"><button class="copy-btn">Copiar</button><span class="quote">"¿Te parece si hoy defines cuántas contactas primero —arrancamos con 20–30— y mañana ya estás enviando?"</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Objeciones probables</h3>
+      <div class="script obj"><div class="q">"No las tengo ordenadas / me da flojera."</div><div class="a">"Mándamelo como sea. Yo lo ordeno. Tu único trabajo es enviar."</div></div>
+      <div class="script obj"><div class="q">"¿Y si se molestan porque les escribo?"</div><div class="a">"Empezamos con quienes ya te compraron y te conocen. No es venta fría, es reencuentro. El mensaje es cálido, no invasivo."</div></div>
+      <div class="script obj"><div class="q">"¿Cuántas clientas puedo atender?" (pregúntaselo tú)</div><div class="a">Define su tope semanal para no generar más citas de las que puede tomar.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. CHECKLIST -->
+<section>
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow"><span class="num-badge">3</span>No salgas sin esto</div>
+      <h2>Los 3 datos clave</h2>
+    </div>
+    <label class="check"><input type="checkbox"><span class="t"><b>¿Tiene lista de "Amate y Suelta" / lista de correo?</b> — de ahí sale la prueba.</span></label>
+    <label class="check"><input type="checkbox"><span class="t"><b>¿Cuántas clientas atiende al mes sin saturarse?</b> — dimensiona la prueba.</span></label>
+    <label class="check"><input type="checkbox"><span class="t"><b>¿Qué considera una "cita calificada"?</b> — así miden el éxito juntos.</span></label>
+
+    <div class="toolbar">
+      <button class="btn btn-gold" id="btn-resumen">📋 Copiar resumen de lo capturado</button>
+      <button class="btn btn-ghost" id="btn-limpiar">Limpiar todo</button>
+    </div>
+    <div class="saved-note" id="saved"></div>
+  </div>
+</section>
+
+<footer>
+  <strong>Fabiola González · Mujer Puente → Mujer Montaña</strong>
+  Kit interno Softvibes · Los datos se guardan solo en tu navegador
+</footer>
+
+<script>
+  const KEY = 'kit-fabiola';
+  const saved = document.getElementById('saved');
+  let flash;
+  function note(msg){ saved.textContent = msg; clearTimeout(flash); flash = setTimeout(()=>saved.textContent='',2200); }
+
+  // Persistencia local
+  function load(){
+    const data = JSON.parse(localStorage.getItem(KEY) || '{}');
+    document.querySelectorAll('input.fld').forEach(i => { if(data[i.dataset.k]) i.value = data[i.dataset.k]; });
+    (data.__checks||[]).forEach((v,idx)=>{ const cb=document.querySelectorAll('.check input')[idx]; if(cb){cb.checked=v; cb.closest('.check').classList.toggle('done',v);} });
+  }
+  function save(){
+    const data = {};
+    document.querySelectorAll('input.fld').forEach(i => data[i.dataset.k] = i.value);
+    data.__checks = [...document.querySelectorAll('.check input')].map(c=>c.checked);
+    localStorage.setItem(KEY, JSON.stringify(data));
+  }
+  document.querySelectorAll('input.fld').forEach(i => i.addEventListener('input', ()=>{save(); note('Guardado ✓');}));
+  document.querySelectorAll('.check input').forEach(c => c.addEventListener('change', e=>{
+    e.target.closest('.check').classList.toggle('done', e.target.checked); save();
+  }));
+
+  // Copiar frases de guion
+  document.querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', ()=>{
+    const txt = b.parentElement.querySelector('.quote').textContent;
+    navigator.clipboard.writeText(txt).then(()=>{ b.textContent='¡Copiado!'; setTimeout(()=>b.textContent='Copiar',1400); });
+  }));
+
+  // Copiar resumen
+  document.getElementById('btn-resumen').addEventListener('click', ()=>{
+    const g = k => (document.querySelector(`[data-k="${k}"]`)?.value || '—');
+    const txt =
+`RESUMEN REUNIÓN FABIOLA — Insights
+Edad: ${g('edad1')} / ${g('edad2')} · Género: ${g('genero')}
+Ciudades: ${g('ciudad1')}, ${g('ciudad2')}, ${g('ciudad3')}
+Países: ${g('pais1')} / ${g('pais2')} · Horario: ${g('horario')}
+Top contenido: ${g('post1')} (${g('t1')}), ${g('post2')} (${g('t2')}), ${g('post3')} (${g('t3')})
+--> Mercado inicial: ${g('pais1')} · Edad+género Ads: ${g('edad1')}, ${g('genero')}`;
+    navigator.clipboard.writeText(txt).then(()=>note('Resumen copiado al portapapeles ✓'));
+  });
+
+  document.getElementById('btn-limpiar').addEventListener('click', ()=>{
+    if(confirm('¿Borrar todo lo capturado?')){ localStorage.removeItem(KEY); location.reload(); }
+  });
+
+  load();
+</script>
+</body>
+</html>

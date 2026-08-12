@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Agenda tu cita - BarberApp</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a1a1a;
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .app {
+      width: 100%;
+      max-width: 500px;
+      background: #2c2c2c;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .header {
+      background: #c9a95c;
+      padding: 1.5rem;
+      text-align: center;
+      color: #1a1a1a;
+    }
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: #222;
+    }
+    .step-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #555;
+      transition: 0.3s;
+    }
+    .step-dot.active { background: #c9a95c; transform: scale(1.2); }
+    .step-dot.done { background: #7a9f5a; }
+    .content {
+      padding: 1.5rem;
+      min-height: 400px;
+    }
+    .step-title {
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      color: #c9a95c;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+    .option-card {
+      background: #3a3a3a;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .option-card.selected {
+      border-color: #c9a95c;
+      background: #4a4030;
+    }
+    .barber-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+      border: 2px solid #555;
+    }
+    .service-info {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 0.3rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #ccc;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 12px;
+      border: none;
+      background: #3a3a3a;
+      color: #fff;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 16px;
+      background: #c9a95c;
+      color: #1a1a1a;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #dab96b;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    .summary-box {
+      background: #3a3a3a;
+      padding: 1rem;
+      border-radius: 12px;
+      line-height: 1.7;
+    }
+    .time-slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .time-slot {
+      background: #3a3a3a;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .time-slot.selected {
+      border-color: #c9a95c;
+      background: #4a4030;
+    }
+    .time-slot:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .success-message {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .success-message h2 {
+      color: #7a9f5a;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>✂️ BarberApp</h1>
+      <p style="font-size:0.9rem;">Agenda tu cita en minutos</p>
+    </div>
+    <div class="step-indicator" id="stepIndicator">
+      <span class="step-dot active" data-step="1"></span>
+      <span class="step-dot" data-step="2"></span>
+      <span class="step-dot" data-step="3"></span>
+      <span class="step-dot" data-step="4"></span>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+
+  <script>
+    // CONFIGURACIÓN
+    const SUPABASE_URL = 'https://okxcyyrmzeoknkfxjuka.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9reGN5eXJtemVva25rZnhqdWthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MjEwNzIsImV4cCI6MjA5MzM5NzA3Mn0.oQkXTjDvAiZzvLumH5LuohpF97n_5S2Wxa-g8w3gDnQ';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Estado global de la cita
+    const appointment = {
+      barber: null,
+      service: null,
+      date: null,
+      time: null,
+      customerName: '',
+      customerPhone: '',
+    };
+
+    let currentStep = 1;
+    const totalSteps = 4;
+    let barbers = [];
+    let services = [];
+
+    const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadInitialData();
+      renderStep(currentStep);
+    });
+
+    async function loadInitialData() {
+      try {
+        const { data: barbersData } = await supabase.from('barbers').select('*');
+        const { data: servicesData } = await supabase.from('services').select('*').eq('is_active', true);
+        barbers = barbersData || [];
+        services = servicesData || [];
+      } catch (err) {
+        console.error('Error cargando datos iniciales:', err);
+      }
+    }
+
+    function renderStep(step) {
+      const content = document.getElementById('content');
+      content.innerHTML = '';
+      updateStepIndicator(step);
+
+      if (step === 1) renderBarberSelection(content);
+      else if (step === 2) renderServiceSelection(content);
+      else if (step === 3) renderDateTimeSelection(content);
+      else if (step === 4) renderConfirmation(content);
+    }
+
+    function updateStepIndicator(active) {
+      const dots = document.querySelectorAll('.step-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.remove('active', 'done');
+        if (index + 1 === active) dot.classList.add('active');
+        else if (index + 1 < active) dot.classList.add('done');
+      });
+    }
+
+    function createButton(text, onClick, disabled = false) {
+      const btn = document.createElement('button');
+      btn.textContent = text;
+      btn.onclick = onClick;
+      btn.disabled = disabled;
+      return btn;
+    }
+
+    function renderBarberSelection(container) {
+      container.innerHTML = '<div class="step-title">1. Elige tu barbero</div>';
+      const grid = document.createElement('div');
+      grid.className = 'options-grid';
+
+      barbers.forEach(barber => {
+        const card = document.createElement('div');
+        card.className = 'option-card' + (appointment.barber?.id === barber.id ? ' selected' : '');
+        card.innerHTML = `
+          <img src="${barber.photo_url || 'https://via.placeholder.com/70'}" class="barber-img" alt="${barber.name}">
+          <div><strong>${barber.name}</strong></div>
+        `;
+        card.onclick = () => {
+          appointment.barber = barber;
+          renderStep(1);
+        };
+        grid.appendChild(card);
+      });
+      container.appendChild(grid);
+      container.appendChild(createButton('Siguiente →', () => {
+        if (!appointment.barber) return alert('Selecciona un barbero');
+        currentStep = 2;
+        renderStep(2);
+      }, !appointment.barber));
+    }
+
+    function renderServiceSelection(container) {
+      container.innerHTML = '<div class="step-title">2. Elige el servicio</div>';
+      const grid = document.createElement('div');
+      grid.className = 'options-grid';
+
+      services.forEach(service => {
+        const card = document.createElement('div');
+        card.className = 'option-card' + (appointment.service?.id === service.id ? ' selected' : '');
+        card.innerHTML = `
+          <div><strong>${service.name}</strong></div>
+          <div class="service-info">⏱️ ${service.duration} min · 💰 $${service.price}</div>
+        `;
+        card.onclick = () => {
+          appointment.service = service;
+          renderStep(2);
+        };
+        grid.appendChild(card);
+      });
+      container.appendChild(grid);
+      const nav = document.createElement('div');
+      nav.style.display = 'flex';
+      nav.style.gap = '0.5rem';
+      nav.appendChild(createButton('← Atrás', () => { currentStep = 1; renderStep(1); }));
+      nav.appendChild(createButton('Siguiente →', () => {
+        if (!appointment.service) return alert('Elige un servicio');
+        currentStep = 3;
+        renderStep(3);
+      }, !appointment.service));
+      container.appendChild(nav);
+    }
+
+    function renderDateTimeSelection(container) {
+      container.innerHTML = '<div class="step-title">3. Fecha y hora</div>';
+
+      const dateInput = document.createElement('input');
+      dateInput.type = 'date';
+      dateInput.id = 'datePicker';
+      dateInput.value = appointment.date || '';
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.setAttribute('min', today);
+      dateInput.onchange = async () => {
+        appointment.date = dateInput.value;
+        appointment.time = null;
+        await loadAvailableSlots();
+      };
+
+      const dateGroup = document.createElement('div');
+      dateGroup.className = 'form-group';
+      dateGroup.innerHTML = '<label>📅 Selecciona la fecha</label>';
+      dateGroup.appendChild(dateInput);
+      container.appendChild(dateGroup);
+
+      const slotsContainer = document.createElement('div');
+      slotsContainer.id = 'slotsContainer';
+      slotsContainer.innerHTML = '<p style="color:#aaa;">Selecciona una fecha para ver horarios</p>';
+      container.appendChild(slotsContainer);
+
+      if (appointment.date) {
+        loadAvailableSlots();
+      }
+
+      const nav = document.createElement('div');
+      nav.style.display = 'flex';
+      nav.style.gap = '0.5rem';
+      nav.appendChild(createButton('← Atrás', () => { currentStep = 2; renderStep(2); }));
+      nav.appendChild(createButton('Siguiente →', () => {
+        if (!appointment.date || !appointment.time) return alert('Selecciona fecha y hora');
+        currentStep = 4;
+        renderStep(4);
+      }, !(appointment.date && appointment.time)));
+      container.appendChild(nav);
+
+      async function loadAvailableSlots() {
+        if (!appointment.date || !appointment.barber) return;
+        const date = new Date(appointment.date + 'T12:00:00');
+        const dayName = weekdays[date.getDay()];
+        const schedule = appointment.barber.schedule[dayName];
+        if (!schedule || !schedule.start || !schedule.end) {
+          slotsContainer.innerHTML = '<p class="error">El barbero no trabaja este día.</p>';
+          return;
+        }
+
+        const { data: existing } = await supabase
+          .from('appointments')
+          .select('start_time, end_time')
+          .eq('barber_id', appointment.barber.id)
+          .eq('appointment_date', appointment.date)
+          .neq('status', 'cancelled');
+
+        const busyIntervals = existing.map(c => ({
+          start: c.start_time.substring(0,5),
+          end: c.end_time.substring(0,5)
+        }));
+
+        const startParts = schedule.start.split(':').map(Number);
+        const endParts = schedule.end.split(':').map(Number);
+        const startMin = startParts[0]*60 + startParts[1];
+        const endMin = endParts[0]*60 + endParts[1];
+        const serviceDuration = appointment.service.duration;
+        const slotInterval = 30;
+
+        const availableSlots = [];
+        for (let min = startMin; min + serviceDuration <= endMin; min += slotInterval) {
+          const slotStartHour = Math.floor(min/60).toString().padStart(2,'0');
+          const slotStartMin = (min%60).toString().padStart(2,'0');
+          const slotEnd = min + serviceDuration;
+          const slotEndHour = Math.floor(slotEnd/60).toString().padStart(2,'0');
+          const slotEndMin = (slotEnd%60).toString().padStart(2,'0');
+          const startStr = `${slotStartHour}:${slotStartMin}`;
+          const endStr = `${slotEndHour}:${slotEndMin}`;
+
+          const overlap = busyIntervals.some(b => {
+            return (startStr < b.end && endStr > b.start);
+          });
+          if (!overlap) availableSlots.push(startStr);
+        }
+
+        slotsContainer.innerHTML = '';
+        if (availableSlots.length === 0) {
+          slotsContainer.innerHTML = '<p class="error">No hay horarios disponibles para este día con la duración del servicio.</p>';
+          return;
+        }
+        const slotsDiv = document.createElement('div');
+        slotsDiv.className = 'time-slots';
+        availableSlots.forEach(slot => {
+          const btn = document.createElement('div');
+          btn.className = 'time-slot' + (appointment.time === slot ? ' selected' : '');
+          btn.textContent = slot;
+          btn.onclick = () => {
+            appointment.time = slot;
+            document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            checkNextButton();
+          };
+          slotsDiv.appendChild(btn);
+        });
+        slotsContainer.appendChild(slotsDiv);
+        if (appointment.time) {
+          const sel = document.querySelector(`.time-slot.selected`);
+          if (!sel) appointment.time = null;
+        }
+        checkNextButton();
+      }
+
+      function checkNextButton() {
+        const nextBtn = document.querySelector('#content button:last-child');
+        if (nextBtn) nextBtn.disabled = !(appointment.date && appointment.time);
+      }
+    }
+
+    function renderConfirmation(container) {
+      container.innerHTML = '<div class="step-title">4. Confirma tu cita</div>';
+
+      const summary = document.createElement('div');
+      summary.className = 'summary-box';
+      summary.innerHTML = `
+        <p><strong>Barbero:</strong> ${appointment.barber.name}</p>
+        <p><strong>Servicio:</strong> ${appointment.service.name} (${appointment.service.duration} min)</p>
+        <p><strong>Precio:</strong> $${appointment.service.price}</p>
+        <p><strong>Fecha:</strong> ${appointment.date} a las ${appointment.time}</p>
+      `;
+      container.appendChild(summary);
+
+      const form = document.createElement('div');
+      form.innerHTML = `
+        <div class="form-group">
+          <label>👤 Tu nombre</label>
+          <input type="text" id="custName" placeholder="Escribe tu nombre" value="${appointment.customerName}">
+        </div>
+        <div class="form-group">
+          <label>📱 Teléfono / WhatsApp</label>
+          <input type="tel" id="custPhone" placeholder="123456789" value="${appointment.customerPhone}">
+        </div>
+        <div id="errorMsg" class="error"></div>
+      `;
+      container.appendChild(form);
+
+      const nav = document.createElement('div');
+      nav.style.display = 'flex';
+      nav.style.gap = '0.5rem';
+      nav.appendChild(createButton('← Atrás', () => { 
+        appointment.customerName = document.getElementById('custName').value;
+        appointment.customerPhone = document.getElementById('custPhone').value;
+        currentStep = 3; 
+        renderStep(3); 
+      }));
+      nav.appendChild(createButton('Confirmar cita ✅', async () => {
+        const name = document.getElementById('custName').value.trim();
+        const phone = document.getElementById('custPhone').value.trim();
+        const errorDiv = document.getElementById('errorMsg');
+        if (!name || !phone) {
+          errorDiv.textContent = 'Completa todos los campos.';
+          return;
+        }
+        appointment.customerName = name;
+        appointment.customerPhone = phone;
+        await submitAppointment();
+      }));
+      container.appendChild(nav);
+    }
+
+    async function submitAppointment() {
+      const service = appointment.service;
+      const endTime = calculateEndTime(appointment.time, service.duration);
+      const { error } = await supabase.from('appointments').insert({
+        barber_id: appointment.barber.id,
+        service_id: service.id,
+        customer_name: appointment.customerName,
+        customer_phone: appointment.customerPhone,
+        appointment_date: appointment.date,
+        start_time: appointment.time,
+        end_time: endTime,
+        status: 'scheduled'
+      });
+      if (error) {
+        document.getElementById('errorMsg').textContent = 'Error al guardar: ' + error.message;
+      } else {
+        const content = document.getElementById('content');
+        content.innerHTML = `
+          <div class="success-message">
+            <h2>🎉 ¡Cita agendada!</h2>
+            <p>Te esperamos el ${appointment.date} a las ${appointment.time}.</p>
+            <p>Recibirás una confirmación en breve.</p>
+            <button onclick="resetApp()">Agendar otra cita</button>
+          </div>
+        `;
+      }
+    }
+
+    function calculateEndTime(start, durationMin) {
+      const [h, m] = start.split(':').map(Number);
+      const totalMin = h * 60 + m + durationMin;
+      const endH = Math.floor(totalMin / 60) % 24;
+      const endM = totalMin % 60;
+      return `${endH.toString().padStart(2,'0')}:${endM.toString().padStart(2,'0')}`;
+    }
+
+    function resetApp() {
+      appointment.barber = null;
+      appointment.service = null;
+      appointment.date = null;
+      appointment.time = null;
+      appointment.customerName = '';
+      appointment.customerPhone = '';
+      currentStep = 1;
+      renderStep(1);
+    }
+  </script>
+</body>
+</html>

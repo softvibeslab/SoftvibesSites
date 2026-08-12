@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Suemi García · Análisis de tu presencia digital — Softvibes</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --verde-900: #1B3A2F;
+    --profundo: #0F241D;
+    --verde-700: #4d6c5f;
+    --bruma: #9db4a8;
+    --crema: #F5F1E8;
+    --oro: #C9A227;
+    --oro-claro: #E2C15C;
+    --rojo: #c0614f;
+    --verde: #4f8f6b;
+    --sombra: 0 20px 60px rgba(15, 36, 29, 0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--crema);
+    color: var(--verde-900);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .serif { font-family: 'Playfair Display', Georgia, serif; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+
+  .etiqueta {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--oro);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background:
+      radial-gradient(ellipse 90% 70% at 70% 0%, rgba(201,162,39,0.18), transparent 60%),
+      linear-gradient(165deg, var(--profundo) 0%, var(--verde-900) 85%);
+    color: var(--crema);
+    text-align: center;
+    padding: 4.5rem 1.5rem 6.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero .retrato {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--oro);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    margin-bottom: 1.4rem;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 80px;
+    background: var(--crema);
+    clip-path: ellipse(60% 100% at 50% 100%);
+  }
+  .hero .marca {
+    font-size: 0.85rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--oro-claro);
+    margin-bottom: 2.2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    font-weight: 500;
+    max-width: 760px;
+    margin: 0 auto 1.4rem;
+  }
+  .hero h1 em { color: var(--oro-claro); }
+  .hero p.sub {
+    max-width: 580px;
+    margin: 0 auto;
+    font-weight: 300;
+    font-size: 1.05rem;
+    opacity: 0.85;
+  }
+  .hero p.sub strong { color: var(--oro-claro); font-weight: 500; }
+  .hero .dedicatoria {
+    margin-top: 2.4rem;
+    font-size: 0.85rem;
+    opacity: 0.65;
+  }
+
+  /* ---------- Cifras ---------- */
+  .cifras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: -2.5rem auto 0;
+    position: relative;
+    z-index: 2;
+    max-width: 820px;
+    padding: 0 1.5rem;
+  }
+  .cifra {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: var(--sombra);
+    padding: 1.4rem 1rem;
+    text-align: center;
+  }
+  .cifra .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    color: var(--oro);
+    font-weight: 700;
+  }
+  .cifra .desc { font-size: 0.78rem; color: var(--verde-700); margin-top: 0.2rem; }
+
+  /* ---------- Galería polaroid ---------- */
+  .galeria {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    padding: 3.2rem 1.5rem 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .polaroid {
+    background: #fff;
+    padding: 10px 10px 14px;
+    border-radius: 6px;
+    box-shadow: 0 12px 32px rgba(15,36,29,0.16);
+    width: 230px;
+    transition: transform 0.35s, box-shadow 0.35s;
+  }
+  .polaroid:nth-child(1) { transform: rotate(-2.5deg); }
+  .polaroid:nth-child(2) { transform: rotate(1.5deg) translateY(10px); }
+  .polaroid:nth-child(3) { transform: rotate(-1deg); }
+  .polaroid:hover { transform: rotate(0) scale(1.05); box-shadow: var(--sombra); z-index: 2; }
+  .polaroid img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 3px;
+    display: block;
+  }
+  .polaroid figcaption {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--verde-700);
+    text-align: center;
+    padding-top: 10px;
+  }
+  .galeria-nota {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--verde-700);
+    font-weight: 300;
+    padding: 1.6rem 1.5rem 0;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+  .galeria-nota strong { color: var(--oro); }
+
+  /* ---------- Secciones ---------- */
+  section { padding: 4.5rem 0 2rem; }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 3rem; }
+  .section-head h2 { font-size: clamp(1.6rem, 4vw, 2.3rem); font-weight: 500; margin-bottom: 0.8rem; }
+  .section-head p { color: var(--verde-700); font-weight: 300; }
+
+  /* ---------- Hallazgos (acordeón) ---------- */
+  .hallazgo {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(15,36,29,0.07);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border-left: 4px solid var(--rojo);
+    transition: box-shadow 0.3s;
+  }
+  .hallazgo:hover { box-shadow: var(--sombra); }
+  .hallazgo button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .hallazgo .icono { font-size: 1.5rem; flex-shrink: 0; }
+  .hallazgo .titulo { font-weight: 600; font-size: 1rem; flex: 1; }
+  .hallazgo .flecha { transition: transform 0.35s; color: var(--oro); flex-shrink: 0; }
+  .hallazgo.abierto .flecha { transform: rotate(180deg); }
+  .hallazgo .detalle {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease;
+  }
+  .hallazgo .detalle-inner {
+    padding: 0 1.4rem 1.4rem 4rem;
+    color: var(--rojo);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+  .hallazgo .detalle-inner .evidencia {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--verde-700);
+  }
+  .hallazgo .detalle-inner .solucion {
+    margin-top: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: rgba(79, 143, 107, 0.09);
+    border-left: 3px solid var(--verde);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: var(--verde);
+  }
+  .hallazgo .detalle-inner .solucion strong { color: var(--verde); }
+
+  /* ---------- Caja de código: el link roto ---------- */
+  .codigo-compara {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.8rem;
+    margin-top: 0.95rem;
+  }
+  .codigo-caja {
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    background: #10201a;
+    overflow: hidden;
+  }
+  .codigo-caja .cc-tit {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+  }
+  .codigo-caja code {
+    font-family: 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    display: block;
+    word-break: break-all;
+    color: #e7e2d6;
+  }
+  .codigo-caja.mal { border: 1px solid rgba(192,97,79,0.55); }
+  .codigo-caja.mal .cc-tit { color: #e08a76; }
+  .codigo-caja.mal code { color: #f0a892; }
+  .codigo-caja.bien { border: 1px solid rgba(79,143,107,0.55); }
+  .codigo-caja.bien .cc-tit { color: #7fc79b; }
+  .codigo-caja.bien code { color: #a8e2c0; }
+  .codigo-pie {
+    font-size: 0.76rem;
+    font-style: italic;
+    color: var(--verde-700);
+    padding-top: 0.55rem;
+  }
+
+  /* ---------- Interruptor Antes/Ahora ---------- */
+  .embudo-seccion { background: var(--profundo); color: var(--crema); padding: 4.5rem 0; margin-top: 3rem; }
+  .embudo-seccion .section-head h2 { color: var(--crema); }
+  .embudo-seccion .section-head p { color: var(--bruma); }
+
+  .switch-wrap { display: flex; justify-content: center; margin-bottom: 2.8rem; }
+  .switch {
+    display: flex;
+    background: rgba(245,241,232,0.1);
+    border-radius: 999px;
+    padding: 5px;
+    gap: 4px;
+  }
+  .switch button {
+    all: unset;
+    cursor: pointer;
+    padding: 0.6rem 2rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--bruma);
+    transition: all 0.3s;
+  }
+  .switch button.activo { background: var(--oro); color: #201a05; }
+
+  @keyframes aparecer { to { opacity: 1; transform: translateY(0); } }
+
+  .escena { max-width: 880px; margin: 0 auto; padding: 0 1.2rem; }
+  .escena[hidden] { display: none; }
+  .escena > * { opacity: 0; transform: translateY(14px); animation: aparecer 0.5s forwards; }
+  .escena > *:nth-child(2) { animation-delay: 0.15s; }
+  .escena > *:nth-child(3) { animation-delay: 0.3s; }
+
+  .veredicto {
+    text-align: center;
+    margin-top: 2.2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--oro-claro);
+    padding: 0 1rem;
+  }
+
+  /* --- Escena ANTES: capturas reales con anotaciones --- */
+  .caos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.3rem;
+  }
+  .tarjeta-caos {
+    background: #fff;
+    border-radius: 14px;
+    width: 250px;
+    box-shadow: 0 16px 38px rgba(0,0,0,0.32);
+    overflow: hidden;
+    color: var(--verde-900);
+    text-align: left;
+  }
+  .caos .tarjeta-caos:nth-child(1) { transform: rotate(-2deg); }
+  .caos .tarjeta-caos:nth-child(2) { transform: rotate(1.8deg) translateY(12px); }
+  .caos .tarjeta-caos:nth-child(3) { transform: rotate(-1.5deg); }
+  .caos .tarjeta-caos:nth-child(4) { transform: rotate(2.2deg) translateY(-6px); }
+  .app-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    border-bottom: 1px solid #efefef;
+  }
+  .pill-off {
+    margin-left: auto;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--rojo);
+    border: 1px solid rgba(192,97,79,0.45);
+    padding: 0.08rem 0.45rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .tarjeta-caos .captura {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .anot {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.7rem 0.8rem 0.85rem;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--verde-700);
+    border-top: 1px dashed rgba(192,97,79,0.4);
+  }
+  .anot .marca-x {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(192,97,79,0.12);
+    color: var(--rojo);
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    margin-top: 0.1rem;
+  }
+  .anot strong { color: var(--rojo); font-weight: 600; }
+
+  /* --- Escena AHORA: el sitio vivo en un dispositivo --- */
+  .redes-fila { display: flex; justify-content: center; gap: 0.55rem; flex-wrap: wrap; }
+  .red-chip {
+    background: rgba(245,241,232,0.08);
+    border: 1px solid rgba(226,193,92,0.45);
+    color: var(--crema);
+    font-size: 0.72rem;
+    padding: 0.34rem 0.75rem;
+    border-radius: 99px;
+  }
+  .convergen { text-align: center; color: var(--oro); font-size: 1.1rem; padding: 0.5rem 0 1rem; }
+  .convergen .linea {
+    display: block;
+    width: 1px;
+    height: 26px;
+    margin: 0.25rem auto 0;
+    background: linear-gradient(var(--oro), transparent);
+  }
+  .disp-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; padding-bottom: 1.5rem; }
+  .disp-tab {
+    all: unset;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bruma);
+    border: 1px solid rgba(157,180,168,0.4);
+    padding: 0.45rem 0.95rem;
+    border-radius: 99px;
+    transition: all 0.25s;
+  }
+  .disp-tab.activo { background: var(--crema); color: var(--verde-900); border-color: var(--crema); }
+
+  .dispositivo {
+    width: fit-content;
+    margin: 0 auto;
+    background: #07130f;
+    position: relative;
+    box-shadow: 0 34px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(226,193,92,0.25);
+  }
+  .dispositivo .pantalla { overflow: hidden; background: #fff; position: relative; }
+  .dispositivo iframe { border: 0; display: block; background: #fff; transform-origin: top left; }
+  .dispositivo .muesca {
+    display: none;
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 118px;
+    height: 22px;
+    background: #07130f;
+    border-radius: 99px;
+    z-index: 2;
+  }
+  .dispositivo .base { display: none; }
+
+  .dispositivo.iphone { border-radius: 52px; padding: 12px; }
+  .dispositivo.iphone .pantalla { border-radius: 40px; }
+  .dispositivo.iphone .muesca { display: block; }
+
+  .dispositivo.tablet { border-radius: 30px; padding: 16px; }
+  .dispositivo.tablet .pantalla { border-radius: 14px; }
+
+  .dispositivo.laptop { border-radius: 16px 16px 4px 4px; padding: 14px 14px 16px; margin-bottom: 24px; }
+  .dispositivo.laptop .pantalla { border-radius: 6px; }
+  .dispositivo.laptop .base {
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -15px;
+    width: calc(100% + 90px);
+    height: 16px;
+    background: linear-gradient(#2b4a3c, #0b1a15);
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+  }
+  .dispositivo.laptop .base::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 7px;
+    background: #0b1a15;
+    border-radius: 0 0 8px 8px;
+  }
+  .tour-tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 1.7rem 0.2rem 0.3rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tour-tabs::-webkit-scrollbar { display: none; }
+  .tour-tab {
+    all: unset;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bruma);
+    border: 1px solid rgba(157,180,168,0.4);
+    padding: 0.45rem 0.95rem;
+    border-radius: 99px;
+    transition: all 0.25s;
+  }
+  .tour-tab.activo { background: var(--oro); color: #201a05; border-color: var(--oro); }
+  .tour-nota {
+    text-align: center;
+    font-size: 0.92rem;
+    color: var(--crema);
+    font-weight: 300;
+    padding: 0.9rem 1rem 0;
+    min-height: 2.6em;
+  }
+  .cta-sitio { text-align: center; padding-top: 1.7rem; }
+  .btn-brillo { font-size: 1.02rem; padding: 1.05rem 2.5rem; animation: pulso 2.4s infinite; }
+  @keyframes pulso {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+    50% { box-shadow: 0 0 0 16px rgba(201,162,39,0); }
+  }
+
+  .barra-flotante {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translate(-50%, 160%);
+    display: flex;
+    gap: 0.55rem;
+    background: rgba(15,36,29,0.96);
+    border: 1px solid rgba(226,193,92,0.45);
+    border-radius: 999px;
+    padding: 0.5rem;
+    z-index: 60;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.4);
+    transition: transform 0.45s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .barra-flotante.visible { transform: translate(-50%, 0); }
+  .bf-btn {
+    display: inline-block;
+    padding: 0.72rem 1.4rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .bf-sitio { background: var(--oro); color: #201a05; }
+  .bf-pago { color: var(--crema); border: 1px solid rgba(245,241,232,0.4); }
+  @media (max-width: 560px) {
+    .barra-flotante { width: calc(100% - 16px); justify-content: center; }
+    .bf-btn { flex: 1; text-align: center; padding: 0.72rem 0.5rem; font-size: 0.8rem; }
+  }
+
+  @media (max-width: 700px) {
+    .caos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+    .tarjeta-caos, .caos .tarjeta-caos { width: auto; transform: none; }
+    .tour-tabs { padding-left: 0.5rem; padding-right: 0.5rem; }
+  }
+  @media (min-width: 701px) {
+    .tour-tabs { justify-content: center; flex-wrap: wrap; }
+  }
+
+  /* ---------- Mejoras (grid) ---------- */
+  .mejoras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+  .mejora {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.6rem 1.5rem;
+    box-shadow: 0 6px 24px rgba(15,36,29,0.07);
+    border-top: 3px solid var(--oro);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s, box-shadow 0.3s;
+  }
+  .mejora.visible { opacity: 1; transform: translateY(0); }
+  .mejora:hover { box-shadow: var(--sombra); }
+  .mejora .icono { font-size: 1.8rem; margin-bottom: 0.7rem; }
+  .mejora h3 { font-size: 1.05rem; margin-bottom: 0.4rem; font-weight: 700; }
+  .mejora p { font-size: 0.88rem; color: var(--verde-700); font-weight: 300; }
+
+  /* ---------- Hazla tuya (3 tiers) ---------- */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; align-items: stretch; }
+  .tier {
+    background: #fff;
+    border: 1px solid rgba(27,58,47,0.12);
+    border-radius: 18px;
+    padding: 1.9rem 1.4rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(15,36,29,0.08);
+    position: relative;
+  }
+  .tier.destacado { border: 2px solid var(--oro); box-shadow: var(--sombra); transform: scale(1.04); z-index: 1; }
+  .tier-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--oro);
+    color: #201a05;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.9rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .tier-nombre { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--verde-900); }
+  .tier-precio { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--oro); line-height: 1.1; padding-top: 0.5rem; }
+  .tier-moneda { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--verde-700); padding-bottom: 1.1rem; }
+  .tier ul { list-style: none; text-align: left; font-size: 0.84rem; color: var(--verde-700); font-weight: 300; flex: 1; margin: 0 0 1.3rem; }
+  .tier ul li {
+    padding: 0.44rem 0;
+    border-bottom: 1px solid rgba(27,58,47,0.06);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    line-height: 1.45;
+  }
+  .tier ul li:last-child { border-bottom: none; }
+  .tier ul li .si { color: var(--verde); font-weight: 700; flex-shrink: 0; }
+  .tier ul li .no { color: #c9c4b8; font-weight: 700; flex-shrink: 0; }
+  .tier ul li.apagado { color: #b7b2a6; }
+  .tier ul li strong { color: var(--verde-900); font-weight: 600; }
+  .tier .btn { display: block; text-align: center; padding: 0.85rem 1rem; }
+  .tier-vigencia { font-size: 0.72rem; color: var(--rojo); padding-top: 0.6rem; font-weight: 500; }
+  .oferta-nota {
+    max-width: 640px;
+    margin: 1.9rem auto 0;
+    text-align: center;
+    font-size: 0.86rem;
+    color: var(--verde-700);
+    font-weight: 300;
+    font-style: italic;
+  }
+  @media (max-width: 860px) {
+    .tiers { grid-template-columns: 1fr; max-width: 430px; margin: 0 auto; }
+    .tier.destacado { transform: none; order: -1; }
+  }
+
+  /* ---------- CTA final ---------- */
+  .cta-final {
+    text-align: center;
+    padding: 5rem 1.5rem 5.5rem;
+  }
+  .cta-final h2 { font-size: clamp(1.7rem, 4.5vw, 2.5rem); font-weight: 500; max-width: 640px; margin: 0 auto 1rem; }
+  .cta-final h2 em { color: var(--oro); }
+  .cta-final p { color: var(--verde-700); font-weight: 300; max-width: 520px; margin: 0 auto 2.2rem; }
+  .botones { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 0.95rem 2.2rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(15,36,29,0.2); }
+  .btn-oro { background: var(--oro); color: #201a05; }
+  .btn-borde { border: 1.5px solid var(--verde-900); color: var(--verde-900); }
+
+  footer {
+    background: var(--profundo);
+    color: var(--bruma);
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 300;
+  }
+  footer strong { color: var(--oro-claro); font-weight: 500; }
+  footer .pd { max-width: 580px; margin: 1rem auto 0; opacity: 0.85; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 560px) {
+    .hallazgo .detalle-inner { padding-left: 1.4rem; }
+    .switch button { padding: 0.6rem 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="marca">Análisis de presencia digital · Softvibes</div>
+  <img class="retrato" src="img/suemi.jpg" alt="Suemi García — asesora inmobiliaria, Riviera Maya" />
+  <h1>Suemi, tu esfuerzo está construyendo<br /><em>la marca de alguien más.</em></h1>
+  <p class="sub">Y no es poco esfuerzo: <strong>169 publicaciones</strong>, fotos bien tomadas, propiedades reales y algo que casi nadie tiene — vendes la Riviera Maya <strong>viviéndola</strong>. Estudiamos tu presencia digital, encontramos por dónde se te está escapando ese trabajo… y en lugar de solo contártelo, construimos la solución para que la navegues funcionando.</p>
+  <div class="dedicatoria">Preparado para ti por <strong>Softvibes</strong> · Playa del Carmen · julio 2026</div>
+</header>
+
+<!-- ============ CIFRAS ============ -->
+<div class="cifras">
+  <div class="cifra"><div class="num" data-meta="169">0</div><div class="desc">publicaciones tuyas trabajando ahí afuera</div></div>
+  <div class="cifra"><div class="num" data-meta="237">0</div><div class="desc">seguidores en Instagram — cada lead vale oro</div></div>
+  <div class="cifra"><div class="num" data-meta="10">0</div><div class="desc">propiedades identificadas en tu feed</div></div>
+  <div class="cifra"><div class="num" data-meta="3">0</div><div class="desc">likes en tu penthouse de $540,000 USD</div></div>
+</div>
+
+<!-- ============ GALERÍA ============ -->
+<div class="galeria">
+  <figure class="polaroid reveal">
+    <img src="img/penthouse-palmares.jpg" alt="Penthouse de Palmares, Playa del Carmen" />
+    <figcaption>Penthouse de Palmares — $540,000 USD, 3 me gusta</figcaption>
+  </figure>
+  <figure class="polaroid reveal">
+    <img src="img/villa-golf.jpg" alt="Villa frente al campo de golf" />
+    <figcaption>Villa del campo de golf — 5 recámaras, alberca privada</figcaption>
+  </figure>
+  <figure class="polaroid reveal">
+    <img src="img/boutique-46.jpg" alt="Proyecto boutique de 46 residencias" />
+    <figcaption>Proyecto boutique de 46 residencias — 75% de avance</figcaption>
+  </figure>
+</div>
+<p class="galeria-nota">Todo esto ya existe gracias a tu trabajo. <strong>Nosotros solo le construimos la casa</strong> donde por fin vive junto — y donde deja de morir en el feed.</p>
+
+<!-- ============ HALLAZGOS ============ -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="etiqueta">El análisis</span>
+      <h2>Lo que encontramos en tus redes hoy</h2>
+      <p>El contenido y el inventario son excelentes — el problema no eres tú, es que el embudo no te devuelve ese esfuerzo. Toca cada punto para ver el detalle y cómo ya lo resolvimos.</p>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🔗</span>
+        <span class="titulo">Su único link está roto: llega como código, no como mensaje</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        El link de tu bio de Instagram lleva el mensaje doblemente codificado: wa.me/529841579774?text=%25F0%259F%2593%25B2%25209841579774%2520. Quien lo toca abre WhatsApp con el texto literal de abajo en vez de un saludo. Se ve roto incluso en la propia bio. Y peor: el mensaje precargado es tu propio número, no la intención del cliente.
+
+        <div class="codigo-compara">
+          <div class="codigo-caja mal">
+            <div class="cc-tit">✕ Lo que hoy recibe el cliente</div>
+            <code>%F0%9F%93%B2%209841579774%20</code>
+          </div>
+          <div class="codigo-caja bien">
+            <div class="cc-tit">✓ Lo que debería decir</div>
+            <code>📲 9841579774</code>
+          </div>
+        </div>
+        <div class="codigo-pie">Puedes comprobarlo tú misma: abre tu link de bio desde otro teléfono y mira el mensaje que se precarga.</div>
+
+        <div class="evidencia">Evidencia: captura de tu perfil de IG con la URL truncada visible; decodificación verificada (doble unquote → "📲 9841579774").</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> link corto a tu /links con WhatsApp precargado por propiedad ("Hola Suemi, me interesa el penthouse de Palmares").</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🏗️</span>
+        <span class="titulo">Está construyendo la marca de alguien más</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        En decenas de posts rematas con "🌐 307realtors.com" y "👉 Información de contacto: en nuestro perfil". Pero 307realtors.com no te menciona ni una vez: cero coincidencias de "Suemi" en todo el sitio. Cada publicación tuya alimenta el SEO y la autoridad de un dominio donde tú no existes.
+        <div class="evidencia">Evidencia: auditoría de 307realtors.com (menciona a Suemi: no) + captions con el dominio y el teléfono corporativo 984 980 0436.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> tu propio dominio como casa central — sin romper con la agencia, pero con TU nombre, TU catálogo y TU WhatsApp.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">👤</span>
+        <span class="titulo">Vende propiedades de $540,000 USD desde un perfil personal de Facebook</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        Tu Facebook no es una página de negocio: es un perfil personal con 411 amigos, tope de 5,000, sin botón de contacto, sin reseñas, sin catálogo y sin métricas. Ahí conviven el penthouse de lujo y las fotos familiares. Tu post más valioso obtuvo 3 me gusta.
+        <div class="evidencia">Evidencia: captura de tu perfil de FB — "Suemi Garcia · 411 amigos · Agregar a amigos"; post del penthouse de $540,000 con 3 reacciones.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> catálogo propio con ficha por propiedad + página de contacto profesional; el perfil personal queda para lo personal.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">💲</span>
+        <span class="titulo">El mismo penthouse, dos precios distintos en 11 días</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        El Penthouse de Palmares (224 m², roof privado con jacuzzi) aparece a $520,000 USD el 2 de junio y a $540,000 USD el 13 de junio. Sin una fuente única de verdad, el inventario se contradice solo — y en ticket alto eso cuesta credibilidad.
+        <div class="evidencia">Evidencia: captura de tu muro de FB con ambas publicaciones y los dos precios visibles.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> ficha única por propiedad: se actualiza en un lugar y el precio queda igual en todos lados.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🔍</span>
+        <span class="titulo">Invisible en Google: solo aparecen sus redes y posts en grupos</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        Buscar "Suemi García bienes raíces Playa del Carmen" devuelve tu Instagram, tu TikTok y publicaciones sueltas dentro de grupos de Facebook. Ningún resultado propio, ninguna página que tú controles. Competidores locales sí tienen dominio (leonbienesraices.com.mx, entre otros).
+        <div class="evidencia">Evidencia: captura de resultados de Google del 26-jul-2026: instagram, tiktok, posts en grupos.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> sitio propio con SEO local por zona (Playa del Carmen, Playacar, Tulum) + Google Business Profile.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">📱</span>
+        <span class="titulo">TikTok abierto, sin bio y sin link</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        Tu cuenta @suemi.garcia.bienesraice dice literalmente "No bio yet." con 114 seguidores y 788 me gusta acumulados. Tercera red sin destino: quien llega ahí no encuentra ni quién eres, ni qué vendes, ni cómo contactarte.
+        <div class="evidencia">Evidencia: captura de tu perfil de TikTok — "No bio yet.", 114 seguidores, 293 siguiendo.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> bio homologada en las tres redes apuntando al mismo /links.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🏚️</span>
+        <span class="titulo">Diez propiedades reales atrapadas en posts que caducan</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        Tu feed tiene inventario de sobra — penthouse de $540K USD, villa de 5 recámaras frente al golf, Corasol desde $7.4 MDP, proyecto boutique desde $465K USD, estudio en Tulum desde $1.3 MDP — pero ninguna propiedad tiene ficha compartible. Cada una se promociona una vez y desaparece en el feed.
+        <div class="evidencia">Evidencia: 169 publicaciones analizadas; 10 propiedades con precio y características identificadas en tus captions.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> catálogo navegable con badges (preventa / renta / oportunidad), precio "desde" y WhatsApp por ficha.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EMBUDO ANTES/AHORA ============ -->
+<section class="embudo-seccion">
+  <div class="section-head">
+    <span class="etiqueta">La transformación</span>
+    <h2>Tu embudo, centralizado</h2>
+    <p>Mueve el interruptor y mira la diferencia 👇</p>
+  </div>
+
+  <div class="switch-wrap">
+    <div class="switch" role="tablist">
+      <button type="button" id="btn-antes" class="activo">Antes</button>
+      <button type="button" id="btn-ahora">Ahora ✨</button>
+    </div>
+  </div>
+
+  <!-- Escena ANTES: capturas reales con anotaciones -->
+  <div class="escena" id="escena-antes">
+    <div class="caos">
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">📸 Instagram <span class="pill-off">✕ link roto</span></div>
+        <img class="captura" src="img/ig-perfil.jpg" alt="Perfil de Instagram suemi_garcia_bienes_raices con el link roto" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>El único link de la bio llega como código.</strong> "wa.me/529841579774?text=%25F0%259F…" — y la bio no dice ni quién eres ni qué vendes.</span></div>
+      </div>
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">👥 Facebook <span class="pill-off">✕ perfil personal</span></div>
+        <img class="captura" src="img/fb-perfil.jpg" alt="Perfil personal de Facebook de Suemi Garcia con 411 amigos" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>Perfil personal con 411 amigos,</strong> no página de negocio: sin botón de contacto, sin reseñas y con el penthouse de $540K junto a las fotos familiares.</span></div>
+      </div>
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">🎵 TikTok <span class="pill-off">✕ sin bio</span></div>
+        <img class="captura" src="img/tiktok-perfil.jpg" alt="Perfil de TikTok suemi.garcia.bienesraice sin biografía" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>"No bio yet."</strong> Tercera red sin destino: 114 seguidores que llegan y no encuentran a dónde ir.</span></div>
+      </div>
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">🔍 Google <span class="pill-off">✕ invisible</span></div>
+        <img class="captura" src="img/google-suemi.jpg" alt="Resultados de Google para Suemi García bienes raíces Playa del Carmen" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>Ningún resultado propio:</strong> solo tu Instagram, tu TikTok y posts sueltos dentro de grupos. Ninguna página que tú controles.</span></div>
+      </div>
+
+    </div>
+    <div class="veredicto">"Contenido de sobra, propiedades reales… y ni un solo destino que sea tuyo."</div>
+  </div>
+
+  <!-- Escena AHORA: el sitio vivo, navegable -->
+  <div class="escena" id="escena-ahora" hidden>
+    <div>
+      <div class="redes-fila">
+        <span class="red-chip">📸 Instagram</span>
+        <span class="red-chip">👥 Facebook</span>
+        <span class="red-chip">🎵 TikTok</span>
+        <span class="red-chip">💬 WhatsApp</span>
+        <span class="red-chip">🔍 Google</span>
+      </div>
+      <div class="convergen">todas apuntan a un solo lugar<span class="linea"></span></div>
+    </div>
+
+    <div>
+      <div class="disp-tabs" id="disp-tabs">
+        <button type="button" class="disp-tab" data-disp="laptop">💻 Laptop</button>
+        <button type="button" class="disp-tab" data-disp="tablet">📱 Tablet / iPad</button>
+        <button type="button" class="disp-tab activo" data-disp="iphone">📲 iPhone</button>
+      </div>
+      <div class="dispositivo iphone" id="dispositivo">
+        <div class="muesca"></div>
+        <div class="pantalla" id="pantalla">
+          <iframe id="tour-frame" data-src="https://chocolate-newt-399168.hostingersite.com/" src="about:blank" title="Tu sitio Suemi García, en vivo"></iframe>
+        </div>
+        <div class="base"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tour-tabs" id="tour-tabs">
+        <button type="button" class="tour-tab activo" data-url="https://chocolate-newt-399168.hostingersite.com/" data-nota="🏠 Tu casa digital, con tu nombre en el logo.">1 · Inicio</button>
+        <button type="button" class="tour-tab" data-url="https://chocolate-newt-399168.hostingersite.com/propiedades/penthouse-palmares/" data-nota="🏷️ Tu penthouse de $540K con ficha propia y un solo precio.">2 · Penthouse Palmares</button>
+        <button type="button" class="tour-tab" data-url="https://chocolate-newt-399168.hostingersite.com/en/" data-nota="🌎 Tus compradores extranjeros, ahora en inglés.">3 · English</button>
+        <button type="button" class="tour-tab" data-url="https://chocolate-newt-399168.hostingersite.com/links/" data-nota="🔗 El link que sí funciona (y con mensaje de verdad).">4 · Tu /links</button>
+        <button type="button" class="tour-tab" data-url="https://chocolate-newt-399168.hostingersite.com/admin/" data-nota="🛠️ Tu panel: editas textos y fotos sin programar.">5 · Tu panel</button>
+      </div>
+      <p class="tour-nota" id="tour-nota">🏠 Tu casa digital, con tu nombre en el logo.</p>
+      <div class="cta-sitio"><a class="btn btn-oro btn-brillo" href="https://chocolate-newt-399168.hostingersite.com/" target="_blank" rel="noopener">🌴 Ver mi casa digital completa ↗</a></div>
+    </div>
+
+    <div class="veredicto">"El mismo esfuerzo de siempre, ahora en una casa que trabaja para ti."</div>
+  </div>
+</section>
+
+<!-- ============ MEJORAS ============ -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="etiqueta">Lo que ya es tuyo</span>
+      <h2>Lo que construimos para ti</h2>
+      <p>Aplicamos nuestra metodología a tu marca. Esto es lo que ya está construido y funcionando.</p>
+    </div>
+    <div class="mejoras-grid">
+      <div class="mejora"><div class="icono">🏠</div><h3>Una sola casa digital</h3><p>Tu nombre, tus propiedades y tus tres redes bajo un mismo techo — con tu paleta de verde selva, arena y oro.</p></div>
+      <div class="mejora"><div class="icono">🏷️</div><h3>Fichas que no caducan</h3><p>El penthouse de Palmares, la villa del golf y el proyecto boutique como fichas navegables, con badge y precio "desde".</p></div>
+      <div class="mejora"><div class="icono">💲</div><h3>Un solo precio, siempre</h3><p>Cada propiedad tiene una fuente única de verdad: lo actualizas en un lugar y queda igual en todos lados.</p></div>
+      <div class="mejora"><div class="icono">💬</div><h3>WhatsApp que sí abre bien</h3><p>Cada ficha con su botón y su mensaje listo: te escriben diciendo exactamente qué propiedad les interesa.</p></div>
+      <div class="mejora"><div class="icono">🌎</div><h3>Versión en inglés</h3><p>Tu inventario está en USD y va dirigido a extranjeros: ahora tienes un activo navegable para ellos.</p></div>
+      <div class="mejora"><div class="icono">🛠️</div><h3>Panel de gestión</h3><p>Editas textos, fotos y propiedades tú misma, sin programar — como editar una historia de Instagram.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HAZLA TUYA (3 TIERS) ============ -->
+<section id="planes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="etiqueta">Si quieres dar el siguiente paso</span>
+      <h2>Hazla completamente tuya</h2>
+      <p>El sitio y este análisis son un regalo — no cambia nada si lo dejas ahí. Pero si quieres dar el paso, elige cómo quieres vivirla:</p>
+    </div>
+
+    <div class="tiers reveal">
+
+      <div class="tier">
+        <div class="tier-nombre">🌱 Pruébala</div>
+        <div class="tier-precio">$1,500</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <ul>
+          <li><span class="si">✓</span><div><strong>Tu página funcionando</strong> (en subdominio Softvibes)</div></li>
+          <li><span class="si">✓</span><div><strong>Llamada de configuración</strong> — personalizamos juntos textos, fotos y propiedades</div></li>
+          <li><span class="si">✓</span><div><strong>Portal de gestión</strong> — editas todo tú misma</div></li>
+          <li class="apagado"><span class="no">—</span><div>Dominio propio</div></li>
+          <li class="apagado"><span class="no">—</span><div>Correos profesionales</div></li>
+          <li class="apagado"><span class="no">—</span><div>Versión EN con dominio</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://mpago.la/1XNSy7M" target="_blank" rel="noopener">💳 Empezar — $1,500</a>
+        <div class="tier-vigencia">Vigencia: 3 meses</div>
+      </div>
+
+      <div class="tier destacado">
+        <div class="tier-badge">⭐ Más elegido</div>
+        <div class="tier-nombre">🌴 Hazla tuya</div>
+        <div class="tier-precio">$3,500</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <ul>
+          <li><span class="si">✓</span><div><strong>Todo lo de Pruébala</strong>, sin fecha de caducidad</div></li>
+          <li><span class="si">✓</span><div><strong>Dominio propio</strong> — ej. suemigarcia.com a tu nombre</div></li>
+          <li><span class="si">✓</span><div><strong>Hosting incluido</strong> por 1 año</div></li>
+          <li><span class="si">✓</span><div><strong>Correo profesional</strong> @tudominio</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://wa.me/525544481170?text=Hola%2C%20soy%20Suemi.%20Vi%20mi%20an%C3%A1lisis%20y%20quiero%20el%20plan%20Hazla%20tuya%20%28%243%2C500%29." target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+
+      <div class="tier">
+        <div class="tier-nombre">🚀 Crece</div>
+        <div class="tier-precio">$7,000</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <ul>
+          <li><span class="si">✓</span><div><strong>Todo lo de Hazla tuya</strong></div></li>
+          <li><span class="si">✓</span><div><strong>Sesión de estrategia de contenido</strong> — tus 169 publicaciones trabajando con sistema</div></li>
+          <li><span class="si">✓</span><div><strong>Google Business Profile fichado</strong> — para ganar tus propias búsquedas</div></li>
+          <li><span class="si">✓</span><div><strong>Bios homologadas</strong> en tus tres redes, apuntando al mismo destino</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://wa.me/525544481170?text=Hola%2C%20soy%20Suemi.%20Vi%20mi%20an%C3%A1lisis%20y%20quiero%20el%20plan%20Crece%20%28%247%2C000%29." target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+
+    </div>
+
+    <p class="oferta-nota">¿Curiosidad de cómo se siente editar tu propio sitio? En el paso 5 del recorrido está tu panel: haces clic sobre cualquier texto o foto y lo cambias ahí mismo ✨</p>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-final reveal">
+  <h2>Tu esfuerzo en redes deja de construir la marca de otros<br /><em>y empieza a construir la tuya.</em></h2>
+  <p>Sigues siendo parte del equipo — solo que ahora las 169 publicaciones también trabajan para tu nombre. Navega tu sitio desde tu cel y decide con calma.</p>
+  <div class="botones">
+    <a class="btn btn-oro" href="https://chocolate-newt-399168.hostingersite.com/" target="_blank" rel="noopener">🌴 Ver mi casa digital</a>
+    <a class="btn btn-borde" href="#planes">💳 Ver los planes</a>
+  </div>
+</section>
+
+<div class="barra-flotante" id="barra-flotante">
+  <a class="bf-btn bf-sitio" href="https://chocolate-newt-399168.hostingersite.com/" target="_blank" rel="noopener">🌴 Ver mi casa digital</a>
+  <a class="bf-btn bf-pago" href="#planes">💳 Hacerla mía</a>
+</div>
+
+<footer>
+  <img src="img/suemi.jpg" alt="Suemi García" style="width:74px; height:74px; border-radius:50%; object-fit:cover; border:2px solid var(--oro); margin-bottom:1rem;" />
+  <div>Hecho con respeto por tu trabajo, por <strong>Softvibes</strong> — acompañamos emprendedores en su salto digital</div>
+  <div class="pd">P.D. Hicimos esto únicamente con material público de tus redes. Si algo no te representa, lo ajustamos o lo retiramos de inmediato — tú mandas.</div>
+</footer>
+
+<script>
+  // ----- Embudo Antes / Ahora (escenas) -----
+  const btnAntes = document.getElementById('btn-antes');
+  const btnAhora = document.getElementById('btn-ahora');
+  const escAntes = document.getElementById('escena-antes');
+  const escAhora = document.getElementById('escena-ahora');
+  const tourFrame = document.getElementById('tour-frame');
+
+  function reanimar(escena) {
+    escena.querySelectorAll(':scope > *').forEach((el) => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+  }
+
+  function mostrarEscena(modo) {
+    const esAhora = modo === 'ahora';
+    escAntes.hidden = esAhora;
+    escAhora.hidden = !esAhora;
+    btnAntes.classList.toggle('activo', !esAhora);
+    btnAhora.classList.toggle('activo', esAhora);
+    // Carga diferida: el sitio solo se carga en el iframe la primera vez
+    // que se abre "Ahora" (ahorra datos y arranque en móviles)
+    if (esAhora && tourFrame.src === 'about:blank') {
+      tourFrame.src = tourFrame.dataset.src;
+    }
+    if (esAhora) ajustarDispositivo();
+    reanimar(esAhora ? escAhora : escAntes);
+  }
+
+  btnAntes.addEventListener('click', () => mostrarEscena('antes'));
+  btnAhora.addEventListener('click', () => mostrarEscena('ahora'));
+
+  // ----- Selector de dispositivo (laptop / tablet / iphone) -----
+  // El iframe renderiza al ancho interno real del dispositivo elegido y se
+  // reduce con transform:scale() — así la vista "Laptop" muestra el diseño
+  // de escritorio aunque se esté viendo desde un celular.
+  const DISPOSITIVOS = {
+    iphone: { ancho: 390, alto: 800, max: 470 },
+    tablet: { ancho: 834, alto: 1024, max: 660 },
+    laptop: { ancho: 1280, alto: 800, max: 940 },
+  };
+  const dispositivo = document.getElementById('dispositivo');
+  const pantalla = document.getElementById('pantalla');
+  const dispTabs = document.querySelectorAll('.disp-tab');
+  let dispActual = 'iphone';
+
+  function ajustarDispositivo() {
+    const cfg = DISPOSITIVOS[dispActual];
+    const disponible = Math.min(cfg.max, (escAhora.clientWidth || window.innerWidth) - 48);
+    let s = disponible / cfg.ancho;
+    const altoMax = window.innerHeight * 0.76;
+    if (cfg.alto * s > altoMax) s = altoMax / cfg.alto;
+    tourFrame.style.width = cfg.ancho + 'px';
+    tourFrame.style.height = cfg.alto + 'px';
+    tourFrame.style.transform = 'scale(' + s + ')';
+    pantalla.style.width = Math.round(cfg.ancho * s) + 'px';
+    pantalla.style.height = Math.round(cfg.alto * s) + 'px';
+  }
+
+  dispTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      dispTabs.forEach((t) => t.classList.remove('activo'));
+      tab.classList.add('activo');
+      dispActual = tab.dataset.disp;
+      dispositivo.className = 'dispositivo ' + dispActual;
+      ajustarDispositivo();
+    });
+  });
+  window.addEventListener('resize', ajustarDispositivo);
+
+  // ----- Barra flotante de CTA -----
+  const barra = document.getElementById('barra-flotante');
+  let pasoEmbudo = false, planesVisible = false, footerVisible = false;
+  function actualizarBarra() {
+    barra.classList.toggle('visible', pasoEmbudo && !planesVisible && !footerVisible);
+  }
+  new IntersectionObserver((e) => {
+    if (e[0].isIntersecting) { pasoEmbudo = true; actualizarBarra(); }
+  }, { threshold: 0.2 }).observe(document.querySelector('.embudo-seccion'));
+  new IntersectionObserver((e) => {
+    planesVisible = e[0].isIntersecting; actualizarBarra();
+  }, { threshold: 0.15 }).observe(document.getElementById('planes'));
+  new IntersectionObserver((e) => {
+    footerVisible = e[0].isIntersecting; actualizarBarra();
+  }, { threshold: 0.05 }).observe(document.querySelector('footer'));
+
+  // ----- Visita guiada -----
+  const tabs = document.querySelectorAll('.tour-tab');
+  const tourNota = document.getElementById('tour-nota');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('activo'));
+      tab.classList.add('activo');
+      tourFrame.src = tab.dataset.url;
+      tourNota.textContent = tab.dataset.nota;
+      tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+  });
+
+  // ----- Acordeones de hallazgos -----
+  document.querySelectorAll('.hallazgo button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.hallazgo');
+      const detalle = card.querySelector('.detalle');
+      const abierto = card.classList.toggle('abierto');
+      detalle.style.maxHeight = abierto ? detalle.scrollHeight + 'px' : '0';
+    });
+  });
+
+  // ----- Reveal al hacer scroll -----
+  const observer = new IntersectionObserver(
+    (entradas) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }),
+    { threshold: 0.15 }
+  );
+  document.querySelectorAll('.reveal, .mejora').forEach((el) => observer.observe(el));
+
+  // ----- Contadores animados -----
+  const contadores = document.querySelectorAll('.cifra .num');
+  const obsNum = new IntersectionObserver(
+    (entradas) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      obsNum.unobserve(e.target);
+      const meta = +e.target.dataset.meta;
+      const dur = 1200;
+      const inicio = performance.now();
+      function tick(t) {
+        const prog = Math.min((t - inicio) / dur, 1);
+        e.target.textContent = Math.round(meta * (1 - Math.pow(1 - prog, 3)));
+        if (prog < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }),
+    { threshold: 0.4 }
+  );
+  contadores.forEach((c) => obsNum.observe(c));
+</script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MenuVibes Marketing Dashboard</title>
+  <meta name="description" content="Dashboard interactivo del kit completo de ventas MenuVibes.">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root{
+      --bg:#0d0d0d;
+      --panel:#151515;
+      --panel-2:#1f1f1f;
+      --line:rgba(255,255,255,.13);
+      --text:#ffffff;
+      --muted:#b8b8b8;
+      --gold:#ffd23f;
+      --green:#16a34a;
+      --red:#ef4444;
+      --blue:#38bdf8;
+      --ink:#111111;
+      --radius:8px;
+      --max:1440px;
+      --sidebar:280px;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);line-height:1.45}
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) 1fr}
+    .side{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:#101010;padding:18px;display:flex;flex-direction:column;gap:18px}
+    .brand{display:flex;align-items:center;gap:11px;min-height:44px}
+    .mark{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--green));color:var(--ink);display:grid;place-items:center;font-weight:950}
+    .brand strong{display:block;font-size:18px;line-height:1}
+    .brand span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .search{position:relative}
+    .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+    .search input{width:100%;height:42px;border:1px solid var(--line);border-radius:8px;background:#0b0b0b;color:var(--text);padding:0 12px 0 36px}
+    .nav{display:grid;gap:6px}
+    .nav button{height:42px;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:8px;display:flex;align-items:center;gap:10px;padding:0 10px;text-align:left}
+    .nav button svg,.icon-btn svg,.btn svg{width:17px;height:17px;flex:0 0 auto}
+    .nav button.active{background:var(--panel-2);border-color:var(--line);color:var(--text)}
+    .side-footer{margin-top:auto;display:grid;gap:8px}
+    .status{border:1px solid rgba(22,163,74,.4);background:#0f1d13;border-radius:8px;padding:12px;color:#c9ffd6;font-size:13px}
+    .main{min-width:0}
+    .topbar{position:sticky;top:0;z-index:10;background:rgba(13,13,13,.86);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:var(--max);margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .title h1{font-size:24px;line-height:1.05;margin:0}
+    .title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .btn,.icon-btn{height:40px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 12px;font-weight:850}
+    .btn.primary{background:var(--gold);border-color:var(--gold);color:#111}
+    .btn.green{background:var(--green);border-color:var(--green);color:#fff}
+    .icon-btn{width:40px;padding:0}
+    .content{max-width:var(--max);margin:0 auto;padding:22px}
+    .tab{display:none}
+    .tab.active{display:block}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+    .metric{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:16px;min-height:118px;display:grid;align-content:space-between}
+    .metric span{color:var(--muted);font-size:12px;text-transform:uppercase;font-weight:850}
+    .metric strong{font-size:28px;color:var(--gold);line-height:1}
+    .metric small{color:var(--muted)}
+    .grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.72fr);gap:16px;align-items:start}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:8px 0 12px}
+    .section-head h2{font-size:22px;margin:0}
+    .section-head p{margin:4px 0 0;color:var(--muted)}
+    .panel{border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden}
+    .panel-head{min-height:56px;padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .panel-head h3{margin:0;font-size:16px}
+    .panel-head span{color:var(--muted);font-size:12px}
+    .panel-body{padding:16px}
+    .preview-frame{width:100%;height:620px;border:0;background:#fff;display:block}
+    .preview-frame.short{height:430px}
+    .asset-list{display:grid;gap:10px}
+    .asset{border:1px solid var(--line);background:#111;border-radius:8px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .asset h4{margin:0 0 4px;font-size:14px}
+    .asset p{margin:0;color:var(--muted);font-size:12px}
+    .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:12px;font-weight:800}
+    .pill.gold{border-color:rgba(255,210,63,.45);color:var(--gold)}
+    .pill.green{border-color:rgba(22,163,74,.45);color:#8af0a5}
+    .copy-box{border:1px solid var(--line);background:#0f0f0f;border-radius:8px;padding:14px;color:#e9e9e9;white-space:pre-wrap;font-size:14px;min-height:120px}
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .seg{display:inline-grid;grid-auto-flow:column;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#111}
+    .seg button{height:38px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);padding:0 12px;font-weight:850}
+    .seg button:last-child{border-right:0}
+    .seg button.active{background:var(--gold);color:#111}
+    .calc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    label{display:grid;gap:6px;color:var(--muted);font-size:12px;font-weight:850}
+    input,select,textarea{border:1px solid var(--line);background:#0c0c0c;color:var(--text);border-radius:8px;padding:11px;min-height:42px}
+    textarea{min-height:170px;resize:vertical}
+    .calc-result{grid-column:1/-1;background:#101d14;border:1px solid rgba(22,163,74,.35);border-radius:8px;padding:14px}
+    .calc-result strong{display:block;color:#8af0a5;font-size:26px}
+    .timeline{display:grid;gap:10px}
+    .day{border:1px solid var(--line);background:#111;border-radius:8px;padding:12px;display:grid;gap:8px}
+    .day-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .day h4{margin:0}
+    .day p{margin:0;color:var(--muted)}
+    .search-results{display:none;margin-bottom:18px}
+    .search-results.active{display:block}
+    .results-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .toast{position:fixed;right:18px;bottom:18px;background:var(--gold);color:#111;border-radius:8px;padding:12px 14px;font-weight:900;box-shadow:0 12px 34px rgba(0,0,0,.35);opacity:0;transform:translateY(12px);transition:.18s ease;z-index:50}
+    .toast.show{opacity:1;transform:translateY(0)}
+    .mobile-menu{display:none}
+    @media (max-width:1060px){
+      .app{grid-template-columns:1fr}
+      .side{display:none}
+      .mobile-menu{display:flex}
+      .topbar-inner{align-items:flex-start}
+      .metric-grid,.grid-3,.results-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-2{grid-template-columns:1fr}
+      .preview-frame{height:560px}
+    }
+    @media (max-width:680px){
+      .topbar-inner{display:grid}
+      .actions{justify-content:flex-start}
+      .content{padding:14px}
+      .metric-grid,.grid-3,.results-grid,.calc{grid-template-columns:1fr}
+      .preview-frame{height:520px}
+      .asset{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="side">
+      <div class="brand">
+        <div class="mark">MV</div>
+        <div><strong>MenuVibes</strong><span>Marketing dashboard</span></div>
+      </div>
+      <label class="search" aria-label="Buscar en el kit">
+        <i data-lucide="search"></i>
+        <input id="searchInput" placeholder="Buscar asset, copy, prompt">
+      </label>
+      <nav class="nav" id="sideNav"></nav>
+      <div class="side-footer">
+        <div class="status"><strong>Estado:</strong> whitelabel validado, demo premium activa y kit comercial listo.</div>
+        <a class="btn green" href="https://menu.rovicrm.com/menu.html?n=demo-premium" target="_blank" rel="noopener"><i data-lucide="external-link"></i> Demo viva</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="title">
+            <h1 id="pageTitle">Resumen comercial</h1>
+            <p id="pageSubtitle">Todo el kit de ventas MenuVibes en una sola vista operativa.</p>
+          </div>
+          <div class="actions">
+            <select class="mobile-menu" id="mobileTabs" aria-label="Cambiar vista"></select>
+            <a class="btn" href="./README.md" target="_blank"><i data-lucide="book-open"></i> README</a>
+            <a class="btn" href="./02-landing/landing.html" target="_blank"><i data-lucide="monitor"></i> Landing</a>
+            <a class="btn primary" href="https://wa.me/529984000000?text=Hola%2C%20quiero%20una%20demo%20de%20MenuVibes" target="_blank"><i data-lucide="send"></i> WhatsApp</a>
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="search-results" id="searchResults">
+          <div class="section-head">
+            <div><h2>Resultados</h2><p id="resultCount"></p></div>
+            <button class="btn" onclick="clearSearch()"><i data-lucide="x"></i> Limpiar</button>
+          </div>
+          <div class="results-grid" id="resultsGrid"></div>
+        </div>
+
+        <div class="tab active" id="tab-resumen">
+          <div class="metric-grid">
+            <div class="metric"><span>Archivos del kit</span><strong>16</strong><small>pitch, landing, emails, lead magnets, IA y redes</small></div>
+            <div class="metric"><span>Smoke tests</span><strong>31 OK</strong><small>demo-premium con escritura completa</small></div>
+            <div class="metric"><span>Demo viva</span><strong>1</strong><small>menu premium publico validado</small></div>
+            <div class="metric"><span>Secuencia ventas</span><strong>3 emails</strong><small>contacto, seguimiento, ultima llamada</small></div>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><div><h3>Ruta comercial</h3><span>De prospecto a cierre</span></div><span class="pill green">Listo</span></div>
+              <div class="panel-body timeline" id="salesPath"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><div><h3>Activos principales</h3><span>Accesos rapidos</span></div><span class="pill gold">Kit</span></div>
+              <div class="panel-body asset-list" id="quickAssets"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab" id="tab-pitch">
+          <div class="section-head">
+            <div><h2>Pitch maestro</h2><p>One-liner, elevator pitch, objeciones y cierre.</p></div>
+            <div class="toolbar">
+              <button class="btn" onclick="copyText('oneLiner')"><i data-lucide="copy"></i> One-liner</button>
+              <a class="btn" href="./01-pitch/guion-maestro.md" target="_blank"><i data-lucide="file-text"></i> Abrir</a>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><h3>Guion de llamada</h3><span>apertura - demo - cierre</span></div>
+              <div class="panel-body">
+                <div class="copy-box" id="pitchBox"></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h3>Objeciones</h3><span>respuestas rapidas</span></div>
+              <div class="panel-body timeline" id="objections"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab" id="tab-landing">
+          <div class="section-head">
+            <div><h2>Landing page</h2><p>HTML responsivo con demos vivas, calculadora y precios sugeridos.</p></div>
+            <div class="toolbar">
+              <a class="btn" href="./02-landing/landing.html" target="_blank"><i data-lucide="external-link"></i> Abrir landing</a>
+              <button class="btn" onclick="copyText('landingCta')"><i data-lucide="copy"></i> CTA</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Preview</h3><span>archivo local del kit</span></div>
+            <iframe class="preview-frame" src="./02-landing/landing.html" title="Landing MenuVibes"></iframe>
+          </div>
+        </div>
+
+        <div class="tab" id="tab-emails">
+          <div class="section-head">
+            <div><h2>Emails HTML</h2><p>Secuencia lista para prospectos con demo.</p></div>
+            <div class="seg" id="emailSeg"></div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><h3 id="emailTitle">Email 1</h3><span id="emailSubject"></span></div>
+              <iframe class="preview-frame short" id="emailFrame" src="./03-emails/email-01-primer-contacto.html" title="Email preview"></iframe>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h3>Variables y CTA</h3><span>copiar rapido</span></div>
+              <div class="panel-body">
+                <div class="copy-box" id="emailCopy"></div>
+                <div class="toolbar" style="margin-top:12px">
+                  <button class="btn" onclick="copyCurrentEmail()"><i data-lucide="copy"></i> Copiar resumen</button>
+                  <a class="btn" id="emailOpen" href="./03-emails/email-01-primer-contacto.html" target="_blank"><i data-lucide="external-link"></i> Abrir HTML</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab" id="tab-leads">
+          <div class="section-head">
+            <div><h2>Lead magnets</h2><p>Guia PDF, calculadora y mini-auditoria.</p></div>
+            <div class="toolbar">
+              <a class="btn" href="./04-lead-magnets/guia-7-formas-menu-digital-vende-mas.pdf" target="_blank"><i data-lucide="download"></i> PDF</a>
+              <a class="btn" href="./04-lead-magnets/calculadora-comisiones.html" target="_blank"><i data-lucide="calculator"></i> Calculadora</a>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><h3>Calculadora de comisiones</h3><span>demo interactiva</span></div>
+              <div class="panel-body calc">
+                <label>Pedidos app/mes <input id="orders" type="number" value="120" oninput="calcValue()"></label>
+                <label>Ticket promedio <input id="ticket" type="number" value="220" oninput="calcValue()"></label>
+                <label>Comision % <input id="fee" type="number" value="25" oninput="calcValue()"></label>
+                <label>% recuperado <input id="recover" type="number" value="20" oninput="calcValue()"></label>
+                <div class="calc-result">
+                  <span>Comision mensual</span><strong id="commission">$6,600</strong>
+                  <span>Ahorro potencial</span><strong id="saving">$1,320</strong>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h3>Guia PDF</h3><span>7 formas en que un menu digital vende mas</span></div>
+              <iframe class="preview-frame short" src="./04-lead-magnets/guia-7-formas-menu-digital-vende-mas.pdf" title="PDF guia"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab" id="tab-ia">
+          <div class="section-head">
+            <div><h2>Prompts IA</h2><p>Creativos para posts, stories, carruseles y ads.</p></div>
+            <a class="btn" href="./05-ia/prompts-imagenes.md" target="_blank"><i data-lucide="file-text"></i> Abrir archivo</a>
+          </div>
+          <div class="grid-3" id="promptGrid"></div>
+        </div>
+
+        <div class="tab" id="tab-redes">
+          <div class="section-head">
+            <div><h2>Calendario de redes</h2><p>4 semanas de publicaciones y guiones.</p></div>
+            <div class="toolbar">
+              <button class="btn" onclick="renderCalendar('all')"><i data-lucide="layout-grid"></i> Todo</button>
+              <button class="btn" onclick="renderCalendar('reel')"><i data-lucide="video"></i> Reels</button>
+              <a class="btn" href="./06-redes/calendario-contenido.md" target="_blank"><i data-lucide="calendar-days"></i> Abrir</a>
+            </div>
+          </div>
+          <div class="timeline" id="calendarList"></div>
+        </div>
+
+        <div class="tab" id="tab-archivos">
+          <div class="section-head">
+            <div><h2>Mapa de archivos</h2><p>Todos los entregables creados.</p></div>
+            <button class="btn" onclick="copyText('fileMap')"><i data-lucide="copy"></i> Copiar mapa</button>
+          </div>
+          <div class="grid-3" id="fileGrid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast">Copiado</div>
+
+  <script>
+    const tabs = [
+      {id:'resumen', label:'Resumen', icon:'layout-dashboard', subtitle:'Todo el kit de ventas MenuVibes en una sola vista operativa.'},
+      {id:'pitch', label:'Pitch', icon:'messages-square', subtitle:'Guion maestro, objeciones y cierres comerciales.'},
+      {id:'landing', label:'Landing', icon:'monitor', subtitle:'Pagina HTML responsiva con demos vivas.'},
+      {id:'emails', label:'Emails', icon:'mail', subtitle:'Secuencia HTML de primer contacto, seguimiento y cierre.'},
+      {id:'leads', label:'Lead magnets', icon:'magnet', subtitle:'PDF, calculadora y mini-auditoria.'},
+      {id:'ia', label:'Prompts IA', icon:'image', subtitle:'Creativos para posts, stories, carruseles y ads.'},
+      {id:'redes', label:'Redes', icon:'calendar-days', subtitle:'Calendario de contenido listo para publicar.'},
+      {id:'archivos', label:'Archivos', icon:'folder-open', subtitle:'Mapa completo de entregables.'}
+    ];
+
+    const files = [
+      ['Analisis del proyecto','00-analisis/estado-proyecto.md','Resumen whitelabel, ultimo desarrollo y posicionamiento.','Analisis'],
+      ['Guion maestro','01-pitch/guion-maestro.md','One-liner, elevator pitch, llamada, objeciones y cierre.','Pitch'],
+      ['Calculadora de valor','01-pitch/calculadora-valor.md','Ahorro vs comisiones y precios sugeridos.','Pitch'],
+      ['Landing HTML','02-landing/landing.html','Hero, features, demos, precios, FAQ y CTA.','Landing'],
+      ['Email 1','03-emails/email-01-primer-contacto.html','Primer contacto con demo personalizada.','Email'],
+      ['Email 2','03-emails/email-02-seguimiento.html','Seguimiento consultivo con valor.','Email'],
+      ['Email 3','03-emails/email-03-ultima-llamada.html','Ultima llamada sin insistir de mas.','Email'],
+      ['Guia PDF','04-lead-magnets/guia-7-formas-menu-digital-vende-mas.pdf','Lead magnet final para enviar.','Lead magnet'],
+      ['Guia editable','04-lead-magnets/guia-7-formas-menu-digital-vende-mas.md','Version markdown del PDF.','Lead magnet'],
+      ['Calculadora HTML','04-lead-magnets/calculadora-comisiones.html','Calculadora interactiva para llamadas.','Lead magnet'],
+      ['Mini-auditoria','04-lead-magnets/mini-auditoria-presencia-digital.md','Plantilla de diagnostico para prospectos.','Lead magnet'],
+      ['Prompts IA','05-ia/prompts-imagenes.md','Prompts para imagenes comerciales.','IA'],
+      ['Calendario redes','06-redes/calendario-contenido.md','4 semanas de posts, stories, reels y LinkedIn.','Redes']
+    ];
+
+    const snippets = {
+      oneLiner:'MenuVibes es un menu digital administrable que convierte tu QR en pedidos por WhatsApp, clientes recurrentes, NPS y reseñas.',
+      landingCta:'Manda tu menu actual, logo y WhatsApp. Te devolvemos una demo navegable para que la pruebes en el celular.',
+      fileMap: files.map(f => `${f[0]} - ./whitelabel/marketing/${f[1]}`).join('\\n')
+    };
+
+    const pathSteps = [
+      ['1','Auditar','Revisa menu actual, Google Maps, WhatsApp, fotos, promociones y fricciones.'],
+      ['2','Demo','Crear slug en borrador y mandar "te arme una demo".'],
+      ['3','Llamada','Mostrar menu primero, dashboard despues, cerrar con prueba de 7 dias.'],
+      ['4','Premium','Para negocios con visitas recurrentes: beneficios, NPS y reseñas.']
+    ];
+
+    const objections = [
+      ['Ya tengo menu','Perfecto. La pregunta es si se actualiza facil, se ve bien en celular y ayuda a vender.'],
+      ['No tengo tiempo','Justo por eso lo armamos nosotros primero; tu equipo solo edita cambios desde dashboard.'],
+      ['Cuanto cuesta','Depende del nivel. Lo vemos contra comisiones, tiempo perdido y valor de clientes recurrentes.'],
+      ['Mis clientes no usan eso','No descargan nada: escanean QR o abren link, igual que un PDF pero mas claro.'],
+      ['Mejor Canva/PDF','Canva disena; MenuVibes opera: pedidos, promos, visitas, NPS y reseñas.'],
+      ['No quiero mensualidad','Cubre hosting, seguridad, backups, soporte y mejoras. Se puede iniciar mensual sin compromiso.']
+    ];
+
+    const emails = [
+      {id:'email-01', label:'Email 1', title:'Primer contacto', subject:'Te arme una demo de menu digital para {{negocio}}', href:'./03-emails/email-01-primer-contacto.html', copy:'Primer contacto: abre con demo personalizada, explica menu editable y CTA a WhatsApp.'},
+      {id:'email-02', label:'Email 2', title:'Seguimiento', subject:'Una idea rapida para vender mas desde tu QR', href:'./03-emails/email-02-seguimiento.html', copy:'Seguimiento: refuerza WhatsApp, promos, lealtad y ahorro frente a comisiones.'},
+      {id:'email-03', label:'Email 3', title:'Ultima llamada', subject:'Cierro tu demo de MenuVibes?', href:'./03-emails/email-03-ultima-llamada.html', copy:'Ultima llamada: cierre amable para reactivar o cerrar seguimiento.'}
+    ];
+    let currentEmail = emails[0];
+
+    const prompts = [
+      ['Hero landing','Fotografia editorial realista de una mesa de restaurante moderno en Mexico, cliente escaneando QR, telefono con menu digital elegante, luz calida, platos apetitosos, colores negro, dorado y verde, sin texto, 16:9.'],
+      ['Post QR','Telefono mostrando menu digital moderno junto a plato atractivo y bebida, codigo QR impreso en mesa, espacio negativo para texto, formato 1:1, sin texto generado.'],
+      ['Story PDF','Imagen vertical 9:16 contrastando PDF borroso con menu digital limpio en smartphone, restaurante de fondo, colores negro y dorado, sin texto.'],
+      ['Dashboard','Laptop en barra de cafeteria mostrando dashboard de menu digital con productos y precios, al lado telefono con menu final, formato 4:5, sin texto legible.'],
+      ['NPS premium','Cliente satisfecho usando smartphone despues de comer, pantalla con encuesta NPS minimalista y boton de beneficio, fotografia lifestyle, 4:5, sin texto.'],
+      ['Reputacion','Dueño de restaurante sonriendo al ver reseñas en tablet, equipo trabajando al fondo, documental premium, sin logos reales, 16:9.']
+    ];
+
+    const calendar = [
+      ['Dia 1','Carrusel','5 señales de que tu menu digital te esta costando ventas.','post'],
+      ['Dia 2','Story','Encuesta: tu menu actual es PDF/imagen o link editable.','story'],
+      ['Dia 3','Reel','Si tu restaurante cambia precios cada semana, un PDF no es menu digital.','reel'],
+      ['Dia 5','Demo','Demo viva de MenuVibes Premium con visitas, NPS y reseñas.','post'],
+      ['Dia 6','Carrusel','Del QR al pedido por WhatsApp.','post'],
+      ['Dia 8','Reel','Tres cosas que tu menu deberia hacer.','reel'],
+      ['Dia 11','Carrusel','Tu menu tambien puede medir satisfaccion.','post'],
+      ['Dia 13','Reel','Pedir reseñas al azar no es estrategia. Primero mide satisfaccion.','reel'],
+      ['Dia 17','Carrusel','Cuanto te cuestan las comisiones.','post'],
+      ['Dia 19','Reel','No necesitas otra app. Necesitas que tu QR deje de ser pasivo.','reel']
+    ];
+
+    function init(){
+      renderNav();
+      renderOverview();
+      renderPitch();
+      renderEmails();
+      renderPrompts();
+      renderCalendar('all');
+      renderFiles();
+      calcValue();
+      document.getElementById('searchInput').addEventListener('input', handleSearch);
+      document.getElementById('mobileTabs').addEventListener('change', e => showTab(e.target.value));
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function renderNav(){
+      const nav = document.getElementById('sideNav');
+      const mobile = document.getElementById('mobileTabs');
+      nav.innerHTML = tabs.map(t => `<button class="${t.id==='resumen'?'active':''}" data-tab="${t.id}" onclick="showTab('${t.id}')"><i data-lucide="${t.icon}"></i>${t.label}</button>`).join('');
+      mobile.innerHTML = tabs.map(t => `<option value="${t.id}">${t.label}</option>`).join('');
+    }
+
+    function showTab(id){
+      document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.id === `tab-${id}`));
+      document.querySelectorAll('.nav button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === id));
+      const tab = tabs.find(t => t.id === id) || tabs[0];
+      document.getElementById('pageTitle').textContent = tab.label === 'Resumen' ? 'Resumen comercial' : tab.label;
+      document.getElementById('pageSubtitle').textContent = tab.subtitle;
+      document.getElementById('mobileTabs').value = id;
+      clearSearch(false);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function renderOverview(){
+      document.getElementById('salesPath').innerHTML = pathSteps.map(s => `<div class="day"><div class="day-top"><h4>${s[0]}. ${s[1]}</h4><span class="pill green">Ventas</span></div><p>${s[2]}</p></div>`).join('');
+      document.getElementById('quickAssets').innerHTML = files.slice(0,8).map(assetHtml).join('');
+    }
+
+    function renderPitch(){
+      document.getElementById('pitchBox').textContent = [
+        snippets.oneLiner,
+        '',
+        'Apertura:',
+        'Hola, soy Roger de MenuVibes. Vi su menu y les arme una idea rapida de como podria verse en formato digital, mas facil de actualizar y listo para pedidos por WhatsApp.',
+        '',
+        'Cierre:',
+        'Lo mas facil es hacer una prueba de 7 dias con tu menu real. Te dejo el QR, probamos cambios y vemos si al equipo le sirve.'
+      ].join('\\n');
+      document.getElementById('objections').innerHTML = objections.map(o => `<div class="day"><div class="day-top"><h4>${o[0]}</h4><button class="icon-btn" title="Copiar" data-copy="${escapeAttr(o[1])}" onclick="copyRaw(this.dataset.copy)"><i data-lucide="copy"></i></button></div><p>${o[1]}</p></div>`).join('');
+    }
+
+    function renderEmails(){
+      document.getElementById('emailSeg').innerHTML = emails.map((e,i) => `<button class="${i===0?'active':''}" onclick="selectEmail('${e.id}')">${e.label}</button>`).join('');
+      selectEmail(currentEmail.id);
+    }
+
+    function selectEmail(id){
+      currentEmail = emails.find(e => e.id === id) || emails[0];
+      document.querySelectorAll('#emailSeg button').forEach(btn => btn.classList.toggle('active', btn.textContent === currentEmail.label));
+      document.getElementById('emailTitle').textContent = currentEmail.title;
+      document.getElementById('emailSubject').textContent = currentEmail.subject;
+      document.getElementById('emailFrame').src = currentEmail.href;
+      document.getElementById('emailOpen').href = currentEmail.href;
+      document.getElementById('emailCopy').textContent = `${currentEmail.subject}\\n\\n${currentEmail.copy}\\n\\nVariables: {{negocio}}, {{nombre_contacto}}, {{demo_url}}, {{whatsapp_url}}, {{tu_nombre}}`;
+    }
+
+    function renderPrompts(){
+      document.getElementById('promptGrid').innerHTML = prompts.map(p => `<div class="panel"><div class="panel-head"><h3>${p[0]}</h3><button class="icon-btn" title="Copiar prompt" data-copy="${escapeAttr(p[1])}" onclick="copyRaw(this.dataset.copy)"><i data-lucide="copy"></i></button></div><div class="panel-body"><div class="copy-box">${p[1]}</div></div></div>`).join('');
+    }
+
+    function renderCalendar(filter){
+      const items = filter === 'all' ? calendar : calendar.filter(c => c[3] === filter);
+      document.getElementById('calendarList').innerHTML = items.map(c => `<div class="day"><div class="day-top"><h4>${c[0]} - ${c[1]}</h4><span class="pill ${c[3]==='reel'?'gold':'green'}">${c[3]}</span></div><p>${c[2]}</p><div><button class="btn" data-copy="${escapeAttr(c[2])}" onclick="copyRaw(this.dataset.copy)"><i data-lucide="copy"></i> Copiar copy</button></div></div>`).join('');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function renderFiles(){
+      document.getElementById('fileGrid').innerHTML = files.map(assetHtml).join('');
+    }
+
+    function assetHtml(f){
+      return `<div class="asset"><div><span class="pill">${f[3]}</span><h4>${f[0]}</h4><p>${f[2]}</p></div><a class="icon-btn" title="Abrir" href="./${f[1]}" target="_blank"><i data-lucide="external-link"></i></a></div>`;
+    }
+
+    function handleSearch(e){
+      const q = e.target.value.trim().toLowerCase();
+      const box = document.getElementById('searchResults');
+      if (!q){ clearSearch(false); return; }
+      const results = files.filter(f => f.join(' ').toLowerCase().includes(q));
+      box.classList.add('active');
+      document.getElementById('resultCount').textContent = `${results.length} coincidencias para "${q}"`;
+      document.getElementById('resultsGrid').innerHTML = results.length ? results.map(assetHtml).join('') : '<div class="asset"><div><h4>Sin resultados</h4><p>Prueba con pitch, email, landing, PDF, prompt o redes.</p></div></div>';
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function clearSearch(clearInput=true){
+      document.getElementById('searchResults').classList.remove('active');
+      if (clearInput) document.getElementById('searchInput').value = '';
+    }
+
+    function calcValue(){
+      const orders = parseFloat(document.getElementById('orders')?.value || 0);
+      const ticket = parseFloat(document.getElementById('ticket')?.value || 0);
+      const fee = parseFloat(document.getElementById('fee')?.value || 0) / 100;
+      const recover = parseFloat(document.getElementById('recover')?.value || 0) / 100;
+      const commission = orders * ticket * fee;
+      document.getElementById('commission').textContent = money(commission);
+      document.getElementById('saving').textContent = money(commission * recover);
+    }
+
+    function money(n){ return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n || 0); }
+    function copyText(key){ copyRaw(snippets[key] || ''); }
+    function copyCurrentEmail(){ copyRaw(document.getElementById('emailCopy').textContent); }
+    function copyRaw(text){
+      const raw = String(text || '');
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(raw).then(showToast).catch(() => fallbackCopy(raw));
+      } else {
+        fallbackCopy(raw);
+      }
+    }
+    function fallbackCopy(text){
+      const area = document.createElement('textarea');
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+      showToast();
+    }
+    function showToast(){
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+    function escapeAttr(str){
+      return String(str).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE, waLink } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Contacto | Frank Hernández · Riviera Maya Investment"
+  descripcion={`Contacta a ${SITE.asesor}: WhatsApp ${SITE.telefono}, agenda una asesoría de inversión o envía tus datos. Bienes raíces en Cancún, Playa del Carmen y Tulum.`}
+  lang="es"
+  rutaAlterna="/en/contact"
+>
+  <CTAContacto titulo="Hablemos de tu inversión en la Riviera Maya" />
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <h2>Asesoría sin costo, en tu idioma</h2>
+      <p class="seccion__intro">
+        La primera asesoría no tiene costo y puede ser por WhatsApp, llamada o videollamada —
+        en español o inglés. Cuéntame qué buscas (plusvalía, renta o patrimonio) y te preparo
+        opciones con números claros.
+      </p>
+      <p>
+        <a href={waLink('Hola Frank, quiero agendar una asesoría de inversión sin costo.')} class="boton boton--laton" target="_blank" rel="noopener">
+          📅 Agendar mi asesoría por WhatsApp
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hopepaoo CMS - Panel de Gestión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            border-right: 1px solid rgba(255,56,92,0.2);
+            padding: 30px 0;
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,56,92,0.2);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff385c;
+            text-align: center;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,56,92,0.1);
+            border-left-color: #ff385c;
+        }
+
+        .nav-item.active {
+            background: rgba(255,56,92,0.15);
+            border-left-color: #ff385c;
+            color: #ff385c;
+            font-weight: 600;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255,56,92,0.2);
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #ff385c;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff385c, #ff8fab);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #ff385c;
+        }
+
+        /* TABLES */
+        .table-container {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(255,56,92,0.1);
+            border-bottom: 2px solid rgba(255,56,92,0.3);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #ff385c;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        tbody tr:hover {
+            background: rgba(255,56,92,0.05);
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff385c;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,56,92,0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #ff385c;
+            background: rgba(255,56,92,0.05);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff385c 0%, #ff6b84 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 56, 92, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255,56,92,0.2);
+            color: #ff385c;
+            border: 1px solid #ff385c;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,56,92,0.3);
+        }
+
+        .btn-danger {
+            background: rgba(220,53,69,0.2);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: rgba(220,53,69,0.3);
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        /* CARDS */
+        .card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,56,92,0.2);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,56,92,0.2);
+            padding-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            color: #ff385c;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255,56,92,0.1);
+            border: 1px solid rgba(255,56,92,0.3);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ff385c;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .error {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">HOPEPAOO</div>
+                <div style="text-align: center; font-size: 0.8em; color: #808080; margin-top: 10px;">CMS v1.0</div>
+            </div>
+
+            <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="showSection('services')">🎵 Servicios</div>
+            <div class="nav-item" onclick="showSection('sessions')">🧘 Sesiones</div>
+            <div class="nav-item" onclick="showSection('testimonials')">⭐ Testimonios</div>
+            <div class="nav-item" onclick="showSection('events')">📅 Eventos</div>
+            <div class="nav-item" onclick="showSection('clients')">👥 Clientes</div>
+            <div class="nav-item" onclick="showSection('settings')">⚙️ Configuración</div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <!-- HEADER -->
+            <div class="header">
+                <h1>Panel de Control</h1>
+                <div class="user-info">
+                    <div>
+                        <div style="font-size: 0.9em; color: #a0a0a0;">Bienvenida,</div>
+                        <div style="font-weight: 600;">Paola Elizabeth</div>
+                    </div>
+                    <div class="avatar">PE</div>
+                </div>
+            </div>
+
+            <!-- DASHBOARD SECTION -->
+            <div class="section active" id="dashboard">
+                <div class="section-title">📊 Dashboard</div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-sessions">0</div>
+                        <div class="stat-label">Sesiones Totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-clients">0</div>
+                        <div class="stat-label">Clientes Activos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="upcoming-events">0</div>
+                        <div class="stat-label">Próximos Eventos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="revenue">$0</div>
+                        <div class="stat-label">Ingresos (Este Mes)</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Sesiones Próximas</div>
+                    </div>
+                    <div id="upcoming-sessions-list" style="color: #a0a0a0;">
+                        <p>No hay sesiones próximas programadas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVICIOS SECTION -->
+            <div class="section" id="services">
+                <div class="section-title">🎵 Servicios</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Agregar Nuevo Servicio</div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Nombre del Servicio</label>
+                                <input type="text" id="service-name" placeholder="Ej: Sesión Completa">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Precio (USD)</label>
+                                <input type="number" id="service-price" placeholder="75">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="service-description" placeholder="Describe este servicio..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Duración (minutos)</label>
+                        <input type="number" id="service-duration" placeholder="50">
+                    </div>
+                    <button class="btn btn-primary" onclick="addService()">Agregar Servicio</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Duración</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-table">
+                            <tr><td colspan="4" style="text-align: center; color: #707070;">Cargando servicios...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SESIONES SECTION -->
+            <div class="section" id="sessions">
+                <div class="section-title">🧘 Sesiones</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Registrar Nueva Sesión</div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Cliente</label>
+                                <input type="text" id="session-client" placeholder="Nombre del cliente">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Servicio</label>
+                                <select id="session-service">
+                                    <option>Seleccionar servicio...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Fecha</label>
+                                <input type="date" id="session-date">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Hora</label>
+                                <input type="time" id="session-time">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas</label>
+                        <textarea id="session-notes" placeholder="Observaciones, feedback, etc..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="addSession()">Registrar Sesión</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Servicio</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessions-table">
+                            <tr><td colspan="5" style="text-align: center; color: #707070;">Cargando sesiones...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TESTIMONIOS SECTION -->
+            <div class="section" id="testimonials">
+                <div class="section-title">⭐ Testimonios</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Agregar Testimonio</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre del Cliente</label>
+                        <input type="text" id="testimonial-name" placeholder="Ej: Mariana G.">
+                    </div>
+                    <div class="form-group">
+                        <label>Rol/Descripción</label>
+                        <input type="text" id="testimonial-role" placeholder="Ej: Asistente a sesión privada">
+                    </div>
+                    <div class="form-group">
+                        <label>Testimonio</label>
+                        <textarea id="testimonial-text" placeholder="¿Qué dice el cliente sobre su experiencia?"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="addTestimonial()">Guardar Testimonio</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Rol</th>
+                                <th>Testimonio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testimonials-table">
+                            <tr><td colspan="4" style="text-align: center; color: #707070;">Cargando testimonios...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- EVENTOS SECTION -->
+            <div class="section" id="events">
+                <div class="section-title">📅 Eventos/Shows</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Crear Nuevo Evento</div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Nombre del Evento</label>
+                                <input type="text" id="event-name" placeholder="Ej: Show en el Teatro Luna">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Tipo</label>
+                                <select id="event-type">
+                                    <option>Show en Vivo</option>
+                                    <option>Taller</option>
+                                    <option>Círculo de Expresión</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Fecha</label>
+                                <input type="date" id="event-date">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Ubicación</label>
+                                <input type="text" id="event-location" placeholder="Dónde será">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="event-description" placeholder="Detalles del evento..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="addEvent()">Crear Evento</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Evento</th>
+                                <th>Tipo</th>
+                                <th>Fecha</th>
+                                <th>Ubicación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-table">
+                            <tr><td colspan="5" style="text-align: center; color: #707070;">Cargando eventos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CLIENTES SECTION -->
+            <div class="section" id="clients">
+                <div class="section-title">👥 Clientes</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Agregar Nuevo Cliente</div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" id="client-name" placeholder="Nombre completo">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="client-email" placeholder="email@example.com">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Teléfono (WhatsApp)</label>
+                                <input type="tel" id="client-phone" placeholder="+1234567890">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Intención</label>
+                                <select id="client-intention">
+                                    <option>Sesión Privada</option>
+                                    <option>Taller</option>
+                                    <option>Show Privado</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="addClient()">Agregar Cliente</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Intención</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table">
+                            <tr><td colspan="5" style="text-align: center; color: #707070;">Cargando clientes...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CONFIGURACIÓN SECTION -->
+            <div class="section" id="settings">
+                <div class="section-title">⚙️ Configuración</div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Información del Perfil</div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Nombre Público</label>
+                                <input type="text" id="settings-name" value="Paola Elizabeth">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Bio</label>
+                                <input type="text" id="settings-bio" value="*lux in tenebris*">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div>
+                            <div class="form-group">
+                                <label>Email de Contacto</label>
+                                <input type="email" id="settings-email" value="paola@hopepaoo.com">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>WhatsApp</label>
+                                <input type="tel" id="settings-whatsapp" value="+52 998 762 7884">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSettings()">Guardar Configuración</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Datos y Privacidad</div>
+                    </div>
+                    <p style="margin-bottom: 20px; color: #a0a0a0;">
+                        Los datos se almacenan localmente en el navegador. Puedes descargar, respaldar o limpiar tus datos.
+                    </p>
+                    <button class="btn btn-secondary" onclick="downloadData()" style="margin-right: 10px;">
+                        📥 Descargar Datos
+                    </button>
+                    <button class="btn btn-danger" onclick="clearData()">
+                        🗑️ Limpiar Todo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATA MANAGEMENT
+        const DB_KEY = 'hopepaoo_cms_db';
+
+        function getDatabase() {
+            const db = localStorage.getItem(DB_KEY);
+            return db ? JSON.parse(db) : {
+                services: [],
+                sessions: [],
+                testimonials: [],
+                events: [],
+                clients: [],
+                settings: {
+                    name: 'Paola Elizabeth',
+                    bio: '*lux in tenebris*',
+                    email: 'paola@hopepaoo.com',
+                    whatsapp: ''
+                }
+            };
+        }
+
+        function saveDatabase(db) {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            refreshAllTables();
+            updateDashboard();
+        }
+
+        // UI FUNCTIONS
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // SERVICE FUNCTIONS
+        function addService() {
+            const name = document.getElementById('service-name').value;
+            const price = document.getElementById('service-price').value;
+            const description = document.getElementById('service-description').value;
+            const duration = document.getElementById('service-duration').value;
+
+            if (!name || !price || !duration) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            const db = getDatabase();
+            db.services.push({
+                id: Date.now(),
+                name,
+                price: parseFloat(price),
+                description,
+                duration: parseInt(duration),
+                createdAt: new Date().toISOString()
+            });
+
+            saveDatabase(db);
+
+            document.getElementById('service-name').value = '';
+            document.getElementById('service-price').value = '';
+            document.getElementById('service-description').value = '';
+            document.getElementById('service-duration').value = '';
+
+            showNotification('Servicio agregado exitosamente');
+        }
+
+        // SESSION FUNCTIONS
+        function addSession() {
+            const client = document.getElementById('session-client').value;
+            const serviceId = document.getElementById('session-service').value;
+            const date = document.getElementById('session-date').value;
+            const time = document.getElementById('session-time').value;
+            const notes = document.getElementById('session-notes').value;
+
+            if (!client || !serviceId || !date || !time) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            const db = getDatabase();
+            db.sessions.push({
+                id: Date.now(),
+                client,
+                serviceId: parseInt(serviceId),
+                date,
+                time,
+                notes,
+                status: 'scheduled',
+                createdAt: new Date().toISOString()
+            });
+
+            saveDatabase(db);
+
+            document.getElementById('session-client').value = '';
+            document.getElementById('session-service').value = '';
+            document.getElementById('session-date').value = '';
+            document.getElementById('session-time').value = '';
+            document.getElementById('session-notes').value = '';
+
+            showNotification('Sesión registrada exitosamente');
+        }
+
+        // TESTIMONIAL FUNCTIONS
+        function addTestimonial() {
+            const name = document.getElementById('testimonial-name').value;
+            const role = document.getElementById('testimonial-role').value;
+            const text = document.getElementById('testimonial-text').value;
+
+            if (!name || !role || !text) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            const db = getDatabase();
+            db.testimonials.push({
+                id: Date.now(),
+                name,
+                role,
+                text,
+                createdAt: new Date().toISOString()
+            });
+
+            saveDatabase(db);
+
+            document.getElementById('testimonial-name').value = '';
+            document.getElementById('testimonial-role').value = '';
+            document.getElementById('testimonial-text').value = '';
+
+            showNotification('Testimonio agregado exitosamente');
+        }
+
+        // EVENT FUNCTIONS
+        function addEvent() {
+            const name = document.getElementById('event-name').value;
+            const type = document.getElementById('event-type').value;
+            const date = document.getElementById('event-date').value;
+            const location = document.getElementById('event-location').value;
+            const description = document.getElementById('event-description').value;
+
+            if (!name || !date || !location) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            const db = getDatabase();
+            db.events.push({
+                id: Date.now(),
+                name,
+                type,
+                date,
+                location,
+                description,
+                status: 'upcoming',
+                createdAt: new Date().toISOString()
+            });
+
+            saveDatabase(db);
+
+            document.getElementById('event-name').value = '';
+            document.getElementById('event-type').value = '';
+            document.getElementById('event-date').value = '';
+            document.getElementById('event-location').value = '';
+            document.getElementById('event-description').value = '';
+
+            showNotification('Evento creado exitosamente');
+        }
+
+        // CLIENT FUNCTIONS
+        function addClient() {
+            const name = document.getElementById('client-name').value;
+            const email = document.getElementById('client-email').value;
+            const phone = document.getElementById('client-phone').value;
+            const intention = document.getElementById('client-intention').value;
+
+            if (!name || !email) {
+                alert('Por favor completa los campos requeridos');
+                return;
+            }
+
+            const db = getDatabase();
+            db.clients.push({
+                id: Date.now(),
+                name,
+                email,
+                phone,
+                intention,
+                status: 'active',
+                createdAt: new Date().toISOString()
+            });
+
+            saveDatabase(db);
+
+            document.getElementById('client-name').value = '';
+            document.getElementById('client-email').value = '';
+            document.getElementById('client-phone').value = '';
+            document.getElementById('client-intention').value = '';
+
+            showNotification('Cliente agregado exitosamente');
+        }
+
+        // TABLE REFRESH
+        function refreshAllTables() {
+            const db = getDatabase();
+
+            // Servicios
+            const servicesTable = document.getElementById('services-table');
+            servicesTable.innerHTML = db.services.length ? db.services.map(s => `
+                <tr>
+                    <td>${s.name}</td>
+                    <td>$${s.price}</td>
+                    <td>${s.duration} min</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="deleteService(${s.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('') : '<tr><td colspan="4" style="text-align: center; color: #707070;">No hay servicios aún</td></tr>';
+
+            // Sessions
+            const sessionsTable = document.getElementById('sessions-table');
+            sessionsTable.innerHTML = db.sessions.length ? db.sessions.map(s => `
+                <tr>
+                    <td>${s.client}</td>
+                    <td>${db.services.find(srv => srv.id == s.serviceId)?.name || 'Servicio no encontrado'}</td>
+                    <td>${s.date} ${s.time}</td>
+                    <td><span style="color: #28a745;">${s.status}</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="deleteSession(${s.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('') : '<tr><td colspan="5" style="text-align: center; color: #707070;">No hay sesiones aún</td></tr>';
+
+            // Testimonials
+            const testimonialsTable = document.getElementById('testimonials-table');
+            testimonialsTable.innerHTML = db.testimonials.length ? db.testimonials.map(t => `
+                <tr>
+                    <td>${t.name}</td>
+                    <td>${t.role}</td>
+                    <td>${t.text.substring(0, 50)}...</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="deleteTestimonial(${t.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('') : '<tr><td colspan="4" style="text-align: center; color: #707070;">No hay testimonios aún</td></tr>';
+
+            // Events
+            const eventsTable = document.getElementById('events-table');
+            eventsTable.innerHTML = db.events.length ? db.events.map(e => `
+                <tr>
+                    <td>${e.name}</td>
+                    <td>${e.type}</td>
+                    <td>${e.date}</td>
+                    <td>${e.location}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="deleteEvent(${e.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('') : '<tr><td colspan="5" style="text-align: center; color: #707070;">No hay eventos aún</td></tr>';
+
+            // Clients
+            const clientsTable = document.getElementById('clients-table');
+            clientsTable.innerHTML = db.clients.length ? db.clients.map(c => `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${c.email}</td>
+                    <td>${c.phone}</td>
+                    <td>${c.intention}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="deleteClient(${c.id})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('') : '<tr><td colspan="5" style="text-align: center; color: #707070;">No hay clientes aún</td></tr>';
+
+            // Update service dropdown
+            const serviceSelect = document.getElementById('session-service');
+            serviceSelect.innerHTML = '<option value="">Seleccionar servicio...</option>' + db.services.map(s =>
+                `<option value="${s.id}">${s.name} - $${s.price}</option>`
+            ).join('');
+        }
+
+        // DASHBOARD
+        function updateDashboard() {
+            const db = getDatabase();
+            document.getElementById('total-sessions').textContent = db.sessions.length;
+            document.getElementById('total-clients').textContent = db.clients.length;
+            document.getElementById('upcoming-events').textContent = db.events.filter(e => e.status === 'upcoming').length;
+
+            const revenue = db.sessions.reduce((sum, s) => {
+                const service = db.services.find(srv => srv.id == s.serviceId);
+                return sum + (service ? service.price : 0);
+            }, 0);
+            document.getElementById('revenue').textContent = '$' + revenue.toFixed(2);
+        }
+
+        // DELETE FUNCTIONS
+        function deleteService(id) {
+            if (confirm('¿Estás seguro?')) {
+                const db = getDatabase();
+                db.services = db.services.filter(s => s.id !== id);
+                saveDatabase(db);
+            }
+        }
+
+        function deleteSession(id) {
+            if (confirm('¿Estás seguro?')) {
+                const db = getDatabase();
+                db.sessions = db.sessions.filter(s => s.id !== id);
+                saveDatabase(db);
+            }
+        }
+
+        function deleteTestimonial(id) {
+            if (confirm('¿Estás seguro?')) {
+                const db = getDatabase();
+                db.testimonials = db.testimonials.filter(t => t.id !== id);
+                saveDatabase(db);
+            }
+        }
+
+        function deleteEvent(id) {
+            if (confirm('¿Estás seguro?')) {
+                const db = getDatabase();
+                db.events = db.events.filter(e => e.id !== id);
+                saveDatabase(db);
+            }
+        }
+
+        function deleteClient(id) {
+            if (confirm('¿Estás seguro?')) {
+                const db = getDatabase();
+                db.clients = db.clients.filter(c => c.id !== id);
+                saveDatabase(db);
+            }
+        }
+
+        // SETTINGS
+        function saveSettings() {
+            const db = getDatabase();
+            db.settings = {
+                name: document.getElementById('settings-name').value,
+                bio: document.getElementById('settings-bio').value,
+                email: document.getElementById('settings-email').value,
+                whatsapp: document.getElementById('settings-whatsapp').value
+            };
+            saveDatabase(db);
+            showNotification('Configuración guardada');
+        }
+
+        function downloadData() {
+            const db = getDatabase();
+            const dataStr = JSON.stringify(db, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `hopepaoo-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function clearData() {
+            if (confirm('⚠️ Esto eliminará TODOS los datos. ¿Estás seguro?')) {
+                localStorage.removeItem(DB_KEY);
+                location.reload();
+            }
+        }
+
+        function showNotification(message) {
+            const div = document.createElement('div');
+            div.className = 'success';
+            div.textContent = '✓ ' + message;
+            document.querySelector('.main').insertBefore(div, document.querySelector('.section.active'));
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        // INIT
+        window.addEventListener('load', () => {
+            refreshAllTables();
+            updateDashboard();
+
+            // Load settings
+            const db = getDatabase();
+            document.getElementById('settings-name').value = db.settings.name;
+            document.getElementById('settings-bio').value = db.settings.bio;
+            document.getElementById('settings-email').value = db.settings.email;
+            document.getElementById('settings-whatsapp').value = db.settings.whatsapp;
+        });
+    </script>
+</body>
+</html>

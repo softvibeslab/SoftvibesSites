@@ -1,0 +1,156 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, waLink, formatoPrecio, CATEGORIAS_EN } from '../../data/site';
+
+const servicios = (await getCollection('servicios')).filter((s) => s.data.tituloEn);
+const destacados = servicios
+  .filter((s) => s.data.destacado)
+  .concat(servicios.filter((s) => !s.data.destacado))
+  .slice(0, 3);
+---
+
+<BaseLayout
+  titulo={`${SITE.nombre} | Laser hair removal & facials in Playa del Carmen`}
+  descripcion={SITE.descripcionEn}
+  lang="en"
+  rutaAlterna="/"
+>
+  <section class="hero">
+    <img src="/img/hero-blooming.jpg" alt="" class="hero__media" fetchpriority="high" aria-hidden="true" />
+    <div class="hero__inner" style="min-height: 86vh; display: flex; flex-direction: column; justify-content: center;">
+      <span class="etiqueta anim" style="color: var(--laton-claro); --d: 100ms;">Laser & Skincare · Playa del Carmen</span>
+      <h1 class="anim" style="--d: 250ms;">Your skin, <em>our passion</em></h1>
+      <p class="anim" style="--d: 420ms;">Diode laser hair removal, Hollywood Peel, custom facials and facial harmonization. Every treatment starts with a skin assessment — because no two skins need the same thing. We work in English and Spanish.</p>
+      <div class="hero__cta anim" style="--d: 580ms;">
+        <a href={waLink(SITE.waMensajeEn)} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Book your appointment</a>
+        <a href="/en/services" class="boton boton--claro">See treatments & prices</a>
+      </div>
+      <p class="hero__prueba anim" style="--d: 720ms;">
+        <strong>⭐ {SITE.resenas.calificacion}</strong> · {SITE.resenas.total} reviews on {SITE.resenas.fuente}
+      </p>
+      <div class="hero__badges anim" style="--d: 860ms;">
+        <div><strong>Diode technology</strong> Suitable for every skin type</div>
+        <div><strong>Assessment included</strong> Before any treatment</div>
+        <div><strong>Tihosuco 13</strong> Fracc. Cataluña, Playa del Carmen</div>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"></div>
+  </section>
+
+  <section class="seccion--oscura" style="padding: 2.5rem 0;">
+    <div class="contenedor" style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+      <span class="etiqueta" style="margin: 0; color: var(--laton-claro);">What our clients say</span>
+      <span style="font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.04em;">
+        ⭐ {SITE.resenas.calificacion} from {SITE.resenas.total} reviews on Google
+      </span>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Treatments</span>
+        <h2>Our client favourites</h2>
+        <p>From laser hair removal to facial harmonization — with prices always visible.</p>
+      </div>
+      <div class="grid-propiedades">
+        {
+          destacados.map((s) => {
+            const d = s.data;
+            const mensaje = `Hi Blooming, I'd like to book "${d.tituloEn}". Could you share your availability?`;
+            return (
+              <article class="card">
+                <div class="card__media">
+                  <a href={`/en/services/${s.id}`} aria-label={d.tituloEn}>
+                    <img src={d.imagen} alt={d.tituloEn} class="card__img" loading="lazy" width="640" height="435" />
+                  </a>
+                  <div class="card__badges">
+                    {d.favorito && <span class="badge badge--favorito">★ Client favourite</span>}
+                  </div>
+                </div>
+                <div class="card__cuerpo">
+                  <span class="card__tipo">{CATEGORIAS_EN[d.categoria]}</span>
+                  <h3 class="card__titulo"><a href={`/en/services/${s.id}`}>{d.tituloEn}</a></h3>
+                  <span class="card__precio">
+                    {d.precio > 0 ? <>from {formatoPrecio(d.precio)}</> : <span class="card__cotiza">Quoted at your assessment</span>}
+                  </span>
+                  <p class="card__resumen">{d.resumenEn}</p>
+                  <div class="card__acciones">
+                    <a href={waLink(mensaje)} class="boton boton--whatsapp" target="_blank" rel="noopener">Book</a>
+                    <a href={`/en/services/${s.id}`} class="boton boton--secundario">Details</a>
+                  </div>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+      <p style="margin-top: 2rem;">
+        <a href="/en/services" class="boton boton--primario">See all treatments →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <div>
+          <span class="etiqueta">About us</span>
+          <h2>A space that's yours</h2>
+          <p>At <strong>Blooming</strong> we pair advanced technology with something harder to find: time for you. Before any treatment we assess your skin — whether it's sensitive, oily or dry, whether there's irritation or a condition to consider — and only then do we decide how to work with it. That's why no two sessions are the same.</p>
+          <p>And because self-care isn't only about skin, you'll also find massages and sound-bowl harmonization therapy here.</p>
+          <ul class="lista-check">
+            <li>Skin assessment before every treatment</li>
+            <li>Personalised protocols, never one-size-fits-all</li>
+            <li>Professional cosmeceutical products</li>
+            <li>Aftercare explained at the end of your session</li>
+          </ul>
+          <p style="margin-top: 1.5rem;">
+            <a href={waLink('Hi Blooming, I would like to know which treatment suits me. Could you advise me?')} class="boton boton--whatsapp" target="_blank" rel="noopener">
+              Tell us what your skin needs
+            </a>
+          </p>
+        </div>
+        <img
+          src="/img/nosotras.jpg"
+          alt="Inside the Blooming studio in Playa del Carmen"
+          style="border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 1 / 1; object-fit: cover; width: 100%;"
+          width="760"
+          height="760"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Visit us</span>
+        <h2>Find us</h2>
+      </div>
+      <div class="dos-columnas">
+        <div class="ubicacion-datos">
+          <p class="ubicacion-direccion">
+            <strong>{SITE.direccion}</strong><br />
+            {SITE.cp}, {SITE.ciudad}
+          </p>
+          <p>🕒 Monday to Saturday, 10:00–20:00</p>
+          <p>📞 <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`}>{SITE.telefono}</a></p>
+          <p>✉️ <a href={`mailto:${SITE.correo}`}>{SITE.correo}</a></p>
+          <div class="ubicacion-acciones">
+            <a href={SITE.mapa} class="boton boton--primario" target="_blank" rel="noopener">📍 Open in Google Maps</a>
+            <a href={waLink('Hi Blooming, could you confirm the address so I can find you?')} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Ask on WhatsApp</a>
+          </div>
+        </div>
+        <iframe
+          class="mapa-marco"
+          src="https://www.google.com/maps?q=Calle+Tihosuco+13,+Fraccionamiento+Catalu%C3%B1a,+Playa+del+Carmen,+Quintana+Roo&output=embed"
+          title="Blooming location in Playa del Carmen"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

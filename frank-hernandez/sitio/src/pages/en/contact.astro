@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../../data/site';
+---
+
+<BaseLayout
+  titulo="Contact | Frank Hernández · Riviera Maya Investment"
+  descripcion={`Contact ${SITE.asesor}: WhatsApp ${SITE.telefono}, book a free investment consultation. Real estate in Cancún, Playa del Carmen and Tulum.`}
+  lang="en"
+  rutaAlterna="/contacto"
+>
+  <section class="seccion" id="contact">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Contact</span>
+        <h2>Let's talk about your Riviera Maya investment</h2>
+        <p>
+          WhatsApp is the fastest channel — Frank replies in minutes, not days, in English or
+          Spanish.
+        </p>
+      </div>
+
+      <div class="dos-columnas">
+        <form class="formulario" action="/contact.php" method="POST">
+          <label>
+            Name
+            <input type="text" name="nombre" required autocomplete="name" />
+          </label>
+          <label>
+            WhatsApp / phone
+            <input type="tel" name="telefono" required autocomplete="tel" />
+          </label>
+          <label>
+            Approximate budget
+            <select name="presupuesto">
+              <option value="usd-150k">Up to $150k USD</option>
+              <option value="usd-150k-300k">$150k – $300k USD</option>
+              <option value="usd-300k+">Over $300k USD</option>
+              <option value="mxn">I prefer to talk in MXN</option>
+            </select>
+          </label>
+          <input type="text" name="empresa" class="campo-oculto" tabindex="-1" autocomplete="off" />
+          <label
+            style="font-weight: 400; display: flex; gap: 0.5rem; align-items: start; text-transform: none; letter-spacing: 0;"
+          >
+            <input type="checkbox" name="privacidad" required style="margin-top: 0.3rem;" />
+            <span>
+              I accept the <a href="/aviso-de-privacidad">privacy notice</a> and the use of my
+              information to be contacted.
+            </span>
+          </label>
+          <button type="submit" class="boton boton--laton">Send me more information</button>
+          <p class="formulario__nota">🔒 Your information is safe. No spam, no strings attached.</p>
+        </form>
+
+        <div>
+          <h3>Immediate response</h3>
+          <p>
+            <strong>The fastest channel is WhatsApp</strong> — you'll hear back in minutes.
+          </p>
+          <a href={waLink(SITE.waMensajeEn)} target="_blank" rel="noopener" class="boton boton--whatsapp">💬 WhatsApp {SITE.telefono}</a>
+          <p style="margin-top: 1.75rem;"><strong>Prefer a video call?</strong></p>
+          <a href={waLink("Hi Frank, I'd like to book a free investment consultation.")} target="_blank" rel="noopener" class="boton boton--primario">📅 Book a free consultation</a>
+          <p class="mini-testimonio">
+            "He walked with us from the first video call to signing with the notary. The
+            fideicomiso process was far simpler than we expected."
+            <strong>— Foreign buyers (sample testimonial)</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,37 @@
+Options -Indexes
+DirectoryIndex index.html index.php
+
+<FilesMatch "\.(zip|tar|gz|tgz|env|log|sql|bak)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType image/jpeg "access plus 0 seconds"
+  ExpiresByType image/png "access plus 0 seconds"
+  ExpiresByType image/webp "access plus 0 seconds"
+  ExpiresByType image/svg+xml "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  SetEnvIfNoCase Host "\.hostingersite\.com$" preview_host
+  Header always set X-Robots-Tag "noindex, nofollow" env=preview_host
+
+  <FilesMatch "\.(html)$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(jpg|jpeg|png|webp|gif|avif|svg|ico)$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|woff2|woff)$">
+    Header always set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+<IfModule LiteSpeed>
+  CacheDisable public /
+</IfModule>

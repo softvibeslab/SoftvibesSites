@@ -1,0 +1,142 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServicioCard from '../components/ServicioCard.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE, waLink } from '../data/site';
+
+const servicios = await getCollection('servicios');
+const destacados = servicios
+  .filter((s) => s.data.destacado)
+  .concat(servicios.filter((s) => !s.data.destacado))
+  .slice(0, 3);
+---
+
+<BaseLayout
+  titulo={`${SITE.nombre} | Depilación láser y faciales en Playa del Carmen`}
+  descripcion={SITE.descripcion}
+  lang="es"
+  rutaAlterna="/en/"
+>
+  <section class="hero">
+    <img src="/img/hero-blooming.jpg" alt="" class="hero__media" fetchpriority="high" aria-hidden="true" />
+    <div class="hero__inner" style="min-height: 86vh; display: flex; flex-direction: column; justify-content: center;">
+      <span class="etiqueta anim" style="color: var(--laton-claro); --d: 100ms;" data-cms="hero-etiqueta">Depilación láser & Skincare · Playa del Carmen</span>
+      <h1 class="anim" style="--d: 250ms;" data-cms="hero-titulo">Tu piel, <em>nuestra pasión</em></h1>
+      <p class="anim" style="--d: 420ms;" data-cms="hero-descripcion">Depilación láser diodo, Hollywood Peel, faciales personalizados y armonización facial. Cada tratamiento empieza con una valoración de tu piel, porque no todas necesitan lo mismo.</p>
+      <div class="hero__cta anim" style="--d: 580ms;">
+        <a href={waLink()} class="boton boton--whatsapp" target="_blank" rel="noopener" data-cms="cta-hero-whatsapp">💬 Agenda tu cita</a>
+        <a href="/servicios" class="boton boton--claro" data-cms="cta-hero-servicios">Ver carta y precios</a>
+      </div>
+      <p class="hero__prueba anim" style="--d: 720ms;">
+        <strong>⭐ {SITE.resenas.calificacion}</strong> · {SITE.resenas.total} reseñas en {SITE.resenas.fuente}
+      </p>
+      <div class="hero__badges anim" style="--d: 860ms;">
+        <div><strong>Tecnología diodo</strong> Apta para todo tipo de piel</div>
+        <div><strong>Valoración incluida</strong> Antes de cualquier tratamiento</div>
+        <div><strong>Tihosuco 13</strong> Fracc. Cataluña, Playa del Carmen</div>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"></div>
+  </section>
+
+  <!-- Reseñas al frente: su mejor activo, hoy invisible -->
+  <section class="seccion--oscura" style="padding: 2.5rem 0;">
+    <div class="contenedor" style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+      <span class="etiqueta" style="margin: 0; color: var(--laton-claro);">Lo que dicen nuestras clientas</span>
+      <span style="font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.04em;" data-cms="resenas-texto">
+        ⭐ {SITE.resenas.calificacion} con {SITE.resenas.total} reseñas — «Me encanta sentirme consentida y apapachada en Blooming 💖»
+      </span>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Tratamientos</span>
+        <h2>Los favoritos de nuestras clientas</h2>
+        <p>
+          Desde la depilación láser hasta la armonización facial. Todos nuestros precios están
+          siempre visibles — no escondidos en promociones que ya vencieron.
+        </p>
+      </div>
+      <div class="grid-propiedades">
+        {destacados.map((s) => <ServicioCard servicio={s} />)}
+      </div>
+      <p style="margin-top: 2rem;">
+        <a href="/servicios" class="boton boton--primario">Ver la carta completa →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--alterna" id="nosotras">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <div>
+          <span class="etiqueta">Sobre nosotras</span>
+          <h2>Un espacio para ti</h2>
+          <p data-cms="nosotras-bio">En <strong>Blooming</strong> combinamos tecnología de vanguardia con algo que no siempre se encuentra: tiempo para ti. Antes de cualquier tratamiento hacemos una valoración de tu piel — observamos si es sensible, grasa o seca, si hay irritación o alguna condición especial — y solo entonces decidimos cómo trabajarla. Por eso ninguna sesión es igual a la anterior.</p>
+          <p>Y porque cuidarte no es solo la piel, aquí también encontrarás masajes y terapia de armonización con cuencos sonoros.</p>
+          <ul class="lista-check">
+            <li>Valoración de la piel antes de cada tratamiento</li>
+            <li>Protocolos personalizados, no la misma receta para todas</li>
+            <li>Productos cosmetológicos profesionales</li>
+            <li>Cuidados en casa explicados al terminar tu sesión</li>
+          </ul>
+          <p style="margin-top: 1.5rem;">
+            <a href={waLink('Hola Blooming, quiero saber qué tratamiento me conviene. ¿Me orientan?')} class="boton boton--whatsapp" target="_blank" rel="noopener">
+              Cuéntanos qué necesita tu piel
+            </a>
+          </p>
+        </div>
+        <img
+          src="/img/nosotras.jpg"
+          alt="Interior del estudio Blooming en Playa del Carmen"
+          style="border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 1 / 1; object-fit: cover; width: 100%;"
+          width="760"
+          height="760"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Ubicación vigente: resuelve la fuga de la dirección desactualizada -->
+  <section class="seccion" id="ubicacion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Visítanos</span>
+        <h2>Dónde estamos</h2>
+      </div>
+      <div class="dos-columnas">
+        <div class="ubicacion-datos">
+          <p class="ubicacion-direccion">
+            <strong>{SITE.direccion}</strong><br />
+            {SITE.cp}, {SITE.ciudad}
+          </p>
+          <p>🕒 {SITE.horario}</p>
+          <p>📞 <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`}>{SITE.telefono}</a></p>
+          <p>✉️ <a href={`mailto:${SITE.correo}`}>{SITE.correo}</a></p>
+          <div class="ubicacion-acciones">
+            <a href={SITE.mapa} class="boton boton--primario" target="_blank" rel="noopener">📍 Abrir en Google Maps</a>
+            <a href={waLink('Hola Blooming, ¿me confirman la dirección para llegar?')} class="boton boton--whatsapp" target="_blank" rel="noopener">💬 Preguntar por WhatsApp</a>
+          </div>
+        </div>
+        <iframe
+          class="mapa-marco"
+          src="https://www.google.com/maps?q=Calle+Tihosuco+13,+Fraccionamiento+Catalu%C3%B1a,+Playa+del+Carmen,+Quintana+Roo&output=embed"
+          title="Ubicación de Blooming en Playa del Carmen"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="parallax">
+    <h2 data-cms="parallax-titulo">Tu momento de <em>cuidarte</em></h2>
+    <p>Agenda tu valoración y descubre qué necesita realmente tu piel.</p>
+    <a href={waLink()} class="boton boton--laton" target="_blank" rel="noopener">Agendar mi cita</a>
+  </section>
+
+  <CTAContacto />
+</BaseLayout>

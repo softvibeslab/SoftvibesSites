@@ -1,0 +1,3 @@
+<FilesMatch "(?:backup|\.tmp)">
+  Require all denied
+</FilesMatch>

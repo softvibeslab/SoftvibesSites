@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" role="img" aria-labelledby="title desc">
+  <title id="title">Retrato de demostración</title>
+  <desc id="desc">Silueta abstracta que debe reemplazarse por una fotografía autorizada.</desc>
+  <rect width="800" height="900" fill="#e9dfcf"/>
+  <circle cx="400" cy="315" r="150" fill="#d29a77"/>
+  <path d="M120 900c20-250 125-390 280-390s260 140 280 390Z" fill="#214a4e"/>
+  <path d="M235 275c20-165 275-210 335-10-80-58-190-85-335 10Z" fill="#563e35"/>
+</svg>

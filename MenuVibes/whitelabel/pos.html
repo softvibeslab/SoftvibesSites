@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MenuVibes POS</title>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ══ MenuVibes Design System v1 — "Hospitalidad cálida" (ver DESIGN.md) ══ */
+  :root{--y:#ff385c;--ya:#e00b41;--b:#ffffff;--d:#ffffff;--s:#f7f7f7;--w:#222222;--body:#3f3f3f;--m:#6a6a6a;
+        --hair:#dddddd;--hair2:#ebebeb;--g:#008a05;--gsoft:#e8f5e9;--warn:#c25e00;--warnsoft:#fff3e6;--r:#c13515;
+        --shc:rgba(0,0,0,.05) 0 2px 8px;--shl:rgba(0,0,0,.08) 0 6px 20px;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{width:100%;overflow-x:hidden;}
+  body{min-height:100vh;background:var(--b);color:var(--w);font-family:'Nunito Sans',system-ui,-apple-system,sans-serif;}
+  .hidden{display:none!important;}
+  .err{min-height:18px;color:var(--r);font-size:12px;font-weight:700;margin-bottom:6px;}
+  .muted{color:var(--m);font-size:12px;}
+  .toast{position:fixed;left:16px;right:16px;bottom:16px;max-width:420px;margin:0 auto;background:var(--w);color:#fff;border-radius:9999px;padding:13px 20px;font-size:13px;font-weight:700;display:none;z-index:300;box-shadow:var(--shl);text-align:center;}
+  input,select{width:100%;background:#fff;border:1px solid var(--hair);color:var(--w);border-radius:8px;padding:11px 12px;font-size:15px;font-weight:600;outline:none;font-family:inherit;}
+  input:focus,select:focus{border-color:var(--w);}
+  .btn{border:0;border-radius:8px;padding:12px 16px;font-weight:700;font-size:14px;cursor:pointer;background:var(--y);color:#fff;font-family:inherit;transition:background .15s;}
+  .btn:hover{background:var(--ya);}
+  .btn.ghost{background:#fff;color:var(--body);border:1px solid var(--hair);}
+  .btn.ghost:hover{background:var(--s);color:var(--w);}
+  .btn.good{background:var(--g);color:#fff;}
+  .btn.danger{background:#fff;color:var(--r);border:1px solid var(--r);}
+  .btn:disabled{opacity:.4;cursor:default;}
+  .pill{display:inline-flex;background:var(--s);border:1px solid var(--hair2);border-radius:9999px;padding:5px 11px;font-size:11px;font-weight:800;color:var(--m);}
+  .pill.ok{background:var(--gsoft);border-color:#b7dfb9;color:var(--g);}
+  .pill.warn{background:var(--warnsoft);border-color:#f0d4b5;color:var(--warn);}
+
+  /* login */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--s);}
+  .login-card{width:100%;max-width:400px;background:#fff;border:1px solid var(--hair);border-radius:20px;padding:24px 20px;box-shadow:var(--shl);}
+  .brand{font-weight:800;letter-spacing:.06em;color:var(--y);text-transform:uppercase;font-size:12px;}
+  .biz{font-size:22px;font-weight:800;margin:3px 0 12px;color:var(--w);}
+  .login-card input{margin-bottom:10px;}
+  .login-card .btn{width:100%;}
+
+  /* app layout */
+  .topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--hair2);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .topbar .left{min-width:0;}
+  .topbar .biz{font-size:16px;margin:0;}
+  .topbar .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .topbar .btn{padding:8px 13px;font-size:12px;}
+  .pos-grid{display:grid;grid-template-columns:1fr 380px;gap:0;min-height:calc(100vh - 55px);}
+  .prod-pane{padding:14px;overflow-y:auto;background:var(--s);}
+  .ticket-pane{background:#fff;border-left:1px solid var(--hair2);padding:16px;display:flex;flex-direction:column;position:sticky;top:55px;height:calc(100vh - 55px);overflow-y:auto;}
+
+  /* productos */
+  .search-row{display:flex;gap:8px;margin-bottom:12px;}
+  .sec-title{font-size:12px;font-weight:800;color:var(--m);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px;}
+  .prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+  .prod-btn{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:13px 12px;text-align:left;cursor:pointer;color:var(--w);min-height:76px;display:flex;flex-direction:column;justify-content:space-between;gap:6px;transition:all .1s;box-shadow:var(--shc);font-family:inherit;}
+  .prod-btn:active{border-color:var(--w);transform:scale(.98);}
+  .prod-name{font-size:13.5px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;}
+  .prod-price{font-size:15px;font-weight:800;color:var(--w);}
+
+  /* ticket */
+  .ticket-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .ticket-head h2{font-size:17px;font-weight:800;}
+  .t-items{flex:1;overflow-y:auto;display:grid;gap:6px;align-content:start;margin-bottom:10px;min-height:80px;}
+  .t-item{display:flex;align-items:center;gap:8px;background:var(--s);border-radius:12px;padding:9px 11px;}
+  .t-name{flex:1;font-size:13.5px;font-weight:600;min-width:0;overflow-wrap:anywhere;}
+  .t-qty{display:flex;align-items:center;gap:6px;}
+  .qty-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--hair);background:#fff;color:var(--w);font-size:16px;font-weight:800;cursor:pointer;}
+  .t-qty span{min-width:18px;text-align:center;font-weight:800;}
+  .t-line-price{font-size:13.5px;font-weight:800;color:var(--w);min-width:52px;text-align:right;}
+  .t-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+  .t-meta input,.t-meta select{padding:9px 10px;font-size:13px;}
+  .tot-row{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;color:var(--m);font-weight:600;}
+  .tot-row.grand{font-size:21px;color:var(--w);font-weight:800;border-top:1px solid var(--hair2);padding-top:8px;margin-top:5px;}
+  .ticket-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+  .ticket-actions .btn{padding:14px 10px;font-size:15px;}
+
+  /* pedidos activos */
+  .orders-strip{margin-top:14px;border-top:1px solid var(--hair2);padding-top:12px;}
+  .orders-strip h3{font-size:12px;color:var(--m);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;font-weight:800;}
+  .mini-order{background:var(--s);border-radius:12px;padding:10px 11px;margin-bottom:7px;}
+  .mo-head{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:800;margin-bottom:4px;}
+  .mo-head .code{color:var(--y);}
+  .mo-meta{font-size:11.5px;color:var(--m);margin-bottom:6px;}
+  .mo-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .mo-actions .btn{padding:7px 11px;font-size:11px;}
+
+  /* modal cobro */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal{width:100%;max-width:380px;background:#fff;border-radius:20px;padding:20px;box-shadow:var(--shl);}
+  .modal h2{font-size:18px;font-weight:800;margin-bottom:4px;}
+  .modal .grand{font-size:36px;font-weight:800;color:var(--w);margin:8px 0 12px;}
+  .pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+  .pay-btn{background:#fff;border:1px solid var(--hair);border-radius:12px;padding:12px 6px;color:var(--body);font-weight:700;font-size:12px;cursor:pointer;text-align:center;font-family:inherit;}
+  .pay-btn.sel{border:2px solid var(--w);color:var(--w);padding:11px 5px;}
+  .cambio-box{background:var(--s);border-radius:12px;padding:12px;margin-bottom:12px;}
+  .cambio-box .tot-row{padding:2px 0;}
+  .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+  @media(max-width:900px){
+    .pos-grid{grid-template-columns:1fr;}
+    .ticket-pane{position:static;height:auto;border-left:0;border-top:1px solid var(--hair2);}
+    .prod-pane{padding-bottom:90px;}
+    .ticket-fab{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;display:flex;justify-content:space-between;align-items:center;background:var(--y);color:#fff;border-radius:9999px;padding:14px 20px;font-weight:800;font-size:15px;cursor:pointer;box-shadow:var(--shl);}
+  }
+  @media(min-width:901px){.ticket-fab{display:none!important;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-view">
+  <div class="login-card">
+    <div class="brand">MenuVibes POS</div>
+    <div class="biz" id="login-biz">Caja</div>
+    <div class="err" id="login-err"></div>
+    <input type="email" id="login-email" placeholder="Email de staff o dueno" autocomplete="email" onkeydown="if(event.key==='Enter')login()">
+    <input type="password" id="login-pass" placeholder="Contrasena" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn" onclick="login()">Entrar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-view" class="hidden">
+  <div class="topbar">
+    <div class="left">
+      <div class="brand">MenuVibes POS</div>
+      <div class="biz" id="biz-name"></div>
+    </div>
+    <div class="right">
+      <span class="pill" id="corte-pill">corte…</span>
+      <button class="btn ghost" id="btn-corte" onclick="abrirCorte()" style="display:none;">Abrir corte</button>
+      <button class="btn ghost" onclick="loadCatalogo();loadActivos();loadCorte();">↻</button>
+      <button class="btn danger" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="pos-grid">
+    <div class="prod-pane">
+      <div class="search-row">
+        <input id="search" placeholder="Buscar producto…" oninput="renderProds()">
+      </div>
+      <div id="prods-root"><div class="muted">Cargando catalogo…</div></div>
+    </div>
+
+    <div class="ticket-pane" id="ticket-pane">
+      <div class="ticket-head">
+        <h2>Ticket</h2>
+        <button class="btn ghost" style="padding:7px 12px;font-size:11px;" onclick="vaciarTicket()">Vaciar</button>
+      </div>
+      <div class="t-items" id="t-items"><div class="muted">Toca productos para agregarlos.</div></div>
+      <div class="t-meta">
+        <select id="t-servicio" onchange="renderTicket()">
+          <option value="mesa">Mesa</option>
+          <option value="pickup">Para llevar</option>
+        </select>
+        <input id="t-mesa" placeholder="# Mesa">
+      </div>
+      <div class="t-meta">
+        <input id="t-cliente" placeholder="Cliente (opcional)">
+        <input id="t-desc" type="number" min="0" max="100" placeholder="% desc" oninput="renderTicket()">
+      </div>
+      <div id="t-tot"></div>
+      <div class="ticket-actions">
+        <button class="btn ghost" id="btn-cocina" onclick="enviarCocina()">A cocina 🍳</button>
+        <button class="btn good" id="btn-cobrar" onclick="abrirCobro()">Cobrar 💵</button>
+      </div>
+
+      <div class="orders-strip">
+        <h3>Pedidos activos <span class="pill" id="activos-count">0</span></h3>
+        <div id="activos-root"><div class="muted">—</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="ticket-fab hidden" id="ticket-fab" onclick="document.getElementById('ticket-pane').scrollIntoView({behavior:'smooth'})">
+    <span id="fab-items">0 items</span><span id="fab-total">$0</span>
+  </div>
+</div>
+
+<!-- MODAL COBRO -->
+<div class="modal-overlay hidden" id="cobro-modal">
+  <div class="modal">
+    <h2 id="cobro-title">Cobrar</h2>
+    <div class="muted" id="cobro-detalle"></div>
+    <div class="grand" id="cobro-total">$0</div>
+    <div class="pay-methods">
+      <button class="pay-btn sel" data-metodo="efectivo" onclick="selMetodo(this)">💵 Efectivo</button>
+      <button class="pay-btn" data-metodo="tarjeta" onclick="selMetodo(this)">💳 Tarjeta</button>
+      <button class="pay-btn" data-metodo="transferencia" onclick="selMetodo(this)">🏦 Transf.</button>
+    </div>
+    <div class="cambio-box" id="cambio-box">
+      <input id="recibido" type="number" inputmode="decimal" placeholder="Recibido $" oninput="calcCambio()" style="margin-bottom:8px;">
+      <div class="tot-row"><span>Cambio</span><span id="cambio-out" style="color:var(--y);font-weight:1000;">$0</span></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn ghost" onclick="cerrarCobro()">Cancelar</button>
+      <button class="btn good" id="btn-confirmar-cobro" onclick="confirmarCobro()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var PLATFORM = {
+  supabase_url: 'https://supabase.rovicrm.com',
+  supabase_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzgzNjYzOTY3LCJleHAiOjE5NDEzNDM5Njd9.GLcqHfvdPpXwISiCd00olUgEjQku1cjwxiMKamU-A2A'
+};
+const SUPA = supabase.createClient(PLATFORM.supabase_url, PLATFORM.supabase_key);
+var NEG = null, STAFF = null, ES_DUENO = false;
+var SECCIONES = [], PRODUCTOS = [];
+var TICKET = {};              // prodId -> qty
+var ACTIVOS = [];
+var COBRO = null;             // { pedidoId } cuando se cobra un pedido activo; null = ticket nuevo
+
+function qs(n){ return new URLSearchParams(location.search).get(n) || ''; }
+function esc(s){ return String(s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; setTimeout(function(){t.style.display='none';},2600); }
+function money(n){ return '$' + (parseInt(n)||0).toLocaleString('es-MX'); }
+function statusLabel(s){ return ({pendiente_confirmacion:'Por confirmar',pendiente:'Pendiente',confirmado:'Confirmado',en_preparacion:'En preparacion',listo:'Listo',entregado:'Entregado',cancelado:'Cancelado'})[s]||s; }
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function init(){
+  var slug = qs('n');
+  if (!slug){ document.getElementById('login-err').textContent = 'Falta ?n=slug del negocio.'; return; }
+  var neg = await SUPA.from('negocios').select('*').eq('slug', slug).maybeSingle();
+  if (!neg.data){ document.getElementById('login-err').textContent = 'Negocio no encontrado.'; return; }
+  NEG = neg.data;
+  document.getElementById('login-biz').textContent = NEG.nombre;
+  var session = await SUPA.auth.getSession();
+  if (session.data && session.data.session) enterApp(session.data.session.user);
+}
+
+async function login(){
+  document.getElementById('login-err').textContent = '';
+  var email = document.getElementById('login-email').value.trim();
+  var pass = document.getElementById('login-pass').value;
+  var res = await SUPA.auth.signInWithPassword({ email: email, password: pass });
+  if (res.error){ document.getElementById('login-err').textContent = 'Credenciales incorrectas.'; return; }
+  enterApp(res.data.user);
+}
+
+async function enterApp(user){
+  var st = await SUPA.from('negocio_staff').select('*').eq('negocio_id', NEG.id).eq('user_id', user.id).eq('activo', true).maybeSingle();
+  STAFF = st.data || null;
+  ES_DUENO = NEG.admin_user_id === user.id;
+  if (!STAFF && !ES_DUENO){
+    var pf = await SUPA.from('perfiles').select('rol').eq('user_id', user.id).maybeSingle();
+    if (!pf.data || pf.data.rol !== 'super_admin'){
+      document.getElementById('login-err').textContent = 'Este usuario no es staff ni dueno de este negocio.';
+      await SUPA.auth.signOut();
+      return;
+    }
+    ES_DUENO = true; // super_admin opera como dueno
+  }
+  document.getElementById('login-view').classList.add('hidden');
+  document.getElementById('app-view').classList.remove('hidden');
+  document.getElementById('biz-name').textContent = NEG.nombre;
+  loadCatalogo(); loadActivos(); loadCorte();
+  setInterval(loadActivos, 30000);
+}
+
+async function logout(){ await SUPA.auth.signOut(); location.reload(); }
+
+// ── CATALOGO ──────────────────────────────────────────────────────────────────
+async function loadCatalogo(){
+  var res = await Promise.all([
+    SUPA.from('secciones').select('*').eq('negocio_id', NEG.id).eq('activo', true).order('orden'),
+    SUPA.from('productos').select('*').eq('negocio_id', NEG.id).eq('activo', true).order('orden')
+  ]);
+  SECCIONES = res[0].data || [];
+  PRODUCTOS = res[1].data || [];
+  renderProds();
+}
+
+function renderProds(){
+  var root = document.getElementById('prods-root');
+  var q = (document.getElementById('search').value || '').toLowerCase();
+  var lista = PRODUCTOS.filter(function(p){ return !q || (p.nombre||'').toLowerCase().indexOf(q) >= 0; });
+  if (!lista.length){ root.innerHTML = '<div class="muted">Sin productos.</div>'; return; }
+  var html = '';
+  SECCIONES.forEach(function(s){
+    var items = lista.filter(function(p){ return p.seccion_id === s.id; });
+    if (!items.length) return;
+    html += '<div class="sec-title">' + esc(s.titulo) + '</div><div class="prods">';
+    items.forEach(function(p){ html += prodBtn(p); });
+    html += '</div>';
+  });
+  var sinSec = lista.filter(function(p){ return !SECCIONES.some(function(s){ return s.id === p.seccion_id; }); });
+  if (sinSec.length){
+    html += '<div class="sec-title">Otros</div><div class="prods">';
+    sinSec.forEach(function(p){ html += prodBtn(p); });
+    html += '</div>';
+  }
+  root.innerHTML = html;
+}
+
+function prodBtn(p){
+  return '<button class="prod-btn" onclick="addTicket(\'' + p.id + '\')">' +
+    '<span class="prod-name">' + esc(p.nombre) + '</span>' +
+    '<span class="prod-price">' + money(p.precio) + '</span></button>';
+}
+
+// ── TICKET ────────────────────────────────────────────────────────────────────
+function addTicket(id){ TICKET[id] = (TICKET[id]||0) + 1; renderTicket(); }
+function stepTicket(id, d){
+  TICKET[id] = (TICKET[id]||0) + d;
+  if (TICKET[id] <= 0) delete TICKET[id];
+  renderTicket();
+}
+function vaciarTicket(){ TICKET = {}; renderTicket(); }
+
+function ticketLineas(){
+  return Object.keys(TICKET).map(function(id){
+    var p = PRODUCTOS.find(function(x){ return x.id === id; });
+    if (!p) return null;
+    return { p: p, qty: TICKET[id], linea: (parseInt(p.precio)||0) * TICKET[id] };
+  }).filter(Boolean);
+}
+
+function ticketTotales(){
+  var lineas = ticketLineas();
+  var sub = lineas.reduce(function(a,l){ return a + l.linea; }, 0);
+  var pct = Math.min(100, Math.max(0, parseInt(document.getElementById('t-desc').value) || 0));
+  var total = Math.round(sub * (100 - pct) / 100);
+  return { lineas: lineas, sub: sub, pct: pct, total: total };
+}
+
+function renderTicket(){
+  var t = ticketTotales();
+  var root = document.getElementById('t-items');
+  if (!t.lineas.length){
+    root.innerHTML = '<div class="muted">Toca productos para agregarlos.</div>';
+  } else {
+    root.innerHTML = t.lineas.map(function(l){
+      return '<div class="t-item">' +
+        '<div class="t-name">' + esc(l.p.nombre) + '</div>' +
+        '<div class="t-qty"><button class="qty-btn" onclick="stepTicket(\'' + l.p.id + '\',-1)">−</button><span>' + l.qty + '</span><button class="qty-btn" onclick="stepTicket(\'' + l.p.id + '\',1)">+</button></div>' +
+        '<div class="t-line-price">' + money(l.linea) + '</div></div>';
+    }).join('');
+  }
+  var tot = '';
+  if (t.pct) tot += '<div class="tot-row"><span>Subtotal</span><span>' + money(t.sub) + '</span></div>' +
+                    '<div class="tot-row"><span>Descuento ' + t.pct + '%</span><span>−' + money(t.sub - t.total) + '</span></div>';
+  tot += '<div class="tot-row grand"><span>Total</span><span>' + money(t.total) + '</span></div>';
+  document.getElementById('t-tot').innerHTML = tot;
+
+  var nItems = t.lineas.reduce(function(a,l){ return a + l.qty; }, 0);
+  var fab = document.getElementById('ticket-fab');
+  fab.classList.toggle('hidden', !nItems);
+  document.getElementById('fab-items').textContent = nItems + ' item' + (nItems === 1 ? '' : 's');
+  document.getElementById('fab-total').textContent = money(t.total);
+  document.getElementById('t-mesa').style.display = document.getElementById('t-servicio').value === 'mesa' ? '' : 'none';
+}
+
+// ── CREAR PEDIDO (RPC) ────────────────────────────────────────────────────────
+function itemsPayload(){
+  return ticketLineas().map(function(l){
+    return { name: (l.qty > 1 ? l.qty + 'x ' : '') + l.p.nombre, price: l.linea, qty: l.qty };
+  });
+}
+
+async function crearPedido(){
+  var t = ticketTotales();
+  if (!t.lineas.length){ toast('El ticket esta vacio'); return null; }
+  var servicio = document.getElementById('t-servicio').value;
+  var mesa = document.getElementById('t-mesa').value.trim();
+  var cliente = document.getElementById('t-cliente').value.trim();
+  var res = await SUPA.rpc('crear_pedido_cliente', {
+    p_negocio_id: NEG.id,
+    p_usuario_id: null,
+    p_nickname: 'POS',
+    p_items: itemsPayload(),
+    p_total: t.total,
+    p_cupon_aplicado: null,
+    p_descuento_pct: t.pct,
+    p_tipo_servicio: servicio,
+    p_mesa: mesa || null,
+    p_direccion_entrega: null,
+    p_hora_pickup: null,
+    p_cliente_nombre: cliente || (mesa ? 'Mesa ' + mesa : 'Mostrador'),
+    p_cliente_telefono: null,
+    p_contexto: { origen: 'pos', staff: STAFF ? STAFF.nombre || STAFF.rol : 'dueno', timestamp: new Date().toISOString() }
+  });
+  if (res.error){ toast('Error al crear pedido: ' + res.error.message); return null; }
+  var row = Array.isArray(res.data) ? res.data[0] : res.data;
+  return row ? row.id : null;
+}
+
+async function enviarCocina(){
+  var btn = document.getElementById('btn-cocina'); btn.disabled = true;
+  var id = await crearPedido();
+  if (id){
+    var up = await SUPA.rpc('cambiar_estado_pedido', { p_pedido_id: id, p_estado: 'confirmado', p_metodo_pago: null });
+    if (up.error) toast('Pedido creado pero no se pudo confirmar: ' + up.error.message);
+    else { toast('Enviado a cocina ✓'); limpiarTrasVenta(); }
+  }
+  btn.disabled = false;
+}
+
+// ── COBRO ─────────────────────────────────────────────────────────────────────
+function abrirCobro(){
+  var t = ticketTotales();
+  if (!t.lineas.length){ toast('El ticket esta vacio'); return; }
+  COBRO = { total: t.total, pedidoId: null };
+  mostrarCobro('Cobrar ticket', t.lineas.length + ' productos', t.total);
+}
+
+function cobrarActivo(id){
+  var p = ACTIVOS.find(function(x){ return x.id === id; });
+  if (!p) return;
+  COBRO = { total: parseInt(p.total) || 0, pedidoId: id };
+  mostrarCobro('Cobrar ' + (p.codigo_confirmacion || ''), esc(p.cliente_nombre || ''), COBRO.total);
+}
+
+function mostrarCobro(titulo, detalle, total){
+  document.getElementById('cobro-title').textContent = titulo;
+  document.getElementById('cobro-detalle').textContent = detalle;
+  document.getElementById('cobro-total').textContent = money(total);
+  document.getElementById('recibido').value = '';
+  document.getElementById('cambio-out').textContent = '$0';
+  document.getElementById('cobro-modal').classList.remove('hidden');
+}
+
+function selMetodo(btn){
+  document.querySelectorAll('.pay-btn').forEach(function(b){ b.classList.remove('sel'); });
+  btn.classList.add('sel');
+  document.getElementById('cambio-box').style.display = btn.dataset.metodo === 'efectivo' ? '' : 'none';
+}
+
+function calcCambio(){
+  var rec = parseFloat(document.getElementById('recibido').value) || 0;
+  document.getElementById('cambio-out').textContent = money(Math.max(0, rec - COBRO.total));
+}
+
+function cerrarCobro(){ document.getElementById('cobro-modal').classList.add('hidden'); COBRO = null; }
+
+async function confirmarCobro(){
+  if (!COBRO) return;
+  var metodo = document.querySelector('.pay-btn.sel').dataset.metodo;
+  var btn = document.getElementById('btn-confirmar-cobro'); btn.disabled = true;
+  var pedidoId = COBRO.pedidoId;
+  if (!pedidoId) pedidoId = await crearPedido();
+  if (pedidoId){
+    var up = await SUPA.rpc('cambiar_estado_pedido', { p_pedido_id: pedidoId, p_estado: 'entregado', p_metodo_pago: metodo });
+    if (up.error) toast('Error al cobrar: ' + up.error.message);
+    else {
+      toast('Cobrado ' + money(COBRO.total) + ' (' + metodo + ') ✓');
+      if (!COBRO.pedidoId) limpiarTrasVenta();
+      cerrarCobro(); loadActivos();
+    }
+  }
+  btn.disabled = false;
+}
+
+function limpiarTrasVenta(){
+  TICKET = {};
+  document.getElementById('t-cliente').value = '';
+  document.getElementById('t-desc').value = '';
+  document.getElementById('t-mesa').value = '';
+  renderTicket(); loadActivos();
+}
+
+// ── PEDIDOS ACTIVOS ───────────────────────────────────────────────────────────
+async function loadActivos(){
+  var res = await SUPA.from('pedidos')
+    .select('id,codigo_confirmacion,estado,tipo_servicio,mesa,cliente_nombre,total,created_at')
+    .eq('negocio_id', NEG.id)
+    .in('estado', ['pendiente_confirmacion','pendiente','confirmado','en_preparacion','listo'])
+    .order('created_at', { ascending: true })
+    .limit(30);
+  ACTIVOS = res.data || [];
+  document.getElementById('activos-count').textContent = ACTIVOS.length;
+  var root = document.getElementById('activos-root');
+  if (!ACTIVOS.length){ root.innerHTML = '<div class="muted">Sin pedidos activos.</div>'; return; }
+  root.innerHTML = ACTIVOS.map(function(p){
+    var next = '';
+    if (p.estado === 'pendiente_confirmacion' || p.estado === 'pendiente')
+      next = '<button class="btn ghost" onclick="avanzar(\'' + p.id + '\',\'confirmado\')">Confirmar</button>';
+    else if (p.estado === 'confirmado')
+      next = '<button class="btn ghost" onclick="avanzar(\'' + p.id + '\',\'en_preparacion\')">A preparacion</button>';
+    else if (p.estado === 'en_preparacion')
+      next = '<button class="btn ghost" onclick="avanzar(\'' + p.id + '\',\'listo\')">Listo</button>';
+    return '<div class="mini-order">' +
+      '<div class="mo-head"><span class="code">' + esc(p.codigo_confirmacion || '—') + '</span><span>' + money(p.total) + '</span></div>' +
+      '<div class="mo-meta">' + statusLabel(p.estado) + ' · ' + esc(p.cliente_nombre || '') + (p.mesa ? ' · Mesa ' + esc(p.mesa) : '') + '</div>' +
+      '<div class="mo-actions">' + next +
+      '<button class="btn good" onclick="cobrarActivo(\'' + p.id + '\')">Cobrar</button>' +
+      '<button class="btn danger" onclick="cancelarPedido(\'' + p.id + '\')">✕</button></div></div>';
+  }).join('');
+}
+
+async function avanzar(id, estado){
+  var res = await SUPA.rpc('cambiar_estado_pedido', { p_pedido_id: id, p_estado: estado, p_metodo_pago: null });
+  if (res.error) toast('Error: ' + res.error.message); else loadActivos();
+}
+
+async function cancelarPedido(id){
+  if (!confirm('¿Cancelar este pedido?')) return;
+  var res = await SUPA.rpc('cambiar_estado_pedido', { p_pedido_id: id, p_estado: 'cancelado', p_metodo_pago: null });
+  if (res.error) toast('Error: ' + res.error.message); else { toast('Pedido cancelado'); loadActivos(); }
+}
+
+// ── CORTE ─────────────────────────────────────────────────────────────────────
+async function loadCorte(){
+  var res = await SUPA.from('cortes_caja').select('id,estado,fecha_apertura').eq('negocio_id', NEG.id).eq('estado', 'abierto').order('fecha_apertura', { ascending: false }).limit(1);
+  var pill = document.getElementById('corte-pill');
+  var abierto = res.data && res.data.length;
+  if (res.error){ pill.textContent = 'corte: sin acceso'; pill.className = 'pill'; return; }
+  pill.textContent = abierto ? 'Corte abierto' : 'Sin corte abierto';
+  pill.className = 'pill ' + (abierto ? 'ok' : 'warn');
+  document.getElementById('btn-corte').style.display = abierto ? 'none' : '';
+}
+
+async function abrirCorte(){
+  var session = await SUPA.auth.getUser();
+  var res = await SUPA.from('cortes_caja').insert({
+    negocio_id: NEG.id,
+    abierto_por: session.data.user ? session.data.user.id : null,
+    estado: 'abierto'
+  });
+  if (res.error) toast('No autorizado para abrir corte');
+  else { toast('Corte abierto ✓'); }
+  loadCorte();
+}
+
+init();
+</script>
+</body>
+</html>

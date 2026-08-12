@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LeadForm from '../components/LeadForm.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout titulo={`Contacto | ${SITE.nombre}`} descripcion={`Contacta a ${SITE.nombre} por formulario, WhatsApp o agenda.`}>
+  <section class="encabezado-pagina"><div class="contenedor"><span class="kicker">Hablemos</span><h1>Cuéntanos qué necesitas</h1><p>Personaliza los canales, horarios y expectativas de respuesta para tu operación.</p></div></section>
+  <LeadForm />
+  <section class="seccion seccion--arena"><div class="contenedor contenedor--texto centrado"><span class="kicker">Agenda</span><h2>Reserva un espacio</h2><p>El enlace se configura en <code>src/config/site.ts</code>.</p><a class="boton boton--oscuro" href={SITE.agenda} target="_blank" rel="noopener">Abrir agenda</a></div></section>
+</BaseLayout>

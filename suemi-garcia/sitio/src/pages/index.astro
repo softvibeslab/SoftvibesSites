@@ -1,0 +1,205 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import CTAContacto from '../components/CTAContacto.astro';
+import { SITE, waLink } from '../data/site';
+
+const propiedades = await getCollection('propiedades');
+const destacadas = propiedades
+  .filter((p) => p.data.destacada)
+  .concat(propiedades.filter((p) => !p.data.destacada))
+  .slice(0, 3);
+---
+
+<BaseLayout
+  titulo="Suemi García | Inversión inmobiliaria en la Riviera Maya"
+  descripcion={SITE.descripcion}
+  lang="es"
+  rutaAlterna="/en/"
+>
+  <!-- Hero cinematográfico: foto full-bleed con Ken Burns y entrada escalonada. -->
+  <section class="hero">
+    <img
+      src="/img/hero-suemi.jpg"
+      alt=""
+      class="hero__media"
+      fetchpriority="high"
+      aria-hidden="true"
+    />
+    <div class="hero__inner" style="min-height: 88vh; display: flex; flex-direction: column; justify-content: center;">
+      <span class="etiqueta anim" style="color: var(--laton-claro); --d: 100ms;" data-cms="hero-etiqueta">Bienes raíces · Riviera Maya</span>
+      <h1 class="anim" style="--d: 250ms;" data-cms="hero-titulo">Vive la Riviera Maya. Invierte donde <em>ya se vive bien</em></h1>
+      <p class="anim" style="--d: 420ms;" data-cms="hero-descripcion">Penthouses, departamentos de preventa y propiedades de renta vacacional en Playa del Carmen, Playacar y Tulum. Vivo aquí, corro la Quinta Avenida y conozco cada zona antes de recomendarla: te acompaño de la primera llamada a la escritura.</p>
+      <div class="hero__cta anim" style="--d: 580ms;">
+        <a href={waLink()} class="boton boton--whatsapp" target="_blank" rel="noopener" data-cms="cta-hero-whatsapp">💬 Escríbeme por WhatsApp</a>
+        <a href={waLink('Hola Suemi, quiero agendar una llamada de asesoría inmobiliaria.')} class="boton boton--claro" target="_blank" rel="noopener" data-cms="cta-hero-agenda">📅 Agenda una asesoría</a>
+      </div>
+      <p class="hero__prueba anim" style="--d: 720ms;" data-cms="hero-testimonio">"Suemi nos explicó los números y la parte legal con una claridad que no encontramos en ningún otro asesor." — Cliente de inversión <em>(testimonio de muestra)</em></p>
+      <div class="hero__badges anim" style="--d: 860ms;">
+        <div><strong>Playa · Playacar · Tulum</strong> Las zonas que camino todos los días</div>
+        <div><strong>Español e inglés</strong> Atención a compradores nacionales y extranjeros</div>
+        <div><strong>$1.3 MDP – $540k USD</strong> Desde tu primera inversión hasta penthouse</div>
+      </div>
+      <p class="anim" style="font-size: 0.72rem; opacity: 0.65; margin-top: 1rem; --d: 980ms;">
+        Cada propiedad se confirma en disponibilidad, precio y situación legal antes de
+        cualquier compromiso.
+      </p>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"></div>
+  </section>
+
+  <!-- Propiedades destacadas -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Oportunidades</span>
+        <h2>Propiedades destacadas</h2>
+        <p>
+          Desde departamentos en preventa con descuento de lanzamiento hasta townhouses listos
+          para renta. Cada oportunidad pasa por revisión de números y certeza legal antes de
+          llegar a este catálogo.
+        </p>
+      </div>
+      <div class="grid-propiedades">
+        {destacadas.map((p) => <PropertyCard propiedad={p} />)}
+      </div>
+      <p style="margin-top: 2rem;">
+        <a href="/propiedades" class="boton boton--primario">Ver todo el catálogo →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Credencial por asociación -->
+  <section class="seccion--oscura" style="padding: 2.25rem 0;">
+    <div
+      class="contenedor"
+      style="display: flex; gap: 2.5rem; flex-wrap: wrap; align-items: center; justify-content: space-between;"
+    >
+      <span class="etiqueta" style="margin: 0; color: var(--laton-claro);">
+        Asesora inmobiliaria · parte del equipo
+      </span>
+      <span style="font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.06em;" data-cms="credencial-texto">307 Realtors — respaldo de equipo y acceso a desarrollos en Playa del Carmen, Tulum y Cancún</span>
+    </div>
+  </section>
+
+  <!-- Sobre Suemi -->
+  <section class="seccion seccion--alterna" id="nosotros">
+    <div class="contenedor">
+      <div class="dos-columnas">
+        <div>
+          <span class="etiqueta">Tu asesora</span>
+          <h2>Suemi García</h2>
+          <p data-cms="nosotros-bio">Soy <strong>Suemi García</strong>, asesora inmobiliaria en la Riviera Maya. Nací en Chetumal y vivo en Playa del Carmen: conozco estas zonas porque las camino y las corro todos los días, no porque las lea en un catálogo. Trabajo con el respaldo del equipo de <strong>307 Realtors</strong>, y mi forma de asesorar es la misma para un estudio de $1.3 millones que para un penthouse de medio millón de dólares: primero entender para qué y para quién funciona cada propiedad. Atiendo en español e inglés.</p>
+          <ul class="lista-check">
+            <li>Asesoría personalizada: para vivir, para rentar o para ambas</li>
+            <li>Números claros antes de decidir — sin presión ni prisas</li>
+            <li>Verificación de disponibilidad, precio y situación legal de cada propiedad</li>
+            <li>Acompañamiento a compradores extranjeros, en inglés</li>
+          </ul>
+          <p style="margin-top: 1.5rem;">
+            <a href={waLink('Hola Suemi, me gustaría una asesoría inmobiliaria.')} class="boton boton--whatsapp" target="_blank" rel="noopener">
+              Hablar con Suemi
+            </a>
+          </p>
+        </div>
+        <img
+          src="/img/suemi.jpg"
+          alt="Suemi García, asesora inmobiliaria en la Riviera Maya"
+          style="border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 1 / 1; object-fit: cover; width: 100%;"
+          width="640"
+          height="640"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué invertir -->
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Riviera Maya</span>
+        <h2>¿Por qué invertir aquí y ahora?</h2>
+      </div>
+      <div class="tarjetas-razones">
+        <div class="razon">
+          <div class="icono">📈</div>
+          <h3>Plusvalía sostenida</h3>
+          <p>
+            La Riviera Maya lleva más de una década entre los mercados inmobiliarios de mayor
+            crecimiento de México, impulsada por turismo e infraestructura.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">⚖️</div>
+          <h3>Certeza legal</h3>
+          <p>
+            Solo trabajo propiedad privada, escriturada y no ejidal. Tu inversión queda
+            protegida ante el Registro Público de la Propiedad.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">✈️</div>
+          <h3>Conectividad mundial</h3>
+          <p>
+            Dos aeropuertos internacionales y el Tren Maya conectan la región con el mundo y
+            sostienen la demanda de renta todo el año.
+          </p>
+        </div>
+        <div class="razon">
+          <div class="icono">💰</div>
+          <h3>Tickets para cada perfil</h3>
+          <p>
+            Desde departamentos en Tulum en USD hasta preventas en Cancún con financiamiento
+            directo: armamos la estrategia según tu presupuesto y horizonte.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banda parallax -->
+  <section class="parallax">
+    <h2 data-cms="parallax-titulo">Despierta donde otros <em>vacacionan</em></h2>
+    <p>
+      Tu propiedad en el Caribe mexicano puede ser tu hogar, tu inversión o ambas. Empecemos
+      con una asesoría sin costo.
+    </p>
+    <a href={waLink()} class="boton boton--laton" target="_blank" rel="noopener">
+      Iniciar mi plan de inversión
+    </a>
+  </section>
+
+  <!-- Testimonios -->
+  <section class="seccion seccion--alterna">
+    <div class="contenedor">
+      <div class="seccion__intro">
+        <span class="etiqueta">Clientes</span>
+        <h2>Lo que dicen de trabajar con Suemi</h2>
+        <p style="font-size: 0.9rem; color: var(--gris);">
+          (Testimonios de muestra: reemplazar con testimonios reales de clientes.)
+        </p>
+      </div>
+      <div class="testimonios">
+        <blockquote class="testimonio">
+          "Suemi nos explicó los números y la parte legal con una claridad que no habíamos
+          encontrado con nadie. Compramos nuestra preventa con total tranquilidad."
+          <footer>— Cliente de preventa</footer>
+        </blockquote>
+        <blockquote class="testimonio">
+          "Nos acompañó desde la primera videollamada hasta la firma con el notario. El proceso
+          con fideicomiso fue mucho más simple de lo que esperábamos."
+          <footer>— Compradores extranjeros</footer>
+        </blockquote>
+        <blockquote class="testimonio">
+          "Buscábamos una propiedad que rentara sola y nos presentó exactamente eso, con
+          corrida financiera incluida."
+          <footer>— Inversión patrimonial</footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <CTAContacto />
+</BaseLayout>

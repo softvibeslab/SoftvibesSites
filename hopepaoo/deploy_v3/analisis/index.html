@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hopepaoo - Análisis Estratégico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* HEADER */
+        .header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-pic {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ff385c;
+            box-shadow: 0 10px 40px rgba(255, 56, 92, 0.3);
+        }
+
+        .header-info h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #ff385c;
+            text-shadow: 0 2px 10px rgba(255, 56, 92, 0.3);
+        }
+
+        .header-info .bio {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff385c;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* SECTIONS */
+        .sections {
+            display: grid;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.03);
+            border-left: 4px solid #ff385c;
+            padding: 40px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            background: rgba(255,255,255,0.08);
+            border-left-color: #ff6b84;
+            transform: translateX(10px);
+        }
+
+        .section h2 {
+            font-size: 2em;
+            color: #ff385c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            font-size: 1.5em;
+        }
+
+        .section-content {
+            display: grid;
+            gap: 20px;
+        }
+
+        .subsection {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #ff385c;
+        }
+
+        .subsection h3 {
+            color: #ff385c;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .subsection p {
+            color: #c0c0c0;
+            line-height: 1.8;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: rgba(255, 56, 92, 0.2);
+            color: #ff6b84;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 56, 92, 0.3);
+        }
+
+        .highlight {
+            background: rgba(255, 56, 92, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #ff385c;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 15px;
+            margin: 12px 0;
+        }
+
+        .list-icon {
+            color: #ff385c;
+            font-weight: bold;
+            min-width: 25px;
+        }
+
+        .list-text {
+            color: #c0c0c0;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #808080;
+            font-size: 0.9em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff385c 0%, #ff6b84 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 56, 92, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .profile-pic {
+                margin: 0 auto;
+            }
+            .header-info h1 {
+                font-size: 2em;
+            }
+            .stats {
+                justify-content: center;
+            }
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <img src="../profile.jpg" alt="Paola Elizabeth" class="profile-pic">
+            <div class="header-info">
+                <h1>Hopepaoo</h1>
+                <div class="bio">*lux in tenebris*</div>
+                <p style="color: #d0d0d0; font-size: 1.1em; margin-bottom: 20px;">
+                    Paola Elizabeth • Cantante | Terapeuta 🔮
+                </p>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">2.3K</div>
+                        <div class="stat-label">Seguidores</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.1K</div>
+                        <div class="stat-label">Siguiendo</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Alcance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTIONS -->
+        <div class="sections">
+            <!-- 1. PERSONA -->
+            <div class="section">
+                <h2><span class="section-icon">🎭</span> Persona</h2>
+                <div class="section-content">
+                    <p>Paola Elizabeth es una cantante y terapeuta que opera en la intersección de la música y la sanación espiritual. Su identidad se construye alrededor del concepto de "lux in tenebris" (luz en la oscuridad), sugiriendo un propósito de iluminar desde lo profundo, lo oculto, lo misterioso.</p>
+
+                    <div class="subsection">
+                        <h3>Arquetipos de Persona</h3>
+                        <div class="list-item">
+                            <div class="list-icon">→</div>
+                            <div class="list-text"><strong>La Sanadora</strong>: Usa música y terapia para transformar</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">→</div>
+                            <div class="list-text"><strong>La Iluminadora</strong>: Guía otros a través de la oscuridad</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">→</div>
+                            <div class="list-text"><strong>La Artista Espiritual</strong>: Fusiona expresión artística con propósito</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Core Story:</strong> De la complejidad emocional (identidades múltiples: Lila, Pao, Elizabeth) a la simplificación a través de la música y la terapia.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PROPUESTA DE VALOR -->
+            <div class="section">
+                <h2><span class="section-icon">💎</span> Propuesta de Valor</h2>
+                <div class="section-content">
+                    <p><strong>Qué ofrece:</strong> Una experiencia de transformación personal a través de música terapéutica y sesiones personalizadas que tocan lo profundo.</p>
+
+                    <div class="subsection">
+                        <h3>Servicios Identificados</h3>
+                        <div class="list-item">
+                            <div class="list-icon">♪</div>
+                            <div class="list-text"><strong>Shows (Actuaciones)</strong> - Experiencias musicales en vivo</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">🧘</div>
+                            <div class="list-text"><strong>Teaching (Enseñanza)</strong> - Terapia/entrenamiento vocal/espiritual</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">🔮</div>
+                            <div class="list-text"><strong>Sesiones Privadas</strong> - Terapia personalizada (implícito)</div>
+                        </div>
+                    </div>
+
+                    <div class="tags">
+                        <span class="tag">Música Transformativa</span>
+                        <span class="tag">Sanación Holística</span>
+                        <span class="tag">Terapia Vocal</span>
+                        <span class="tag">Enseñanza Espiritual</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. VOZ Y TONO -->
+            <div class="section">
+                <h2><span class="section-icon">🎤</span> Voz y Tono</h2>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Características de Comunicación</h3>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>Misteriosa</strong> - Usa símbolos, frases en latín ("lux in tenebris")</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>Íntima</strong> - Se presenta por nombres personales (Lila, Pao, Elizabeth)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>Espiritual</strong> - Uso de símbolos 🔮, referencia a lo trascendente</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>Educativa</strong> - "Teaching" implica liderazgo y conocimiento</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight">
+                        <strong>Tono Recomendado:</strong> Poético, accesible pero profundo, cálido pero con misterio. Evitar lo superficial.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. ESTÉTICA Y VISUAL IDENTITY -->
+            <div class="section">
+                <h2><span class="section-icon">🎨</span> Estética Visual</h2>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Paleta de Colores Identificada</h3>
+                        <div class="list-item">
+                            <div class="list-icon">●</div>
+                            <div class="list-text"><strong>Negro/Oscuro</strong> - Lo profundo, lo misterioso (tenebris)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">●</div>
+                            <div class="list-text"><strong>Púrpura/Indigo</strong> - Espiritualidad, lo oculto</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">●</div>
+                            <div class="list-text"><strong>Oro/Dorado</strong> - Luz (lux), iluminación</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">●</div>
+                            <div class="list-text"><strong>Blanco</strong> - Contraste, claridad emergente</div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Elementos de Diseño</h3>
+                        <div class="list-item">
+                            <div class="list-icon">◇</div>
+                            <div class="list-text">Símbolos espirituales (🔮, ✦, ◇)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">◇</div>
+                            <div class="list-text">Tipografía moderna + elementos clásicos</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">◇</div>
+                            <div class="list-text">Fotografía íntima, natural, con profundidad emocional</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. ARQUETIPOS DE MARCA -->
+            <div class="section">
+                <h2><span class="section-icon">👑</span> Arquetipos de Marca</h2>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Arquetipo Primario: La Sanadora Mágica</h3>
+                        <p>Combina la sabiduría de lo antiguo con la modernidad. No es un doctora clásica, sino alguien que sana a través de lo invisible: la música, la energía, la presencia.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Arquetipos Secundarios</h3>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>La Maga</strong> - Transforma a través de rituales (musicales)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>La Amante</strong> - Conexión emocional profunda con audiencia</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✦</div>
+                            <div class="list-text"><strong>La Líder Espiritual</strong> - Guía hacia transformación personal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. INSIGHTS DEL ANÁLISIS -->
+            <div class="section">
+                <h2><span class="section-icon">💡</span> Insights Clave</h2>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>🔍 Oportunidad 1: Identidades Múltiples = Fortaleza</h3>
+                        <p>En lugar de confundir, "Lila, Pao, Elizabeth" comunica versatilidad y profundidad. Cada nombre puede representar un aspecto (la artista, la persona, la terapeuta).</p>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>🔍 Oportunidad 2: "Lux in Tenebris" es Diferenciador Único</h3>
+                        <p>Esta frase es poderosa y memorable. La mayoría de músicos usan frases cliché. Esto es profundo, único y marca a Paola como pensadora, no solo artista.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>🔍 Oportunidad 3: Audiencia Específica Pero Creciente</h3>
+                        <p>2.3K seguidores sugiere comunidad niche, pero altamente comprometida. Personas que buscan transformación real, no entretenimiento superficial.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>⚠️ Desafío 1: Falta de Claridad en Oferta</h3>
+                        <p>Instagram solo muestra "shows" y "teaching" pero no hay descripción clara de qué son esas sesiones, cómo acceder, o cuál es el resultado esperado.</p>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>⚠️ Desafío 2: Sin Punto de Conversión Visible</h3>
+                        <p>No hay enlace a booking, WhatsApp, correo, o form claro. Interesados no saben cómo contratar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. RECOMENDACIONES PRIORITARIAS -->
+            <div class="section">
+                <h2><span class="section-icon">🎯</span> Recomendaciones Prioritarias</h2>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>🥇 Prioridad 1: Landing Page Clara (URGENTE)</h3>
+                        <p>Crear sitio que explique:</p>
+                        <div style="margin-left: 20px; margin-top: 10px;">
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Quién es Paola (historia en 100 palabras)</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Qué son sus Shows vs Teaching (diferencia clara)</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Cómo reservar/contratar (botón WhatsApp + email)</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Testimonios de clientes/asistentes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>🥈 Prioridad 2: Segmentar Contenido IG</h3>
+                        <p>Crear reels/posts categorizados:</p>
+                        <div style="margin-left: 20px; margin-top: 10px;">
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">#ShowsComingUp - Próximas actuaciones</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">#TeachingMoments - Tips de sanación/canto</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">#BehindTheLux - Proceso creativo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>🥉 Prioridad 3: Expandir Oferta</h3>
+                        <p>Crear productos digitales/servicios con precio bajo para accesibilidad:</p>
+                        <div style="margin-left: 20px; margin-top: 10px;">
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Mini-sesiones de 30 min (USD 25-40)</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Curso de canto terapéutico (USD 99-199)</div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-icon">→</div>
+                                <div class="list-text">Meditaciones guiadas (Spotify, YouTube)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. PRÓXIMOS PASOS -->
+            <div class="section">
+                <h2><span class="section-icon">📋</span> Plan de Acción (30-60-90 días)</h2>
+                <div class="section-content">
+                    <div class="subsection">
+                        <h3>Semanas 1-2 (SETUP)</h3>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Crear landing page (este proyecto)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Setup de booking (Calendly/WhatsApp)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Definir pricing para servicios</div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Semanas 3-6 (CONTENT)</h3>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Crear 12 reels temáticos para IG</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Publicar primeros 3 testimonios</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Producir 1-2 videos behind-the-scenes</div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3>Semanas 7-12 (CONVERSION)</h3>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Lanzar mini-sesiones (oferta limitada)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Email list building (lead magnet: meditación gratis)</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-icon">✓</div>
+                            <div class="list-text">Measurement: conversiones, DAU, retention</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. DATOS Y CONTEXTO -->
+            <div class="section">
+                <h2><span class="section-icon">📊</span> Datos del Perfil IG</h2>
+                <div class="section-content">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <td style="padding: 12px; color: #ff385c; font-weight: bold;">Métrica</td>
+                            <td style="padding: 12px; text-align: right; color: #c0c0c0;">Valor</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px;">Seguidores</td>
+                            <td style="padding: 12px; text-align: right; font-weight: bold; color: #ff8fab;">2,257</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px;">Siguiendo</td>
+                            <td style="padding: 12px; text-align: right;">4,126</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px;">Username</td>
+                            <td style="padding: 12px; text-align: right;">@hopepaoo</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px;">Bio</td>
+                            <td style="padding: 12px; text-align: right; font-size: 0.9em;">*lux in tenebris* 🔮</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px;">Perfil</td>
+                            <td style="padding: 12px; text-align: right;">Creador/Terapeuta</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px;">Threads</td>
+                            <td style="padding: 12px; text-align: right;">@hopepaoo</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>Análisis creado por SoftvibesLab</strong></p>
+            <p style="margin-top: 10px; color: #606060;">Estrategia digital para artistas + terapeutas | Enfoque: transformación + comunidad</p>
+            <a href="http://menu.rovicrm.com/landing.html" class="cta-button">Ver Landing Page</a>
+        </div>
+    </div>
+</body>
+</html>

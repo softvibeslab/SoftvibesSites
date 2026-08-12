@@ -1,0 +1,277 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, waLink, formatoPrecio } from '../../data/site';
+
+export async function getStaticPaths() {
+  const propiedades = await getCollection('propiedades');
+  return propiedades.map((p) => ({ params: { slug: p.id }, props: { propiedad: p } }));
+}
+
+const { propiedad } = Astro.props;
+const { Content } = await render(propiedad);
+const d = propiedad.data;
+
+const zonaNombre: Record<string, string> = {
+  'playa-del-carmen': 'Playa del Carmen',
+  cancun: 'Cancún',
+  tulum: 'Tulum',
+};
+
+const etiquetaEstatus: Record<string, { texto: string; clase: string } | null> = {
+  venta: null,
+  preventa: { texto: 'Preventa', clase: 'badge--preventa' },
+  'entrega-inmediata': { texto: 'Entrega inmediata', clase: 'badge--entrega' },
+  oportunidad: { texto: 'Oportunidad', clase: 'badge--oportunidad' },
+};
+const badgeEstatus = etiquetaEstatus[d.estatus];
+
+const precioM2 = Math.round(d.precio / d.m2);
+const mensajeWa = `Hola Katya, me interesa "${d.titulo}" que vi en tu sitio. ¿Me compartes más información?`;
+const mensajeAgenda = `Hola Katya, quiero agendar una visita o videollamada por "${d.titulo}".`;
+
+const schemaPropiedad = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.titulo,
+  description: d.resumen,
+  image: new URL(d.imagen, Astro.site).href,
+  category: 'Real Estate',
+  offers: {
+    '@type': 'Offer',
+    price: d.precio,
+    priceCurrency: d.moneda,
+    availability: 'https://schema.org/InStock',
+    seller: { '@type': 'RealEstateAgent', name: SITE.nombre, telephone: SITE.telefono },
+  },
+};
+---
+
+<BaseLayout
+  titulo={`${d.titulo} | Katya Varela · Inversiones Riviera Maya`}
+  descripcion={d.resumen}
+  schema={schemaPropiedad}
+  lang="es"
+  rutaAlterna={`/en/properties/${propiedad.id}`}
+>
+  <section
+    class="detalle-hero detalle-hero--banner"
+    style={`background-image: url('${d.imagen}')`}
+  >
+    <div class="contenedor">
+      <nav style="font-size: 0.85rem; margin-bottom: 1rem;" aria-label="Migas de pan">
+        <a href="/propiedades">Propiedades</a> ·
+        <a href={`/zonas/${d.zona}`}>{zonaNombre[d.zona]}</a>
+      </nav>
+      <div class="detalle-badges">
+        {badgeEstatus && <span class={`badge ${badgeEstatus.clase}`}>{badgeEstatus.texto}</span>}
+        {d.frenteAlMar && <span class="badge badge--mar">Frente al mar</span>}
+      </div>
+      <h1 data-cms={`prop-${propiedad.id}-titulo`}>{d.titulo}</h1>
+      <div class="detalle-precio">{formatoPrecio(d.precio, d.moneda)}</div>
+      <div class="detalle-meta">
+        <span>📍 {d.ubicacion}</span>
+        <span>📐 {d.m2} m²</span>
+        {d.recamaras && <span>🛏 {d.recamaras} recámaras</span>}
+        {d.banos && <span>🛁 {d.banos} baños</span>}
+      </div>
+      {d.unidades && <span class="urgencia">Solo {d.unidades} unidades en esta etapa</span>}
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      {
+        d.ejemplo && (
+          <p class="aviso-ejemplo">
+            ⚠️ <strong>Propiedad de ejemplo.</strong> Esta ficha es demostrativa; reemplázala con
+            inventario real editando su archivo en <code>src/content/propiedades/</code>.
+          </p>
+        )
+      }
+      <div class="detalle-cuerpo">
+        <div>
+          <div class="numeros-inversion" style="margin-top: 0;">
+            <div>
+              <span class="dato">{formatoPrecio(precioM2, d.moneda)}</span>
+              <span class="concepto">Precio por m²</span>
+            </div>
+            <div>
+              <span class="dato">{d.m2} m²</span>
+              <span class="concepto">Superficie</span>
+            </div>
+            {
+              d.formasPago.length > 0 && (
+                <div>
+                  <span class="dato">{d.formasPago.length > 1 ? `${d.formasPago.length} planes` : 'Plan directo'}</span>
+                  <span class="concepto">Formas de pago</span>
+                </div>
+              )
+            }
+            {
+              d.unidades && (
+                <div>
+                  <span class="dato">{d.unidades}</span>
+                  <span class="concepto">Unidades en etapa</span>
+                </div>
+              )
+            }
+          </div>
+          {
+            d.roiEstimado && (
+              <p class="mini-testimonio" style="margin-bottom: 2rem;">
+                📈 <strong style="display: inline;">Perfil de inversión:</strong> {d.roiEstimado}
+              </p>
+            )
+          }
+
+          <div class="prosa">
+            <Content />
+          </div>
+
+          {
+            d.video && (
+              <section class="recorrido">
+                <h2>Recorrido en video</h2>
+                <video
+                  class="recorrido__video"
+                  src={d.video}
+                  poster={d.imagen}
+                  controls
+                  playsinline
+                  preload="none"
+                  aria-label={`Recorrido en video de ${d.titulo}`}
+                />
+                <p class="recorrido__nota">Video del recorrido por la propiedad.</p>
+              </section>
+            )
+          }
+
+          {
+            d.galeria.length > 0 && (
+              <section class="galeria">
+                <h2>Galería</h2>
+                <div class="galeria__grid">
+                  {d.galeria.map((foto, i) => (
+                    <button class="galeria__item" type="button" data-foto={foto} aria-label={`Ampliar foto ${i + 1} de ${d.titulo}`}>
+                      <img src={foto} alt={`${d.titulo} — foto ${i + 1}`} loading="lazy" width="900" height="630" />
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )
+          }
+
+          {
+            d.formasPago.length > 0 && (
+              <>
+                <h2>Formas de pago</h2>
+                <ul class="lista-check">
+                  {d.formasPago.map((f) => (
+                    <li>{f}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+        </div>
+
+        <aside class="detalle-lateral">
+          <div class="asesora-card">
+            <div class="asesora-card__perfil">
+              <img
+                src="/img/katya.jpg"
+                alt={`${SITE.asesor}, asesor de inversión inmobiliaria`}
+                class="asesora-card__foto"
+                width="72"
+                height="72"
+              />
+              <div>
+                <div class="asesora-card__nombre">{SITE.asesor}</div>
+                <div class="asesora-card__titulo">Asesor de inversión · Riviera Maya</div>
+              </div>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--gris);">
+              Te comparto brochure, disponibilidad y corrida financiera de esta propiedad.
+            </p>
+            <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener" data-cms="cta-ficha-whatsapp">💬 Pedir información</a>
+            <a href={waLink(mensajeAgenda)} class="boton boton--primario" target="_blank" rel="noopener" data-cms="cta-ficha-agenda">📅 Agendar visita / videollamada</a>
+            <a href={`tel:${SITE.telefono.replace(/\s/g, '')}`} class="boton boton--secundario">
+              📞 {SITE.telefono}
+            </a>
+            <p class="mini-testimonio">
+              "Nos explicó los números y la parte legal con una claridad que no habíamos
+              encontrado con nadie."
+              <strong>— Cliente de inversión (testimonio de muestra)</strong>
+            </p>
+          </div>
+          <div class="asesora-card" style="border-top-color: var(--teal);">
+            <h3 style="margin: 0; font-size: 1.05rem;">Certeza legal incluida</h3>
+            <ul class="lista-check" style="font-size: 0.88rem;">
+              {d.caracteristicas.slice(0, 6).map((c) => <li>{c}</li>)}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra fija inferior (solo móvil): WhatsApp + Agendar -->
+  <div class="barra-movil">
+    <a href={waLink(mensajeWa)} class="boton boton--whatsapp" target="_blank" rel="noopener" data-cms="cta-movil-whatsapp">💬 WhatsApp</a>
+    <a href={waLink(mensajeAgenda)} class="boton boton--primario" target="_blank" rel="noopener" data-cms="cta-movil-agenda">📅 Agendar</a>
+  </div>
+
+  <!-- Visor de fotos ampliadas -->
+  <div class="visor" id="visor" hidden>
+    <button class="visor__cerrar" type="button" aria-label="Cerrar">×</button>
+    <button class="visor__nav visor__nav--prev" type="button" aria-label="Foto anterior">‹</button>
+    <img class="visor__img" id="visor-img" src="" alt="" />
+    <button class="visor__nav visor__nav--next" type="button" aria-label="Foto siguiente">›</button>
+  </div>
+
+  <script>
+    const visor = document.getElementById('visor');
+    const visorImg = document.getElementById('visor-img') as HTMLImageElement | null;
+    const items = Array.from(document.querySelectorAll<HTMLElement>('.galeria__item'));
+
+    if (visor && visorImg && items.length) {
+      let actual = 0;
+      const fotos = items.map((b) => b.dataset.foto || '');
+
+      const mostrar = (i: number) => {
+        actual = (i + fotos.length) % fotos.length;
+        visorImg.src = fotos[actual];
+      };
+      const abrir = (i: number) => {
+        mostrar(i);
+        visor.hidden = false;
+        document.body.style.overflow = 'hidden';
+      };
+      const cerrar = () => {
+        visor.hidden = true;
+        document.body.style.overflow = '';
+      };
+
+      items.forEach((b, i) => b.addEventListener('click', () => abrir(i)));
+      visor.querySelector('.visor__cerrar')?.addEventListener('click', cerrar);
+      visor.querySelector('.visor__nav--prev')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mostrar(actual - 1);
+      });
+      visor.querySelector('.visor__nav--next')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mostrar(actual + 1);
+      });
+      visor.addEventListener('click', (e) => {
+        if (e.target === visor || e.target === visorImg) cerrar();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (visor.hidden) return;
+        if (e.key === 'Escape') cerrar();
+        if (e.key === 'ArrowLeft') mostrar(actual - 1);
+        if (e.key === 'ArrowRight') mostrar(actual + 1);
+      });
+    }
+  </script>
+</BaseLayout>

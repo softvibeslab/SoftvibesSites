@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../data/site';
+---
+
+<BaseLayout
+  titulo="Katya Varela · Inversiones Riviera Maya — Enlaces"
+  descripcion="Todos los enlaces de Katya Varela: catálogo de propiedades, WhatsApp y redes sociales."
+  desnudo={true}
+>
+  <main class="pagina-links">
+    <div class="pagina-links__tarjeta">
+      <a href="/" aria-label="Ir al sitio de Katya Varela">
+        <img
+          src="/img/logo-katya.jpg"
+          alt="Katya Varela, asesor de inversión inmobiliaria en la Riviera Maya"
+          width="112"
+          height="112"
+          style="width: 112px; height: 112px; border-radius: 50%; object-fit: cover; margin: 0 auto 1rem; border: 2px solid var(--laton-claro); box-shadow: 0 8px 24px rgba(0,0,0,0.3);"
+        />
+      </a>
+      <h1>🏝️ {SITE.lema}</h1>
+      <p>🏡 Real Estate & Inversión · 📍 Riviera Maya, Mx 🇲🇽</p>
+      <nav class="links-lista" aria-label="Enlaces">
+        <a href="/propiedades">🏠 Catálogo de propiedades</a>
+        <a href="/en/properties">🌎 Invest in Riviera Maya (English)</a>
+        <a href={waLink()} target="_blank" rel="noopener" data-cms="cta-links-whatsapp">💬 ¡Contáctame! · WhatsApp</a>
+        <a href={waLink('Hola Katya, quiero agendar una llamada de asesoría inmobiliaria.')} target="_blank" rel="noopener" data-cms="cta-links-agenda">📅 ¡Agenda una asesoría!</a>
+        <a href={SITE.redes.instagram} target="_blank" rel="noopener">Instagram · Inversiones</a>
+        <a href={SITE.redes.facebook} target="_blank" rel="noopener">Facebook</a>
+        <a href={SITE.redes.instagramPersonal} target="_blank" rel="noopener">Instagram personal · @katya_varela</a>
+      </nav>
+    </div>
+  </main>
+</BaseLayout>

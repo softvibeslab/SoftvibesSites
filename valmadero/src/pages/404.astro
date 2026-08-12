@@ -1,0 +1,7 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+Astro.response.status = 404;
+---
+
+<BaseLayout titulo={`Página no encontrada | ${SITE.nombre}`}><section class="estado"><div class="estado__tarjeta"><span class="kicker">Error 404</span><h1>Esta página no existe</h1><p>Puede que la propiedad haya cambiado de dirección o ya no esté disponible.</p><a class="boton" href="/propiedades">Ver propiedades</a><a class="enlace" href="/">Volver al inicio</a></div></section></BaseLayout>

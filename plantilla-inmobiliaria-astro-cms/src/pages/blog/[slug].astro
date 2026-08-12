@@ -1,0 +1,18 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  return (await getCollection('blog')).filter((a) => !a.data.borrador).map((articulo) => ({ params: { slug: articulo.id }, props: { articulo } }));
+}
+const { articulo } = Astro.props;
+const { Content } = await render(articulo);
+const schema = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: articulo.data.titulo, description: articulo.data.descripcion, datePublished: articulo.data.fecha.toISOString(), author: { '@type': 'Organization', name: SITE.nombre } };
+---
+
+<BaseLayout titulo={`${articulo.data.titulo} | ${SITE.nombre}`} descripcion={articulo.data.descripcion} imagen={articulo.data.imagen} schema={schema}>
+  <article class="seccion articulo"><div class="contenedor contenedor--texto"><a class="enlace" href="/blog">← Volver al blog</a><time datetime={articulo.data.fecha.toISOString()}>{articulo.data.fecha.toLocaleDateString(SITE.idioma, { dateStyle: 'long' })}</time><h1>{articulo.data.titulo}</h1><p class="articulo__bajada">{articulo.data.descripcion}</p><div class="prosa"><Content /></div></div></article>
+  <LeadForm titulo="¿Quieres conversar sobre tu caso?" />
+</BaseLayout>

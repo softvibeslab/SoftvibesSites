@@ -1,0 +1,13 @@
+*.zip
+*.pyc
+__pycache__/
+.DS_Store
+.env*
+node_modules/
+dist/
+playwright-report/
+test-results/
+qa/tmp/
+qa/screenshots/*.png
+qa/screenshots/*.json
+research/private/

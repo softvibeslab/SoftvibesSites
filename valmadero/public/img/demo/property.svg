@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Propiedad de demostración</title>
+  <desc id="desc">Ilustración geométrica de una vivienda contemporánea.</desc>
+  <rect width="1200" height="800" fill="#e8ede9"/>
+  <circle cx="920" cy="160" r="82" fill="#d78056"/>
+  <path d="M0 570 1200 420v380H0Z" fill="#9cb0a4"/>
+  <path d="M230 310h720v330H230z" fill="#f8f5ed"/>
+  <path d="m170 330 430-230 430 230Z" fill="#1e484d"/>
+  <path d="M330 410h220v230H330zm310 0h210v130H640z" fill="#356e75"/>
+</svg>

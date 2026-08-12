@@ -1,0 +1,125 @@
+{
+  "slug": "mystic-nails-art",
+  "nombre": "Carolina (Mystic Nails Art)",
+  "marca": "Mystic Nails Art — Arte Efímero · Playa del Carmen",
+  "nicho": "nail artist / salón de uñas boutique (belleza, ticket medio-alto + turismo)",
+  "ciudad": "Playa del Carmen, Quintana Roo",
+  "contacto": {
+    "whatsapp": "+52 984 310 8186",
+    "telefono": "984 310 8186",
+    "instagram": "https://www.instagram.com/mysticnailsart/",
+    "facebook": "https://www.facebook.com/ (Mystic Nails Art, 80+ seguidores)",
+    "tiktok": "TikTok Mystic Nails Art (290+ seguidores)",
+    "sitios": ["https://mysticnailsart.com/"],
+    "direccion": "Calle 38 Nte Lote 73, Tohoku, Centro, 77720 Playa del Carmen, Q.R.",
+    "google_business": "Mystic Nails Art — 5.0★ (140 opiniones), actualizado hace 1 semana"
+  },
+  "credenciales": [
+    "Nail artist colombiana radicada en Playa del Carmen (bio IG: 'ARTE EFÍMERO · Colombiana en PDC')",
+    "Especialista en Acrílicas, Polygel, Softgel, Builder, Rubber, Kapping, manicura rusa y pedicure",
+    "Home studio privado activo desde 2023 ('2+ años' según el sitio)",
+    "1,300+ clientas atendidas (contador del sitio en vivo)"
+  ],
+  "cifras_reales": {
+    "instagram_publicaciones": 224,
+    "instagram_seguidores": 1470,
+    "instagram_seguidos": 142,
+    "google_rating": 5.0,
+    "google_opiniones": 140,
+    "tiktok_seguidores": "290+",
+    "facebook_seguidores": "80+",
+    "clientas_felices_sitio": "1,300+",
+    "competidor_lovel_opiniones": 322,
+    "competidor_nua_opiniones": 46,
+    "competidor_russian_manicure_opiniones": 59
+  },
+  "diseno_actual": {
+    "plataforma": "mysticnailsart.com en vivo — landing 'Arte Efímero' oscura (morado profundo + lavanda + degradado rosa), trilingüe ES/EN/FR, cotizador por servicio vía WhatsApp precargado, retoques con descuento (15/10/8/5%), galería con marca de agua, reseñas de Google embebidas",
+    "problemas": "El sitio es fuerte pero está desconectado del embudo real: la bio de IG no lo enlaza, el GBP no tiene botón de reserva, y la sección 'Nosotros' usa retrato ilustrado IA en lugar de la foto real de Carolina.",
+    "idioma": "ES/EN/FR"
+  },
+  "hallazgos": [
+    {
+      "icono": "🔗",
+      "titulo": "La bio de Instagram no enlaza su propio dominio",
+      "detalle": "El único link de la bio es wa.me/529843108186. mysticnailsart.com — con galería, cotizador trilingüe y 140 reseñas — es invisible desde su canal principal: 224 publicaciones que desembocan en un chat vacío en vez de en su casa digital.",
+      "evidencia": "fuentes/ig-perfil.png (link de bio = wa.me, sin sitio).",
+      "solucion": "Bio con mysticnailsart.com (o página /links propia) + wa.me con mensaje precargado como enlace secundario."
+    },
+    {
+      "icono": "💬",
+      "titulo": "WhatsApp de la bio sin mensaje precargado",
+      "detalle": "El wa.me de la bio va sin ?text=: la clienta (a menudo turista en inglés o francés) aterriza en un chat en blanco y tiene que redactar desde cero. El sitio sí precarga texto — la bio, que recibe mucho más tráfico, no.",
+      "evidencia": "fuentes/ig-perfil.png (wa.me/529843108186 pelón).",
+      "solucion": "wa.me/529843108186?text= con mensaje por idioma ('Hola Caro, vengo de Instagram y quiero cotizar un set…')."
+    },
+    {
+      "icono": "📅",
+      "titulo": "Google Business sin botón de reserva (y la competencia sí lo tiene)",
+      "detalle": "En la búsqueda 'nail art playa del carmen', Núa Nail Art Studio (46 reseñas) muestra botón 'Programar' directo en Google. Mystic, con 140 reseñas y 5.0★, solo muestra 'Sitio web': pierde la reserva de un clic ante una competidora con 3× menos prueba social.",
+      "evidencia": "fuentes/google-busqueda-nicho.png (Núa con 'Programar', Mystic sin él).",
+      "solucion": "Activar link de cita en el GBP (Reserva → mysticnailsart.com/#cotizacion o wa.me precargado)."
+    },
+    {
+      "icono": "💸",
+      "titulo": "El primer resultado del nicho es un anuncio de la competencia",
+      "detalle": "Lovel Beauty (322 reseñas) paga Google Ads sobre 'nail art playa del carmen' y aparece arriba de Mystic. Sin campaña propia ni defensa de marca, el primer contacto del turista que busca es la competencia.",
+      "evidencia": "fuentes/google-busqueda-nicho.png ('Patrocinado' = Lovel Beauty).",
+      "solucion": "Campaña mínima de marca + nicho (presupuesto bajo) o al menos maximizar CTR orgánico con reseñas frescas y fotos en el GBP."
+    },
+    {
+      "icono": "📱",
+      "titulo": "TikTok (290) y Facebook (80) muy por debajo de su Instagram (1,470)",
+      "detalle": "Los canales existen pero sin estrategia: el nail art de proceso es de los formatos más virales de TikTok y su feed de IG ya produce el material. Cada set grabado es un TikTok no publicado.",
+      "evidencia": "fuentes/google-gbp-mystic.png (TikTok 290+, Facebook 80+ en la SERP).",
+      "solucion": "Reciclar reels a TikTok con hashtags locales (#nailartplayadelcarmen) y cross-post a FB; meta 3 videos/semana."
+    },
+    {
+      "icono": "🎭",
+      "titulo": "La sección 'Nosotros' esconde a Carolina detrás de una ilustración IA",
+      "detalle": "Las reseñas la nombran ('I can't say enough about Carolina and her team') y hay turistas que vuelan cada mes por ella — pero el sitio la representa con un retrato ilustrado. En un negocio de confianza 1:1, la cara real convierte más que el avatar.",
+      "evidencia": "fuentes/sitio-scroll-8.png (retrato IA) + fuentes/sitio-resenas.png (reseñas nombrándola).",
+      "solucion": "Sesión de fotos real (ella + estudio + proceso) para 'Nosotros', GBP y prensa social."
+    }
+  ],
+  "benchmark": {
+    "patrones_ganadores": [
+      "Botón 'Programar' en Google Business = reserva sin fricción (Núa Nail Art Studio)",
+      "Google Ads sobre el término del nicho para capturar al turista (Lovel Beauty)",
+      "Prueba social numérica prominente (322/140/59 reseñas visibles en la SERP)"
+    ],
+    "huecos_diferenciacion": [
+      "Nadie comunica 'arte coleccionable/efímero' ni firma sus sets como obra — Mystic ya tiene esa marca",
+      "Nadie atiende explícitamente en 3 idiomas al turista (Mystic ya tiene el sitio ES/EN/FR, falta gritarlo en Google e IG)"
+    ]
+  },
+  "paleta_sugerida": {
+    "primario": "#B06BE0",
+    "profundo": "#161028",
+    "crema": "#F6EFFB",
+    "acento_cta": "#25D366",
+    "nota": "Morado místico + fondo noche + lavanda pastel, con verde WhatsApp para CTA. Derivada del branding real del sitio en vivo y la bio de IG (🔮 Arte Efímero)."
+  },
+  "productos_estrella": [
+    "Acrílicas artísticas con diseño personalizado (flores 3D, cat eye, cromados) — gancho principal",
+    "Extensiones Soft Gel / Gel X / Polygel",
+    "Kapping de polygel o baño de acrílico (protección uña natural)",
+    "Manicura rusa",
+    "Pedicure spa 'Mystico'",
+    "Retoques con descuento escalonado (15/10/8/5% según días)"
+  ],
+  "gancho_personalizacion": {
+    "principal": "140 reseñas 5.0★ en Google y clientas de EUA que literalmente vuelan cada mes por ella — pero su bio de Instagram sigue mandando todo ese tráfico a un chat vacío en vez de a mysticnailsart.com.",
+    "reseña_reciente": "Google — Katie Carmichael (hace 3 semanas): 'I can't say enough about Carolina and her team! Booking was easy… wow did she nail it!' / cellabianca gray: 'I'm from the US and I will fly here every month'.",
+    "pendiente": "Confirmar apellido de Carolina y elegir 1 reel específico del feed para el gancho del primer mensaje."
+  },
+  "deploy": {
+    "url_sitio": "https://mysticnailsart.com/",
+    "url_demo": "https://dimgrey-wasp-300371.hostingersite.com/",
+    "url_analisis": "https://dimgrey-wasp-300371.hostingersite.com/analisis/",
+    "fecha": "2026-07-29",
+    "hosting": "softvibes-hosting (order 1008508005) — demo con copia noindex de la landing viva + /analisis/",
+    "nota": "mysticnailsart.com vive en OTRA cuenta de hosting (no accesible con el token Softvibes). Cuando se tenga acceso, subir /analisis/ al dominio real y retirar el demo."
+  },
+  "estado_pipeline": "analisis_publicado"
+}

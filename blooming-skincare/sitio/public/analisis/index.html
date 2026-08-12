@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blooming · Análisis de su presencia digital — Softvibes</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --rosa-900: #C4899A;
+    --profundo: #5E3A44;
+    --rosa-700: #8a626e;
+    --bruma: #d8bcc4;
+    --crema: #FBF3F1;
+    --oro: #C9A227;
+    --oro-claro: #E6C558;
+    --rosa-claro: #E7BECA;
+    --rojo: #b8503f;
+    --verde: #4f8f6b;
+    --sombra: 0 20px 60px rgba(94, 58, 68, 0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--crema);
+    color: var(--profundo);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .serif { font-family: 'Playfair Display', Georgia, serif; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
+
+  .etiqueta {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rosa-900);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background:
+      radial-gradient(ellipse 90% 70% at 70% 0%, rgba(196,137,154,0.34), transparent 60%),
+      linear-gradient(165deg, var(--profundo) 0%, #8E5D6B 85%);
+    color: var(--crema);
+    text-align: center;
+    padding: 4.5rem 1.5rem 6.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero .retrato {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    border: 3px solid var(--rosa-claro);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    margin-bottom: 1.4rem;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 80px;
+    background: var(--crema);
+    clip-path: ellipse(60% 100% at 50% 100%);
+  }
+  .hero .marca {
+    font-size: 0.85rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--rosa-claro);
+    margin-bottom: 2.2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    font-weight: 500;
+    max-width: 820px;
+    margin: 0 auto 1.4rem;
+  }
+  .hero h1 em { color: var(--oro-claro); }
+  .hero p.sub {
+    max-width: 620px;
+    margin: 0 auto;
+    font-weight: 300;
+    font-size: 1.05rem;
+    opacity: 0.9;
+  }
+  .hero p.sub strong { color: var(--oro-claro); font-weight: 500; }
+  .hero .dedicatoria {
+    margin-top: 2.4rem;
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  /* ---------- Cifras ---------- */
+  .cifras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: -2.5rem auto 0;
+    position: relative;
+    z-index: 2;
+    max-width: 820px;
+    padding: 0 1.5rem;
+  }
+  .cifra {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: var(--sombra);
+    padding: 1.4rem 1rem;
+    text-align: center;
+  }
+  .cifra .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    color: var(--rosa-900);
+    font-weight: 700;
+  }
+  .cifra .desc { font-size: 0.78rem; color: var(--rosa-700); margin-top: 0.2rem; }
+
+  /* ---------- Galería polaroid ---------- */
+  .galeria {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    padding: 3.2rem 1.5rem 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .polaroid {
+    background: #fff;
+    padding: 10px 10px 14px;
+    border-radius: 6px;
+    box-shadow: 0 12px 32px rgba(94,58,68,0.16);
+    width: 230px;
+    transition: transform 0.35s, box-shadow 0.35s;
+  }
+  .polaroid:nth-child(1) { transform: rotate(-2.5deg); }
+  .polaroid:nth-child(2) { transform: rotate(1.5deg) translateY(10px); }
+  .polaroid:nth-child(3) { transform: rotate(-1deg); }
+  .polaroid:hover { transform: rotate(0) scale(1.05); box-shadow: var(--sombra); z-index: 2; }
+  .polaroid img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 3px;
+    display: block;
+  }
+  .polaroid figcaption {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--rosa-700);
+    text-align: center;
+    padding-top: 10px;
+  }
+  .galeria-nota {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--rosa-700);
+    font-weight: 300;
+    padding: 1.6rem 1.5rem 0;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .galeria-nota strong { color: var(--rosa-900); }
+
+  /* ---------- Secciones ---------- */
+  section { padding: 4.5rem 0 2rem; }
+  .section-head { text-align: center; max-width: 660px; margin: 0 auto 3rem; }
+  .section-head h2 { font-size: clamp(1.6rem, 4vw, 2.3rem); font-weight: 500; margin-bottom: 0.8rem; }
+  .section-head p { color: var(--rosa-700); font-weight: 300; }
+
+  /* ---------- Hallazgos (acordeón) ---------- */
+  .hallazgo {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(94,58,68,0.07);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border-left: 4px solid var(--rojo);
+    transition: box-shadow 0.3s;
+  }
+  .hallazgo:hover { box-shadow: var(--sombra); }
+  .hallazgo button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .hallazgo .icono { font-size: 1.5rem; flex-shrink: 0; }
+  .hallazgo .titulo { font-weight: 600; font-size: 1rem; flex: 1; }
+  .hallazgo .flecha { transition: transform 0.35s; color: var(--rosa-900); flex-shrink: 0; }
+  .hallazgo.abierto .flecha { transform: rotate(180deg); }
+  .hallazgo.destacado { border-left-color: var(--oro); }
+  .hallazgo .detalle {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease;
+  }
+  .hallazgo .detalle-inner {
+    padding: 0 1.4rem 1.4rem 4rem;
+    color: var(--rojo);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+  .hallazgo .detalle-inner .evidencia {
+    margin-top: 0.6rem;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--rosa-700);
+  }
+  .hallazgo .detalle-inner .solucion {
+    margin-top: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: rgba(79, 143, 107, 0.09);
+    border-left: 3px solid var(--verde);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: var(--verde);
+  }
+  .hallazgo .detalle-inner .solucion strong { color: var(--verde); }
+
+  /* ---------- Cajas monoespaciadas y comparativa ---------- */
+  .bio-fuga {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 0.95rem;
+  }
+  .bio-caja {
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    background: #2E1D22;
+    border: 1px solid rgba(184,80,63,0.55);
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+  .bio-caja .cc-tit {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+    color: #e8927e;
+  }
+  .bio-caja code {
+    font-family: 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    display: block;
+    color: #f7efec;
+    word-break: break-word;
+  }
+  .bio-flecha {
+    flex: 1 1 200px;
+    color: var(--rojo);
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .codigo-compara {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.8rem;
+    margin-top: 0.95rem;
+  }
+  .codigo-caja {
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    background: #2E1D22;
+    overflow: hidden;
+  }
+  .codigo-caja .cc-tit {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+  }
+  .codigo-caja code {
+    font-family: 'SFMono-Regular', Menlo, Consolas, 'Courier New', monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    display: block;
+    word-break: break-word;
+    color: #efe6e3;
+  }
+  .codigo-caja .cc-fuente {
+    display: block;
+    margin-top: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    color: #bda9ae;
+  }
+  .codigo-caja.mal { border: 1px solid rgba(184,80,63,0.55); }
+  .codigo-caja.mal .cc-tit { color: #e8927e; }
+  .codigo-caja.bien { border: 1px solid rgba(79,143,107,0.55); }
+  .codigo-caja.bien .cc-tit { color: #7fc79b; }
+  .codigo-pie {
+    font-size: 0.76rem;
+    font-style: italic;
+    color: var(--rosa-700);
+    padding-top: 0.55rem;
+  }
+
+  /* ---------- Mini-diagrama de recorrido ---------- */
+  .recorrido {
+    margin-top: 0.95rem;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(184,80,63,0.3);
+    background: rgba(184,80,63,0.05);
+  }
+  .recorrido + .recorrido {
+    border-color: rgba(79,143,107,0.35);
+    background: rgba(79,143,107,0.07);
+  }
+  .rec-tit {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--rojo);
+    margin-bottom: 0.6rem;
+  }
+  .recorrido + .recorrido .rec-tit { color: var(--verde); }
+  .rec-flujo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .rec-nodo {
+    background: #fff;
+    border: 1px solid rgba(184,80,63,0.35);
+    border-radius: 10px;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.72rem;
+    line-height: 1.3;
+    text-align: center;
+    color: var(--profundo);
+    font-weight: 500;
+    min-width: 118px;
+  }
+  .rec-nodo small { display: block; font-size: 0.64rem; color: var(--rosa-700); font-weight: 400; }
+  .rec-nodo.muerto { border-color: var(--rojo); color: var(--rojo); background: rgba(184,80,63,0.1); font-weight: 700; }
+  .recorrido + .recorrido .rec-nodo { border-color: rgba(79,143,107,0.4); }
+  .rec-nodo.destino { border: 2px solid var(--verde); color: var(--verde); background: rgba(79,143,107,0.12); font-weight: 700; }
+  .rec-arrow { color: var(--rojo); font-size: 1rem; flex-shrink: 0; }
+  .recorrido + .recorrido .rec-arrow { color: var(--verde); }
+  .rec-par { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  /* ---------- Interruptor Antes/Ahora ---------- */
+  .embudo-seccion { background: var(--profundo); color: var(--crema); padding: 4.5rem 0; margin-top: 3rem; }
+  .embudo-seccion .section-head h2 { color: var(--crema); }
+  .embudo-seccion .section-head p { color: var(--bruma); }
+  .embudo-seccion .etiqueta { color: var(--oro-claro); }
+
+  .switch-wrap { display: flex; justify-content: center; margin-bottom: 2.8rem; }
+  .switch {
+    display: flex;
+    background: rgba(251,243,241,0.1);
+    border-radius: 999px;
+    padding: 5px;
+    gap: 4px;
+  }
+  .switch button {
+    all: unset;
+    cursor: pointer;
+    padding: 0.6rem 2rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--bruma);
+    transition: all 0.3s;
+  }
+  .switch button.activo { background: var(--oro); color: #33270a; }
+
+  @keyframes aparecer { to { opacity: 1; transform: translateY(0); } }
+
+  .escena { max-width: 880px; margin: 0 auto; padding: 0 1.2rem; }
+  .escena[hidden] { display: none; }
+  .escena > * { opacity: 0; transform: translateY(14px); animation: aparecer 0.5s forwards; }
+  .escena > *:nth-child(2) { animation-delay: 0.15s; }
+  .escena > *:nth-child(3) { animation-delay: 0.3s; }
+
+  .veredicto {
+    text-align: center;
+    margin-top: 2.2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--rosa-claro);
+    padding: 0 1rem;
+  }
+
+  /* --- Escena ANTES: capturas reales con anotaciones --- */
+  .caos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.3rem;
+  }
+  .tarjeta-caos {
+    background: #fff;
+    border-radius: 14px;
+    width: 250px;
+    box-shadow: 0 16px 38px rgba(0,0,0,0.32);
+    overflow: hidden;
+    color: var(--profundo);
+    text-align: left;
+  }
+  .caos .tarjeta-caos:nth-child(1) { transform: rotate(-2deg); }
+  .caos .tarjeta-caos:nth-child(2) { transform: rotate(1.8deg) translateY(12px); }
+  .caos .tarjeta-caos:nth-child(3) { transform: rotate(-1.5deg); }
+  .caos .tarjeta-caos:nth-child(4) { transform: rotate(2.2deg) translateY(-6px); }
+  .app-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+    border-bottom: 1px solid #efefef;
+  }
+  .pill-off {
+    margin-left: auto;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--rojo);
+    border: 1px solid rgba(184,80,63,0.45);
+    padding: 0.08rem 0.45rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .pill-on {
+    margin-left: auto;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--verde);
+    border: 1px solid rgba(79,143,107,0.5);
+    padding: 0.08rem 0.45rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .tarjeta-caos .captura {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+  }
+  .anot {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.7rem 0.8rem 0.85rem;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--rosa-700);
+    border-top: 1px dashed rgba(184,80,63,0.4);
+  }
+  .anot .marca-x {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(184,80,63,0.12);
+    color: var(--rojo);
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    margin-top: 0.1rem;
+  }
+  .anot strong { color: var(--rojo); font-weight: 600; }
+  .anot.buena { border-top-color: rgba(79,143,107,0.4); }
+  .anot.buena .marca-x { background: rgba(79,143,107,0.14); color: var(--verde); }
+  .anot.buena strong { color: var(--verde); }
+
+  /* --- Escena AHORA: el sitio vivo en un dispositivo --- */
+  .redes-fila { display: flex; justify-content: center; gap: 0.55rem; flex-wrap: wrap; }
+  .red-chip {
+    background: rgba(251,243,241,0.08);
+    border: 1px solid rgba(231,190,202,0.45);
+    color: var(--crema);
+    font-size: 0.72rem;
+    padding: 0.34rem 0.75rem;
+    border-radius: 99px;
+  }
+  .convergen { text-align: center; color: var(--rosa-claro); font-size: 1.1rem; padding: 0.5rem 0 1rem; }
+  .convergen .linea {
+    display: block;
+    width: 1px;
+    height: 26px;
+    margin: 0.25rem auto 0;
+    background: linear-gradient(var(--oro), transparent);
+  }
+  .disp-tabs { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; padding-bottom: 1.5rem; }
+  .disp-tab {
+    all: unset;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bruma);
+    border: 1px solid rgba(216,188,196,0.4);
+    padding: 0.45rem 0.95rem;
+    border-radius: 99px;
+    transition: all 0.25s;
+  }
+  .disp-tab.activo { background: var(--crema); color: var(--profundo); border-color: var(--crema); }
+
+  .dispositivo {
+    width: fit-content;
+    margin: 0 auto;
+    background: #2b171d;
+    position: relative;
+    box-shadow: 0 34px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(231,190,202,0.25);
+  }
+  .dispositivo .pantalla { overflow: hidden; background: #fff; position: relative; }
+  .dispositivo iframe { border: 0; display: block; background: #fff; transform-origin: top left; }
+  .dispositivo .muesca {
+    display: none;
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 118px;
+    height: 22px;
+    background: #2b171d;
+    border-radius: 99px;
+    z-index: 2;
+  }
+  .dispositivo .base { display: none; }
+
+  .dispositivo.iphone { border-radius: 52px; padding: 12px; }
+  .dispositivo.iphone .pantalla { border-radius: 40px; }
+  .dispositivo.iphone .muesca { display: block; }
+
+  .dispositivo.tablet { border-radius: 30px; padding: 16px; }
+  .dispositivo.tablet .pantalla { border-radius: 14px; }
+
+  .dispositivo.laptop { border-radius: 16px 16px 4px 4px; padding: 14px 14px 16px; margin-bottom: 24px; }
+  .dispositivo.laptop .pantalla { border-radius: 6px; }
+  .dispositivo.laptop .base {
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -15px;
+    width: calc(100% + 90px);
+    height: 16px;
+    background: linear-gradient(#8E5D6B, #2b171d);
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+  }
+  .dispositivo.laptop .base::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 7px;
+    background: #2b171d;
+    border-radius: 0 0 8px 8px;
+  }
+  .tour-tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 1.7rem 0.2rem 0.3rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tour-tabs::-webkit-scrollbar { display: none; }
+  .tour-tab {
+    all: unset;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bruma);
+    border: 1px solid rgba(216,188,196,0.4);
+    padding: 0.45rem 0.95rem;
+    border-radius: 99px;
+    transition: all 0.25s;
+  }
+  .tour-tab.activo { background: var(--oro); color: #33270a; border-color: var(--oro); }
+  .tour-nota {
+    text-align: center;
+    font-size: 0.92rem;
+    color: var(--crema);
+    font-weight: 300;
+    padding: 0.9rem 1rem 0;
+    min-height: 2.6em;
+  }
+  .cta-sitio { text-align: center; padding-top: 1.7rem; }
+  .btn-brillo { font-size: 1.02rem; padding: 1.05rem 2.5rem; animation: pulso 2.4s infinite; }
+  @keyframes pulso {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+    50% { box-shadow: 0 0 0 16px rgba(201,162,39,0); }
+  }
+
+  .barra-flotante {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translate(-50%, 160%);
+    display: flex;
+    gap: 0.55rem;
+    background: rgba(94,58,68,0.96);
+    border: 1px solid rgba(231,190,202,0.45);
+    border-radius: 999px;
+    padding: 0.5rem;
+    z-index: 60;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.4);
+    transition: transform 0.45s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .barra-flotante.visible { transform: translate(-50%, 0); }
+  .bf-btn {
+    display: inline-block;
+    padding: 0.72rem 1.4rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .bf-sitio { background: var(--oro); color: #33270a; }
+  .bf-pago { color: var(--crema); border: 1px solid rgba(251,243,241,0.4); }
+  @media (max-width: 560px) {
+    .barra-flotante { width: calc(100% - 16px); justify-content: center; }
+    .bf-btn { flex: 1; text-align: center; padding: 0.72rem 0.5rem; font-size: 0.8rem; }
+  }
+
+  @media (max-width: 700px) {
+    .caos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+    .tarjeta-caos, .caos .tarjeta-caos { width: auto; transform: none; }
+    .tour-tabs { padding-left: 0.5rem; padding-right: 0.5rem; }
+  }
+  @media (min-width: 701px) {
+    .tour-tabs { justify-content: center; flex-wrap: wrap; }
+  }
+
+  /* ---------- Mejoras (grid) ---------- */
+  .mejoras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+  .mejora {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.6rem 1.5rem;
+    box-shadow: 0 6px 24px rgba(94,58,68,0.07);
+    border-top: 3px solid var(--rosa-900);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s, box-shadow 0.3s;
+  }
+  .mejora.visible { opacity: 1; transform: translateY(0); }
+  .mejora:hover { box-shadow: var(--sombra); }
+  .mejora .icono { font-size: 1.8rem; margin-bottom: 0.7rem; }
+  .mejora h3 { font-size: 1.05rem; margin-bottom: 0.4rem; font-weight: 700; }
+  .mejora p { font-size: 0.88rem; color: var(--rosa-700); font-weight: 300; }
+
+  /* ---------- Hazla tuya (3 tiers) ---------- */
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; align-items: stretch; }
+  .tier {
+    background: #fff;
+    border: 1px solid rgba(196,137,154,0.22);
+    border-radius: 18px;
+    padding: 1.9rem 1.4rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(94,58,68,0.08);
+    position: relative;
+  }
+  .tier.destacado { border: 2px solid var(--oro); box-shadow: var(--sombra); transform: scale(1.04); z-index: 1; }
+  .tier-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--oro);
+    color: #33270a;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.9rem;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .tier-nombre { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--profundo); }
+  .tier-precio { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--rosa-900); line-height: 1.1; padding-top: 0.5rem; }
+  .tier-moneda { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rosa-700); padding-bottom: 1.1rem; }
+  .tier ul { list-style: none; text-align: left; font-size: 0.84rem; color: var(--rosa-700); font-weight: 300; flex: 1; margin: 0 0 1.3rem; }
+  .tier ul li {
+    padding: 0.44rem 0;
+    border-bottom: 1px solid rgba(196,137,154,0.14);
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    line-height: 1.45;
+  }
+  .tier ul li:last-child { border-bottom: none; }
+  .tier ul li .si { color: var(--verde); font-weight: 700; flex-shrink: 0; }
+  .tier ul li .no { color: #d7c8cc; font-weight: 700; flex-shrink: 0; }
+  .tier ul li.apagado { color: #bfaeb3; }
+  .tier ul li strong { color: var(--profundo); font-weight: 600; }
+  .tier .btn { display: block; text-align: center; padding: 0.85rem 1rem; }
+  .tier-vigencia { font-size: 0.72rem; color: var(--rojo); padding-top: 0.6rem; font-weight: 500; }
+  .oferta-nota {
+    max-width: 640px;
+    margin: 1.9rem auto 0;
+    text-align: center;
+    font-size: 0.86rem;
+    color: var(--rosa-700);
+    font-weight: 300;
+    font-style: italic;
+  }
+  @media (max-width: 860px) {
+    .tiers { grid-template-columns: 1fr; max-width: 430px; margin: 0 auto; }
+    .tier.destacado { transform: none; order: -1; }
+  }
+
+  /* ---------- CTA final ---------- */
+  .cta-final {
+    text-align: center;
+    padding: 5rem 1.5rem 5.5rem;
+  }
+  .cta-final h2 { font-size: clamp(1.7rem, 4.5vw, 2.5rem); font-weight: 500; max-width: 700px; margin: 0 auto 1rem; }
+  .cta-final h2 em { color: var(--rosa-900); }
+  .cta-final p { color: var(--rosa-700); font-weight: 300; max-width: 560px; margin: 0 auto 2.2rem; }
+  .botones { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 0.95rem 2.2rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(94,58,68,0.2); }
+  .btn-oro { background: var(--oro); color: #33270a; }
+  .btn-borde { border: 1.5px solid var(--rosa-900); color: var(--rosa-900); }
+
+  footer {
+    background: var(--profundo);
+    color: var(--bruma);
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 300;
+  }
+  footer strong { color: var(--rosa-claro); font-weight: 500; }
+  footer .pd { max-width: 600px; margin: 1rem auto 0; opacity: 0.85; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 560px) {
+    .hallazgo .detalle-inner { padding-left: 1.4rem; }
+    .switch button { padding: 0.6rem 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="marca">Análisis de presencia digital · Softvibes</div>
+  <img class="retrato" src="img/logo.jpg" alt="Blooming · Depilación Láser &amp; Skincare, Playa del Carmen" />
+  <h1>Blooming, se mudaron y su Instagram<br /><em>todavía no lo sabe.</em></h1>
+  <p class="sub">Y no es por falta de trabajo: tienen <strong>5.0 con 38 reseñas en Google</strong> —una calificación perfecta que casi nadie logra sostener—, <strong>190 publicaciones</strong> con contenido educativo mejor diseñado que el de toda su competencia, y una identidad visual que ya está lograda: el loto, el rosa, la tipografía. Nada de eso hay que tocarlo. Lo que estudiamos fue el camino que recorre una clienta desde que las descubre hasta que agenda… y en lugar de solo contárselos, se lo resolvimos: aquí abajo pueden navegarlo funcionando.</p>
+  <div class="dedicatoria">Preparado para ustedes por <strong>Softvibes</strong> · Playa del Carmen · julio 2026</div>
+</header>
+
+<!-- ============ CIFRAS ============ -->
+<div class="cifras">
+  <div class="cifra"><div class="num" data-meta="5" data-dec="1">0</div><div class="desc">de calificación en Google — perfecta</div></div>
+  <div class="cifra"><div class="num" data-meta="38">0</div><div class="desc">reseñas de clientas reales</div></div>
+  <div class="cifra"><div class="num" data-meta="190">0</div><div class="desc">publicaciones en su Instagram</div></div>
+  <div class="cifra"><div class="num" data-meta="0">0</div><div class="desc">enlaces en su bio hacia su propio sitio</div></div>
+</div>
+
+<!-- ============ GALERÍA ============ -->
+<div class="galeria">
+  <figure class="polaroid reveal">
+    <img src="img/hollywood-peel.jpg" alt="Hollywood Peel en Blooming" />
+    <figcaption>Hollywood Peel — el favorito de sus clientas</figcaption>
+  </figure>
+  <figure class="polaroid reveal">
+    <img src="img/depilacion-laser.jpg" alt="Depilación láser diodo en Blooming" />
+    <figcaption>Depilación láser diodo</figcaption>
+  </figure>
+  <figure class="polaroid reveal">
+    <img src="img/espacio.jpg" alt="El espacio de Blooming en Playa del Carmen" />
+    <figcaption>Su espacio en Playa del Carmen</figcaption>
+  </figure>
+</div>
+<p class="galeria-nota">Todo esto ya existe gracias a su trabajo. <strong>Nosotros solo reparamos el camino</strong> que lleva a una clienta hasta aquí — y le pusimos una casa donde vive todo junto.</p>
+
+<!-- ============ HALLAZGOS ============ -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="etiqueta">El análisis</span>
+      <h2>Lo que encontramos hoy</h2>
+      <p>Hacen un trabajo excelente y sus 38 reseñas de cinco estrellas lo prueban. Su marca está construida: el problema no es el diseño, es el camino de la clienta hacia la cita. Toca cada punto para ver el detalle y cómo ya lo resolvimos.</p>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🚪</span>
+        <span class="titulo">La página de Contacto de su sitio no existe</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        En el menú principal de su sitio hay un botón "Contacto". Al tocarlo, en lugar de un WhatsApp o un mapa, aparece un mensaje de página no encontrada. Los datos de contacto solo sobreviven en el pie de página. Quien llegó hasta el punto de querer escribirles se topa con un error justo en el último paso.
+
+        <div class="bio-fuga">
+          <div class="bio-caja">
+            <div class="cc-tit">Lo que ve quien toca "Contacto"</div>
+            <code>Parece que esta página no existe.</code>
+          </div>
+          <div class="bio-flecha">← ahí termina el recorrido de una clienta que ya estaba lista para escribirles</div>
+        </div>
+        <div class="codigo-pie">Puedes comprobarlo tú misma: abre el sitio desde tu celular y toca "Contacto" en el menú.</div>
+
+        <div class="evidencia">Evidencia: la ruta /contacto/ de su sitio devuelve una página de error 404, con el menú visible arriba.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> página de contacto real con WhatsApp precargado, mapa de la ubicación vigente y formulario corto.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo destacado reveal">
+      <button type="button">
+        <span class="icono">📍</span>
+        <span class="titulo">Se mudaron, pero su bio de Instagram sigue mandando al local anterior</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        La bio de Instagram dice "Av Contituyentes / 60 y 65". Su sitio, su ficha de Google y su propia publicación de "NUEVA Ubicación" dicen "Calle Tihosuco No. 13, Fraccionamiento Cataluña". Una clienta que copie la dirección del perfil llega a la dirección vieja. Es la fuga más cara, porque pierde a la persona que ya iba en camino.
+
+        <div class="codigo-compara">
+          <div class="codigo-caja mal">
+            <div class="cc-tit">✕ Lo que dice su bio de Instagram hoy</div>
+            <code>Av Constituyentes / 60 y 65</code>
+            <span class="cc-fuente">Es la dirección que copia quien las encontró en Instagram — el canal por donde llega la mayoría.</span>
+          </div>
+          <div class="codigo-caja bien">
+            <div class="cc-tit">✓ Donde están de verdad</div>
+            <code>Calle Tihosuco 13, Fracc. Cataluña</code>
+            <span class="cc-fuente">Lo dicen su sitio, su ficha de Google y su propio post de "NUEVA Ubicación".</span>
+          </div>
+        </div>
+
+        <div class="recorrido">
+          <div class="rec-tit">✕ El recorrido de hoy</div>
+          <div class="rec-flujo">
+            <div class="rec-nodo">Ve un reel<small>quiere su Hollywood Peel</small></div>
+            <span class="rec-arrow">→</span>
+            <div class="rec-nodo">Copia la dirección de la bio<small>Av Constituyentes</small></div>
+            <span class="rec-arrow">→</span>
+            <div class="rec-nodo muerto">llega al local anterior<small>y ahí ya no hay nadie</small></div>
+          </div>
+        </div>
+
+        <div class="recorrido">
+          <div class="rec-tit">✓ El recorrido nuevo</div>
+          <div class="rec-flujo">
+            <div class="rec-nodo">Ve un reel<small>quiere su Hollywood Peel</small></div>
+            <span class="rec-arrow">→</span>
+            <div class="rec-nodo">Toca el enlace de la bio<small>su sitio</small></div>
+            <span class="rec-arrow">→</span>
+            <div class="rec-nodo destino">Tihosuco 13<small>con botón a Google Maps</small></div>
+          </div>
+        </div>
+
+        <div class="evidencia">Evidencia: captura de su perfil de Instagram con la bio en "Av Constituyentes", contra su post de "NUEVA Ubicación", el pie de su sitio y su ficha de Google Maps.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> dirección única y verificada en todos lados, con enlace directo a Google Maps.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🔗</span>
+        <span class="titulo">Tienen sitio web y no lo enlazan desde Instagram</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        El único enlace de su bio lleva a Threads — otra red social, no un destino donde se pueda agendar o ver precios. Su propio sitio no aparece por ningún lado en el perfil. La web existe y su audiencia principal no puede encontrarla.
+
+        <div class="recorrido">
+          <div class="rec-tit">✕ El único enlace de la bio</div>
+          <div class="rec-flujo">
+            <div class="rec-nodo">Instagram<small>190 publicaciones</small></div>
+            <span class="rec-arrow">→</span>
+            <div class="rec-nodo">Threads<small>otra red social</small></div>
+            <span class="rec-arrow">→</span>
+            <div class="rec-nodo muerto">sin precios ni cita<small>el interés se enfría</small></div>
+          </div>
+        </div>
+
+        <div class="evidencia">Evidencia: enlaces externos del perfil: únicamente threads.com/@blooming_skincare_.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> página /links con su marca: carta de servicios, WhatsApp, ubicación y redes en un solo lugar.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">🔍</span>
+        <span class="titulo">En Google su sitio aparece como "skincare" a secas</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        La portada no tiene etiqueta de título ni descripción, y su encabezado principal dice literalmente "Inicio". Por eso el resultado de búsqueda se ve vacío y sin gancho, mientras la competencia aparece con nombre, servicios y reseñas. Buscar "blooming skincare" devuelve primero a negocios homónimos de otros países.
+
+        <div class="codigo-compara">
+          <div class="codigo-caja mal">
+            <div class="cc-tit">✕ Su resultado en Google hoy</div>
+            <code>skincare<br />bloomingskincare.net</code>
+          </div>
+          <div class="codigo-caja bien">
+            <div class="cc-tit">✓ Como se ve ahora</div>
+            <code>Blooming · Depilación Láser &amp; Skincare en Playa del Carmen<br />Hollywood Peel, faciales y láser diodo · 5.0 ★ (38)</code>
+          </div>
+        </div>
+
+        <div class="evidencia">Evidencia: auditoría del HTML de la portada — sin etiqueta de título, sin descripción, encabezado principal = "Inicio". Resultado en Google: "skincare — bloomingskincare.net".</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> títulos y descripciones por página, encabezados con los servicios reales y SEO local de Playa del Carmen.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">⭐</span>
+        <span class="titulo">Cinco estrellas con 38 reseñas… escondidas</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        Su ficha de Google tiene calificación perfecta de 5.0 con 38 reseñas — un activo enorme y dificilísimo de construir. Pero no aparece ni en su sitio ni en su perfil de Instagram. La prueba social que convence a quien duda está guardada donde casi nadie la ve.
+        <div class="evidencia">Evidencia: ficha de Google "Blooming Depilación Láser &amp; Skin Care": 5.0 (38). Cero menciones de reseñas en su sitio.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> reseñas destacadas en la portada y junto a cada botón de agendar.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">📱</span>
+        <span class="titulo">Dos números distintos circulando, y el vigente escrito de cuatro formas</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        En sus publicaciones aparece el 984 256 0671; en su ficha de Google y en el pie de su sitio, el 984 315 7426. Además, ese mismo número aparece escrito de cuatro maneras diferentes entre publicaciones. Quien intente guardarlo o escribirles no sabe cuál es el bueno.
+
+        <div class="codigo-compara">
+          <div class="codigo-caja mal">
+            <div class="cc-tit">✕ Lo que circula hoy</div>
+            <code>984 256 0671<br />984 315 7426<br />+52 984 3157426<br />9843157426</code>
+          </div>
+          <div class="codigo-caja bien">
+            <div class="cc-tit">✓ Un solo número, un solo botón</div>
+            <code>+52 984 315 7426</code>
+            <span class="cc-fuente">Con mensaje precargado por servicio: ya saben qué quiere antes de contestar.</span>
+          </div>
+        </div>
+
+        <div class="evidencia">Evidencia: análisis de 190 publicaciones — dos números detectados y cuatro variantes de formato del vigente.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> un solo número, con botón de WhatsApp y mensaje precargado por servicio.</div>
+      </div></div>
+    </div>
+
+    <div class="hallazgo reveal">
+      <button type="button">
+        <span class="icono">💲</span>
+        <span class="titulo">Sus precios viven en promociones que caducan</span>
+        <span class="flecha">▾</span>
+      </button>
+      <div class="detalle"><div class="detalle-inner">
+        Publican precios reales y atractivos — limpieza profunda $650, Hollywood Peel $950, masaje + facial $1,299, seis sesiones de axilas y bikini por $2,600 — pero siempre dentro de promociones de un mes concreto. Pasada la fecha, el post se hunde y quien busca cuánto cuesta un facial hoy no tiene dónde verlo.
+        <div class="evidencia">Evidencia: publicaciones de promoción de octubre, aniversario de enero, Navidad y verano, cada una con su propia lista de precios.</div>
+        <div class="solucion"><strong>✓ Resuelto:</strong> carta de servicios permanente con precios "desde", y las promociones del mes como sección aparte.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EMBUDO ANTES/AHORA ============ -->
+<section class="embudo-seccion">
+  <div class="section-head">
+    <span class="etiqueta">La transformación</span>
+    <h2>El camino de su clienta, reparado</h2>
+    <p>Mueve el interruptor y mira la diferencia 👇</p>
+  </div>
+
+  <div class="switch-wrap">
+    <div class="switch" role="tablist">
+      <button type="button" id="btn-antes" class="activo">Antes</button>
+      <button type="button" id="btn-ahora">Ahora ✨</button>
+    </div>
+  </div>
+
+  <!-- Escena ANTES: capturas reales con anotaciones -->
+  <div class="escena" id="escena-antes">
+    <div class="caos">
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">📸 Instagram <span class="pill-off">✕ dirección anterior</span></div>
+        <img class="captura" src="img/ig-perfil.jpg" alt="Perfil de Instagram de Blooming con la dirección anterior en la bio" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>La bio manda a "Av Constituyentes".</strong> Y su único enlace lleva a Threads, no a un lugar donde ver precios o agendar.</span></div>
+      </div>
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">🖥️ Su sitio <span class="pill-off">✕ Contacto 404</span></div>
+        <img class="captura" src="img/sitio-actual.jpg" alt="Portada del sitio actual de Blooming" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>El botón "Contacto" del menú va a una página de error.</strong> Y en Google el sitio aparece solo como "skincare", sin nombre ni servicios.</span></div>
+      </div>
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">⭐ Google <span class="pill-on">✓ 5.0 · 38 reseñas</span></div>
+        <img class="captura" src="img/gbp-ficha.jpg" alt="Ficha de Google de Blooming con 5.0 y 38 reseñas" loading="lazy" />
+        <div class="anot buena"><span class="marca-x">✓</span><span><strong>Su mejor activo, escondido.</strong> 5.0 con 38 reseñas — y ni el sitio ni el Instagram lo mencionan una sola vez.</span></div>
+      </div>
+
+      <div class="tarjeta-caos">
+        <div class="app-bar">🗺️ Maps <span class="pill-off">✕ dos direcciones</span></div>
+        <img class="captura" src="img/google-maps.jpg" alt="Ubicación de Blooming en Google Maps" loading="lazy" />
+        <div class="anot"><span class="marca-x">✕</span><span><strong>Google ya sabe que están en Tihosuco 13.</strong> Su Instagram todavía no: quien copia la bio termina en la colonia equivocada.</span></div>
+      </div>
+
+    </div>
+    <div class="veredicto">"Trabajo excelente, clientas felices, cinco estrellas… y un camino que se rompe justo antes de la cita."</div>
+  </div>
+
+  <!-- Escena AHORA: el sitio vivo, navegable -->
+  <div class="escena" id="escena-ahora" hidden>
+    <div>
+      <div class="redes-fila">
+        <span class="red-chip">📸 Instagram</span>
+        <span class="red-chip">🧵 Threads</span>
+        <span class="red-chip">👥 Facebook</span>
+        <span class="red-chip">💬 WhatsApp</span>
+        <span class="red-chip">⭐ Google</span>
+      </div>
+      <div class="convergen">todas apuntan a un solo lugar<span class="linea"></span></div>
+    </div>
+
+    <div>
+      <div class="disp-tabs" id="disp-tabs">
+        <button type="button" class="disp-tab" data-disp="laptop">💻 Laptop</button>
+        <button type="button" class="disp-tab" data-disp="tablet">📱 Tablet / iPad</button>
+        <button type="button" class="disp-tab activo" data-disp="iphone">📲 iPhone</button>
+      </div>
+      <div class="dispositivo iphone" id="dispositivo">
+        <div class="muesca"></div>
+        <div class="pantalla" id="pantalla">
+          <iframe id="tour-frame" data-src="https://royalblue-quail-326867.hostingersite.com/" src="about:blank" title="El sitio de Blooming, en vivo"></iframe>
+        </div>
+        <div class="base"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="tour-tabs" id="tour-tabs">
+        <button type="button" class="tour-tab activo" data-url="https://royalblue-quail-326867.hostingersite.com/" data-nota="📍 Su dirección correcta y sus 5 estrellas, arriba de todo.">1 · Inicio</button>
+        <button type="button" class="tour-tab" data-url="https://royalblue-quail-326867.hostingersite.com/servicios/" data-nota="💲 Su carta completa con precios que ya no caducan.">2 · Servicios</button>
+        <button type="button" class="tour-tab" data-url="https://royalblue-quail-326867.hostingersite.com/servicios/hollywood-peel/" data-nota="💬 Cada tratamiento con su propio WhatsApp precargado.">3 · Hollywood Peel</button>
+        <button type="button" class="tour-tab" data-url="https://royalblue-quail-326867.hostingersite.com/links/" data-nota="🔗 El enlace que su bio de Instagram necesita.">4 · Su /links</button>
+        <button type="button" class="tour-tab" data-url="https://royalblue-quail-326867.hostingersite.com/admin/" data-nota="🛠️ Su panel: cambian precios y textos sin depender de nadie.">5 · Su panel</button>
+      </div>
+      <p class="tour-nota" id="tour-nota">📍 Su dirección correcta y sus 5 estrellas, arriba de todo.</p>
+      <div class="cta-sitio"><a class="btn btn-oro btn-brillo" href="https://royalblue-quail-326867.hostingersite.com/" target="_blank" rel="noopener">🌸 Ver el sitio completo ↗</a></div>
+    </div>
+
+    <div class="veredicto">"La misma marca de siempre — el loto, el rosa, su tono — ahora con un camino que llega hasta la cita."</div>
+  </div>
+</section>
+
+<!-- ============ MEJORAS ============ -->
+<section>
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="etiqueta">Lo que ya está hecho</span>
+      <h2>Lo que construimos para ustedes</h2>
+      <p>Respetamos su identidad tal cual: el loto dorado, el rosa palo y su tipografía. Lo que cambia es el recorrido.</p>
+    </div>
+    <div class="mejoras-grid">
+      <div class="mejora"><div class="icono">📍</div><h3>Una sola dirección</h3><p>Tihosuco 13, Fracc. Cataluña en cada página, con botón directo a Google Maps. Nadie vuelve a llegar al local anterior.</p></div>
+      <div class="mejora"><div class="icono">🚪</div><h3>Contacto que sí abre</h3><p>Página de contacto real con WhatsApp precargado, mapa y formulario corto — donde antes había un error.</p></div>
+      <div class="mejora"><div class="icono">💲</div><h3>Precios que no caducan</h3><p>Carta permanente con precios "desde" para Hollywood Peel, faciales, láser y masajes. Las promos del mes van aparte.</p></div>
+      <div class="mejora"><div class="icono">⭐</div><h3>Sus 38 reseñas al frente</h3><p>El 5.0 de Google, arriba de todo y junto a cada botón de agendar: la prueba que convence a quien duda.</p></div>
+      <div class="mejora"><div class="icono">🔗</div><h3>El /links para su bio</h3><p>Servicios, WhatsApp, ubicación y redes en un solo destino — el enlace que hoy le falta al perfil de Instagram.</p></div>
+      <div class="mejora"><div class="icono">🛠️</div><h3>Panel de gestión</h3><p>Cambian precios, textos y fotos ustedes mismas, sin programar — como editar una historia de Instagram.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HAZLA TUYA (3 TIERS) ============ -->
+<section id="planes">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="etiqueta">Si quieren dar el siguiente paso</span>
+      <h2>Hazla completamente tuya</h2>
+      <p>El sitio y este análisis son un regalo — no cambia nada si lo dejan ahí. Pero si quieren dar el paso, elijan cómo quieren vivirlo:</p>
+    </div>
+
+    <div class="tiers reveal">
+
+      <div class="tier">
+        <div class="tier-nombre">🌱 Pruébala</div>
+        <div class="tier-precio">$1,500</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <ul>
+          <li><span class="si">✓</span><div><strong>Su página funcionando</strong> (en subdominio Softvibes)</div></li>
+          <li><span class="si">✓</span><div><strong>Llamada de configuración</strong> — personalizamos juntas textos, fotos y servicios</div></li>
+          <li><span class="si">✓</span><div><strong>Portal de gestión</strong> — editan todo ustedes mismas</div></li>
+          <li class="apagado"><span class="no">—</span><div>Dominio propio</div></li>
+          <li class="apagado"><span class="no">—</span><div>Correos profesionales</div></li>
+          <li class="apagado"><span class="no">—</span><div>Versión EN con dominio</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://mpago.la/1XNSy7M" target="_blank" rel="noopener">💳 Empezar — $1,500</a>
+        <div class="tier-vigencia">Vigencia: 3 meses</div>
+      </div>
+
+      <div class="tier destacado">
+        <div class="tier-badge">⭐ Más elegido</div>
+        <div class="tier-nombre">🌸 Hazla tuya</div>
+        <div class="tier-precio">$3,500</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <ul>
+          <li><span class="si">✓</span><div><strong>Todo lo de Pruébala</strong>, sin fecha de caducidad</div></li>
+          <li><span class="si">✓</span><div><strong>Dominio propio</strong> a su nombre</div></li>
+          <li><span class="si">✓</span><div><strong>Hosting incluido</strong> por 1 año</div></li>
+          <li><span class="si">✓</span><div><strong>Correo profesional</strong> @sudominio</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://wa.me/525544481170?text=Hola%2C%20soy%20Blooming.%20Vimos%20nuestro%20an%C3%A1lisis%20y%20queremos%20el%20plan%20Hazla%20tuya%20%28%243%2C500%29." target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+
+      <div class="tier">
+        <div class="tier-nombre">🚀 Crece</div>
+        <div class="tier-precio">$7,000</div>
+        <div class="tier-moneda">MXN · pago único</div>
+        <ul>
+          <li><span class="si">✓</span><div><strong>Todo lo de Hazla tuya</strong></div></li>
+          <li><span class="si">✓</span><div><strong>Sesión de estrategia de contenido</strong> — sus carruseles educativos, trabajando con sistema</div></li>
+          <li><span class="si">✓</span><div><strong>Optimización de su ficha de Google</strong> — que sus 38 reseñas trabajen a su favor</div></li>
+          <li><span class="si">✓</span><div><strong>Bio y datos homologados</strong> en todas sus redes: una sola dirección, un solo número, un solo destino</div></li>
+        </ul>
+        <a class="btn btn-oro" href="https://wa.me/525544481170?text=Hola%2C%20soy%20Blooming.%20Vimos%20nuestro%20an%C3%A1lisis%20y%20queremos%20el%20plan%20Crece%20%28%247%2C000%29." target="_blank" rel="noopener">💬 Apartar por WhatsApp</a>
+      </div>
+
+    </div>
+
+    <p class="oferta-nota">¿Curiosidad de cómo se siente editar su propio sitio? En el paso 5 del recorrido está el panel: hacen clic sobre cualquier texto o precio y lo cambian ahí mismo ✨</p>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-final reveal">
+  <h2>Su Instagram deja de mandar al local anterior<br /><em>y empieza a llevar a la cita.</em></h2>
+  <p>Las 38 reseñas de cinco estrellas son suyas y nadie puede copiárselas. Lo único que faltaba era reparar el camino. Naveguen el sitio desde su celular y decidan con calma.</p>
+  <div class="botones">
+    <a class="btn btn-oro" href="https://royalblue-quail-326867.hostingersite.com/" target="_blank" rel="noopener">🌸 Ver el sitio</a>
+    <a class="btn btn-borde" href="#planes">💳 Ver los planes</a>
+  </div>
+</section>
+
+<div class="barra-flotante" id="barra-flotante">
+  <a class="bf-btn bf-sitio" href="#planes">💳 Ver los planes</a>
+  <a class="bf-btn bf-pago" href="#planes">🌸 Hacerla nuestra</a>
+</div>
+
+<footer>
+  <img src="img/logo.jpg" alt="Blooming" style="width:74px; height:74px; border-radius:50%; object-fit:cover; background:#fff; border:2px solid var(--rosa-claro); margin-bottom:1rem;" />
+  <div>Hecho con respeto por su trabajo, por <strong>Softvibes</strong> — acompañamos emprendedoras en su salto digital</div>
+  <div class="pd">P.D. Hicimos esto únicamente con material público de sus redes y de su sitio. Si algo no las representa, lo ajustamos o lo retiramos de inmediato — ustedes mandan.</div>
+</footer>
+
+<script>
+  // ----- Embudo Antes / Ahora (escenas) -----
+  const btnAntes = document.getElementById('btn-antes');
+  const btnAhora = document.getElementById('btn-ahora');
+  const escAntes = document.getElementById('escena-antes');
+  const escAhora = document.getElementById('escena-ahora');
+  const tourFrame = document.getElementById('tour-frame');
+
+  function reanimar(escena) {
+    escena.querySelectorAll(':scope > *').forEach((el) => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+  }
+
+  function mostrarEscena(modo) {
+    const esAhora = modo === 'ahora';
+    escAntes.hidden = esAhora;
+    escAhora.hidden = !esAhora;
+    btnAntes.classList.toggle('activo', !esAhora);
+    btnAhora.classList.toggle('activo', esAhora);
+    // Carga diferida: el sitio solo se carga en el iframe la primera vez
+    // que se abre "Ahora" (ahorra datos y arranque en móviles)
+    if (esAhora && tourFrame.src === 'about:blank') {
+      tourFrame.src = tourFrame.dataset.src;
+    }
+    if (esAhora) ajustarDispositivo();
+    reanimar(esAhora ? escAhora : escAntes);
+  }
+
+  btnAntes.addEventListener('click', () => mostrarEscena('antes'));
+  btnAhora.addEventListener('click', () => mostrarEscena('ahora'));
+
+  // ----- Selector de dispositivo (laptop / tablet / iphone) -----
+  // El iframe renderiza al ancho interno real del dispositivo elegido y se
+  // reduce con transform:scale() — así la vista "Laptop" muestra el diseño
+  // de escritorio aunque se esté viendo desde un celular.
+  const DISPOSITIVOS = {
+    iphone: { ancho: 390, alto: 800, max: 470 },
+    tablet: { ancho: 834, alto: 1024, max: 660 },
+    laptop: { ancho: 1280, alto: 800, max: 940 },
+  };
+  const dispositivo = document.getElementById('dispositivo');
+  const pantalla = document.getElementById('pantalla');
+  const dispTabs = document.querySelectorAll('.disp-tab');
+  let dispActual = 'iphone';
+
+  function ajustarDispositivo() {
+    const cfg = DISPOSITIVOS[dispActual];
+    const disponible = Math.min(cfg.max, (escAhora.clientWidth || window.innerWidth) - 48);
+    let s = disponible / cfg.ancho;
+    const altoMax = window.innerHeight * 0.76;
+    if (cfg.alto * s > altoMax) s = altoMax / cfg.alto;
+    tourFrame.style.width = cfg.ancho + 'px';
+    tourFrame.style.height = cfg.alto + 'px';
+    tourFrame.style.transform = 'scale(' + s + ')';
+    pantalla.style.width = Math.round(cfg.ancho * s) + 'px';
+    pantalla.style.height = Math.round(cfg.alto * s) + 'px';
+  }
+
+  dispTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      dispTabs.forEach((t) => t.classList.remove('activo'));
+      tab.classList.add('activo');
+      dispActual = tab.dataset.disp;
+      dispositivo.className = 'dispositivo ' + dispActual;
+      ajustarDispositivo();
+    });
+  });
+  window.addEventListener('resize', ajustarDispositivo);
+
+  // ----- Barra flotante de CTA -----
+  const barra = document.getElementById('barra-flotante');
+  let pasoEmbudo = false, planesVisible = false, footerVisible = false;
+  function actualizarBarra() {
+    barra.classList.toggle('visible', pasoEmbudo && !planesVisible && !footerVisible);
+  }
+  new IntersectionObserver((e) => {
+    if (e[0].isIntersecting) { pasoEmbudo = true; actualizarBarra(); }
+  }, { threshold: 0.2 }).observe(document.querySelector('.embudo-seccion'));
+  new IntersectionObserver((e) => {
+    planesVisible = e[0].isIntersecting; actualizarBarra();
+  }, { threshold: 0.15 }).observe(document.getElementById('planes'));
+  new IntersectionObserver((e) => {
+    footerVisible = e[0].isIntersecting; actualizarBarra();
+  }, { threshold: 0.05 }).observe(document.querySelector('footer'));
+
+  // La barra flotante lleva al bloque de planes
+  document.querySelectorAll('a[href="#planes"]').forEach((a) => {
+    a.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      document.getElementById('planes').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // ----- Visita guiada -----
+  const tabs = document.querySelectorAll('.tour-tab');
+  const tourNota = document.getElementById('tour-nota');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('activo'));
+      tab.classList.add('activo');
+      tourFrame.src = tab.dataset.url;
+      tourNota.textContent = tab.dataset.nota;
+      tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+  });
+
+  // ----- Acordeones de hallazgos -----
+  document.querySelectorAll('.hallazgo button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.hallazgo');
+      const detalle = card.querySelector('.detalle');
+      const abierto = card.classList.toggle('abierto');
+      detalle.style.maxHeight = abierto ? detalle.scrollHeight + 'px' : '0';
+    });
+  });
+
+  // ----- Reveal al hacer scroll -----
+  const observer = new IntersectionObserver(
+    (entradas) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }),
+    { threshold: 0.15 }
+  );
+  document.querySelectorAll('.reveal, .mejora').forEach((el) => observer.observe(el));
+
+  // ----- Contadores animados -----
+  const contadores = document.querySelectorAll('.cifra .num');
+  const obsNum = new IntersectionObserver(
+    (entradas) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      obsNum.unobserve(e.target);
+      const meta = +e.target.dataset.meta;
+      const dec = +(e.target.dataset.dec || 0);
+      const dur = 1200;
+      const inicio = performance.now();
+      function tick(t) {
+        const prog = Math.min((t - inicio) / dur, 1);
+        const v = meta * (1 - Math.pow(1 - prog, 3));
+        e.target.textContent = dec
+          ? v.toLocaleString('es-MX', { minimumFractionDigits: dec, maximumFractionDigits: dec })
+          : Math.round(v).toLocaleString('es-MX');
+        if (prog < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }),
+    { threshold: 0.4 }
+  );
+  contadores.forEach((c) => obsNum.observe(c));
+</script>
+</body>
+</html>

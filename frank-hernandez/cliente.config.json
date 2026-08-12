@@ -1,0 +1,115 @@
+{
+  "slug": "frank-hernandez",
+  "nombre": "Francisco (Frank) Hernández",
+  "marca": "Frank Hernández | Riviera Maya Investment",
+  "nicho": "asesor inmobiliario / inversión patrimonial (preventa + renta, ticket alto)",
+  "ciudad": "Playa del Carmen, Quintana Roo (opera Cancún · Playa del Carmen · Tulum)",
+  "contacto": {
+    "whatsapp": "+52 984 280 3445",
+    "telefono": "984 280 3445",
+    "instagram": "https://www.instagram.com/frank.rivieramaya/",
+    "facebook": "https://www.facebook.com/frankhernandezriviera",
+    "threads": "https://www.threads.net/@frank.rivieramaya",
+    "sitios": []
+  },
+  "bio_actual": "Riviera Maya Investment · Capital inteligente con visión de estilo de vida · Riviera Maya • Playa del Carmen · Estrategia patrimonial (IG, sin URL). FB: Real Estate & Inversión | Riviera Maya 🏝️ Helping you invest in Mexico 🇲🇽 📲 984 280 3445",
+  "cifras_reales": {
+    "instagram_seguidores": 245,
+    "instagram_seguidos": 351,
+    "instagram_publicaciones": 202,
+    "facebook_me_gusta": 89,
+    "facebook_hablando_de_esto": 22,
+    "likes_post_zenit_3_2mdp": 2,
+    "competidores_analizados": 17
+  },
+  "diseno_actual": {
+    "plataforma": "Sin sitio web ni link-in-bio; solo perfiles sociales",
+    "problemas": "Cero destino digital: no aparece en Google, sin GBP detectado, WhatsApp como texto plano en bios y captions, propiedades publicadas como posts sueltos (mueren en el feed), marca alterna Frank/Francisco y ES/EN sin sistema.",
+    "idioma": "Bio FB en inglés, bio IG en español, posts mezclados (NODO 2021 EN, Zenit 2025 ES)"
+  },
+  "hallazgos": [
+    {
+      "icono": "🔍",
+      "titulo": "Invisible en Google: sus búsquedas las gana la competencia",
+      "detalle": "Buscar 'Frank Hernandez real estate Riviera Maya' devuelve a Frank Ruiz Realty Group, RE/MAX, The Agency y mycasa.mx — él no aparece en ningún resultado. Sin sitio web propio ni Google Business Profile, todo el tráfico de intención alta se lo llevan competidores con sitio.",
+      "evidencia": "Búsqueda Google 26-jul-2026: 0 resultados propios; competidor homónimo Frank Ruiz posicionado con dominio propio.",
+      "solucion": "Sitio propio con SEO local (zonas Cancún/PDC/Tulum) + Google Business Profile fichado."
+    },
+    {
+      "icono": "🔗",
+      "titulo": "Bio de Instagram sin ningún link",
+      "detalle": "Su bio completa ('Riviera Maya Investment · Capital inteligente con visión de estilo de vida · Estrategia patrimonial') no tiene una sola URL. Un inversionista interesado no tiene a dónde ir: ni catálogo, ni WhatsApp, ni agenda. El embudo muere en la bio.",
+      "evidencia": "fuentes/ig-perfil.png + meta description del perfil (sin URL).",
+      "solucion": "Página /links con su marca + link al catálogo y WhatsApp precargado."
+    },
+    {
+      "icono": "💬",
+      "titulo": "WhatsApp escrito a mano, sin mensaje precargado",
+      "detalle": "En FB y en cada caption el número aparece como texto: '📲 984 280 3445'. El prospecto debe copiarlo, guardarlo y redactar desde cero. En ticket alto cada fricción cuesta leads; el benchmark documenta 72% de conversión con flujo wa.me precargado vs 15% con formulario.",
+      "evidencia": "fuentes/fb-perfil.png + captions de Zenit y NODO con el número en texto plano.",
+      "solucion": "Botón wa.me por propiedad con mensaje listo ('Hola Frank, me interesa Zenit Cancún')."
+    },
+    {
+      "icono": "🏚️",
+      "titulo": "Sus propiedades viven atrapadas en posts que caducan",
+      "detalle": "El townhouse de Punta Estrella existe solo como post en el grupo Playarentalsmx; Zenit Cancún ($3.2 MDP, últimas 3 unidades) obtuvo 2 likes y quedó enterrado en el feed a las 48h. No hay catálogo navegable ni fichas compartibles: cada propiedad se promociona una vez y desaparece.",
+      "evidencia": "Post grupo Playarentalsmx 4298962407021170 (townhouse 2 rec/3 baños) + post DNmauqFtHDR (Zenit, 2 likes).",
+      "solucion": "Catálogo con ficha por propiedad (badge preventa/renta, precio 'desde', WhatsApp por ficha) que se comparte como link profesional."
+    },
+    {
+      "icono": "🪞",
+      "titulo": "Marca dividida: dos nombres, dos idiomas, cero sistema",
+      "detalle": "FB es 'Frank Hernandez' (@frankhernandezriviera, bio en inglés); IG es 'frank.rivieramaya' (bio en español); en captions firma a veces 'Francisco Hernández'. El posicionamiento 'Helping you invest in Mexico' apunta a extranjeros pero sin un solo activo en inglés navegable.",
+      "evidencia": "Capturas de ambos perfiles + captions con firmas distintas.",
+      "solucion": "Identidad unificada (nombre, handle, lema bilingüe) con el sitio como casa central."
+    },
+    {
+      "icono": "🎯",
+      "titulo": "245 seguidores vendiendo propiedades de $3.2 MDP: cada lead vale oro y el embudo los tira",
+      "detalle": "Con audiencia pequeña y ticket altísimo, su negocio no es de alcance sino de conversión: los 2-5 interesados reales que generan sus posts necesitan un destino profesional que hoy no existe.",
+      "evidencia": "245 seguidores IG / 89 likes FB vs propiedades de $3.2 MDP (Zenit) y $129k USD (NODO).",
+      "solucion": "Embudo de conversión completo: ficha → WhatsApp precargado → seguimiento."
+    }
+  ],
+  "benchmark": {
+    "fuente": "vivemar/docs/investigacion-diseno.md (14 sitios: Sotheby's, E&V, The Agency, SIMCA, Corasol, Jaguar Tulum...) + refresco Zenit (Kingdom Realty, Plalla, Factor Inmobiliario)",
+    "patrones_ganadores": [
+      "WhatsApp precargado como CTA primario, botón dentro de cada tarjeta de propiedad (72% conversión vs 15% formulario)",
+      "Precio 'desde $X' visible + escasez numérica verificable (SIMCA: 'último PH disponible')",
+      "La propiedad como instrumento financiero: ROI explícito, planes de pago, educación fideicomiso — encaja exacto con su lema 'capital inteligente'"
+    ],
+    "huecos_diferenciacion": [
+      "Ningún local muestra ROI/yield en tarjeta ni calculadora de plusvalía — Frank ya habla de 'plusvalía +30%' en captions, solo hay que darle casa",
+      "Asesor con rostro como CTA (no formulario genérico): en marca personal, Frank ES el diferenciador vs agencias sin cara"
+    ]
+  },
+  "paleta_sugerida": {
+    "primario": "#14263A",
+    "profundo": "#0D1B2B",
+    "crema": "#F4EFE6",
+    "acento_cta": "#C1873F",
+    "nota": "Azul noche patrimonial + crema + latón atardecer. Derivada de su estética real (portada FB de atardecer en Playa Mamitas, retrato en camisa oscura) + paleta 'quiet luxury' validada en el benchmark. Distinta del teal de Vive Mar."
+  },
+  "productos_estrella": [
+    "Zenit Cancún — depto en preventa frente a Parque Cancún, desde $3.2 MDP, plusvalía proyectada +30%, últimas 3 unidades con 5% dcto (post 20-ago-2025)",
+    "Townhouse Punta Estrella, Playa del Carmen — 2 recámaras / 3 baños (post en grupo Playarentalsmx, vertical rentas)",
+    "NODO Tulum, La Veleta — deptos 1-2 rec con alberca privada, desde $129k USD (post 2021; verificar vigencia con Frank)"
+  ],
+  "gancho_personalizacion": {
+    "principal": "Su post de Zenit Cancún (20 ago 2025): '🚨 ÚLTIMAS 3 UNIDADES 🚨... desde $3.2 MDP' — un producto de 3.2 millones promocionado con toda la intención quedó en 2 likes y enterrado en el feed. El regalo: una ficha profesional donde ese esfuerzo viva para siempre.",
+    "secundario": "Townhouse Punta Estrella en el grupo Playarentalsmx: la propiedad existe solo dentro del grupo; fuera de ahí no es compartible.",
+    "grupos_comunes": "Playarentalsmx (PENDIENTE confirmar con Roger si es grupo en común)"
+  },
+  "tour": [],
+  "deploy": {
+    "url_sitio": "https://darkviolet-dolphin-929053.hostingersite.com/",
+    "url_analisis": "https://darkviolet-dolphin-929053.hostingersite.com/analisis/",
+    "url_links": "https://darkviolet-dolphin-929053.hostingersite.com/links/",
+    "url_en": "https://darkviolet-dolphin-929053.hostingersite.com/en/",
+    "fecha": "2026-07-26",
+    "hosting": "softvibes-hosting (order 1008508005)",
+    "cms_usuario": "roger",
+    "cms_clave": "frankrm-47441c"
+  },
+  "estado_pipeline": "outreach_listo"
+}

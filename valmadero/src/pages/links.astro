@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, waLink } from '../config/site';
+---
+
+<BaseLayout titulo={`Enlaces | ${SITE.nombre}`} descripcion={`Enlaces principales de ${SITE.nombre}.`} desnudo>
+  <section class="links"><div class="links__tarjeta"><span class="marca__simbolo">V</span><h1>{SITE.nombre}</h1><p>{SITE.lema}</p><div class="links__lista"><a class="boton boton--acento" href={waLink()} target="_blank" rel="noopener">Cuéntame qué buscas</a><a class="boton" href={SITE.redes.instagram} target="_blank" rel="noopener">Instagram</a><a class="boton" href="/propiedades">Referencias inmobiliarias</a><a class="boton" href="/">Sitio principal</a></div><small>Playa del Carmen · Tulum · Riviera Maya</small></div></section>
+</BaseLayout>
