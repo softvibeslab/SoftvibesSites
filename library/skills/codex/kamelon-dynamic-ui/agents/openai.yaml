@@ -1,0 +1,7 @@
+interface:
+  display_name: "Kamelon Dynamic UI"
+  short_description: "Build local Kamelon layout.json UIs."
+  default_prompt: "Use $kamelon-dynamic-ui to migrate an Android Kamelon feature UI into local layout.json bindings, actions, dialogs, and Gradle validation."
+
+policy:
+  allow_implicit_invocation: true

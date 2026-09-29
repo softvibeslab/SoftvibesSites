@@ -1,0 +1,8 @@
+.agents/.softvibes-ecosystem/
+.agents/skills/
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+.DS_Store

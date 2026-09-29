@@ -1,0 +1,4 @@
+interface:
+  display_name: "Piloto de gigs — Softvibes"
+  short_description: "Oportunidades, propuestas y seguimiento freelance"
+  default_prompt: "Usa $gig-pilot para iniciar el piloto de captación de Softvibes con un digest de hasta cinco oportunidades reales."

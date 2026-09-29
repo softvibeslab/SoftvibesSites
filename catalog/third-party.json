@@ -1,0 +1,37 @@
+[
+  {
+    "source": "alirezarezvani/claude-skills",
+    "license_path": "licenses/alirezarezvani/claude-skills/LICENSE",
+    "url": "https://raw.githubusercontent.com/alirezarezvani/claude-skills/main/LICENSE"
+  },
+  {
+    "source": "Arize-ai/arize-skills",
+    "license_path": "licenses/Arize-ai/arize-skills/LICENSE",
+    "url": "https://raw.githubusercontent.com/Arize-ai/arize-skills/main/LICENSE"
+  },
+  {
+    "source": "chatwoot/cli",
+    "license_path": "licenses/chatwoot/cli/LICENSE",
+    "url": "https://raw.githubusercontent.com/chatwoot/cli/main/LICENSE"
+  },
+  {
+    "source": "himself65/finance-skills",
+    "license_path": "licenses/himself65/finance-skills/LICENSE",
+    "url": "https://raw.githubusercontent.com/himself65/finance-skills/main/LICENSE"
+  },
+  {
+    "source": "spookyuser/datastudio-cli",
+    "license_path": null,
+    "status": "not-found"
+  },
+  {
+    "source": "stablyai/orca",
+    "license_path": "licenses/stablyai/orca/LICENSE",
+    "url": "https://raw.githubusercontent.com/stablyai/orca/main/LICENSE"
+  },
+  {
+    "source": "vercel-labs/skills",
+    "license_path": "licenses/vercel-labs/skills/LICENSE",
+    "url": "https://raw.githubusercontent.com/vercel-labs/skills/main/LICENSE"
+  }
+]

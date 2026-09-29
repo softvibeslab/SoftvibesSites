@@ -1,0 +1,4 @@
+interface:
+  display_name: "BeGlobal Lesson Ingestor"
+  short_description: "Ingesta privada y trazable de lecciones"
+  default_prompt: "Usa $beglobal-lesson-ingestor para procesar una URL autorizada de curso o lección BeGlobal Pro."

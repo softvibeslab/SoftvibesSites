@@ -1,0 +1,5 @@
+interface:
+  display_name: "Behance Design Inspiration"
+  short_description: "Busca, analiza y conserva referencias de Behance"
+  brand_color: "#8D63FF"
+  default_prompt: "Usa $behance-design-inspiration para investigar referencias visuales de mi próximo producto y convertirlas en decisiones originales."

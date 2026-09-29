@@ -1,0 +1,47 @@
+{
+  "sanitized_files": [
+    "library/skills/codex/beglobal-ingestion-guide/SKILL.md",
+    "library/skills/codex/beglobal-ingestion-guide/references/plan-n8n-guiado.md",
+    "library/skills/codex/beglobal-ingestion-guide/references/webhook-contract.md",
+    "library/skills/codex/beglobal-lesson-ingestor/SKILL.md",
+    "library/skills/codex/beglobal-lesson-ingestor/scripts/remote_runner.py",
+    "library/skills/codex/beglobal-lesson-ingestor/scripts/test_remote_runner.py",
+    "library/skills/codex/beglobal-lesson-ingestor/scripts/test_trigger_bridge.py",
+    "library/skills/codex/beglobal-lesson-ingestor/scripts/trigger_server.py",
+    "library/skills/codex/beglobal-lesson-ingestor/scripts/validate_item_url.py",
+    "library/skills/codex/gig-pilot/SKILL.md",
+    "library/skills/codex/gig-pilot/references/operations.md",
+    "library/skills/codex/landing-inventory-first/SKILL.md",
+    "library/skills/codex/srs-iso29148-reference/references/farmbot-srs-outline.md"
+  ],
+  "excluded_files": [
+    "library/skills/agents/_shared/templates/project-skeleton/.env",
+    "library/skills/agents/graphify/.graphify_version",
+    "library/skills/codex/.system/.codex-system-skills.marker",
+    "library/skills/codex/_shared/.nirvana-skill-copy",
+    "library/skills/codex/_shared/templates/project-skeleton/.env",
+    "library/skills/codex/businesses/.nirvana-skill-copy",
+    "library/skills/codex/harness/.nirvana-skill-copy",
+    "library/skills/codex/nirvana-os/.nirvana-skill-copy",
+    "library/skills/codex/squads/.nirvana-skill-copy"
+  ],
+  "sources": [
+    "agents",
+    "codex",
+    "openai-reference",
+    "design"
+  ],
+  "skills": 574,
+  "unique_names": 548,
+  "web_profile_skills": 40,
+  "excluded_categories": [
+    "developed-client-sites",
+    "client-case-playbooks",
+    "client-specific-tools",
+    "account-configurations",
+    "git-history",
+    "installed-dependencies",
+    "environment-files",
+    "caches"
+  ]
+}

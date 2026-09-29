@@ -1,0 +1,4 @@
+interface:
+  display_name: "Landings: inventario primero"
+  short_description: "Revisa nichos y reutiliza bases o investiga Envato"
+  default_prompt: "Usa $landing-inventory-first antes de crear esta landing: revisa el inventario, compara cada nicho y reutiliza una base existente o investiga plantillas en Envato."
