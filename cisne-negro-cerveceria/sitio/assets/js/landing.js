@@ -46,7 +46,7 @@
     if (beer.img) {
       var fig = el('figure', 'tap__fig');
       var img = el('img', 'tap__img');
-      img.src = '/assets/img/cervezas/' + beer.img;
+      img.src = '/assets/img/cervezas/' + beer.img + '?v=20261006b';
       img.alt = (beer.etiqueta ? 'Diseño de ' + beer.nombre + ' inspirado en su etiqueta' : 'Ilustración de ' + beer.nombre) + ' (' + beer.estilo + '), servida en el vaso de Cisne Negro';
       img.width = 900; img.height = 900; img.loading = 'lazy'; img.decoding = 'async';
       fig.appendChild(img);
@@ -57,7 +57,7 @@
     top.appendChild(el('span', 'tap__num', String(i + 1).padStart(2, '0')));
     if (beer.etiqueta) {
       var etq = el('a', 'tap__etq', 'Ver etiqueta');
-      etq.href = '/assets/img/cervezas/' + beer.etiqueta;
+      etq.href = '/assets/img/cervezas/' + beer.etiqueta + '?v=20261006b';
       etq.target = '_blank'; etq.rel = 'noopener';
       etq.setAttribute('aria-label', 'Ver el arte oficial de la etiqueta de ' + beer.nombre + ' (se abre en otra pestaña)');
       top.appendChild(etq);
