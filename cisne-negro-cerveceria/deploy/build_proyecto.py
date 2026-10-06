@@ -21,6 +21,8 @@ DOCS = [  # (archivo fuente, slug, título, descripción)
      "Las 6 fases, su estado, la arquitectura elegida y los riesgos."),
     ("04-gamificacion.md", "gamificacion", "Plan de gamificación del Pasaporte",
      "Plumas, combo «Cuéntalo» (publicación + calificación = 2 visitas), rachas, referidos, niveles e insignias."),
+    ("05-plan-pedido-app-wifi.md", "plan-pedido-app-wifi", "Plan: Mi pedido, app instalable y Wi-Fi",
+     "Agregar al pedido y mostrar al mesero, Pasaporte instalable en cualquier dispositivo y Wi-Fi administrable."),
     ("BACKLOG.md", "backlog", "Backlog del cliente",
      "Lo que necesitamos de Cisne Negro: exportación de Meta, accesos y Threads."),
     ("scraping/README.md", "inventario", "Inventario de contenido (scraping)",
