@@ -13,6 +13,7 @@ Variables de entorno:
   CLUB_PORT    puerto local                  (default 8790)
   CLUB_REVIEW_URL  enlace de Google al que se invita después del NPS
   CLUB_COOKIE_SECURE  "0" para desarrollo sin HTTPS (default "1")
+  CLUB_COOKIE_PATH    ruta de la cookie de sesión (default "/api"; "/v2/api" en el entorno /v2)
 """
 import csv
 import hashlib
@@ -38,6 +39,7 @@ REVIEW_URL = os.environ.get(
     "https://www.google.com/maps/place/Cisne+Negro/data=!4m2!3m1!1s0x0:0x2d58b94ff33d7e6b")
 COOKIE_SECURE = os.environ.get("CLUB_COOKIE_SECURE", "1") != "0"
 COOKIE = "cn_sesion"
+COOKIE_PATH = os.environ.get("CLUB_COOKIE_PATH", "/api")  # /v2/api en el entorno /v2
 TZ = timezone(timedelta(hours=-6))  # America/Mexico_City (sin horario de verano desde 2022)
 
 # Recompensas por número de visita. El ciclo se repite cada 10 visitas.
@@ -96,6 +98,11 @@ create table if not exists clicks_resena (
   socio_id integer references socios(id),
   visita_id integer references visitas(id),
   creado_at text not null
+);
+create table if not exists ajustes (
+  clave text primary key,
+  valor text not null,
+  actualizado_at text not null
 );
 create index if not exists visitas_socio_idx on visitas (socio_id, dia);
 create index if not exists nps_creado_idx on nps (creado_at);
@@ -774,11 +781,77 @@ def admin_nps_csv(h, q):
     return 200, buf.getvalue()
 
 
+
+# ── Ajustes del negocio (Wi-Fi) ────────────────────────────────────────────
+
+WIFI_EJEMPLO = {"ssid": "CisneNegro-Invitados", "password": "CuentaloEnElCisne", "seguridad": "WPA",
+                "visibilidad": "publica", "ejemplo": True, "actualizado_at": None}
+WIFI_SEGURIDAD = ("WPA", "WEP", "nopass")
+WIFI_VISIBILIDAD = ("publica", "socios", "oculta")
+
+
+def leer_wifi(con):
+    r = con.execute("select valor, actualizado_at from ajustes where clave = 'wifi'").fetchone()
+    if not r:
+        return dict(WIFI_EJEMPLO)
+    w = {**WIFI_EJEMPLO, **json.loads(r["valor"])}
+    w["actualizado_at"] = r["actualizado_at"]
+    return w
+
+
+def api_config(h, q):
+    """Configuración pública del menú. El Wi-Fi respeta su visibilidad."""
+    with db() as con:
+        w = leer_wifi(con)
+    wifi, requiere = None, False
+    if w["visibilidad"] == "publica" or (w["visibilidad"] == "socios" and h.socio_id()):
+        wifi = {k: w[k] for k in ("ssid", "password", "seguridad")}
+    elif w["visibilidad"] == "socios":
+        requiere = True
+    return 200, {"wifi": wifi, "wifi_requiere_pasaporte": requiere}
+
+
+def admin_ajustes(h, q):
+    with db() as con:
+        return 200, {"wifi": leer_wifi(con)}
+
+
+def admin_ajustes_guardar(h, body):
+    w = body.get("wifi")
+    if not isinstance(w, dict):
+        return 400, {"error": "Faltan los datos del Wi-Fi."}
+    ssid = str(w.get("ssid") or "").strip()
+    seguridad = w.get("seguridad") or "WPA"
+    visibilidad = w.get("visibilidad") or "publica"
+    password = str(w.get("password") or "")
+    if not 1 <= len(ssid) <= 32:
+        return 400, {"error": "El nombre de la red debe tener de 1 a 32 caracteres."}
+    if seguridad not in WIFI_SEGURIDAD:
+        return 400, {"error": "Tipo de seguridad inválido."}
+    if visibilidad not in WIFI_VISIBILIDAD:
+        return 400, {"error": "Visibilidad inválida."}
+    if seguridad == "WPA" and not 8 <= len(password) <= 63:
+        return 400, {"error": "La contraseña WPA debe tener de 8 a 63 caracteres."}
+    if seguridad == "WEP" and len(password) not in (5, 10, 13, 26):
+        return 400, {"error": "La contraseña WEP debe tener 5, 13 (texto) o 10, 26 (hex) caracteres."}
+    if seguridad == "nopass":
+        password = ""
+    if any(ord(c) < 32 for c in ssid + password):
+        return 400, {"error": "Hay caracteres no válidos."}
+    valor = json.dumps({"ssid": ssid, "password": password, "seguridad": seguridad,
+                        "visibilidad": visibilidad, "ejemplo": False}, ensure_ascii=False)
+    with db() as con:
+        con.execute("insert into ajustes (clave, valor, actualizado_at) values ('wifi', ?, ?) "
+                    "on conflict(clave) do update set valor = excluded.valor, actualizado_at = excluded.actualizado_at",
+                    (valor, iso()))
+        return 200, {"ok": True, "wifi": leer_wifi(con)}
+
 # ── Servidor ────────────────────────────────────────────────────────────────
 
 RUTAS = [  # (método, patrón, handler, tipo) — tipo: publica | socio | admin
     ("GET", r"/api/salud", lambda h, q: (200, {"ok": True}), "publica"),
     ("GET", r"/api/ranking", api_ranking, "publica"),
+    ("GET", r"/api/config", api_config, "publica"),
     ("POST", r"/api/registro", api_registro, "publica"),
     ("POST", r"/api/login", api_login, "publica"),
     ("GET", r"/api/yo", api_yo, "socio"),
@@ -805,6 +878,8 @@ RUTAS = [  # (método, patrón, handler, tipo) — tipo: publica | socio | admin
     ("POST", r"/api/admin/socios/(\d+)/visitas", admin_socio_visita, "admin"),
     ("DELETE", r"/api/admin/visitas/(\d+)", admin_visita_borrar, "admin"),
     ("POST", r"/api/admin/canjear", admin_canjear, "admin"),
+    ("GET", r"/api/admin/ajustes", admin_ajustes, "admin"),
+    ("PUT", r"/api/admin/ajustes", admin_ajustes_guardar, "admin"),
 ]
 
 
@@ -849,7 +924,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.cookie_sesion is not None:
             vida = SESION_DIAS * 86400 if self.cookie_sesion else 0
             seguro = "; Secure" if COOKIE_SECURE else ""
-            self.send_header("Set-Cookie", f"{COOKIE}={self.cookie_sesion}; Path=/api; Max-Age={vida}; "
+            self.send_header("Set-Cookie", f"{COOKIE}={self.cookie_sesion}; Path={COOKIE_PATH}; Max-Age={vida}; "
                                            f"HttpOnly; SameSite=Lax{seguro}")
         self.end_headers()
         self.wfile.write(payload)

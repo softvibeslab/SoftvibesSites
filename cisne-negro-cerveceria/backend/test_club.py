@@ -241,6 +241,28 @@ def main():
         s, r = admin.call("GET", "/api/admin/socios/4")
         check("notas" in r["nps"][0] and r["nps"][0]["origen"] == "panel", "ficha trae notas y origen del NPS")
 
+        # ── Wi-Fi (ajustes) ──
+        s, r = otro.call("GET", "/api/config")
+        check(s == 200 and r["wifi"]["ssid"] == "CisneNegro-Invitados", "Wi-Fi de ejemplo visible por defecto")
+        s, r = admin.call("GET", "/api/admin/ajustes")
+        check(s == 200 and r["wifi"]["ejemplo"] is True and r["wifi"]["visibilidad"] == "publica", "ajustes de ejemplo en el panel")
+        for malo in ({"ssid": "", "password": "12345678"}, {"ssid": "Red", "password": "corta"},
+                     {"ssid": "Red", "password": "12345678", "seguridad": "XX"}, {"ssid": "Red", "password": "12345678", "visibilidad": "x"},
+                     {"ssid": "Red", "password": "abc", "seguridad": "WEP"}):
+            s, _ = admin.call("PUT", "/api/admin/ajustes", {"wifi": malo})
+            check(s == 400, f"rechaza Wi-Fi inválido {malo}")
+        s, r = admin.call("PUT", "/api/admin/ajustes", {"wifi": {"ssid": "Cisne Clientes", "password": "Barril2026!", "seguridad": "WPA", "visibilidad": "socios"}})
+        check(s == 200 and r["wifi"]["ejemplo"] is False, "guarda Wi-Fi real")
+        s, r = Cliente().call("GET", "/api/config")
+        check(r["wifi"] is None and r["wifi_requiere_pasaporte"] is True, "solo socios: un invitado no ve la contraseña")
+        s, r = nav.call("GET", "/api/config")
+        check(r["wifi"]["password"] == "Barril2026!", "solo socios: el socio con sesión sí la ve")
+        admin.call("PUT", "/api/admin/ajustes", {"wifi": {"ssid": "Cisne Clientes", "password": "x", "seguridad": "nopass", "visibilidad": "oculta"}})
+        s, r = nav.call("GET", "/api/config")
+        check(r["wifi"] is None and not r["wifi_requiere_pasaporte"], "Wi-Fi oculto no se expone")
+        s, r = admin.call("GET", "/api/admin/ajustes")
+        check(r["wifi"]["password"] == "" and r["wifi"]["seguridad"] == "nopass", "red abierta guarda contraseña vacía")
+
         # ── Logout, borrado y vencimiento ──
         s, _ = otro.call("POST", "/api/logout", {})
         check(s == 200 and otro.call("GET", "/api/yo")[0] == 401, "logout borra la sesión")

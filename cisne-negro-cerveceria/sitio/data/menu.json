@@ -2,7 +2,8 @@
   "_meta": {
     "fuente": "cisnenegro.mx/menu transcrito el 2026-10-05",
     "notas": "Las 'notas' de barril describen el perfil típico del estilo, salvo ¿A poco sí pa'? (notas oficiales de la marca, IG 2025-04-30). 'historia' queda vacía hasta que el cliente cuente el origen de cada nombre. Maridajes: 'marida_oficial' = sugerencia publicada por Cisne Negro (IG 2026-01-20); el resto, propuesta pendiente de validar. Imágenes: ilustraciones en assets/img/cervezas (herramientas/ilustrar-cervezas.cjs) y arte oficial de etiqueta en assets/img/cervezas/etiquetas. Pendiente: Henry IX aparece como Munich Helles en IG (dic 2025) y como IPA en el menú; ¿A poco sí pa'? 6.8% ABV en IG y 6.9% en el menú.",
-    "moneda": "MXN"
+    "moneda": "MXN",
+    "pedido": "Cada producto tiene 'id'. 'variantes' (id, nombre, precio) sustituyen precios escritos en el texto. Los barriles usan 'precios' por medida. 'disponible': false oculta el botón Agregar."
   },
   "negocio": {
     "nombre": "Cervecería Cisne Negro",
@@ -220,7 +221,8 @@
       "estilo": "West Coast Pilsner",
       "abv": 5.0,
       "precio": 110,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-93-beer-hard-to-explain"
     },
     {
       "nombre": "Negra",
@@ -229,7 +231,8 @@
       "estilo": "American Porter",
       "abv": 5.5,
       "precio": 110,
-      "perfil": "oscura"
+      "perfil": "oscura",
+      "id": "lata-loba-negra"
     },
     {
       "nombre": "Caballo Blanco",
@@ -238,7 +241,8 @@
       "estilo": "Pale Ale",
       "abv": 5.2,
       "precio": 130,
-      "perfil": "lupulada"
+      "perfil": "lupulada",
+      "id": "lata-hercules-caballo-blanco"
     },
     {
       "nombre": "Dog N' Beer",
@@ -247,7 +251,8 @@
       "estilo": "American Pale Ale",
       "abv": 5.2,
       "precio": 110,
-      "perfil": "lupulada"
+      "perfil": "lupulada",
+      "id": "lata-93-beer-dog-n-beer"
     },
     {
       "nombre": "Different Breakfast",
@@ -256,7 +261,8 @@
       "estilo": "Mocha Stout",
       "abv": 7.2,
       "precio": 120,
-      "perfil": "oscura"
+      "perfil": "oscura",
+      "id": "lata-93-beer-different-breakfast"
     },
     {
       "nombre": "Blue Moon",
@@ -265,7 +271,8 @@
       "estilo": "Belgian Style Wheat Ale",
       "abv": 5.4,
       "precio": 120,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-blue-moon-blue-moon"
     },
     {
       "nombre": "Hard Seltzer Toronja",
@@ -274,7 +281,8 @@
       "estilo": "Hard Seltzer",
       "abv": 4.2,
       "precio": 80,
-      "perfil": "acida"
+      "perfil": "acida",
+      "id": "lata-tal-cual-hard-seltzer-toronja"
     },
     {
       "nombre": "Hard Seltzer Jamaica",
@@ -283,7 +291,8 @@
       "estilo": "Hard Seltzer",
       "abv": 4.2,
       "precio": 80,
-      "perfil": "acida"
+      "perfil": "acida",
+      "id": "lata-tal-cual-hard-seltzer-jamaica"
     },
     {
       "nombre": "Asimetría",
@@ -292,7 +301,8 @@
       "estilo": "Peanut Butter Stout",
       "abv": 5.5,
       "precio": 130,
-      "perfil": "oscura"
+      "perfil": "oscura",
+      "id": "lata-principia-asimetria"
     },
     {
       "nombre": "Oktoberfest Bier",
@@ -301,7 +311,8 @@
       "estilo": "Festbier",
       "abv": 7.2,
       "precio": 170,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-paulaner-oktoberfest-bier"
     },
     {
       "nombre": "Hombre Pájaro",
@@ -310,7 +321,8 @@
       "estilo": "Rye Lager",
       "abv": 4.5,
       "precio": 130,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-hercules-hombre-pajaro"
     },
     {
       "nombre": "Buen Chofer",
@@ -319,7 +331,8 @@
       "estilo": "Witbier",
       "abv": 5.0,
       "precio": 120,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-hercules-buen-chofer"
     },
     {
       "nombre": "Hooligan",
@@ -328,7 +341,8 @@
       "estilo": "Best Bitter",
       "abv": 3.8,
       "precio": 120,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-hercules-hooligan"
     },
     {
       "nombre": "Ráfaga",
@@ -337,7 +351,8 @@
       "estilo": "Pale Ale",
       "abv": 5.0,
       "precio": 130,
-      "perfil": "lupulada"
+      "perfil": "lupulada",
+      "id": "lata-hercules-rafaga"
     },
     {
       "nombre": "Faro",
@@ -346,7 +361,8 @@
       "estilo": "Helles Original",
       "abv": 4.8,
       "precio": 120,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-hercules-faro"
     },
     {
       "nombre": "Macanuda",
@@ -355,7 +371,8 @@
       "estilo": "Brown Ale",
       "abv": 5.2,
       "precio": 120,
-      "perfil": "oscura"
+      "perfil": "oscura",
+      "id": "lata-hercules-macanuda"
     },
     {
       "nombre": "Juicebag",
@@ -364,7 +381,8 @@
       "estilo": "Hazy Pale Ale",
       "abv": 5.0,
       "precio": 160,
-      "perfil": "lupulada"
+      "perfil": "lupulada",
+      "id": "lata-madueno-juicebag"
     },
     {
       "nombre": "Gol de Oro",
@@ -373,7 +391,8 @@
       "estilo": "Blonde Ale",
       "abv": 4.7,
       "precio": 130,
-      "perfil": "ligera"
+      "perfil": "ligera",
+      "id": "lata-wendlandt-gol-de-oro"
     }
   ],
   "comida": [
@@ -425,9 +444,21 @@
         {
           "id": "chips-camote",
           "nombre": "Chips de Camote",
-          "descripcion": "Con aderezo de ajo rostizado. 55 g $75 · 110 g $135.",
+          "descripcion": "Con aderezo de ajo rostizado.",
           "precio": 75,
-          "img": "chips_de_camote.jpg"
+          "img": "chips_de_camote.jpg",
+          "variantes": [
+            {
+              "id": "55g",
+              "nombre": "55 g",
+              "precio": 75
+            },
+            {
+              "id": "110g",
+              "nombre": "110 g",
+              "precio": 135
+            }
+          ]
         }
       ]
     },
@@ -547,27 +578,44 @@
     {
       "nombre": "Refresco",
       "detalle": "Lata 355 ml",
-      "precio": 35
+      "precio": 35,
+      "id": "bebida-refresco"
     },
     {
       "nombre": "Agua mineral",
-      "detalle": "600 ml · Rusa +$10",
-      "precio": 35
+      "detalle": "600 ml",
+      "precio": 35,
+      "id": "bebida-agua-mineral",
+      "variantes": [
+        {
+          "id": "natural",
+          "nombre": "Natural",
+          "precio": 35
+        },
+        {
+          "id": "rusa",
+          "nombre": "Preparada (rusa)",
+          "precio": 45
+        }
+      ]
     },
     {
       "nombre": "Naranjada",
       "detalle": "330 ml natural o mineral",
-      "precio": 45
+      "precio": 45,
+      "id": "bebida-naranjada"
     },
     {
       "nombre": "Limonada",
       "detalle": "330 ml natural o mineral",
-      "precio": 45
+      "precio": 45,
+      "id": "bebida-limonada"
     },
     {
       "nombre": "Café",
       "detalle": "Prensa francesa 350 ml",
-      "precio": 50
+      "precio": 50,
+      "id": "bebida-cafe"
     }
   ]
 }
