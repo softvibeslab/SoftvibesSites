@@ -66,6 +66,10 @@ function vaso(b, r) {
   let s = '';
   // sombra en la mesa
   s += `<ellipse cx="${(B.l + B.r) / 2}" cy="${B.y + 14}" rx="170" ry="18" fill="${TINTA}" opacity=".10"/>`;
+  if (b.vidrio) {
+    const vid = [[T.l, T.y], [B.l, B.y], [B.r, B.y], [T.r, T.y]];
+    s += `<path d="${mano(vid, r, 1, true)}" fill="${b.vidrio}"/>`;
+  }
   // cuerpo de la cerveza
   const cuerpo = [[xIzq(espumaY) + ins, espumaY], [xDer(espumaY) - ins, espumaY], [xDer(fondoY) - ins, fondoY], [xIzq(fondoY) + ins, fondoY]];
   s += `<path d="${mano(cuerpo, r, 1.4, true)}" fill="url(#cerveza)"/>`;
@@ -277,13 +281,135 @@ function svg(b) {
 </svg>`;
 }
 
+
+// ── Diseños especializados con base en la etiqueta oficial ──────────────────
+const ETQ_DIR = path.join(OUT, 'etiquetas');
+const dataUri = (f, mime = 'image/jpeg') => `data:${mime};base64,${fs.readFileSync(f).toString('base64')}`;
+
+/** Calcomanía con la etiqueta real (recorte opcional), margen de papel y borde de tinta. */
+function calcomania(uri, img, crop, x, y, w, rot, papel = '#FBF6E6') {
+  const [cx, cy, cw, ch] = crop || [0, 0, img[0], img[1]];
+  const h = w * ch / cw, m = 14;
+  return `<g transform="translate(${x},${y}) rotate(${rot})">
+    <rect x="${-w / 2 - m + 10}" y="${-h / 2 - m + 14}" width="${w + m * 2}" height="${h + m * 2}" rx="10" fill="#000" opacity=".28"/>
+    <rect x="${-w / 2 - m}" y="${-h / 2 - m}" width="${w + m * 2}" height="${h + m * 2}" rx="10" fill="${papel}" stroke="${TINTA}" stroke-width="6"/>
+    <svg x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" viewBox="${cx} ${cy} ${cw} ${ch}" preserveAspectRatio="xMidYMid slice">
+      <image href="${uri}" width="${img[0]}" height="${img[1]}"/></svg>
+    <rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="none" stroke="${TINTA}" stroke-width="3"/>
+  </g>`;
+}
+const HALO = (c) => `<filter id="halo" x="-15%" y="-15%" width="130%" height="130%"><feMorphology in="SourceAlpha" operator="dilate" radius="6" result="d"/><feFlood flood-color="${c}"/><feComposite in2="d" operator="in" result="h"/><feMerge><feMergeNode in="h"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+const vasoEn = (b, r, tx, ty, esc, filtro = '') => `<g transform="translate(${tx},${ty}) scale(${esc})" ${filtro}>${vaso(b, r)}</g>`;
+function lluvia(r, n, x0, y0, x1, y1, colores, rmin, rmax, op = 1) {
+  let s = '';
+  for (let i = 0; i < n; i++) s += `<circle cx="${(x0 + r() * (x1 - x0)).toFixed(1)}" cy="${(y0 + r() * (y1 - y0)).toFixed(1)}" r="${(rmin + r() * (rmax - rmin)).toFixed(1)}" fill="${colores[i % colores.length]}" opacity="${op}"/>`;
+  return s;
+}
+function cola(r, x, y, dir, color) {
+  // cola de diablo rosa como en la etiqueta de ¡Alarma!
+  const d = dir;
+  const c = `M${x},${y} C${x + 30 * d},${y + 8} ${x + 34 * d},${y + 56} ${x + 46 * d},${y + 44}`;
+  let s = `<path d="${c}" fill="none" stroke="${TINTA}" stroke-width="20" stroke-linecap="round"/>`;
+  s += `<path d="${c}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round"/>`;
+  const px = x + 46 * d, py = y + 44;
+  s += relleno(mano([[px - 8 * d, py - 26], [px + 40 * d, py - 4], [px - 4 * d, py + 26], [px + 8 * d, py]], r, .5, true), color, 5);
+  return s;
+}
+function llama(r, x, base, alto, ancho, c1, c2) {
+  const pts = [[x - ancho / 2, base], [x - ancho * .45, base - alto * .45], [x - ancho * .15, base - alto * .7], [x - ancho * .05, base - alto], [x + ancho * .2, base - alto * .62], [x + ancho * .42, base - alto * .5], [x + ancho / 2, base]];
+  const ext = relleno(mano(pts, r, 2, true), c1, 5);
+  const int = pts.map(([px, py]) => [x + (px - x) * .55, base - (base - py) * .62]);
+  return ext + `<path d="${mano(int, r, 1.4, true)}" fill="${c2}"/>`;
+}
+
+const DISENOS = {
+  alarma: (b, r) => {
+    const etq = dataUri(path.join(ETQ_DIR, 'alarma.jpg'));
+    const pluma = dataUri(path.join(OUT, '..', 'marca', 'pluma.png'), 'image/png');
+    const ROSA = '#E8505B', MOSTAZA = '#CEC14E', CREMA2 = '#FBFBE3';
+    return `<rect width="1000" height="1000" fill="${CREMA2}"/>
+      <rect x="60" y="250" width="880" height="630" rx="30" fill="${MOSTAZA}"/>
+      ${lluvia(r, 1400, 70, 260, 930, 870, ['#A89A2E', '#E3D86E'], .8, 2.2, .55)}
+      <rect x="60" y="250" width="880" height="630" rx="30" fill="none" stroke="${TINTA}" stroke-width="12"/>
+      ${cola(r, 66, 760, -1, ROSA)}${cola(r, 934, 330, 1, ROSA)}
+      ${vasoEn(b, r, 6, 66, .92)}
+      ${calcomania(etq, [809, 1000], null, 735, 545, 290, 7)}
+      <g transform="rotate(-3 440 150)">
+        <rect x="120" y="70" width="640" height="160" rx="44" fill="${ROSA}" stroke="${TINTA}" stroke-width="12"/>
+        <text x="440" y="182" text-anchor="middle" font-family="'Rubik Wet Paint', 'Rubik Dirt', Impact, sans-serif" font-size="104" fill="${TINTA}">¡ALARMA!</text>
+      </g>
+      <image href="${pluma}" x="740" y="34" width="110" height="222" transform="rotate(24 795 145)"/>
+      <polygon points="262,920 768,920 748,956 242,956" fill="${ROSA}"/>
+      <text x="500" y="952" text-anchor="middle" font-family="'Big Shoulders Display', Impact, sans-serif" font-weight="900" font-size="66" fill="${TINTA}">RED IPA · 7.0%</text>`;
+  },
+  'a-poco-si-pa': (b, r) => {
+    const etq = dataUri(path.join(ETQ_DIR, 'a-poco-si-pa.jpg'));
+    let s = `<defs>
+        <radialGradient id="rojo" cx=".82" cy=".85" r=".75"><stop offset="0" stop-color="#8A1F1F"/><stop offset="1" stop-color="#8A1F1F" stop-opacity="0"/></radialGradient>
+        <radialGradient id="morado" cx=".12" cy=".18" r=".6"><stop offset="0" stop-color="#2C2552"/><stop offset="1" stop-color="#2C2552" stop-opacity="0"/></radialGradient>
+        <linearGradient id="rayas" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2B3C8E"/><stop offset=".3" stop-color="#2B3C8E"/><stop offset=".3" stop-color="#C43A2C"/><stop offset=".55" stop-color="#C43A2C"/>
+          <stop offset=".55" stop-color="#E8892E"/><stop offset=".78" stop-color="#E8892E"/><stop offset=".78" stop-color="#F2C24B"/><stop offset="1" stop-color="#F2C24B"/></linearGradient>
+        ${HALO('#FBF1DC')}
+      </defs>
+      <rect width="1000" height="1000" fill="#141012"/><rect width="1000" height="1000" fill="url(#morado)"/><rect width="1000" height="1000" fill="url(#rojo)"/>`;
+    // rayos de santo, como el halo del póster
+    for (let i = 0; i < 28; i++) {
+      const a = (-170 + i * (160 / 27)) * Math.PI / 180;
+      s += `<line x1="${(360 + Math.cos(a) * 250).toFixed(1)}" y1="${(470 + Math.sin(a) * 250).toFixed(1)}" x2="${(360 + Math.cos(a) * 470).toFixed(1)}" y2="${(470 + Math.sin(a) * 470).toFixed(1)}" stroke="#F3E3C0" stroke-width="5" stroke-linecap="round" opacity=".28"/>`;
+    }
+    // llamas al pie, como en el póster
+    for (let i = 0; i < 16; i++) s += llama(r, 30 + i * 66, 1012, 150 + (i % 3) * 55 + r() * 40, 120, '#E8562B', '#F2B33D');
+    s += vasoEn({ ...b, vidrio: 'rgba(251,241,220,.10)' }, r, 0, 70, .88, 'filter="url(#halo)"');
+    s += calcomania(etq, [1000, 1000], [195, 55, 610, 890], 790, 560, 270, -6);
+    s += `<text x="506" y="156" text-anchor="middle" font-family="'Bungee', Impact, sans-serif" font-size="100" fill="#0B0A0A">¿A POCO SÍ PA'?</text>
+      <text x="500" y="150" text-anchor="middle" font-family="'Bungee', Impact, sans-serif" font-size="100" fill="url(#rayas)" stroke="#FBF1DC" stroke-width="4" paint-order="stroke">¿A POCO SÍ PA'?</text>
+      <text x="500" y="214" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="30" letter-spacing="2" fill="#F3E3C0">AMERICAN IPA · 6.9% · 62 IBU</text>`;
+    return s;
+  },
+  'barrilete-cosmico': (b, r) => {
+    const etq = dataUri(path.join(ETQ_DIR, 'barrilete-cosmico.jpg'));
+    const ORO = '#E8D9A0';
+    let s = `<defs>${HALO('#F1E6C2')}</defs><rect width="1000" height="1000" fill="#101E21"/>`;
+    s += lluvia(r, 340, 0, 0, 1000, 1000, ['#E0A64A', '#D6C677', '#F2C97D'], 1, 4.5, .85);
+    // remolino cósmico (ola turquesa y azul de la etiqueta)
+    const giro = 'M120,900 C-40,620 120,330 430,300 C760,270 960,470 900,700 C850,880 640,960 480,930';
+    s += `<path d="${giro}" fill="none" stroke="#0D383D" stroke-width="150" stroke-linecap="round"/>`;
+    s += `<path d="${giro}" fill="none" stroke="#1E6C70" stroke-width="70" stroke-linecap="round" opacity=".95"/>`;
+    s += `<path d="${giro}" fill="none" stroke="#2E7DBA" stroke-width="16" stroke-linecap="round" stroke-dasharray="120 46"/>`;
+    // constelación
+    const pts = [[90, 330], [190, 250], [300, 300], [700, 290], [820, 230], [915, 330]];
+    s += `<polyline points="${pts.map((p) => p.join(',')).join(' ')}" fill="none" stroke="${ORO}" stroke-width="2.5" opacity=".9"/>`;
+    for (const [x, y] of pts) s += estrella(r, x, y, 15);
+    s += `<g transform="translate(150,520) scale(.6)">${papalote(r, 0, 0)}</g><g transform="translate(870,500) scale(.5) rotate(22)">${papalote(r, 0, 0)}</g>`;
+    // vaso con salpicadura de espuma
+    s += vasoEn({ ...b, vidrio: 'rgba(241,230,194,.10)' }, r, 155, 150, .76, 'filter="url(#halo)"');
+    for (const [x, y, rr] of [[380, 318, 13], [350, 292, 8], [612, 312, 15], [646, 286, 9], [470, 268, 7], [560, 262, 10], [330, 340, 6], [676, 330, 6]])
+      s += `<circle cx="${x}" cy="${y}" r="${rr}" fill="#FFF8E6" stroke="${TINTA}" stroke-width="4"/>`;
+    s += calcomania(etq, [1000, 908], null, 820, 850, 250, 7, '#F1E6C2');
+    s += `<text x="500" y="60" text-anchor="middle" font-family="'Big Shoulders Display', Impact, sans-serif" font-weight="900" font-size="34" letter-spacing="2" fill="${ORO}">CISNE ⚡ NEGRO</text>
+      <text x="500" y="160" text-anchor="middle" font-family="'Big Shoulders Display', Impact, sans-serif" font-weight="900" font-size="112" letter-spacing="2" fill="#F1E6C2">BARRILETE</text>
+      <text x="500" y="248" text-anchor="middle" font-family="'Rubik Wet Paint', Impact, sans-serif" font-size="92" fill="#F1E6C2">CÓSMICO</text>
+      <text x="56" y="955" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="32" letter-spacing="2" fill="${ORO}">HAZY IPA · 6.1%</text>`;
+    return s;
+  },
+};
+
+function svgDiseno(b) {
+  const r = rng(b.seed + 1000);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+    <defs><linearGradient id="cerveza" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${b.c1}"/><stop offset="1" stop-color="${b.c2}"/></linearGradient>
+    <linearGradient id="turbia" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFF6DA" stop-opacity=".35"/><stop offset=".5" stop-color="#FFF6DA" stop-opacity=".12"/><stop offset="1" stop-color="#FFF6DA" stop-opacity=".3"/></linearGradient></defs>
+    ${DISENOS[b.id](b, r)}</svg>`;
+}
+
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1000, height: 1000 }, deviceScaleFactor: 1 });
   for (const b of CERVEZAS) {
     await page.setContent(`<!doctype html><html><head>
-      <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Big+Shoulders+Display:wght@800;900&display=block" rel="stylesheet">
-      <style>html,body{margin:0;background:${CREMA}}svg{display:block}</style></head><body>${svg(b)}</body></html>`, { waitUntil: 'networkidle' });
+      <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Big+Shoulders+Display:wght@800;900&family=Rubik+Wet+Paint&family=Bungee&family=JetBrains+Mono:wght@700&display=block" rel="stylesheet">
+      <style>html,body{margin:0;background:${CREMA}}svg{display:block}</style></head><body>${DISENOS[b.id] ? svgDiseno(b) : svg(b)}</body></html>`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: path.join(OUT, `${b.id}.png`) });
     console.log('✓', b.id);

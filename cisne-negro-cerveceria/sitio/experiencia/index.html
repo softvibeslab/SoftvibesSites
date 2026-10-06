@@ -40,25 +40,19 @@
       <div class="door-note depth-4" data-depth="4"><span>Barril y comedor</span><span>Cerveza hecha aquí. Sin pretensiones.</span></div>
       <p class="scene-index" aria-hidden="true">01 / LA CASA</p>
     </section>
-    <!-- Illustrated spatial set: no manufactured photography or product cutouts. -->
-    <section class="scene bar" id="barra" tabindex="-1" aria-labelledby="bar-title">
-      <div class="bar-wall depth-0" data-depth="0" aria-hidden="true"></div>
-      <div class="light-cone depth-1" data-depth="1" aria-hidden="true"></div>
+    <!-- Original beer illustrations, presented as artwork, never simulated product photography. -->
+    <section class="scene bar" id="barra" data-beer="alarma" tabindex="-1" aria-labelledby="bar-title">
       <div class="bar-heading depth-4" data-depth="4">
         <p class="eyebrow">02 / Del otro lado de la puerta</p>
         <h2 id="bar-title">TU LUGAR<br>EN LA <span>BARRA.</span></h2>
         <p>Dos cervezas, dos maneras de empezar la plática.</p>
       </div>
       <figure class="bar-art" aria-labelledby="art-caption">
-        <div class="back-sign depth-2" data-depth="2" aria-hidden="true">CISNE NEGRO<small>BEBE LOCAL</small></div>
-        <div class="tap-pipes depth-2" data-depth="2" aria-hidden="true"><i></i><i></i></div>
-        <div class="counter depth-2" data-depth="2" aria-hidden="true"></div>
-        <div class="glasses depth-3" data-depth="3" data-parallax="-0.025" aria-hidden="true">
-          <div class="glass-wrap" data-glass="0"><div class="glass glass-amber"><div class="foam"></div><span class="glass-mark">CN<small>HECHA AQUÍ</small></span></div><div class="coaster"></div></div>
-          <div class="glass-wrap" data-glass="1"><div class="glass glass-dark"><div class="foam"></div><span class="glass-mark">CN<small>HECHA AQUÍ</small></span></div><div class="coaster"></div></div>
+        <div class="art-frame" id="beer-art">
+          <img data-art="alarma" src="../assets/img/cervezas/alarma.jpg" width="900" height="900" decoding="async" alt="¡Alarma!: ilustración de cerveza ámbar junto a su etiqueta de cómic, en crema, mostaza y coral">
+          <img data-art="agua-puerca" src="../assets/img/cervezas/agua-puerca.jpg" width="900" height="900" decoding="async" alt="Agua Puerca: ilustración de stout oscura con espuma caramelo, chocolate y café dibujados sobre papel crema" hidden>
         </div>
-        <img class="mascot depth-3" data-depth="3" src="../assets/img/marca/cisne-mascota.jpg" width="1080" height="1080" loading="lazy" decoding="async" alt="Mascota del Cisne con su tarro de cerveza, en un sello blanco">
-        <figcaption id="art-caption">Composición ilustrativa · Los vasos no son fotografías del producto.</figcaption>
+        <figcaption id="art-caption">¡Alarma! · Ilustración de la cerveza y su etiqueta.</figcaption>
       </figure>
       <div class="beer-console depth-4" data-depth="4">
         <div id="beer-data" aria-busy="false">

@@ -15,7 +15,7 @@
     return element;
   };
   const money = new Intl.NumberFormat('es-MX', {style:'currency', currency:'MXN', maximumFractionDigits:0});
-  function selectBeer(beer, index) {
+  function selectBeer(beer) {
     const content = document.createDocumentFragment();
     content.append(node('p', 'beer-meta', `${beer.estilo} · ${beer.abv.toFixed(1)}% ABV`));
     content.append(node('h3', 'beer-name', beer.nombre));
@@ -29,7 +29,9 @@
     });
     content.append(prices);
     detail.replaceChildren(content);
-    document.querySelectorAll('[data-glass]').forEach((glass, i) => glass.classList.toggle('is-selected', i === index));
+    document.querySelector('#barra').dataset.beer = beer.id;
+    document.querySelectorAll('[data-art]').forEach(art => { art.hidden = art.dataset.art !== beer.id; });
+    document.querySelector('#art-caption').textContent = `${beer.nombre} · Ilustración de la cerveza${beer.id === 'alarma' ? ' y su etiqueta' : ''}.`;
   }
   async function load() {
     dataBox.setAttribute('aria-busy', 'true');
@@ -50,14 +52,14 @@
         const input = document.createElement('input');
         input.type = 'radio'; input.name = 'cerveza'; input.value = beer.id;
         input.checked = index === 0;
-        input.setAttribute('aria-controls', 'beer-detail');
-        input.addEventListener('change', () => { if (input.checked) selectBeer(beer, index); });
+        input.setAttribute('aria-controls', 'beer-detail beer-art');
+        input.addEventListener('change', () => { if (input.checked) selectBeer(beer); });
         label.append(input, document.createTextNode(beer.nombre));
         fragment.append(label);
       });
       choices.replaceChildren(fragment);
       fieldset.hidden = false;
-      selectBeer(beers[0], 0);
+      selectBeer(beers[0]);
       status.hidden = true;
     } catch (_) {
       fieldset.hidden = true;
