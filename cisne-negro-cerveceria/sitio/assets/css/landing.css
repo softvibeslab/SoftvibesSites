@@ -475,3 +475,67 @@ h3 { font-family: var(--f-display); font-weight: 800; text-transform: uppercase;
   *, *::before, *::after { transition: none !important; animation: none !important; }
   .btn:hover, .gallery button:hover img { transform: none; }
 }
+
+/* =====================================================================
+   Ajustes multi-dispositivo (auditoría responsiva 2026-10-06)
+   Android · iPhone · tabletas · iPad · Mac · Windows
+   ===================================================================== */
+
+/* Titular que también respeta la altura: laptops de 768 px y tabletas horizontales */
+.hero__title { font-size: clamp(3rem, min(17vw, 15vh), 9.5rem); }
+
+/* Escritorio y monitores grandes: mascota proporcional y alineada al contenido */
+@media (min-width: 960px) {
+  .hero__sticker {
+    width: clamp(170px, min(20vw, 30vh), 280px);
+    right: max(5%, calc((100% - var(--wrap)) / 2 + var(--pad)));
+  }
+}
+@media (min-width: 1800px) {
+  :root { --wrap: 1360px; }
+  html { font-size: 112.5%; }
+}
+
+/* Teléfonos en horizontal y pantallas muy bajas: hero compacto */
+@media (orientation: landscape) and (max-height: 540px) {
+  .hero { min-height: auto; align-items: flex-end; padding: 96px 0 40px; }
+  .hero__sticker { width: 92px; top: 18px; bottom: auto; right: max(16px, env(safe-area-inset-right)); }
+  .hero__title { font-size: clamp(2.6rem, 8vw, 4.4rem); max-width: none; }
+  .hero__ctas { margin: 18px 0 16px; }
+}
+
+/* Tabletas (600–959 px): la navegación por secciones pasa a una fila deslizable */
+@media (min-width: 600px) and (max-width: 959px) {
+  .topbar__in { flex-wrap: wrap; row-gap: 0; }
+  .nav {
+    display: flex; order: 3; width: 100%; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad) 10px;
+    overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { scroll-snap-align: start; white-space: nowrap; }
+  [id] { scroll-margin-top: 128px; }
+}
+
+/* Pantallas táctiles: objetivos de al menos 44 px (Apple HIG / Material) */
+@media (pointer: coarse) {
+  .brand { min-height: 44px; }
+  .nav a { min-height: 44px; display: inline-flex; align-items: center; }
+  .btn--sm { min-height: 44px; }
+}
+
+/* WhatsApp flotante: respeta el indicador de inicio del iPhone y no tapa el hero */
+.wa-float {
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transition: opacity .25s ease, transform .25s ease;
+}
+.wa-float--oculto { opacity: 0; transform: translateY(16px); pointer-events: none; }
+@media (max-width: 859px) { .footer { padding-bottom: 96px; } }
+
+/* Windows en alto contraste: botones y chips conservan su borde */
+@media (forced-colors: active) {
+  .btn, .wa-float, .nav a { border: 1px solid ButtonText; }
+  .sticker { forced-color-adjust: none; }
+}
+/* iPhone en horizontal: el contenido no se mete bajo el notch */
+.wrap { padding-left: max(var(--pad), env(safe-area-inset-left)); padding-right: max(var(--pad), env(safe-area-inset-right)); }

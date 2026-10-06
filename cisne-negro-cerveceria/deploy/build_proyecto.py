@@ -65,6 +65,10 @@ section{margin-top:44px}section>h2{font-size:1.6rem;margin:0;color:var(--hueso)}
 .doc pre code{border:0;padding:0;background:none}
 .doc blockquote{margin:1em 0;border-left:3px solid var(--neon);padding:.2em 1em;color:var(--gris)}
 .doc hr{border:0;border-top:1px solid var(--borde);margin:2em 0}
+.doc a,.wrap>p>a{overflow-wrap:anywhere}
+.wrap>p>a{display:inline-flex;align-items:center;min-height:44px}
+@media (pointer:coarse){.marca{min-height:44px}}
+@media (forced-colors:active){.card{border:1px solid CanvasText}}
 footer{margin-top:56px;color:var(--gris);font-size:.85rem;border-top:1px solid var(--borde);padding-top:16px}
 """
 

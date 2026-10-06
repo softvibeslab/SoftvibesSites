@@ -187,6 +187,20 @@
     if (y) y.textContent = String(new Date().getFullYear());
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  // WhatsApp flotante: aparece al pasar el hero, para no tapar sus botones en teléfonos pequeños.
+  function waFlotante() {
+    var wa = document.querySelector('.wa-float');
+    var hero = document.querySelector('.hero');
+    if (!wa || !hero || !('IntersectionObserver' in window)) return;
+    wa.classList.add('wa-float--oculto');
+    new IntersectionObserver(function (entradas) {
+      var visible = entradas[0].isIntersecting && entradas[0].intersectionRatio > 0.35;
+      wa.classList.toggle('wa-float--oculto', visible);
+      if (visible) wa.setAttribute('tabindex', '-1'); else wa.removeAttribute('tabindex');
+    }, { threshold: [0, 0.35, 1] }).observe(hero);
+  }
+
+  function arrancar() { init(); waFlotante(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arrancar);
+  else arrancar();
 })();

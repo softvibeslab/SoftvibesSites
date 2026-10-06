@@ -591,3 +591,32 @@ main { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad); }
   *, *::before, *::after { transition: none !important; animation: none !important; }
   .btn:hover:not(:disabled) { transform: none; }
 }
+
+/* =====================================================================
+   Ajustes multi-dispositivo (auditoría responsiva 2026-10-06)
+   ===================================================================== */
+/* Pantallas de 320–359 px (Galaxy S9+, iPhone SE 1ª gen): botón del Pasaporte compacto */
+@media (max-width: 359px) {
+  .mbar__pass > span:not(.mbar__count) {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .mbar__pass { padding-left: 12px; padding-right: 12px; min-width: 48px; justify-content: center; }
+  .mbar__title { font-size: 1.5rem; }
+}
+/* Los códigos de cortesía nunca se parten en dos líneas */
+.cortesias .mono, .premio__codigo { white-space: nowrap; }
+.premio__codigo { font-size: clamp(1.8rem, 10vw, 3rem); }
+/* Pantallas táctiles: objetivos de al menos 44 px */
+@media (pointer: coarse) {
+  .check { min-height: 44px; align-items: center; }
+  .check input { margin-top: 0; }
+}
+/* Teléfonos en horizontal: el Pasaporte ocupa todo el alto disponible */
+@media (orientation: landscape) and (max-height: 540px) {
+  .pase__body { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+}
+/* Windows en alto contraste */
+@media (forced-colors: active) {
+  .btn, .tabs a, .tabs button, [role="tab"], .chip { border: 1px solid ButtonText; }
+  .sticker { forced-color-adjust: none; }
+}

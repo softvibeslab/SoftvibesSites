@@ -23,6 +23,7 @@ Proyecto de marca y presencia digital: investigación, análisis, landing, menú
 - **Publicar cambios:** `deploy/publicar.sh` (rsync de `sitio/` + backend y reinicio del servicio). El hub se regenera con `deploy/build_proyecto.py` (requiere el paquete `markdown`).
 - **Editar el menú:** `sitio/data/menu.json` es la fuente única de la landing y del menú. Al publicar, el cambio se refleja en ambos.
 - **Backend del club:** `backend/club_server.py` (Python + SQLite), servicio `cisnenegro-club` en el VPS rovicrm, base en `/var/lib/cisnenegro-club/club.db`, con respaldo diario a las 03:30 (CDMX) en `/var/backups/cisnenegro-club/`. Pruebas: `python3 backend/test_club.py` (26 verificaciones). Desarrollo local: `python3 backend/dev_server.py 8080`.
+- **Auditoría responsiva:** `tests/responsive/audit.cjs` revisa 20 perfiles en 3 motores (Android, iPhone, iPad y tabletas Android, Mac, Windows, 2560 px) sobre 13 vistas: desbordes, objetivos táctiles, zoom de iOS, recortes y errores JS. Uso: `python3 backend/dev_server.py 8082 &` y luego `NODE_PATH=<carpeta con playwright>/node_modules node tests/responsive/audit.cjs`. Las capturas y `reporte.json` quedan en `sitio/qa/responsive/` (fuera de git).
 - **Infra:** DNS A `cisnenegro.softvibes.art → 31.220.63.211` (Hostinger), vhost nginx `deploy/nginx-cisnenegro.conf`, SSL de Let's Encrypt (certbot), y el panel protegido con basic auth.
 
 ## Documentos
