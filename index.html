@@ -35,7 +35,7 @@
 <main>
   <header>
     <div><h1>Softvibes Sites</h1><p>Mapa operativo de productos, clientes, análisis, agentes y herramientas. El catálogo organiza sin mover las carpetas originales.</p></div>
-    <div><span class="count" id="visibleCount">37</span><br><span style="color:var(--muted)">proyectos visibles</span></div>
+    <div><span class="count" id="visibleCount">38</span><br><span style="color:var(--muted)">proyectos visibles</span></div>
   </header>
   <div class="controls">
     <input id="search" type="search" placeholder="Buscar proyecto, stack o descripción…" aria-label="Buscar proyectos">
@@ -49,6 +49,7 @@
 <script id="project-data" type="application/json">
 [
   {"name":"BeerVibes","type":"producto","status":"idea","stack":"concepto","description":"Concepto de producto para experiencias y operación cervecera.","href":"BeerVibes/README.md"},
+  {"name":"Cervecería Cisne Negro","type":"cliente","status":"revisión","stack":"HTML · JavaScript · Python · SQLite","description":"Landing, menú QR con maridaje, Pasaporte (lealtad) + NPS y análisis; vista previa en cisnenegro.softvibes.art.","href":"cisne-negro-cerveceria/README.md"},
   {"name":"MenuVibes","type":"producto","status":"producción","stack":"HTML · JavaScript · Supabase","description":"Plataforma whitelabel para menús QR, pedidos, lealtad y NPS.","href":"MenuVibes/index.html"},
   {"name":"MenuVibes Private","type":"producto","status":"desarrollo","stack":"web","description":"Extensiones privadas y operación interna de MenuVibes.","href":"MenuVibes-private/"},
   {"name":"MoneyPrinterV2","type":"herramienta","status":"referencia","stack":"Python","description":"Automatización de publicación, afiliados y generación de ingresos.","href":"MoneyPrinterV2/README.md"},
@@ -99,7 +100,7 @@
     visibleCount.textContent=filtered.length; empty.hidden=filtered.length>0;
   }
   [search,type,status].forEach(el=>el.addEventListener('input',render));
-  console.assert(projects.length===37,'El catálogo debe contener 37 proyectos');
+  console.assert(projects.length===38,'El catálogo debe contener 38 proyectos');
   render();
 </script>
 </body>

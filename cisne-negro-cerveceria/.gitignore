@@ -1,0 +1,16 @@
+# Contenido descargado de redes y web (pesado; se respalda fuera de git)
+contenido/**/*.jpg
+contenido/**/*.jpeg
+contenido/**/*.png
+contenido/**/*.webp
+contenido/**/*.ico
+contenido/**/*.mp4
+contenido/**/*.m4a
+contenido/**/*.jpg__
+contenido/**/*.image
+PRIVADO/
+
+# El repo es público: los crudos del scraping y la metadata por post incluyen
+# usuarios y comentarios de terceros. Se conservan solo en local.
+scraping/raw/
+contenido/

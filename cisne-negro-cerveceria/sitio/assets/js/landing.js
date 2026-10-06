@@ -1,0 +1,192 @@
+/* Cervecería Cisne Negro · Landing
+ * - Barril de hoy y Vuelo del Cisne desde /data/menu.json (fuente única).
+ * - Oculta maridajes cuya cerveza ya no está en barril.
+ * - Lightbox de la galería con <dialog>.
+ */
+(function () {
+  'use strict';
+
+  var DATA_URL = '/data/menu.json';
+  var PERFIL_LABEL = { lupulada: 'Lupulada', oscura: 'Oscura', acida: 'Ácida', ligera: 'Ligera' };
+  var ASK = '¿Por qué se llama así? Pregúntale a tu bartender.';
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function money(n) { return '$' + Number(n).toLocaleString('es-MX'); }
+  function abv(n) { return Number(n).toFixed(1) + '% ABV'; }
+
+  // Etiqueta legible de un platillo: las hamburguesas y sándwiches se llaman "De X" en el menú.
+  function dishLabel(item) {
+    var name = item.nombre;
+    if (/^De /.test(name) && item.img) {
+      var lower = 'de ' + name.slice(3);
+      if (/^hambur/.test(item.img)) return 'Hamburguesa ' + lower;
+      if (/^san_/.test(item.img)) return 'Sándwich ' + lower;
+    }
+    return name;
+  }
+
+  function indexDishes(comida) {
+    var map = {};
+    (comida || []).forEach(function (sec) {
+      (sec.items || []).forEach(function (it) { map[it.id] = it; });
+    });
+    return map;
+  }
+
+  function renderTap(beer, i, perfiles, dishes) {
+    var card = el('article', 'tap');
+    card.id = 'barril-' + beer.id;
+
+    var top = el('div', 'tap__top');
+    top.appendChild(el('span', 'tap__num', String(i + 1).padStart(2, '0')));
+    if (beer.perfil) {
+      top.appendChild(el('span', 'chip chip--' + beer.perfil, PERFIL_LABEL[beer.perfil] || beer.perfil));
+    }
+    card.appendChild(top);
+
+    card.appendChild(el('h3', 'tap__name', beer.nombre));
+    card.appendChild(el('p', 'tap__meta', (beer.estilo || '') + ' · ' + abv(beer.abv)));
+    if (beer.cerveceria) card.appendChild(el('p', 'tap__guest', 'De ' + beer.cerveceria));
+
+    if (beer.notas) card.appendChild(el('p', 'tap__notes', beer.notas));
+    if (beer.perfil && perfiles && perfiles[beer.perfil]) {
+      card.appendChild(el('p', 'tap__profile', 'Perfil: ' + perfiles[beer.perfil]));
+    }
+
+    var hasStory = beer.historia && beer.historia.trim();
+    card.appendChild(el('p', 'tap__story' + (hasStory ? '' : ' tap__story--ask'), hasStory ? beer.historia.trim() : ASK));
+
+    var pairs = (beer.marida_con || []).map(function (id) { return dishes[id]; }).filter(Boolean);
+    if (pairs.length) {
+      var p = el('p', 'tap__pairs');
+      p.appendChild(document.createTextNode('Va perfecto con: '));
+      p.appendChild(el('b', null, pairs.map(dishLabel).join(' · ')));
+      card.appendChild(p);
+    }
+
+    if (beer.precios && beer.precios.length) {
+      var ul = el('ul', 'tap__prices');
+      ul.setAttribute('aria-label', 'Precios');
+      beer.precios.forEach(function (pr) {
+        var li = el('li');
+        li.appendChild(el('span', null, pr.medida));
+        li.appendChild(el('b', null, money(pr.precio)));
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+    }
+    return card;
+  }
+
+  function renderVuelo(vuelo) {
+    var box = document.getElementById('vuelo');
+    if (!box || !vuelo) return;
+    box.querySelector('[data-vuelo-nombre]').textContent = vuelo.nombre || 'Vuelo del Cisne';
+    box.querySelector('[data-vuelo-desc]').textContent = vuelo.descripcion || '';
+    box.querySelector('[data-vuelo-nota]').textContent = vuelo.nota || '';
+    var price = box.querySelector('[data-vuelo-precio]');
+    if (vuelo.precio_desde != null) {
+      price.textContent = money(vuelo.precio_desde);
+    } else {
+      price.parentNode.hidden = true;
+    }
+    box.hidden = false;
+  }
+
+  function syncPairs(barril) {
+    var ids = {};
+    barril.forEach(function (b) { ids[b.id] = true; });
+    document.querySelectorAll('.pair[data-beer]').forEach(function (card) {
+      if (!ids[card.getAttribute('data-beer')]) card.hidden = true;
+    });
+  }
+
+  function showError(container) {
+    container.innerHTML = '';
+    var p = el('p', 'taps__status');
+    p.appendChild(document.createTextNode('No pudimos cargar el barril en este momento. Consulta el '));
+    var a = el('a', null, 'menú completo');
+    a.href = '/menu/';
+    p.appendChild(a);
+    p.appendChild(document.createTextNode('.'));
+    container.appendChild(p);
+  }
+
+  function loadBarril() {
+    var container = document.getElementById('taps');
+    if (!container) return;
+    container.appendChild(el('p', 'taps__status', 'Cargando el barril…'));
+    fetch(DATA_URL, { headers: { Accept: 'application/json' } })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (data) {
+        var barril = Array.isArray(data.barril) ? data.barril : [];
+        if (!barril.length) throw new Error('Barril vacío');
+        var dishes = indexDishes(data.comida);
+        var frag = document.createDocumentFragment();
+        barril.forEach(function (b, i) { frag.appendChild(renderTap(b, i, data.perfiles, dishes)); });
+        container.innerHTML = '';
+        container.appendChild(frag);
+        renderVuelo(data.vuelo);
+        syncPairs(barril);
+      })
+      .catch(function () { showError(container); })
+      .then(function () { container.setAttribute('aria-busy', 'false'); });
+  }
+
+  function initLightbox() {
+    var dlg = document.getElementById('lightbox');
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-gallery] button[data-full]'));
+    if (!dlg || !buttons.length || typeof dlg.showModal !== 'function') return;
+
+    var img = dlg.querySelector('img');
+    var cap = dlg.querySelector('figcaption');
+    var current = 0;
+    var opener = null;
+
+    function show(i) {
+      current = (i + buttons.length) % buttons.length;
+      var b = buttons[current];
+      var thumb = b.querySelector('img');
+      img.src = b.getAttribute('data-full');
+      img.alt = thumb ? thumb.alt : '';
+      img.width = thumb ? thumb.width : 1400;
+      img.height = thumb ? thumb.height : 1400;
+      cap.textContent = thumb ? thumb.alt : '';
+    }
+
+    buttons.forEach(function (b, i) {
+      b.setAttribute('aria-label', 'Ampliar foto: ' + (b.querySelector('img') || {}).alt);
+      b.addEventListener('click', function () {
+        opener = b;
+        show(i);
+        dlg.showModal();
+      });
+    });
+
+    dlg.querySelector('[data-close]').addEventListener('click', function () { dlg.close(); });
+    dlg.querySelector('[data-prev]').addEventListener('click', function () { show(current - 1); });
+    dlg.querySelector('[data-next]').addEventListener('click', function () { show(current + 1); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+    dlg.addEventListener('close', function () { if (opener) opener.focus(); });
+  }
+
+  function init() {
+    loadBarril();
+    initLightbox();
+    var y = document.querySelector('[data-year]');
+    if (y) y.textContent = String(new Date().getFullYear());
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();

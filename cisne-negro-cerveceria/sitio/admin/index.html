@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel del equipo · Cervecería Cisne Negro</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0E0D0B">
+
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/marca/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/marca/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="/assets/css/menu.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+  <script src="/assets/js/admin.js" defer></script>
+</head>
+<body class="admin">
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <header class="mbar">
+    <div class="mbar__in">
+      <span class="mbar__brand">
+        <span class="sticker mbar__sticker"><img src="/assets/img/marca/favicon-192.png" alt="" width="192" height="192"></span>
+        <span class="mbar__title">Panel del equipo</span>
+      </span>
+      <button type="button" class="btn btn--ghost btn--sm mbar__pass" id="actualizar">Actualizar</button>
+    </div>
+  </header>
+
+  <main id="contenido" class="panel">
+    <p class="aviso" id="aviso" role="alert" hidden></p>
+
+    <div class="panel__grid">
+      <!-- Código del día -->
+      <section class="card card--codigo" aria-labelledby="t-codigo">
+        <h1 class="card__h" id="t-codigo">Código del día</h1>
+        <p class="codigo-dia mono" id="codigo" aria-live="polite">····</p>
+        <p class="codigo-dia__fecha" id="codigo-fecha"></p>
+        <p class="codigo-dia__inst">Dáselo a quien quiera registrar su visita.</p>
+      </section>
+
+      <!-- Canjear cortesía -->
+      <section class="card" aria-labelledby="t-canje">
+        <h2 class="card__h" id="t-canje">Canjear cortesía</h2>
+        <form class="canje" id="canje" novalidate>
+          <label for="canje-codigo" class="sr-only">Código de la cortesía</label>
+          <input id="canje-codigo" class="canje__input mono" placeholder="CN-XXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" required aria-describedby="canje-h">
+          <button class="btn btn--primary" type="submit">Canjear</button>
+        </form>
+        <p class="fine" id="canje-h">Escribe el código que te muestra el cliente en su Pasaporte.</p>
+        <div class="resultado" id="canje-res" role="status" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <!-- Métricas -->
+    <section class="card" aria-labelledby="t-metricas">
+      <div class="card__fila">
+        <h2 class="card__h" id="t-metricas">Últimos 30 días</h2>
+        <a class="btn btn--ghost btn--sm" href="/api/admin/socios.csv" download="socios-cisne-negro.csv" id="csv">Descargar socios.csv</a>
+      </div>
+      <div class="metricas" id="metricas" aria-busy="true"></div>
+    </section>
+
+    <!-- Bandeja NPS -->
+    <section class="card" aria-labelledby="t-nps">
+      <div class="card__fila">
+        <h2 class="card__h" id="t-nps">Bandeja NPS</h2>
+        <div class="seg seg--dark" role="group" aria-label="Filtrar respuestas">
+          <button type="button" data-filtro="pendientes" aria-pressed="true">Pendientes</button>
+          <button type="button" data-filtro="detractores" aria-pressed="false">Detractores</button>
+          <button type="button" data-filtro="todos" aria-pressed="false">Todos</button>
+        </div>
+      </div>
+      <p class="fine" id="nps-ayuda">Pendientes: calificaciones de 0 a 6 que aún no se resuelven. Contacta, escucha y anota qué se hizo.</p>
+      <p class="sr-only" id="nps-estado" role="status" aria-live="polite"></p>
+      <ul class="bandeja" id="bandeja"></ul>
+    </section>
+  </main>
+</body>
+</html>
