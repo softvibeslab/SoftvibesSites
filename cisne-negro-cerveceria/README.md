@@ -20,9 +20,10 @@ Proyecto de marca y presencia digital: investigación, análisis, landing, menú
 
 ## Operación
 
-- **Publicar cambios:** `deploy/publicar.sh` (rsync de `sitio/` + backend y reinicio del servicio). El hub se regenera con `deploy/build_proyecto.py` (requiere el paquete `markdown`).
+- **Publicar cambios:** `deploy/publicar.sh` desde un estado con commit. Respalda antes en el VPS (`/var/backups/cisnenegro-web/<fecha>/`), sincroniza `sitio/` **sin `/experiencia/`** (`INCLUIR_EXPERIENCIA=1` para incluirla), reinicia `cisnenegro-club` solo si cambió el backend y anota el commit en `DESPLIEGUES.log`. El hub se regenera con `deploy/build_proyecto.py` (requiere el paquete `markdown`).
 - **Editar el menú:** `sitio/data/menu.json` es la fuente única de la landing y del menú. Al publicar, el cambio se refleja en ambos.
 - **Backend del club:** `backend/club_server.py` (Python + SQLite), servicio `cisnenegro-club` en el VPS rovicrm, base en `/var/lib/cisnenegro-club/club.db`, con respaldo diario a las 03:30 (CDMX) en `/var/backups/cisnenegro-club/`. Pruebas: `python3 backend/test_club.py` (26 verificaciones). Desarrollo local: `python3 backend/dev_server.py 8080`.
+- **Batería funcional:** `NODE_PATH=<carpeta con playwright>/node_modules tests/funcional/correr.sh [puerto]` levanta un servidor con base desechable, siembra 14 socios de prueba y corre 70 pruebas (menú, Pasaporte, NPS, ranking y panel). Se niega a correr contra producción.
 - **Auditoría responsiva:** `tests/responsive/audit.cjs` revisa 20 perfiles en 3 motores (Android, iPhone, iPad y tabletas Android, Mac, Windows, 2560 px) sobre 13 vistas: desbordes, objetivos táctiles, zoom de iOS, recortes y errores JS. Uso: `python3 backend/dev_server.py 8082 &` y luego `NODE_PATH=<carpeta con playwright>/node_modules node tests/responsive/audit.cjs`. Las capturas y `reporte.json` quedan en `sitio/qa/responsive/` (fuera de git).
 - **Infra:** DNS A `cisnenegro.softvibes.art → 31.220.63.211` (Hostinger), vhost nginx `deploy/nginx-cisnenegro.conf`, SSL de Let's Encrypt (certbot), y el panel protegido con basic auth.
 
@@ -39,7 +40,7 @@ Proyecto de marca y presencia digital: investigación, análisis, landing, menú
 | Prueba | Comando | Resultado |
 |---|---|---|
 | Backend del Pasaporte | `python3 backend/test_club.py` | 55/55 |
-| Funcional menú + Pasaporte + panel | `verificar.js` (Playwright; script local en `/tmp/cisne-v2-qa/`, **no versionado**) contra `dev_server.py 8095` con datos sembrados | 70/70 |
+| Funcional menú + Pasaporte + panel | `verificar.js` (Playwright) contra `dev_server.py 8095` con datos sembrados; ahora versionado como `tests/funcional/correr.sh` (70/70 también) | 70/70 |
 | Responsivo | `tests/responsive/audit.cjs` (20 perfiles × 13 vistas, WebKit/Chromium/Firefox) | 0 desbordes · 0 zoom iOS · 0 errores JS · 0 errores de carga · 11 excepciones aceptadas (enlaces numéricos en tablas de `/analisis/`) |
 | Producción: infraestructura | `curl` / `openssl` | HTTPS válido, redirección 301 a HTTPS, rutas 200, `/api/salud` 200, `/api/ranking` 200 sin datos personales, `/api/yo` 401 y `/admin/` 401 (esperados), 29/29 assets del menú |
 | Producción: navegador (solo lectura) | Playwright en iPhone 16 (WebKit), Pixel 7 y Mac 1440 (Chromium), Windows 1366 (Firefox) | portada (6 cervezas), navegación portada → menú (6 cervezas, 20 platillos), diálogo de etiqueta, Pasaporte como invitado y ranking: 0 errores JS, 0 recursos fallidos, 0 desbordes, 0 imágenes rotas |
@@ -61,9 +62,8 @@ Además, la base tiene un respaldo diario automático en `/var/backups/cisnenegr
 4. Verificar con `curl -s https://cisnenegro.softvibes.art/api/salud` y abrir `/` y `/menu/`.
 
 **Pendientes fuera de esta entrega:**
-- **`/experiencia/`** ("Entra al Cisne", de otra sesión): sin commit en la copia de trabajo, y en producción con una instantánea anterior (el usuario decidió dejarla publicada). `deploy/publicar.sh` sincroniza `sitio/` completo, **incluida `/experiencia/`**: mientras siga en progreso, publicar con `--exclude 'experiencia/'` o ajustar el script.
+- **`/experiencia/`** ("Entra al Cisne", de otra sesión): sin commit en la copia de trabajo, y en producción con una instantánea anterior (el usuario decidió dejarla publicada). `deploy/publicar.sh` ya la excluye por defecto (ni la sube ni la borra del servidor).
 - La rama `feat/cisne-negro-menu-pasaporte` (`66a3037`) **contiene `/experiencia/` en progreso**: no fusionarla a `main` tal cual; usar `4f5291e` o esta rama.
-- Versionar la batería funcional (`/tmp/cisne-v2-qa/verificar.js` + `seed.py`) en `tests/`, con rutas y puerto configurables.
 - Decidir el merge a `main` (no hecho).
 - Cliente: `BACKLOG.md` (B1–B4) y preguntas abiertas de la base de conocimientos (Henry IX ¿IPA o Munich Helles?, ABV de ¿A poco sí pa'?, historia de cada nombre, aviso de privacidad, valores de la gamificación).
 
