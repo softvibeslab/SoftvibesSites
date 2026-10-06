@@ -27,6 +27,15 @@ Proyecto de marca y presencia digital: investigación, análisis, landing, menú
 - **Auditoría responsiva:** `tests/responsive/audit.cjs` revisa 20 perfiles en 3 motores (Android, iPhone, iPad y tabletas Android, Mac, Windows, 2560 px) sobre 13 vistas: desbordes, objetivos táctiles, zoom de iOS, recortes y errores JS. Uso: `python3 backend/dev_server.py 8082 &` y luego `NODE_PATH=<carpeta con playwright>/node_modules node tests/responsive/audit.cjs`. Las capturas y `reporte.json` quedan en `sitio/qa/responsive/` (fuera de git).
 - **Infra:** DNS A `cisnenegro.softvibes.art → 31.220.63.211` (Hostinger), vhost nginx `deploy/nginx-cisnenegro.conf`, SSL de Let's Encrypt (certbot), y el panel protegido con basic auth.
 
+## Último despliegue — 2026-10-06 12:07 UTC · `27df153` (`feat/cisne-negro-continuacion`)
+
+- **Comando:** `deploy/publicar.sh` desde un worktree limpio de `feat/cisne-negro-continuacion` (sin cambios sin commit).
+- **Contenido publicado:** el mismo sitio y backend que `66a3037` sin `/experiencia/` (los commits nuevos solo agregan pruebas, el script de publicación y documentación). Checksum posterior: 0 archivos distintos entre `sitio/` y producción; `club_server.py` idéntico, así que `cisnenegro-club` **no se reinició** (activo desde 10:26:46 UTC). `/experiencia/` del servidor quedó intacta.
+- **Respaldo previo:** `/var/backups/cisnenegro-web/20261006T120711Z/` (sumas verificadas). El registro de despliegues está en `/var/backups/cisnenegro-web/DESPLIEGUES.log`.
+- **Pruebas antes de publicar:** `backend/test_club.py` 55/55 y `tests/funcional/correr.sh` 70/70 (base desechable).
+- **Pruebas en producción:** rutas 200, `/api/yo` y `/admin/` 401 (esperados), y smoke de solo lectura en iPhone 16, Pixel 7, Mac 1440 y Windows Firefox 1366 (portada con 6 cervezas, menú con 6 cervezas y 20 platillos, etiqueta, Pasaporte invitado y ranking): 0 errores JS, 0 recursos fallidos, 0 desbordes.
+- **Rollback:** igual que abajo, usando `R=/var/backups/cisnenegro-web/20261006T120711Z` (o el respaldo anterior `20261006T115900Z`).
+
 ## Despliegue a producción — 2026-10-06 (portada, menú y Pasaporte)
 
 **Entrega:** rama `feat/cisne-negro-menu-pasaporte` @ `66a3037`, **sin `/experiencia/`**. El contenido activo equivale a `4f5291e` (`feat/cisne-negro-responsive`), que es `66a3037` sin los 4 archivos de `/experiencia/` (verificado con `git diff --stat 66a3037 4f5291e`).
