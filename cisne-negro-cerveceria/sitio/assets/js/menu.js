@@ -2,13 +2,30 @@
  * - Catálogo desde /data/menu.json (fuente única; no se inventan datos).
  * - Maridaje en ambos sentidos: barril → "Va perfecto con…", platillo → "Pídelo con…".
  * - Filtro por perfil (barril + latas) y constructor del Vuelo del Cisne.
- * - Pasaporte (registro, entrada, check-in con código del día, cortesías) y NPS contra /api.
+ * - Pasaporte (registro, entrada, check-in con código del día, cortesías), ranking y NPS contra /api.
+ *
+ * Sesión (v2): la cookie HttpOnly `cn_sesion` (180 días) que pone el servidor es la fuente de verdad.
+ * El localStorage solo guarda una caché del último `socio` para pintar al instante; Safari puede
+ * borrarlo a los 7 días sin que eso cierre la sesión. Solo un 401 o "Salir" terminan la sesión;
+ * un error de red o 5xx conserva el estado, muestra un aviso y reintenta.
  */
 (() => {
   'use strict';
 
   const DATA_URL = '/data/menu.json';
-  const TOKEN_KEY = 'cisne.pasaporte.token';
+  const TOKEN_KEY = 'cisne.pasaporte.token';       // v1: token Bearer (se conserva como respaldo de la cookie)
+  const CACHE_KEY = 'cisne.pasaporte.socio';       // v2: {dia, socio} del último /api/yo
+  const SALIR_KEY = 'cisne.pasaporte.salir';       // "Salir" sin red: se completa en la siguiente carga
+  const PERIODOS = { semana: 'esta semana', mes: 'este mes', total: 'en total' };
+  const PRIMERO = { semana: 'Sé el primero de la semana: registra tu visita.', mes: 'Sé el primero del mes: registra tu visita.', total: 'Sé el primero: registra tu visita.' };
+  // Después del NPS se invita a Google a TODOS, sin premio (las políticas de Google prohíben incentivar
+  // reseñas o pedirlas solo a quien califica alto). [titular, texto, botón] según el `tono` del servidor.
+  const RESENA = {
+    promotor: ['¡Gracias!', '¿Nos ayudas contándolo en Google?', 'Contarlo en Google'],
+    pasivo: ['Gracias', 'Si quieres, cuéntanos tu experiencia en Google.', 'Contar mi experiencia en Google'],
+    detractor: ['Gracias por decírnoslo', 'El equipo lo va a revisar. También puedes dejar tu opinión en Google.', 'Dejar mi opinión en Google'],
+  };
+  const tonoDe = (score) => (score >= 9 ? 'promotor' : score >= 7 ? 'pasivo' : 'detractor');
   const PERFILES = ['lupulada', 'oscura', 'acida', 'ligera'];
   const PERFIL_LABEL = { lupulada: 'Lupulada', oscura: 'Oscura', acida: 'Ácida', ligera: 'Ligera' };
   const ASK = '¿Por qué se llama así? Pregúntale a tu bartender.';
@@ -21,6 +38,8 @@
   const state = {
     data: null, dishes: {}, filtro: null, vuelo: [],
     token: safeGet(TOKEN_KEY), socio: null, visitaId: null, npsScore: null,
+    comprobando: false, sinRed: false, reintento: null, espera: 0,
+    periodo: 'mes', ranking: {}, tab: 'pase',
   };
 
   // ── Utilidades ─────────────────────────────────────────────────────────────
@@ -349,58 +368,126 @@
   // ── API del club ───────────────────────────────────────────────────────────
   class ApiError extends Error { constructor(status, msg) { super(msg); this.status = status; } }
 
-  async function api(path, body) {
+  /** Llama a /api con la cookie de sesión. Si hay un token v1 guardado también lo manda (Bearer);
+   *  si ese token ya no sirve (401) reintenta una vez solo con la cookie antes de rendirse. */
+  async function api(path, body, reintento) {
     const headers = { Accept: 'application/json' };
     if (body) headers['Content-Type'] = 'application/json';
-    if (state.token) headers.Authorization = 'Bearer ' + state.token;
+    const publica = path === '/login' || path === '/registro';
+    const conToken = !!state.token && !reintento && !publica;
+    if (conToken) headers.Authorization = 'Bearer ' + state.token;
     let res;
     try {
-      res = await fetch('/api' + path, { method: body ? 'POST' : 'GET', headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' });
+      res = await fetch('/api' + path, { method: body ? 'POST' : 'GET', headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store', credentials: 'same-origin' });
     } catch (e) {
       throw new ApiError(0, 'No hay conexión. Revisa tu internet e inténtalo otra vez.');
     }
+    if (res.status === 401 && conToken) {
+      state.token = null; safeSet(TOKEN_KEY, null);
+      return api(path, body, true);
+    }
     let data = {};
-    try { data = await res.json(); } catch (e) { /* respuesta sin JSON */ }
-    if (!res.ok) throw new ApiError(res.status, data.error || 'Algo salió mal. Inténtalo otra vez.');
+    try { data = await res.json(); } catch (e) { /* respuesta sin JSON (p. ej. 502 del proxy) */ }
+    if (!res.ok) throw new ApiError(res.status, data.error || (res.status >= 500 ? 'El servidor no respondió. Inténtalo en un momento.' : 'Algo salió mal. Inténtalo otra vez.'));
     return data;
   }
+  const esFalloDeRed = (ex) => ex && (ex.status === 0 || ex.status >= 500 || ex.status === 429);
 
   // ── Pasaporte ──────────────────────────────────────────────────────────────
   const dlg = () => $('#pasaporte');
+  const hoyMx = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Mexico_City' });
 
   function msg(texto) { $('#pase-msg').textContent = texto || ''; }
   function err(texto) { $('#pase-err').textContent = texto || ''; }
 
-  function abrirPasaporte() {
+  function abrirPasaporte(tab) {
     const d = dlg();
     if (!d.open) d.showModal();
+    elegirPestana(tab || state.tab, true);
     pintarPasaporte();
+    if (state.tab === 'ranking') { $('#rank-h').focus(); return; }
     const foco = state.socio
       ? ($('#checkin-form').hidden ? $('#pase-t') : $('#checkin-codigo'))
       : $('#tab-registro[aria-selected="true"], #tab-entrar[aria-selected="true"]');
-    if (foco) { if (foco === $('#pase-t')) foco.setAttribute('tabindex', '-1'); foco.focus(); }
+    if (foco && !foco.closest('[hidden]')) { if (foco === $('#pase-t')) foco.setAttribute('tabindex', '-1'); foco.focus(); }
+    else { $('#pase-t').setAttribute('tabindex', '-1'); $('#pase-t').focus(); }
   }
   function cerrarPasaporte() { dlg().close(); }
 
   function onCerrado() {
-    if (location.hash === '#pasaporte') history.replaceState(null, '', location.pathname + location.search);
+    if (location.hash === '#pasaporte' || location.hash === '#ranking') history.replaceState(null, '', location.pathname + location.search);
     msg(''); err('');
     $('#abrir-pasaporte').focus({ preventScroll: true });
   }
 
+  // Pestañas del diálogo: Mi Pasaporte · Ranking
+  function elegirPestana(cual, silencioso) {
+    state.tab = cual === 'ranking' ? 'ranking' : 'pase';
+    const rk = state.tab === 'ranking';
+    $('#ptab-pase').setAttribute('aria-selected', String(!rk));
+    $('#ptab-ranking').setAttribute('aria-selected', String(rk));
+    $('#ptab-pase').tabIndex = rk ? -1 : 0;
+    $('#ptab-ranking').tabIndex = rk ? 0 : -1;
+    $('#ppanel-pase').hidden = rk;
+    $('#ppanel-ranking').hidden = !rk;
+    if (rk) cargarRanking(state.periodo);
+    if (!silencioso) { msg(''); err(''); }
+  }
+
+  /** Guarda la caché local del socio (con el día, para no arrastrar "visita de hoy" a mañana). */
+  function guardarCache(socio) {
+    safeSet(CACHE_KEY, socio ? JSON.stringify({ dia: hoyMx(), socio }) : null);
+  }
+  function leerCache() {
+    try {
+      const c = JSON.parse(safeGet(CACHE_KEY) || 'null');
+      if (!c || !c.socio || !c.socio.nombre) return null;
+      const s = c.socio;
+      if (c.dia !== hoyMx()) { s.visita_hoy = null; s.nps_hoy = false; }
+      const ahora = new Date().toISOString();
+      s.recompensas = (s.recompensas || []).filter((r) => !r.vence_at || new Date(r.vence_at).toISOString() >= ahora);
+      return s;
+    } catch (e) { return null; }
+  }
+
   function guardarSesion(token, socio) {
-    state.token = token; safeSet(TOKEN_KEY, token);
+    if (token) { state.token = token; safeSet(TOKEN_KEY, token); }
+    actualizarSocio(socio);
+    safeSet(SALIR_KEY, null);
+  }
+  function actualizarSocio(socio) {
     state.socio = socio;
+    guardarCache(socio);
+    state.ranking = {};   // la posición del socio cambió o puede cambiar
   }
   function cerrarSesionLocal() {
     state.token = null; safeSet(TOKEN_KEY, null);
-    state.socio = null; state.visitaId = null;
+    state.socio = null; state.visitaId = null; guardarCache(null);
+    state.ranking = {};
   }
   function sesionVencida() {
     cerrarSesionLocal();
+    $('#premio').hidden = true; $('#nps-gracias').hidden = true; $('#checkin-form').hidden = true;
     pintarPasaporte();
     err('Tu sesión venció. Vuelve a entrar con tu teléfono y PIN.');
     elegirTab('entrar');
+  }
+
+  // Aviso discreto de "sin conexión" + reintento con espera creciente (5 s, 10 s, 20 s… hasta 60 s).
+  function marcarSinRed(si) {
+    state.sinRed = si;
+    $('#pase-red').hidden = !si;
+    $('#pase-red-t').textContent = state.socio
+      ? 'Sin conexión. Te mostramos tu Pasaporte guardado y reintentamos solos.'
+      : 'Sin conexión. No pudimos revisar tu Pasaporte; reintentamos solos.';
+    $('#abrir-pasaporte').classList.toggle('mbar__pass--sinred', si);
+    clearTimeout(state.reintento);
+    if (si) {
+      state.espera = Math.min(60000, state.espera ? state.espera * 2 : 5000);
+      state.reintento = setTimeout(refrescarSocio, state.espera);
+    } else {
+      state.espera = 0;
+    }
   }
 
   function pintarBoton() {
@@ -418,12 +505,22 @@
 
   function pintarPasaporte(opts = {}) {
     pintarBoton();
+    pintarPreferencia();
     const s = state.socio;
-    $('#pase-invitado').hidden = !!s;
+    const esperando = !s && state.comprobando;
+    $('#pase-cargando').hidden = !esperando;
+    $('#pase-invitado').hidden = !!s || esperando;
     $('#pase-socio').hidden = !s;
     if (!s) return;
 
     $('#pase-hola').textContent = '¡Hola, ' + s.nombre.split(' ')[0] + '!';
+    const rk = s.ranking || {};
+    const chip = $('#pase-rank');
+    chip.hidden = !rk.posicion;
+    if (rk.posicion) {
+      chip.textContent = `#${rk.posicion} este mes`;
+      chip.setAttribute('aria-label', `Vas en el lugar ${rk.posicion} de ${rk.participantes} este mes. Ver ranking`);
+    }
     pintarSellos(s, opts.nuevo);
 
     const prog = $('#pase-prog');
@@ -510,6 +607,7 @@
     try {
       const r = await api('/registro', { nombre, telefono: tel, pin, acepta_privacidad: true, acepta_whatsapp: f.acepta_whatsapp.checked });
       guardarSesion(r.token, r.socio);
+      marcarSinRed(false);
       f.reset();
       pintarPasaporte();
       msg(`¡Listo, ${r.socio.nombre.split(' ')[0]}! Tu Pasaporte ya está activo.`);
@@ -534,6 +632,7 @@
     try {
       const r = await api('/login', { telefono: tel, pin });
       guardarSesion(r.token, r.socio);
+      marcarSinRed(false);
       f.reset();
       pintarPasaporte();
       msg(`¡Qué gusto verte, ${r.socio.nombre.split(' ')[0]}!`);
@@ -570,7 +669,8 @@
     try {
       const r = await api('/checkin', { codigo });
       marcarInvalido(inp, false);
-      state.socio = r.socio;
+      marcarSinRed(false);
+      actualizarSocio(r.socio);
       state.visitaId = r.visita_id;
       $('#checkin-form').hidden = true;
       if (r.ya_registrada) {
@@ -588,7 +688,7 @@
       }
     } catch (ex) {
       if (ex.status === 401) return sesionVencida();
-      marcarInvalido(inp, true);
+      marcarInvalido(inp, ex.status === 400);
       err(ex.message);
       inp.select();
     } finally {
@@ -660,21 +760,14 @@
     try {
       const score = state.npsScore;
       const r = await api('/nps', { visita_id: visita, score, comentario: $('#nps-comentario').value.trim() });
-      if (state.socio) state.socio.nps_hoy = true;
+      if (state.socio) { state.socio.nps_hoy = true; guardarCache(state.socio); }
       $('#nps').hidden = true;
-      const t = $('#gracias-t'); const p = $('#gracias-p'); const btn = $('#resena');
-      btn.hidden = true;
-      if (r.ya_respondida) {
-        t.textContent = '¡Gracias!'; p.textContent = 'Ya nos habías respondido hoy.';
-      } else if (r.invitar_resena && r.resena_url) {
-        t.textContent = '¡Gracias!';
-        p.textContent = '¿Nos ayudas contándolo en Google? Así más gente encuentra el Cisne.';
-        btn.href = r.resena_url; btn.hidden = false;
-      } else if (score >= 7) {
-        t.textContent = '¡Gracias por contarnos!'; p.textContent = 'Nos sirve para seguir mejorando. ¡Salud!';
-      } else {
-        t.textContent = 'Gracias por decírnoslo.'; p.textContent = 'El equipo lo va a revisar.';
-      }
+      const [titulo, texto, boton] = RESENA[r.tono] || RESENA[tonoDe(score)];
+      $('#gracias-t').textContent = r.ya_respondida ? '¡Gracias!' : titulo;
+      $('#gracias-p').textContent = r.ya_respondida ? 'Ya nos habías respondido hoy. Si quieres, cuéntanos tu experiencia en Google.' : texto;
+      const btn = $('#resena');
+      btn.hidden = !(r.invitar_resena && r.resena_url);
+      if (!btn.hidden) { btn.href = r.resena_url; $('#resena-t').textContent = r.ya_respondida ? 'Contarlo en Google' : boton; }
       $('#nps-gracias').hidden = false;
       $('#nps-gracias').focus();
     } catch (ex) {
@@ -684,52 +777,203 @@
   }
 
   function clickResena() {
-    // El enlace abre la reseña en otra pestaña por sí mismo; aquí solo se registra el clic.
+    // El enlace abre la reseña en otra pestaña por sí mismo; aquí solo se registra el clic (con la cookie).
     const visita = state.visitaId || (state.socio && state.socio.visita_hoy);
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.token) headers.Authorization = 'Bearer ' + state.token;
     try {
       fetch('/api/resena-click', {
-        method: 'POST', keepalive: true,
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + state.token },
+        method: 'POST', keepalive: true, credentials: 'same-origin', headers,
         body: JSON.stringify({ visita_id: visita }),
       }).catch(() => {});
     } catch (e) { /* sin red: no bloquea la reseña */ }
   }
 
+  // ── Ranking ────────────────────────────────────────────────────────────────
+  function pintarPreferencia() {
+    const s = state.socio;
+    $('#rank-pref').hidden = !s;
+    if (!s) return;
+    const on = s.mostrar_ranking !== false;
+    $('#rank-switch').setAttribute('aria-checked', String(on));
+    $('#rank-switch-h').textContent = on
+      ? 'Apareces como «' + (s.alias || s.nombre.split(' ')[0]) + '». Puedes ocultarte cuando quieras.'
+      : 'No apareces en la lista pública, pero sigues sumando visitas y ves tu lugar.';
+  }
+
+  async function cargarRanking(periodo, forzar) {
+    state.periodo = periodo;
+    $$('[data-periodo]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.periodo === periodo)));
+    const cache = state.ranking[periodo];
+    if (cache && !forzar) { pintarRanking(cache); return; }
+    const estado = $('#rank-estado');
+    $('#rank-lista').setAttribute('aria-busy', 'true');
+    if (!cache) estado.textContent = 'Cargando ranking…';
+    try {
+      const r = await api('/ranking?periodo=' + periodo);
+      state.ranking[periodo] = r;
+      if (state.periodo === periodo) pintarRanking(r);
+    } catch (ex) {
+      if (state.periodo !== periodo) return;
+      estado.replaceChildren(ex.status === 0 ? 'Sin conexión: no pudimos cargar el ranking. ' : ex.message + ' ',
+        h('button', { type: 'button', class: 'linkbtn', text: 'Reintentar', onclick: () => cargarRanking(periodo, true) }));
+    } finally {
+      $('#rank-lista').setAttribute('aria-busy', 'false');
+    }
+  }
+
+  function medalla(pos) {
+    if (pos === 1) {
+      return h('span', { class: 'rank__pos rank__pos--1', 'aria-hidden': 'true' },
+        h('span', { class: 'sticker rank__sticker' }, h('img', { src: '/assets/img/marca/favicon-192.png', alt: '', width: 192, height: 192 })),
+        h('span', { class: 'rank__n', text: '1' }));
+    }
+    if (pos <= 3) {
+      return h('span', { class: 'rank__pos rank__pos--' + pos, 'aria-hidden': 'true' }, svgUse('pluma', 'rank__pluma'), h('span', { class: 'rank__n', text: String(pos) }));
+    }
+    return h('span', { class: 'rank__pos', 'aria-hidden': 'true' }, h('span', { class: 'rank__n', text: String(pos) }));
+  }
+
+  function pintarRanking(r) {
+    const periodo = r.periodo || state.periodo;
+    const filas = r.ranking || [];
+    const yo = r.yo;
+    const s = state.socio;
+    $('#rank-estado').textContent = filas.length ? `Top ${filas.length} ${PERIODOS[periodo]}.` : '';
+
+    // "Tú vas en el lugar N de M"
+    const box = $('#rank-yo');
+    box.hidden = false;
+    if (yo && yo.posicion) {
+      box.replaceChildren(h('p', null, 'Tú vas en el lugar ', h('b', { class: 'mono', text: '#' + yo.posicion }), ` de ${yo.participantes} ${PERIODOS[periodo]}`),
+        h('small', { text: `${yo.visitas} ${yo.visitas === 1 ? 'visita' : 'visitas'} ${PERIODOS[periodo]}.` }));
+    } else if (s) {
+      box.replaceChildren(h('p', { text: `Aún no tienes visitas ${PERIODOS[periodo]}.` }),
+        h('small', { text: 'Registra la de hoy con el código del día para entrar al ranking.' }));
+    } else {
+      box.replaceChildren(h('p', { text: '¿Quieres aparecer aquí?' }),
+        h('button', { type: 'button', class: 'linkbtn', text: 'Crea tu Pasaporte y registra tus visitas', onclick: () => { elegirPestana('pase'); elegirTab('registro'); $('#r-nombre').focus(); } }));
+    }
+
+    const lista = $('#rank-lista');
+    if (!filas.length) {
+      lista.replaceChildren(h('li', { class: 'rank__vacio' }, svgUse('pluma', 'rank__vacio-ico'), h('span', { text: PRIMERO[periodo] })));
+      return;
+    }
+    const esYo = (f) => s && yo && s.mostrar_ranking !== false && f.alias === s.alias && f.visitas === yo.visitas;
+    lista.replaceChildren(...filas.map((f) => {
+      const mio = esYo(f);
+      return h('li', { class: 'rank__fila' + (f.posicion <= 3 ? ' rank__fila--podio' : '') + (mio ? ' rank__fila--yo' : '') },
+        medalla(f.posicion),
+        h('span', { class: 'rank__alias' }, h('span', { class: 'sr-only', text: `Lugar ${f.posicion}: ` }), f.alias, mio && h('span', { class: 'rank__tu', text: 'Tú' })),
+        h('span', { class: 'rank__v mono', text: `${f.visitas} ${f.visitas === 1 ? 'visita' : 'visitas'}` }));
+    }));
+  }
+
+  async function cambiarPreferencia() {
+    const s = state.socio;
+    if (!s) return;
+    const sw = $('#rank-switch');
+    const nuevo = sw.getAttribute('aria-checked') !== 'true';
+    sw.setAttribute('aria-checked', String(nuevo));   // optimista
+    sw.disabled = true;
+    err('');
+    try {
+      const r = await api('/yo/preferencias', { mostrar_ranking: nuevo });
+      actualizarSocio(r.socio);
+      marcarSinRed(false);
+      pintarPasaporte();
+      msg(nuevo ? 'Listo: apareces en el ranking público.' : 'Listo: ya no apareces en el ranking público.');
+      cargarRanking(state.periodo, true);
+    } catch (ex) {
+      sw.setAttribute('aria-checked', String(!nuevo));
+      if (ex.status === 401) { sesionVencida(); return; }
+      err(ex.status === 0 ? 'Sin conexión: no se guardó el cambio. Inténtalo otra vez.' : ex.message);
+    } finally { sw.disabled = false; sw.focus(); }
+  }
+
+  // ── Sesión: arranque, refresco y salida ────────────────────────────────────
   async function salir() {
     const tok = state.token;
     cerrarSesionLocal();
+    marcarSinRed(false);
     $('#premio').hidden = true; $('#nps-gracias').hidden = true; $('#checkin-form').hidden = true;
     pintarPasaporte();
     msg('Saliste de tu Pasaporte. ¡Vuelve pronto!');
     elegirTab('entrar');
     $('#tab-entrar').focus();
-    if (tok) {
-      try { await fetch('/api/logout', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: '{}' }); } catch (e) { /* ya se cerró en el dispositivo */ }
-    }
+    safeSet(SALIR_KEY, '1');   // si no hay red, la siguiente carga termina de borrar la cookie
+    if (await cerrarEnServidor(tok)) safeSet(SALIR_KEY, null);
+    else msg('Saliste en este celular. Cuando vuelva la conexión cerraremos también tu sesión en el servidor.');
   }
 
-  async function cargarSocio() {
-    if (!state.token) { pintarPasaporte(); return; }
+  /** POST /api/logout: el servidor borra la sesión y la cookie. true si respondió (200 o 401). */
+  async function cerrarEnServidor(tok) {
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (tok) headers.Authorization = 'Bearer ' + tok;
+      const res = await fetch('/api/logout', { method: 'POST', credentials: 'same-origin', headers, body: '{}' });
+      if (res.status === 401 && tok) return cerrarEnServidor(null);   // token viejo: borra la de la cookie
+      return res.status < 500;
+    } catch (e) { return false; }
+  }
+
+  /** Pide /api/yo SIEMPRE (la cookie puede existir aunque Safari haya borrado el localStorage).
+   *  Solo un 401 cierra la sesión; red caída o 5xx conservan el estado y reintentan. */
+  async function refrescarSocio() {
+    clearTimeout(state.reintento);
+    if (safeGet(SALIR_KEY)) {
+      if (!(await cerrarEnServidor(state.token))) { state.comprobando = false; pintarPasaporte(); marcarSinRed(true); return; }
+      safeSet(SALIR_KEY, null);
+      cerrarSesionLocal();
+    }
+    const tenia = !!state.socio;
     try {
       const r = await api('/yo');
-      state.socio = r.socio;
+      actualizarSocio(r.socio);
+      marcarSinRed(false);
     } catch (ex) {
-      if (ex.status === 401) cerrarSesionLocal();
+      if (ex.status === 401) {
+        cerrarSesionLocal();
+        marcarSinRed(false);
+        if (tenia) { err('Tu sesión venció. Vuelve a entrar con tu teléfono y PIN.'); elegirTab('entrar'); }
+      } else if (esFalloDeRed(ex)) {
+        marcarSinRed(true);
+      }
+    } finally {
+      state.comprobando = false;
     }
     pintarPasaporte();
   }
 
   function iniciarPasaporte() {
     const d = dlg();
-    $('#abrir-pasaporte').addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', '#pasaporte'); abrirPasaporte(); });
+    $('#abrir-pasaporte').addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', '#pasaporte'); abrirPasaporte('pase'); });
     $$('[data-cerrar]', d).forEach((b) => b.addEventListener('click', cerrarPasaporte));
     d.addEventListener('click', (e) => { if (e.target === d) cerrarPasaporte(); });
     d.addEventListener('close', onCerrado);
-    window.addEventListener('hashchange', () => { if (location.hash === '#pasaporte') abrirPasaporte(); });
+    window.addEventListener('hashchange', () => {
+      if (location.hash === '#pasaporte') abrirPasaporte('pase');
+      else if (location.hash === '#ranking') abrirPasaporte('ranking');
+    });
+
+    // Pestañas Mi Pasaporte / Ranking (flechas izquierda/derecha, Inicio/Fin)
+    $('#ptab-pase').addEventListener('click', () => elegirPestana('pase'));
+    $('#ptab-ranking').addEventListener('click', () => elegirPestana('ranking'));
+    $('#ptab-pase').parentElement.addEventListener('keydown', (e) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+      e.preventDefault();
+      const destino = e.key === 'Home' ? 'pase' : e.key === 'End' ? 'ranking' : (state.tab === 'pase' ? 'ranking' : 'pase');
+      elegirPestana(destino);
+      $(destino === 'pase' ? '#ptab-pase' : '#ptab-ranking').focus();
+    });
+    $('#pase-rank').addEventListener('click', () => { state.periodo = 'mes'; elegirPestana('ranking'); $('#rank-h').focus(); });
+    $$('[data-periodo]').forEach((b) => b.addEventListener('click', () => cargarRanking(b.dataset.periodo)));
+    $('#rank-switch').addEventListener('click', cambiarPreferencia);
 
     $('#tab-registro').addEventListener('click', () => { err(''); elegirTab('registro'); });
     $('#tab-entrar').addEventListener('click', () => { err(''); elegirTab('entrar'); });
-    $('.seg').addEventListener('keydown', (e) => {
+    $('#tab-registro').parentElement.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       const reg = $('#tab-registro').getAttribute('aria-selected') === 'true';
       elegirTab(reg ? 'entrar' : 'registro');
@@ -753,7 +997,16 @@
     $('#resena').addEventListener('click', clickResena);
     $('#salir').addEventListener('click', salir);
 
-    cargarSocio().then(() => { if (location.hash === '#pasaporte') abrirPasaporte(); });
+    // 1) Pinta YA con la caché (sin parpadeo de formularios). 2) Refresca en segundo plano.
+    state.socio = leerCache();
+    state.comprobando = !state.socio;
+    pintarPasaporte();
+    if (location.hash === '#pasaporte') abrirPasaporte('pase');
+    else if (location.hash === '#ranking') abrirPasaporte('ranking');
+    refrescarSocio();
+    // Al volver a la pestaña (p. ej. al día siguiente) o al recuperar la red, refresca.
+    window.addEventListener('online', () => refrescarSocio());
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refrescarSocio(); });
   }
 
   // ── Arranque ───────────────────────────────────────────────────────────────

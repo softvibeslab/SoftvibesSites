@@ -19,6 +19,8 @@ DOCS = [  # (archivo fuente, slug, título, descripción)
      "Diagnóstico, plataforma de marca «¡Cuéntalo en el Cisne!», maridaje, lealtad, NPS, redes y KPIs."),
     ("03-plan-ejecucion.md", "plan", "Plan de ejecución",
      "Las 6 fases, su estado, la arquitectura elegida y los riesgos."),
+    ("04-gamificacion.md", "gamificacion", "Plan de gamificación del Pasaporte",
+     "Plumas, combo «Cuéntalo» (publicación + calificación = 2 visitas), rachas, referidos, niveles e insignias."),
     ("BACKLOG.md", "backlog", "Backlog del cliente",
      "Lo que necesitamos de Cisne Negro: exportación de Meta, accesos y Threads."),
     ("scraping/README.md", "inventario", "Inventario de contenido (scraping)",

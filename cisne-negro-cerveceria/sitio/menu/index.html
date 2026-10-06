@@ -146,9 +146,22 @@
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
       </button>
     </div>
+    <div class="pase__tabs">
+      <div class="seg seg--pase" role="tablist" aria-label="Pasaporte y ranking">
+        <button type="button" role="tab" id="ptab-pase" aria-controls="ppanel-pase" aria-selected="true">Mi Pasaporte</button>
+        <button type="button" role="tab" id="ptab-ranking" aria-controls="ppanel-ranking" aria-selected="false" tabindex="-1">Ranking</button>
+      </div>
+    </div>
     <div class="pase__body">
+      <p class="pase__red" id="pase-red" role="status" aria-live="polite" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 8.5a15 15 0 0 1 20 0M5.5 12a10 10 0 0 1 13 0M9 15.5a5 5 0 0 1 6 0M3 3l18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span id="pase-red-t">Sin conexión. Te mostramos tu Pasaporte guardado y reintentamos solos.</span>
+      </p>
       <p class="pase__msg" id="pase-msg" role="status" aria-live="polite"></p>
       <p class="pase__err" id="pase-err" role="alert" aria-live="assertive"></p>
+
+      <div id="ppanel-pase" role="tabpanel" aria-labelledby="ptab-pase">
+      <p class="pase__cargando" id="pase-cargando" hidden>Revisando tu Pasaporte…</p>
 
       <!-- Sin sesión -->
       <div id="pase-invitado" hidden>
@@ -206,7 +219,10 @@
 
       <!-- Con sesión -->
       <div id="pase-socio" hidden>
-        <p class="pase__hola" id="pase-hola"></p>
+        <div class="pase__saludo">
+          <p class="pase__hola" id="pase-hola"></p>
+          <button type="button" class="rank-chip mono" id="pase-rank" hidden></button>
+        </div>
 
         <div class="libreta">
           <ol class="sellos" id="sellos" aria-label="Sellos de este ciclo"></ol>
@@ -257,7 +273,7 @@
         <div class="bloque gracias" id="nps-gracias" hidden tabindex="-1">
           <p class="gracias__t" id="gracias-t"></p>
           <p id="gracias-p"></p>
-          <a class="btn btn--primary btn--block" id="resena" target="_blank" rel="noopener" hidden>Contarlo en Google</a>
+          <a class="btn btn--primary btn--block" id="resena" target="_blank" rel="noopener" hidden><span id="resena-t">Contarlo en Google</span><span class="sr-only"> (se abre en otra pestaña)</span></a>
         </div>
 
         <div class="bloque" id="cortesias-bloque" hidden>
@@ -266,6 +282,28 @@
         </div>
 
         <button type="button" class="btn btn--ghost btn--block salir" id="salir">Salir</button>
+      </div>
+      </div>
+
+      <!-- Ranking (se ve con o sin sesión) -->
+      <div id="ppanel-ranking" role="tabpanel" aria-labelledby="ptab-ranking" hidden>
+        <h3 class="rank__h" id="rank-h" tabindex="-1">Ranking del Cisne</h3>
+        <p class="fine">Quién ha venido más veces. En la lista pública solo aparece tu nombre y la inicial de tu apellido.</p>
+        <div class="seg seg--3" role="group" aria-label="Periodo del ranking">
+          <button type="button" data-periodo="semana" aria-pressed="false">Semana</button>
+          <button type="button" data-periodo="mes" aria-pressed="true">Mes</button>
+          <button type="button" data-periodo="total" aria-pressed="false">Total</button>
+        </div>
+        <div class="rank__yo" id="rank-yo" hidden></div>
+        <p class="rank__estado" id="rank-estado" role="status" aria-live="polite"></p>
+        <ol class="rank" id="rank-lista" aria-labelledby="rank-h"></ol>
+        <div class="rank__pref" id="rank-pref" hidden>
+          <button type="button" class="switch" role="switch" id="rank-switch" aria-checked="true" aria-describedby="rank-switch-h">
+            <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
+            <span class="switch__label">Aparecer en el ranking público (solo nombre e inicial)</span>
+          </button>
+          <p class="fine" id="rank-switch-h"></p>
+        </div>
       </div>
     </div>
   </dialog>

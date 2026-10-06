@@ -78,11 +78,11 @@ Un menú QR propio (`/menu/`) donde **la cerveza va primero**: cada barril con e
 
 ### 4.5 NPS y reseñas
 QR en la cuenta o en el portavasos: una pregunta NPS (0–10) más un comentario.
-- **9–10:** invitación directa a dejar reseña en Google (y en Untappd si es cervecera).
-- **7–8:** se pregunta "¿Qué nos faltó para el 10?".
-- **0–6:** alerta privada a los dueños y contacto en menos de 24 h; **no** se le pide reseña pública.
+- **Todos** reciben después la invitación a contar su experiencia en Google, sin premio. Pedir reseñas solo a quien calificó alto ("review gating") va contra las políticas de Google.
+- El texto cambia según el score: con 9–10 "¿Nos ayudas contándolo en Google?"; con 7–8 "Si quieres, cuéntanos en Google"; con 0–6 "El equipo lo va a revisar; también puedes dejar tu opinión en Google".
+- **0–6:** alerta privada a los dueños en la bandeja del panel y contacto por WhatsApp en menos de 24 h.
 
-El panel del equipo (`/admin/`) muestra el NPS, los detractores por recuperar (con enlace a WhatsApp) y los clics a reseña. La cortesía se da por la visita, **nunca por la reseña** (Google prohíbe reseñas incentivadas).
+El panel del equipo (`/admin/`) tiene CRUD de NPS (incluida la captura en papel), estadísticas y KPIs, CRUD de miembros y ranking. La cortesía se da por la visita, **nunca por la reseña**.
 
 ### 4.6 Redes sociales
 - **Ritmo:** 3 publicaciones por semana + historias diarias en días de servicio.

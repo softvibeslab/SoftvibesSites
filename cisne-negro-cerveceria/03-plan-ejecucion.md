@@ -81,18 +81,27 @@ Informe HTML en `analisis/index.html`, mismo formato que los análisis previos (
 - **Backend** `backend/club_server.py`: Python estándar + SQLite, servicio systemd `cisnenegro-club` detrás de nginx en `/api/`, con un respaldo diario a las 03:30 (CDMX). Prueba de humo: `python3 backend/test_club.py` (20 verificaciones).
 - **Socios:** nombre, teléfono y PIN de 4 dígitos, con aceptación del aviso de privacidad (`/privacidad/`) y opt-in de WhatsApp.
 - **Check-in** con el código del día (4 dígitos, cambia diario, lo da el equipo), una visita por día. Cortesías en la visita 5 (4 oz) y la 10 (12 oz) con código `CN-XXXXX` y vigencia de 30 días.
-- **NPS** tras cada visita: 9–10 → invitación a reseñar en Google (sin premio); 0–6 → bandeja de recuperación.
+- **NPS** tras cada visita: **todos** reciben la invitación a Google, sin premio y con texto según el score; 0–6 → bandeja de recuperación.
+- **v2 (2026-10-06):** sesión persistente por cookie HttpOnly de 180 días, CRUD de NPS y de miembros, estadísticas y KPIs, y ranking público (alias «Ana R.», con opción de ocultarse). Pruebas: 48 verificaciones.
 - **Panel del equipo** `/admin/` (usuario y contraseña de nginx): código del día, canje de cortesías, métricas de 30 días, bandeja NPS con seguimiento y exportación de socios a CSV.
 - **Pendiente:** reto "Vacía el barril" y Club del Barril (avisos de barril nuevo por WhatsApp), que se anuncian como "Próximamente". También falta validar el aviso de privacidad con el cliente (razón social y responsable).
 
-## Fase 6 — Lanzamiento y operación (semana 3 en adelante)
+## Fase 6 — Lanzamiento y operación ← SIGUIENTE
 
-- Arreglos rápidos de la propuesta §4.1 (pueden adelantarse a la semana 1).
-- Calendario editorial de 30 días con los formatos fijos de la propuesta §4.6.
-- Kit de outreach si es prospecto: WhatsApp + email con el enlace al análisis y al demo (no se envía sin aprobación).
-- Revisión mensual de KPIs (propuesta §5).
+**Semana 1 (con el cliente)**
+- [ ] Recorrido del sitio, el menú y el panel con los dueños; aprobar maridajes, notas de cata, historia de cada nombre y aviso de privacidad (razón social, casilla 18+).
+- [ ] Capacitación del equipo (15 min): código del día, canje de cortesías, alta en barra, bandeja NPS y cómo recuperar a un detractor por WhatsApp.
+- [ ] Imprimir el QR del menú (`/assets/qr/menu-qr.svg`) en portavasos y mesas, más un cartel "Pasaporte Cisne".
+- [ ] Arreglos rápidos: retirar la landing de Abacus, corregir Tripadvisor, renombrar a "Cervecería Cisne Negro" y agregar la categoría "Cervecería/Brewpub" en Google, crear el perfil de Untappd y enlazar redes y WhatsApp en cisnenegro.mx.
+- [ ] **Responder las 69 reseñas de Google** (empezando por las 9 críticas). Requiere el acceso B3 del backlog.
 
----
+**Semana 2–4**
+- [ ] Decidir el dominio final: `menu.cisnenegro.mx` / `club.cisnenegro.mx` apuntando al VPS, o migrar el sitio completo desde Squarespace. Al migrar, quitar `noindex` y regenerar el QR.
+- [ ] Calendario editorial de 30 días con los formatos de la propuesta §4.6 (barril de la semana, lunes de producción, maridaje del finde, comunidad y eventos) y reactivar TikTok.
+- [ ] Gamificación G1: plumas y combo «Cuéntalo» (ver [04-gamificacion.md](04-gamificacion.md)).
+- [ ] Primera revisión mensual de KPIs en el panel (Estadísticas) contra las metas de la propuesta §5.
+
+**Continuo:** backlog del cliente B1–B4 (exportación de Meta, Business Suite, Google admin, Threads).
 
 ## Cronograma resumido
 
