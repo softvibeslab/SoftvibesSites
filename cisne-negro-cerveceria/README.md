@@ -27,7 +27,15 @@ Proyecto de marca y presencia digital: investigación, análisis, landing, menú
 - **Auditoría responsiva:** `tests/responsive/audit.cjs` revisa 20 perfiles en 3 motores (Android, iPhone, iPad y tabletas Android, Mac, Windows, 2560 px) sobre 13 vistas: desbordes, objetivos táctiles, zoom de iOS, recortes y errores JS. Uso: `python3 backend/dev_server.py 8082 &` y luego `NODE_PATH=<carpeta con playwright>/node_modules node tests/responsive/audit.cjs`. Las capturas y `reporte.json` quedan en `sitio/qa/responsive/` (fuera de git).
 - **Infra:** DNS A `cisnenegro.softvibes.art → 31.220.63.211` (Hostinger), vhost nginx `deploy/nginx-cisnenegro.conf`, SSL de Let's Encrypt (certbot), y el panel protegido con basic auth.
 
-## Último despliegue — 2026-10-06 12:07 UTC · `27df153` (`feat/cisne-negro-continuacion`)
+## Último despliegue — 2026-10-06 12:15 UTC · `f63794d` (corrección de caché)
+
+- **Problema:** producción ya era idéntica a la versión local, pero los navegadores mostraban las imágenes, el CSS y el JS anteriores. `/assets/` se cacheaba 7 días (`max-age=604800`) y las imágenes nuevas conservaron su nombre.
+- **Cambio:** versión `?v=20261006b` en las URLs de CSS, JS e imágenes de las cervezas, y nginx con `Cache-Control: no-cache` en todo el sitio (el navegador revalida y recibe 304 si no cambió). Para el próximo cambio de imágenes con el mismo nombre ya no hace falta subir la versión, aunque hacerlo no estorba.
+- **nginx del servidor:** se editó solo el vhost `cisnenegro.softvibes.art` (respaldo previo en `/var/backups/cisnenegro-web/20261006T121516Z/nginx-antes-cache.conf`), `nginx -t` ok y `systemctl reload nginx` (recarga sin cortes).
+- **Pruebas:** `tests/funcional/correr.sh` 70/70, `backend/test_club.py` 55/55 y smoke de producción en 4 navegadores OK. El backend no cambió, así que no hubo reinicio.
+- **Rollback de nginx:** `cp /var/backups/cisnenegro-web/20261006T121516Z/nginx-antes-cache.conf /etc/nginx/sites-available/cisnenegro.softvibes.art && nginx -t && systemctl reload nginx`
+
+## Despliegue anterior — 2026-10-06 12:07 UTC · `27df153` (`feat/cisne-negro-continuacion`)
 
 - **Comando:** `deploy/publicar.sh` desde un worktree limpio de `feat/cisne-negro-continuacion` (sin cambios sin commit).
 - **Contenido publicado:** el mismo sitio y backend que `66a3037` sin `/experiencia/` (los commits nuevos solo agregan pruebas, el script de publicación y documentación). Checksum posterior: 0 archivos distintos entre `sitio/` y producción; `club_server.py` idéntico, así que `cisnenegro-club` **no se reinició** (activo desde 10:26:46 UTC). `/experiencia/` del servidor quedó intacta.
