@@ -27,6 +27,28 @@ Proyecto de marca y presencia digital: investigación, análisis, landing, menú
 - **Auditoría responsiva:** `tests/responsive/audit.cjs` revisa 20 perfiles en 3 motores (Android, iPhone, iPad y tabletas Android, Mac, Windows, 2560 px) sobre 13 vistas: desbordes, objetivos táctiles, zoom de iOS, recortes y errores JS. Uso: `python3 backend/dev_server.py 8082 &` y luego `NODE_PATH=<carpeta con playwright>/node_modules node tests/responsive/audit.cjs`. Las capturas y `reporte.json` quedan en `sitio/qa/responsive/` (fuera de git).
 - **Infra:** DNS A `cisnenegro.softvibes.art → 31.220.63.211` (Hostinger), vhost nginx `deploy/nginx-cisnenegro.conf`, SSL de Let's Encrypt (certbot), y el panel protegido con basic auth.
 
+## Entorno /v2 — https://cisnenegro.softvibes.art/v2/ (Mi pedido, Wi-Fi y app instalable)
+
+Vista previa de la siguiente versión, **separada de producción**: la raíz `/` sigue sirviendo `f63794d` sin cambios.
+
+- **Rama:** `feat/cisne-negro-v2-pedido` · publicado `d8d7850` el 2026-10-06 13:43 UTC.
+- **Qué incluye:**
+  - "Mi pedido": agregar con medidas y variantes, barra flotante, notas, mesa y tarjeta "Para tu mesero" con Wake Lock (plan: `05-plan-pedido-app-wifi.md`).
+  - Wi-Fi en el menú, con copiar y QR, y su pestaña **Ajustes** en `/v2/admin/` (pública / solo socios / oculta).
+  - App instalable (manifest, service worker con alcance `/v2/`, tarjeta para socios).
+- **Infraestructura:**
+  - `deploy/construir-v2.py` reescribe las rutas a `/v2/…` y falla si queda alguna sin prefijo.
+  - Backend propio `cisnenegro-club-v2` (127.0.0.1:8791, cookie `Path=/v2/api`) con **base aparte** en `/var/lib/cisnenegro-club-v2/club.db`. Los socios reales no se tocan.
+  - nginx incluye `snippets/cisnenegro-v2.conf` en el vhost (el panel y la API de admin usan la misma contraseña del equipo).
+  - Instalación única: `deploy/v2/instalar-v2.sh`. Publicar: `deploy/publicar-v2.sh` (respaldo en `/var/backups/cisnenegro-web/v2-<fecha>/`).
+  - `deploy/publicar.sh` (producción) excluye `/v2/`.
+- **Pruebas (2026-10-06):**
+  - Backend 67/67, `pedido.test.cjs` 12/12, funcional 132/132 y auditoría responsiva sin regresiones.
+  - En `/v2` real, en iPhone 16 (WebKit), Pixel 7, Mac 1440 y Windows Firefox 1366: pedido ($375 = 100 + 135 + 140), tarjeta del mesero con mesa, "Ya lo pedí", Wi-Fi con QR, Pasaporte y service worker con alcance `/v2/`, con 0 errores JS, 0 recursos fallidos y 0 desbordes.
+  - Con sesión real en iPhone: registro, tarjeta de instalar con pasos de iOS, sesión persistente tras recargar, y Wi-Fi "solo socios" (el invitado no ve la contraseña; el socio sí). Los socios de prueba se borraron y el Wi-Fi volvió a los datos de ejemplo.
+- **Limitación conocida:** en Android/Chrome la tarjeta de instalar aparece solo cuando el navegador ofrece la instalación nativa (`beforeinstallprompt`). No se pudo verificar en un navegador automatizado; probar en un Android real.
+- **Pasar a producción:** cuando el cliente apruebe, fusionar `feat/cisne-negro-v2-pedido` y publicar con `deploy/publicar.sh` (la raíz y `/api` usan el backend de producción; aplicar antes el mismo `club_server.py`).
+
 ## Último despliegue — 2026-10-06 12:15 UTC · `f63794d` (corrección de caché)
 
 - **Problema:** producción ya era idéntica a la versión local, pero los navegadores mostraban las imágenes, el CSS y el JS anteriores. `/assets/` se cacheaba 7 días (`max-age=604800`) y las imágenes nuevas conservaron su nombre.
