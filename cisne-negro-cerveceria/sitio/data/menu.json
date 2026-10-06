@@ -1,7 +1,7 @@
 {
   "_meta": {
     "fuente": "cisnenegro.mx/menu transcrito el 2026-10-05",
-    "notas": "Las 'notas' de barril describen el perfil típico del estilo, no una cata del cervecero. 'historia' queda vacía hasta que el cliente cuente el origen de cada nombre. Maridajes: propuesta pendiente de validar con los cerveceros.",
+    "notas": "Las 'notas' de barril describen el perfil típico del estilo, salvo ¿A poco sí pa'? (notas oficiales de la marca, IG 2025-04-30). 'historia' queda vacía hasta que el cliente cuente el origen de cada nombre. Maridajes: 'marida_oficial' = sugerencia publicada por Cisne Negro (IG 2026-01-20); el resto, propuesta pendiente de validar. Imágenes: ilustraciones en assets/img/cervezas (herramientas/ilustrar-cervezas.cjs) y arte oficial de etiqueta en assets/img/cervezas/etiquetas. Pendiente: Henry IX aparece como Munich Helles en IG (dic 2025) y como IPA en el menú; ¿A poco sí pa'? 6.8% ABV en IG y 6.9% en el menú.",
     "moneda": "MXN"
   },
   "negocio": {
@@ -70,7 +70,9 @@
       "marida_con": [
         "hamburguesa-costilla",
         "tlayuda"
-      ]
+      ],
+      "img": "alarma.jpg",
+      "etiqueta": "etiquetas/alarma.jpg"
     },
     {
       "id": "henry-ix",
@@ -93,15 +95,16 @@
       "marida_con": [
         "taco-pescado",
         "camarones-piedra"
-      ]
+      ],
+      "img": "henry-ix.jpg"
     },
     {
       "id": "a-poco-si-pa",
       "nombre": "¿A poco sí pa'?",
-      "estilo": "IPA",
+      "estilo": "American IPA",
       "abv": 6.9,
       "perfil": "lupulada",
-      "notas": "Amargor marcado y notas de pino y cítricos.",
+      "notas": "Intensa y aromática, de perfil tropical y cítrico: piña, mango, papaya, melón y un ligero toque resinoso.",
       "precios": [
         {
           "medida": "12 oz",
@@ -114,9 +117,15 @@
       ],
       "historia": "",
       "marida_con": [
-        "hamburguesa-suadero",
-        "taco-asada"
-      ]
+        "palomitas-coliflor",
+        "hamburguesa-suadero"
+      ],
+      "img": "a-poco-si-pa.jpg",
+      "etiqueta": "etiquetas/a-poco-si-pa.jpg",
+      "marida_oficial": [
+        "palomitas-coliflor"
+      ],
+      "ibu": 62
     },
     {
       "id": "agua-puerca",
@@ -137,8 +146,12 @@
       ],
       "historia": "Su nombre nació de una plática en la barra del Cisne.",
       "marida_con": [
-        "dona-tocino",
-        "pastel-campechanas"
+        "tlayuda",
+        "dona-tocino"
+      ],
+      "img": "agua-puerca.jpg",
+      "marida_oficial": [
+        "tlayuda"
       ]
     },
     {
@@ -164,7 +177,8 @@
         "aguachile-ny",
         "ceviche-atun",
         "palomitas-coliflor"
-      ]
+      ],
+      "img": "guamaica.jpg"
     },
     {
       "id": "barrilete-cosmico",
@@ -187,7 +201,9 @@
       "marida_con": [
         "hamburguesa-manchego",
         "tartar-cecina"
-      ]
+      ],
+      "img": "barrilete-cosmico.jpg",
+      "etiqueta": "etiquetas/barrilete-cosmico.jpg"
     }
   ],
   "vuelo": {

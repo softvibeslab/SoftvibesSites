@@ -43,6 +43,23 @@
     var card = el('article', 'tap');
     card.id = 'barril-' + beer.id;
 
+    if (beer.img) {
+      var fig = el('figure', 'tap__fig');
+      var img = el('img', 'tap__img');
+      img.src = '/assets/img/cervezas/' + beer.img;
+      img.alt = 'Ilustración de ' + beer.nombre + ' (' + beer.estilo + ') servida en el vaso de Cisne Negro';
+      img.width = 900; img.height = 900; img.loading = 'lazy'; img.decoding = 'async';
+      fig.appendChild(img);
+      if (beer.etiqueta) {
+        var a = el('a', 'tap__etq', 'Ver etiqueta');
+        a.href = '/assets/img/cervezas/' + beer.etiqueta;
+        a.target = '_blank'; a.rel = 'noopener';
+        a.setAttribute('aria-label', 'Ver el arte oficial de la etiqueta de ' + beer.nombre + ' (se abre en otra pestaña)');
+        fig.appendChild(a);
+      }
+      card.appendChild(fig);
+    }
+
     var top = el('div', 'tap__top');
     top.appendChild(el('span', 'tap__num', String(i + 1).padStart(2, '0')));
     if (beer.perfil) {
@@ -51,7 +68,7 @@
     card.appendChild(top);
 
     card.appendChild(el('h3', 'tap__name', beer.nombre));
-    card.appendChild(el('p', 'tap__meta', (beer.estilo || '') + ' · ' + abv(beer.abv)));
+    card.appendChild(el('p', 'tap__meta', [beer.estilo, abv(beer.abv), beer.ibu ? beer.ibu + ' IBU' : ''].filter(Boolean).join(' · ')));
     if (beer.cerveceria) card.appendChild(el('p', 'tap__guest', 'De ' + beer.cerveceria));
 
     if (beer.notas) card.appendChild(el('p', 'tap__notes', beer.notas));
