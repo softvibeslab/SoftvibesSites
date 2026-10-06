@@ -544,11 +544,11 @@ h3 { font-family: var(--f-display); font-weight: 800; text-transform: uppercase;
 .tap__fig { position: relative; margin: -22px -22px 18px; }
 .tap__img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius) var(--radius) 0 0; background: #FBF6E6; }
 .tap__etq {
-  position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px;
-  border-radius: 999px; border: 2px solid var(--tinta); background: var(--hueso); color: var(--tinta);
-  font-weight: 800; font-size: .875rem; text-decoration: none; box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; margin: 0 auto 0 10px;
+  border-radius: 999px; border: 1.5px solid rgba(242,201,125,.5); color: var(--neon);
+  font-weight: 800; font-size: .8125rem; text-decoration: none;
 }
-.tap__etq:hover { background: var(--neon); }
+.tap__etq:hover { background: rgba(242,201,125,.12); }
 .pair { position: relative; }
 .pair__vaso {
   position: absolute; top: 12px; right: 12px; width: 84px !important; height: 84px !important; aspect-ratio: 1;

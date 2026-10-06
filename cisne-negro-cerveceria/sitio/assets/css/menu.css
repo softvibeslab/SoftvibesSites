@@ -627,13 +627,12 @@ main { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad); }
 .tap__fig { position: relative; margin: -18px -18px 16px; }
 .tap__img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius) var(--radius) 0 0; background: #FBF6E6; }
 .tap__etq {
-  position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 8px;
-  min-height: 44px; padding: 4px 14px 4px 4px; border-radius: 999px; border: 2px solid var(--tinta);
-  background: var(--hueso); color: var(--tinta); font-weight: 800; font-size: .875rem; cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 auto 0 10px;
+  min-height: 44px; padding: 4px 14px 4px 4px; border-radius: 999px; border: 1.5px solid rgba(242,201,125,.5);
+  background: transparent; color: var(--neon); font-weight: 800; font-size: .8125rem; cursor: pointer;
 }
+.tap__etq:hover { background: rgba(242,201,125,.12); }
 .tap__etq img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--tinta); }
-.tap__etq:hover { background: var(--neon); }
 .mini__casa {
   display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; vertical-align: 2px;
   background: var(--neon); color: var(--tinta); font: 800 .6875rem/1.6 var(--f-mono); text-transform: uppercase; letter-spacing: .04em;

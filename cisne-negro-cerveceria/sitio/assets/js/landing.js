@@ -47,21 +47,21 @@
       var fig = el('figure', 'tap__fig');
       var img = el('img', 'tap__img');
       img.src = '/assets/img/cervezas/' + beer.img;
-      img.alt = 'Ilustración de ' + beer.nombre + ' (' + beer.estilo + ') servida en el vaso de Cisne Negro';
+      img.alt = (beer.etiqueta ? 'Diseño de ' + beer.nombre + ' inspirado en su etiqueta' : 'Ilustración de ' + beer.nombre) + ' (' + beer.estilo + '), servida en el vaso de Cisne Negro';
       img.width = 900; img.height = 900; img.loading = 'lazy'; img.decoding = 'async';
       fig.appendChild(img);
-      if (beer.etiqueta) {
-        var a = el('a', 'tap__etq', 'Ver etiqueta');
-        a.href = '/assets/img/cervezas/' + beer.etiqueta;
-        a.target = '_blank'; a.rel = 'noopener';
-        a.setAttribute('aria-label', 'Ver el arte oficial de la etiqueta de ' + beer.nombre + ' (se abre en otra pestaña)');
-        fig.appendChild(a);
-      }
       card.appendChild(fig);
     }
 
     var top = el('div', 'tap__top');
     top.appendChild(el('span', 'tap__num', String(i + 1).padStart(2, '0')));
+    if (beer.etiqueta) {
+      var etq = el('a', 'tap__etq', 'Ver etiqueta');
+      etq.href = '/assets/img/cervezas/' + beer.etiqueta;
+      etq.target = '_blank'; etq.rel = 'noopener';
+      etq.setAttribute('aria-label', 'Ver el arte oficial de la etiqueta de ' + beer.nombre + ' (se abre en otra pestaña)');
+      top.appendChild(etq);
+    }
     if (beer.perfil) {
       top.appendChild(el('span', 'chip chip--' + beer.perfil, PERFIL_LABEL[beer.perfil] || beer.perfil));
     }
