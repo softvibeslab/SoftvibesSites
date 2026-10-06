@@ -31,6 +31,10 @@
   const ASK = '¿Por qué se llama así? Pregúntale a tu bartender.';
   const VUELO_N = 4;
   const PREMIOS = { 5: '4 oz', 10: '12 oz' };   // casillas premiadas del Pasaporte (ver club_server.RECOMPENSAS)
+  const VER = '?v=20261006c';                     // versión de caché de los assets (ver /sw.js)
+  const INSTALAR_KEY = 'cisne.instalar.descartado'; // "Ahora no" en la invitación a instalar (30 días)
+  const INSTALAR_PAUSA = 30 * 24 * 60 * 60 * 1000;
+  const P = window.CisnePedido;                   // funciones puras de "Mi pedido" (assets/js/pedido.js)
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -40,7 +44,14 @@
     token: safeGet(TOKEN_KEY), socio: null, visitaId: null, npsScore: null,
     comprobando: false, sinRed: false, reintento: null, espera: 0,
     periodo: 'mes', ranking: {}, tab: 'pase',
+    pedido: null, wakeLock: null, avisoT: null,
+    wifi: null, wifiEstado: 'cargando', wifiTrasLogin: false, configPidiendo: 0,
+    promptInstalar: null, instalada: false,
   };
+
+  // La invitación nativa a instalar llega en cualquier momento (Android y Chrome/Edge de escritorio).
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); state.promptInstalar = e; if (document.readyState !== 'loading') pintarInstalar(); });
+  window.addEventListener('appinstalled', () => { state.promptInstalar = null; state.instalada = true; pintarInstalar(); });
 
   // ── Utilidades ─────────────────────────────────────────────────────────────
   function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -118,11 +129,11 @@
       const oficial = b.marida_oficial || [];
       const card = h('article', { class: 'tap', id: 'barril-' + b.id, 'data-perfil': b.perfil, 'aria-labelledby': 'tn-' + b.id },
         b.img && h('figure', { class: 'tap__fig' },
-          h('img', { class: 'tap__img', src: '/assets/img/cervezas/' + b.img + '?v=20261006b', alt: (b.etiqueta ? 'Diseño de ' + b.nombre + ' inspirado en su etiqueta' : 'Ilustración de ' + b.nombre) + ' (' + b.estilo + '), servida en el vaso de Cisne Negro', width: 900, height: 900, loading: i < 2 ? 'eager' : 'lazy', decoding: 'async' })),
+          h('img', { class: 'tap__img', src: '/assets/img/cervezas/' + b.img + VER, alt: (b.etiqueta ? 'Diseño de ' + b.nombre + ' inspirado en su etiqueta' : 'Ilustración de ' + b.nombre) + ' (' + b.estilo + '), servida en el vaso de Cisne Negro', width: 900, height: 900, loading: i < 2 ? 'eager' : 'lazy', decoding: 'async' })),
         h('div', { class: 'tap__top' },
           h('span', { class: 'tap__num', text: String(i + 1).padStart(2, '0') }),
           b.etiqueta && h('button', { type: 'button', class: 'tap__etq', 'data-etiqueta': b.etiqueta, 'data-nombre': b.nombre },
-            h('img', { src: '/assets/img/cervezas/' + b.etiqueta + '?v=20261006b', alt: '', width: 44, height: 44, loading: 'lazy', decoding: 'async' }),
+            h('img', { src: '/assets/img/cervezas/' + b.etiqueta + VER, alt: '', width: 44, height: 44, loading: 'lazy', decoding: 'async' }),
             h('span', { text: 'Ver etiqueta' })),
           b.perfil && h('span', { class: 'chip chip--' + b.perfil }, h('span', { class: 'dot dot--' + b.perfil }), PERFIL_LABEL[b.perfil] || b.perfil)),
         h('h3', { class: 'tap__name', id: 'tn-' + b.id, text: b.nombre }),
@@ -133,8 +144,12 @@
         (b.historia || '').trim()
           ? h('p', { class: 'tap__story', text: b.historia.trim() })
           : h('p', { class: 'tap__story tap__story--ask', text: ASK }),
-        h('ul', { class: 'tap__prices', 'aria-label': 'Precios' },
-          (b.precios || []).map((p) => h('li', null, h('span', { text: p.medida }), h('b', { text: money(p.precio) })))),
+        b.disponible === false
+          ? h('div', { class: 'tap__agotado' },
+            h('ul', { class: 'tap__prices', 'aria-label': 'Precios' },
+              (b.precios || []).map((p) => h('li', null, h('span', { text: p.medida }), h('b', { text: money(p.precio) })))),
+            h('p', { class: 'agotado', text: 'Agotado por hoy' }))
+          : pedirUI('barril', b.id, b.nombre, (b.precios || []).map((p) => ({ valor: p.medida, etiqueta: p.medida, precio: p.precio })), 'tap__pedir'),
         pairs.length > 0 && h('div', { class: 'marida' },
           h('p', { class: 'marida__t', text: 'Va perfecto con…' }),
           h('ul', { class: 'marida__lista' }, pairs.map((d) => h('li', null,
@@ -199,13 +214,49 @@
         h('div', { class: 'grupo__h' },
           h('h3', null, h('span', { class: 'dot dot--' + p }), PERFIL_LABEL[p] || p),
           perfiles[p] && h('p', { text: perfiles[p] })),
-        h('ul', { class: 'rows' }, items.map((l) => h('li', { class: 'row', 'data-perfil': p },
+        h('ul', { class: 'rows' }, items.map((l) => filaPedible('lata', l, p,
           h('div', null,
             h('span', { class: 'row__n', text: l.nombre }),
             h('span', { class: 'row__e', text: [l.estilo, abv(l.abv)].filter(Boolean).join(' · ') }),
-            h('span', { class: 'row__o', text: [l.cerveceria, l.origen].filter(Boolean).join(' · ') })),
-          h('span', { class: 'row__p', text: money(l.precio) }))))));
+            h('span', { class: 'row__o', text: [l.cerveceria, l.origen].filter(Boolean).join(' · ') })))))));
     });
+  }
+
+  /** Opciones de variante de un producto (Chips de Camote 55 g / 110 g, agua mineral natural / rusa). */
+  function opcionesDe(prod) {
+    if (!Array.isArray(prod.variantes) || !prod.variantes.length) return null;
+    return prod.variantes.filter((v) => v.disponible !== false).map((v) => ({
+      valor: v.id, etiqueta: v.nombre, precio: typeof v.precio === 'number' ? v.precio : prod.precio + (v.extra || 0),
+    }));
+  }
+
+  /** Fila de lata o bebida: nombre a la izquierda; precio y "＋ Agregar" a la derecha.
+   *  Con variantes, los chips (con su precio) y el botón ocupan una segunda línea. */
+  function filaPedible(tipo, prod, perfil, info) {
+    const ops = opcionesDe(prod);
+    const agotado = prod.disponible === false;
+    return h('li', { class: 'row' + (ops && !agotado ? ' row--var' : ''), 'data-perfil': perfil || null },
+      info,
+      ops && !agotado
+        ? pedirUI(tipo, prod.id, prod.nombre, ops, 'row__pedir')
+        : h('div', { class: 'row__der' },
+          h('span', { class: 'row__p', text: money(prod.precio) }),
+          agotado ? h('span', { class: 'agotado', text: 'Agotado' }) : pedirUI(tipo, prod.id, prod.nombre, null, 'row__pedir row__pedir--solo')));
+  }
+
+  /** Selector de medida o variante (chips con su precio) + botón "＋ Agregar". */
+  function pedirUI(tipo, id, nombre, opciones, clase) {
+    const grupo = opciones && opciones.length > 0 && h('div', {
+      class: 'opciones', role: 'group', 'aria-label': (tipo === 'barril' ? 'Medida de ' : 'Presentación de ') + nombre,
+    }, opciones.map((o, j) => h('button', {
+      type: 'button', class: 'opc-chip', 'data-opcion': o.valor, 'aria-pressed': String(j === 0),
+    }, h('span', { class: 'opc-chip__t', text: o.etiqueta }), h('b', { class: 'opc-chip__p', text: money(o.precio) }))));
+    return h('div', { class: 'pedir ' + (clase || '') },
+      grupo,
+      h('button', {
+        type: 'button', class: 'btn btn--sm agregar', 'data-agregar': tipo, 'data-id': id,
+        'aria-label': 'Agregar ' + nombre + ' a tu pedido',
+      }, h('span', { 'aria-hidden': 'true', text: '＋' }), 'Agregar'));
   }
 
   function renderComida() {
@@ -226,20 +277,22 @@
               h('div', { class: 'plato__top' },
                 h('h4', { class: 'plato__n', text: d.nombre }),
                 h('span', { class: 'plato__p', text: money(d.precio) })),
-              d.descripcion && h('p', { class: 'plato__d', text: d.descripcion })),
+              d.descripcion && h('p', { class: 'plato__d', text: d.descripcion }),
+              d.disponible === false && h('p', { class: 'plato__agotado agotado', text: 'Agotado por hoy' }),
+              d.disponible !== false && !opcionesDe(d) && pedirUI('comida', d.id, dishLabel(d), null, 'plato__pedir plato__pedir--solo')),
+            d.disponible !== false && opcionesDe(d) && pedirUI('comida', d.id, dishLabel(d), opcionesDe(d), 'plato__pedir'),
             con.length > 0 && h('p', { class: 'pidelo' },
               h('span', { class: 'pidelo__t', text: 'Pídelo con…' }),
               con.map((b) => h('a', { href: '#barril-' + b.id, 'data-barril': b.id },
-                b.img ? h('img', { class: 'pidelo__img', src: '/assets/img/cervezas/' + b.img + '?v=20261006b', alt: '', width: 32, height: 32, loading: 'lazy', decoding: 'async' })
+                b.img ? h('img', { class: 'pidelo__img', src: '/assets/img/cervezas/' + b.img + VER, alt: '', width: 32, height: 32, loading: 'lazy', decoding: 'async' })
                   : h('span', { class: 'dot dot--' + b.perfil }), b.nombre))));
         }))));
     });
   }
 
   function renderSinAlcohol() {
-    $('#lista-sin').replaceChildren(...state.data.sin_alcohol.map((s) => h('li', { class: 'row' },
-      h('div', null, h('span', { class: 'row__n', text: s.nombre }), s.detalle && h('span', { class: 'row__o', text: s.detalle })),
-      h('span', { class: 'row__p', text: money(s.precio) }))));
+    $('#lista-sin').replaceChildren(...state.data.sin_alcohol.map((s) => filaPedible('bebida', s, null,
+      h('div', null, h('span', { class: 'row__n', text: s.nombre }), s.detalle && h('span', { class: 'row__o', text: s.detalle })))));
   }
 
   function renderPie() {
@@ -323,13 +376,18 @@
     });
     $('#vuelo-vaciar').addEventListener('click', () => { state.vuelo = []; pintarVuelo(); });
     $('#vuelo-mostrar').addEventListener('click', mostrarVuelo);
+    $('#vuelo-agregar').addEventListener('click', () => {
+      if (state.vuelo.length !== VUELO_N) return;
+      agregarAlPedido({ tipo: 'vuelo', cervezas: state.vuelo.slice() },
+        (v.nombre || 'Vuelo del Cisne') + ' (' + state.vuelo.map((id) => beerById(id).nombre).join(', ') + ')');
+    });
     const etq = $('#etiqueta');
     $('#lista-barril').addEventListener('click', (e) => {
       const btn = e.target.closest('.tap__etq');
       if (!btn) return;
       $('#etq-t').textContent = btn.dataset.nombre;
       const img = $('#etq-img');
-      img.src = '/assets/img/cervezas/' + btn.dataset.etiqueta + '?v=20261006b';
+      img.src = '/assets/img/cervezas/' + btn.dataset.etiqueta + VER;
       img.alt = 'Arte oficial de la etiqueta de ' + btn.dataset.nombre;
       etq.showModal();
     });
@@ -369,6 +427,7 @@
       $('#vuelo-estado').textContent = `Elige ${VUELO_N} cervezas de barril.`;
     }
     $('#vuelo-mostrar').disabled = !lleno;
+    $('#vuelo-agregar').disabled = !lleno;
     $('#vuelo-vaciar').disabled = n === 0;
   }
 
@@ -382,6 +441,532 @@
     }));
     $('#vcard-total').textContent = money(totalVuelo());
     $('#vuelo-tarjeta').showModal();
+  }
+
+  // ── Diálogos: foco atrapado (Tab / Mayús+Tab) ──────────────────────────────
+  const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  function atraparFoco(d) {
+    d.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const els = $$(FOCUSABLE, d).filter((el) => !el.closest('[hidden]') && el.getClientRects().length > 0);
+      if (!els.length) return;
+      const primero = els[0]; const ultimo = els[els.length - 1];
+      if (e.shiftKey && (document.activeElement === primero || !d.contains(document.activeElement))) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
+    });
+    d.addEventListener('click', (e) => { if (e.target === d) d.close(); });   // clic en el fondo
+  }
+
+  // ── Mi pedido ──────────────────────────────────────────────────────────────
+  function cargarPedido() {
+    state.pedido = P.revalidar(P.restaurar(safeGet(P.CLAVE), Date.now()), state.data);
+  }
+  function guardarPedido() {
+    const p = state.pedido;
+    safeSet(P.CLAVE, p.lineas.length || p.mesa ? P.serializar(p) : null);
+  }
+  /** Cambia el pedido, lo guarda y repinta la barra (y el panel si está abierto). */
+  function actualizarPedido(nuevo, repintarPanel = true) {
+    state.pedido = nuevo;
+    guardarPedido();
+    pintarBarra();
+    if (repintarPanel && $('#pedido').open) pintarPanel();
+  }
+
+  /** Aviso breve con aria-live ("Agregado: ¡Alarma! 12 oz"). */
+  function avisar(texto) {
+    const t = $('#pedido-aviso');
+    clearTimeout(state.avisoT);
+    t.textContent = '';
+    // Un tick vacío para que el lector de pantalla anuncie aunque se repita el mismo texto.
+    setTimeout(() => { t.textContent = texto; }, 30);
+    state.avisoT = setTimeout(() => { t.textContent = ''; }, 3200);
+  }
+
+  function agregarAlPedido(item, etiqueta) {
+    try {
+      const r = P.resolver(state.data, item.tipo, item.tipo === 'vuelo' ? 'vuelo' : item.id, item.variante, item.cervezas);
+      actualizarPedido(P.agregar(state.pedido, item, state.data, Date.now()));
+      avisar('Agregado: ' + (etiqueta || [r.nombre, r.detalle].filter(Boolean).join(' ')));
+    } catch (ex) {
+      avisar(ex.message);
+    }
+  }
+
+  function iniciarAgregar() {
+    // Chips de medida o variante: uno seleccionado por grupo.
+    document.addEventListener('click', (e) => {
+      const chip = e.target.closest('.opc-chip');
+      if (chip) {
+        $$('.opc-chip', chip.parentElement).forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        return;
+      }
+      const btn = e.target.closest('[data-agregar]');
+      if (!btn) return;
+      const sel = $('.opc-chip[aria-pressed="true"]', btn.closest('.pedir'));
+      agregarAlPedido({ tipo: btn.dataset.agregar, id: btn.dataset.id, variante: sel ? sel.dataset.opcion : null });
+    });
+  }
+
+  function pintarBarra() {
+    const p = state.pedido;
+    const hay = !!p && p.lineas.length > 0;
+    $('#pedido-barra').hidden = !hay;
+    document.body.classList.toggle('con-pedido', hay);
+    if (!hay) return;
+    const n = P.contar(p);
+    const tot = money(P.total(p));
+    const revisar = P.pendientes(p);
+    $('#pbar-n').textContent = String(n);
+    $('#pbar-total').textContent = tot;
+    $('#pedido-barra').classList.toggle('pbar--aviso', revisar > 0);
+    $('#abrir-pedido').setAttribute('aria-label', `Mi pedido: ${n} ${n === 1 ? 'producto' : 'productos'}, total estimado ${tot}` + (revisar ? '. Hay avisos por revisar' : ''));
+  }
+
+  function abrirPedido() {
+    const d = $('#pedido');
+    pedidoErr('');
+    $('#pedido-confirma').hidden = true;
+    $('#pedido-vaciar').hidden = false;
+    pintarPanel();
+    if (!d.open) d.showModal();
+    $('#pedido-t').focus();
+  }
+  function pedidoErr(t) { $('#pedido-err').textContent = t || ''; }
+  function pedidoEstado(t) { const s = $('#pedido-estado'); s.textContent = ''; setTimeout(() => { s.textContent = t; }, 30); }
+
+  const etiquetaLinea = (l) => [l.nombre, P.detalleLinea(l, state.data)].filter(Boolean).join(' ');
+
+  /** Repinta el panel conservando el foco (por línea y acción). */
+  function pintarPanel() {
+    const p = state.pedido;
+    const act = document.activeElement;
+    const foco = act && act.closest && act.closest('#pedido-lineas') && act.dataset.acc ? { k: act.closest('[data-k]').dataset.k, acc: act.dataset.acc } : null;
+    const vacio = p.lineas.length === 0;
+    $('#pedido-vacio').hidden = !vacio;
+    $('#pedido-pie').hidden = vacio;
+    $('#pedido-lineas').replaceChildren(...p.lineas.map((l, i) => lineaPanel(l, i)));
+    $('#pedido-total').textContent = money(P.total(p));
+    const mesa = $('#pedido-mesa');
+    if (document.activeElement !== mesa) mesa.value = p.mesa || '';
+    if (foco) {
+      const li = $(`#pedido-lineas [data-k="${CSS.escape(foco.k)}"]`);
+      let el = li && $(`[data-acc="${foco.acc}"]`, li);
+      if (el && el.disabled) el = $('[data-acc="' + (foco.acc === 'menos' ? 'mas' : 'menos') + '"]', li);
+      (el || $('#pedido-t')).focus();
+    }
+  }
+
+  function lineaPanel(l, i) {
+    const nombre = etiquetaLinea(l);
+    const unit = l.precio_cambiado ? l.precio_nuevo : l.precio;
+    const detalle = P.detalleLinea(l, state.data);
+    const aviso = l.no_disponible
+      ? h('div', { class: 'pl__aviso', role: 'note' },
+        h('p', { text: l.tipo === 'barril' || l.tipo === 'vuelo' ? 'Ya no está en barril.' : 'Ya no está disponible.' }),
+        h('button', { type: 'button', class: 'btn btn--ink btn--sm', 'data-acc': 'quitar-aviso', 'aria-label': 'Quitar ' + nombre + ' del pedido' }, 'Quitar'))
+      : l.precio_cambiado
+        ? h('div', { class: 'pl__aviso', role: 'note' },
+          h('p', null, 'Cambió el precio: ', h('b', { class: 'mono', text: money(l.precio_nuevo) }), h('span', { class: 'pl__antes mono', text: ' (antes ' + money(l.precio) + ')' })),
+          h('div', { class: 'pl__aviso-acc' },
+            h('button', { type: 'button', class: 'btn btn--ink btn--sm', 'data-acc': 'quitar-aviso', 'aria-label': 'Quitar ' + nombre + ' del pedido' }, 'Quitar'),
+            h('button', { type: 'button', class: 'btn btn--primary btn--sm', 'data-acc': 'aceptar', 'aria-label': 'Aceptar el precio nuevo de ' + nombre }, 'Aceptar')))
+        : null;
+    return h('li', { class: 'pl' + (aviso ? ' pl--aviso' : ''), 'data-i': i, 'data-k': [l.tipo, l.id, l.variante || '', (l.cervezas || []).join('+'), l.nota].join('|') },
+      h('div', { class: 'pl__top' },
+        h('div', { class: 'pl__info' },
+          h('p', { class: 'pl__n', text: l.nombre }),
+          h('p', { class: 'pl__d mono', text: [detalle, money(unit) + (l.cantidad > 1 ? ' c/u' : '')].filter(Boolean).join(' · ') }),
+          l.cervezas && h('p', { class: 'pl__vuelo', text: l.cervezas.map((id) => (beerById(id) || { nombre: id }).nombre).join(' · ') })),
+        h('b', { class: 'pl__imp mono', text: l.no_disponible ? '—' : money(unit * l.cantidad) })),
+      aviso,
+      !l.no_disponible && h('div', { class: 'pl__ctrl' },
+        h('div', { class: 'cant', role: 'group', 'aria-label': 'Cantidad de ' + nombre },
+          h('button', { type: 'button', class: 'cant__b', 'data-acc': 'menos', 'aria-label': 'Uno menos de ' + nombre, disabled: l.cantidad <= 1 }, '−'),
+          h('span', { class: 'cant__v mono', text: String(l.cantidad) }),
+          h('button', { type: 'button', class: 'cant__b', 'data-acc': 'mas', 'aria-label': 'Uno más de ' + nombre, disabled: l.cantidad >= P.MAX_CANTIDAD }, '＋')),
+        !l.precio_cambiado && h('button', { type: 'button', class: 'linkbtn pl__quitar', 'data-acc': 'quitar', 'aria-label': 'Quitar ' + nombre + ' del pedido' }, 'Quitar')),
+      !l.no_disponible && h('div', { class: 'pl__nota' },
+        h('label', { class: 'sr-only', for: 'pl-nota-' + i, text: 'Nota para ' + nombre }),
+        h('input', { id: 'pl-nota-' + i, class: 'pl__nota-in', 'data-acc': 'nota', maxlength: P.MAX_NOTA, value: l.nota || '', placeholder: 'Nota (ej. sin cebolla)', autocomplete: 'off', enterkeyhint: 'done' })));
+  }
+
+  function iniciarPedido() {
+    const d = $('#pedido');
+    atraparFoco(d);
+    $('#abrir-pedido').addEventListener('click', abrirPedido);
+    $$('[data-cerrar]', d).forEach((b) => b.addEventListener('click', () => d.close()));
+    d.addEventListener('close', () => { if (!$('#pedido-barra').hidden) $('#abrir-pedido').focus({ preventScroll: true }); });
+
+    const lista = $('#pedido-lineas');
+    lista.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-acc]');
+      if (!btn) return;
+      const li = btn.closest('[data-i]');
+      const i = Number(li.dataset.i);
+      const l = state.pedido.lineas[i];
+      if (!l) return;
+      const nombre = etiquetaLinea(l);
+      pedidoErr('');
+      try {
+        if (btn.dataset.acc === 'menos' || btn.dataset.acc === 'mas') {
+          const n = l.cantidad + (btn.dataset.acc === 'mas' ? 1 : -1);
+          actualizarPedido(P.cambiarCantidad(state.pedido, i, n));
+          pedidoEstado(`${nombre}: ${n}`);
+        } else if (btn.dataset.acc === 'quitar' || btn.dataset.acc === 'quitar-aviso') {
+          const sig = li.nextElementSibling || li.previousElementSibling;
+          actualizarPedido(P.quitar(state.pedido, i));
+          pedidoEstado(`Quitamos ${nombre} de tu pedido.`);
+          const dest = sig && $(`#pedido-lineas [data-k="${CSS.escape(sig.dataset.k)}"] .pl__quitar, #pedido-lineas [data-k="${CSS.escape(sig.dataset.k)}"] [data-acc="quitar-aviso"]`);
+          (dest || $('#pedido-t')).focus();
+        } else if (btn.dataset.acc === 'aceptar') {
+          actualizarPedido(P.aceptarPrecio(state.pedido, i));
+          pedidoEstado(`Aceptaste el precio nuevo de ${nombre}.`);
+          const nuevo = $(`#pedido-lineas [data-i="${i}"] [data-acc="mas"]`) || $(`#pedido-lineas [data-i="${i}"] [data-acc="nota"]`);
+          (nuevo || $('#pedido-t')).focus();
+        }
+      } catch (ex) { pedidoErr(ex.message); }
+    });
+    // Notas: se guardan al confirmar (change). Solo se repinta si dos líneas quedaron iguales y se juntaron.
+    lista.addEventListener('change', (e) => {
+      const inp = e.target.closest('[data-acc="nota"]');
+      if (!inp) return;
+      const i = Number(inp.closest('[data-i]').dataset.i);
+      const antes = state.pedido.lineas.length;
+      try {
+        const nuevo = P.cambiarNota(state.pedido, i, inp.value);
+        const junto = nuevo.lineas.length !== antes;
+        actualizarPedido(nuevo, junto);
+        if (!junto) {
+          const l = nuevo.lineas[i];
+          inp.value = l.nota;
+          inp.closest('[data-i]').dataset.k = [l.tipo, l.id, l.variante || '', (l.cervezas || []).join('+'), l.nota].join('|');
+        } else {
+          pedidoEstado('Juntamos dos productos iguales.');
+        }
+      } catch (ex) { pedidoErr(ex.message); }
+    });
+    lista.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.matches('[data-acc="nota"]')) { e.preventDefault(); e.target.dispatchEvent(new Event('change', { bubbles: true })); }
+    });
+    const mesa = $('#pedido-mesa');
+    mesa.addEventListener('input', () => actualizarPedido(P.ponerMesa(state.pedido, mesa.value), false));
+    mesa.addEventListener('change', () => { mesa.value = state.pedido.mesa; });
+
+    $('#pedido-mostrar').addEventListener('click', mostrarAlMesero);
+    $('#pedido-vaciar').addEventListener('click', () => {
+      $('#pedido-vaciar').hidden = true;
+      $('#pedido-confirma').hidden = false;
+      $('#pedido-confirma-no').focus();
+    });
+    $('#pedido-confirma-no').addEventListener('click', () => {
+      $('#pedido-confirma').hidden = true;
+      $('#pedido-vaciar').hidden = false;
+      $('#pedido-vaciar').focus();
+    });
+    $('#pedido-confirma-si').addEventListener('click', () => {
+      $('#pedido-confirma').hidden = true;
+      $('#pedido-vaciar').hidden = false;
+      actualizarPedido(P.vacio(Date.now()));
+      pedidoEstado('Vaciamos tu pedido.');
+      $('#pedido-t').focus();
+    });
+
+    // Tarjeta para el mesero
+    const t = $('#pedido-tarjeta');
+    atraparFoco(t);
+    $$('[data-cerrar]', t).forEach((b) => b.addEventListener('click', () => t.close()));
+    t.addEventListener('close', () => {
+      soltarPantalla();
+      if ($('#pedido').open) $('#pedido-mostrar').focus();
+    });
+    $('#ptar-listo').addEventListener('click', () => {
+      actualizarPedido(P.vacio(Date.now()), false);
+      t.close();
+      $('#pedido').close();
+      avisar('¡Salud! Vaciamos tu pedido para la próxima ronda.');
+      const m = $('#contenido'); m.setAttribute('tabindex', '-1'); m.focus({ preventScroll: true });
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      if (t.open && !state.wakeLock) mantenerPantalla();   // el navegador lo suelta al ocultar la página
+      if (state.pedido && state.pedido.lineas.length && P.caducado(state.pedido, Date.now())) actualizarPedido(P.vacio(Date.now()));
+    });
+  }
+
+  function mostrarAlMesero() {
+    const p = state.pedido;
+    if (!p.lineas.length) return;
+    if (P.pendientes(p)) {
+      pedidoErr('Revisa los avisos marcados antes de mostrar tu pedido.');
+      const b = $('#pedido-lineas .pl--aviso button');
+      if (b) b.focus();
+      return;
+    }
+    pedidoErr('');
+    const t = P.tarjeta(p, state.data);
+    const mesa = $('#ptar-mesa');
+    mesa.hidden = !t.mesa;
+    mesa.textContent = t.mesa ? (/^\d/.test(t.mesa) ? 'Mesa ' + t.mesa : t.mesa) : '';
+    $('#ptar-secciones').replaceChildren(...t.secciones.map((s) => h('section', { class: 'ptar__sec', 'aria-label': s.titulo },
+      h('h3', { class: 'ptar__h', text: s.titulo }),
+      h('ul', { class: 'ptar__lista' }, s.lineas.map((l) => h('li', null,
+        h('span', { class: 'ptar__c mono', text: l.cantidad + '×' }),
+        h('span', { class: 'ptar__info' },
+          h('span', { class: 'vcard__n', text: l.nombre }),
+          l.detalle && h('span', { class: 'vcard__e', text: l.detalle }),
+          l.cervezas && h('ol', { class: 'ptar__vuelo' }, l.cervezas.map((c) => h('li', { text: c }))),
+          l.nota && h('span', { class: 'ptar__nota', text: 'Nota: ' + l.nota })),
+        h('span', { class: 'vcard__p', text: money(l.importe) })))))));
+    $('#ptar-total').textContent = money(t.total);
+    const d = $('#pedido-tarjeta');
+    d.showModal();
+    d.scrollTop = 0;
+    $('#ptar-t').setAttribute('tabindex', '-1');
+    $('#ptar-t').focus({ preventScroll: true });
+    mantenerPantalla();
+  }
+
+  /** Pide que la pantalla no se apague mientras el mesero lee la tarjeta (si el navegador lo permite). */
+  async function mantenerPantalla() {
+    if (!('wakeLock' in navigator) || state.wakeLock) return;
+    try {
+      const lock = await navigator.wakeLock.request('screen');
+      if (!$('#pedido-tarjeta').open) { lock.release().catch(() => {}); return; }
+      state.wakeLock = lock;
+      lock.addEventListener && lock.addEventListener('release', () => { if (state.wakeLock === lock) state.wakeLock = null; });
+    } catch (e) { /* sin permiso o batería baja: la tarjeta funciona igual */ }
+  }
+  function soltarPantalla() {
+    const lock = state.wakeLock;
+    state.wakeLock = null;
+    if (lock) { try { lock.release().catch(() => {}); } catch (e) { /* ya liberado */ } }
+  }
+
+  // ── Wi-Fi ──────────────────────────────────────────────────────────────────
+  async function cargarConfig() {
+    const pedido = ++state.configPidiendo;
+    try {
+      const res = await fetch('/api/config', { headers: { Accept: 'application/json' }, cache: 'no-store', credentials: 'same-origin' });
+      if (!res.ok) throw new Error('config ' + res.status);
+      const c = await res.json();
+      if (pedido !== state.configPidiendo) return;
+      state.wifi = c.wifi && c.wifi.ssid ? c.wifi : null;
+      state.wifiEstado = state.wifi ? 'ok' : c.wifi_requiere_pasaporte ? 'socios' : 'oculto';
+      if (state.wifi) cargarQR().catch(() => {});
+    } catch (e) {
+      if (pedido !== state.configPidiendo) return;
+      if (state.wifiEstado === 'cargando') state.wifiEstado = 'error';   // si ya se conocía, se conserva
+    }
+    pintarWifi();
+  }
+
+  function pintarWifi() {
+    const visible = state.wifiEstado === 'ok' || state.wifiEstado === 'socios' || state.wifiEstado === 'error';
+    $('#abrir-wifi').hidden = !visible;
+    $('#pie-wifi').hidden = !visible;
+    const d = $('#wifi-dlg');
+    if (!d.open) return;
+    const e = state.wifiEstado;
+    $('#wifi-cargando').hidden = e !== 'cargando';
+    $('#wifi-datos').hidden = e !== 'ok';
+    $('#wifi-socios').hidden = e !== 'socios';
+    $('#wifi-error').hidden = e !== 'error' && e !== 'oculto';
+    $('#wifi-error p').textContent = e === 'oculto'
+      ? 'El Wi-Fi no está disponible desde el menú. Pregunta en la barra.'
+      : 'No pudimos revisar los datos del Wi-Fi. Pregunta la contraseña en la barra.';
+    $('#wifi-reintentar').hidden = e === 'oculto';
+    if (e !== 'ok') return;
+    const w = state.wifi;
+    const abierta = w.seguridad === 'nopass';
+    $('#wifi-ssid').textContent = w.ssid;
+    $('#wifi-pass').textContent = abierta ? '' : w.password;
+    $('#wifi-fila-pass').hidden = abierta;
+    $('#wifi-abierta').hidden = !abierta;
+    const caja = $('#wifi-qr');
+    const cadena = P.cadenaWifi(w);
+    if (caja.dataset.cadena === cadena && caja.firstChild) return;
+    caja.dataset.cadena = cadena;
+    caja.replaceChildren(h('span', { class: 'wifi__qr-cargando', text: 'Preparando el código…' }));
+    const dibujar = (intento) => cargarQR().then(() => {
+      if (caja.dataset.cadena !== cadena) return;
+      caja.replaceChildren(qrSvg(cadena, 'Código QR para conectarte a la red ' + w.ssid));
+    }).catch(() => {
+      if (caja.dataset.cadena !== cadena) return;
+      if (intento < 2) { setTimeout(() => dibujar(intento + 1), 800 * (intento + 1)); return; }   // red inestable: reintenta
+      caja.replaceChildren(h('span', { class: 'wifi__qr-cargando', text: 'No pudimos dibujar el código. Usa la red y la contraseña de arriba.' }));
+    });
+    dibujar(0);
+  }
+
+  let qrPromesa = null;
+  let qrIntentos = 0;
+  /** Carga la librería del QR solo cuando hace falta. Si falla, el siguiente intento usa otra URL
+   *  (así el service worker no repite una copia dañada). */
+  function cargarQR() {
+    if (window.qrcode) return Promise.resolve();
+    if (!qrPromesa) {
+      const n = qrIntentos++;
+      qrPromesa = new Promise((ok, mal) => {
+        const s = document.createElement('script');
+        s.src = '/assets/js/lib/qrcode.js' + VER + (n ? '&r=' + n : '');
+        s.async = true;
+        const fallo = () => { qrPromesa = null; s.remove(); mal(new Error('qrcode')); };
+        s.onload = () => (window.qrcode ? ok() : fallo());
+        s.onerror = fallo;
+        document.head.append(s);
+      });
+    }
+    return qrPromesa;
+  }
+
+  /** QR negro sobre crema, en SVG (con margen de 4 módulos para que la cámara lo lea bien). */
+  function qrSvg(texto, etiqueta) {
+    const q = window.qrcode;
+    q.stringToBytes = q.stringToBytesFuncs['UTF-8'];
+    const qr = q(0, 'M');
+    qr.addData(texto, 'Byte');
+    qr.make();
+    const n = qr.getModuleCount();
+    const m = 4;
+    const lado = n + m * 2;
+    let d = '';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c + m} ${r + m}h1v1h-1z`;
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${lado} ${lado}`);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', etiqueta);
+    svg.setAttribute('shape-rendering', 'crispEdges');
+    svg.setAttribute('class', 'wifi__svg');
+    const fondo = document.createElementNS(ns, 'rect');
+    fondo.setAttribute('width', lado); fondo.setAttribute('height', lado); fondo.setAttribute('fill', '#F3EDE2');
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', d); path.setAttribute('fill', '#0E0D0B');
+    svg.append(fondo, path);
+    return svg;
+  }
+
+  async function copiarTexto(texto, dentro) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(texto); return true; }
+    } catch (e) { /* sin permiso: respaldo abajo */ }
+    const ta = h('textarea', { readonly: true, 'aria-hidden': 'true', tabindex: '-1', class: 'copiar-respaldo' });
+    ta.value = texto;
+    dentro.append(ta);   // dentro del diálogo modal: lo de afuera está inerte
+    ta.select();
+    ta.setSelectionRange(0, texto.length);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+
+  function abrirWifi() {
+    const d = $('#wifi-dlg');
+    $('#wifi-copiado').textContent = '';
+    if (!d.open) d.showModal();
+    pintarWifi();
+    $('#wifi-t').setAttribute('tabindex', '-1');
+    $('#wifi-t').focus();
+    if (state.wifiEstado === 'error') cargarConfig();
+  }
+
+  function iniciarWifi() {
+    const d = $('#wifi-dlg');
+    atraparFoco(d);
+    $('#abrir-wifi').addEventListener('click', abrirWifi);
+    $('#pie-wifi').addEventListener('click', (e) => { e.preventDefault(); abrirWifi(); });
+    $$('[data-cerrar]', d).forEach((b) => b.addEventListener('click', () => d.close()));
+    d.addEventListener('close', () => {
+      if (location.hash === '#wifi') history.replaceState(null, '', location.pathname + location.search);
+      const b = $('#abrir-wifi');
+      if (!b.hidden && !$('#pasaporte').open) b.focus({ preventScroll: true });
+    });
+    $$('[data-copiar]', d).forEach((b) => b.addEventListener('click', async () => {
+      if (!state.wifi) return;
+      const cual = b.dataset.copiar;
+      const ok = await copiarTexto(String(state.wifi[cual] || ''), d);
+      $('#wifi-copiado').textContent = ok
+        ? (cual === 'ssid' ? 'Copiamos el nombre de la red.' : 'Copiamos la contraseña.')
+        : 'No se pudo copiar. Mantén presionado el texto para copiarlo.';
+      if (ok) {
+        b.textContent = 'Copiado';
+        setTimeout(() => { b.textContent = 'Copiar'; }, 2000);
+      }
+    }));
+    $('#wifi-reintentar').addEventListener('click', () => { state.wifiEstado = 'cargando'; pintarWifi(); cargarConfig(); });
+    $('#wifi-pasaporte').addEventListener('click', () => {
+      state.wifiTrasLogin = true;
+      d.close();
+      history.replaceState(null, '', '#pasaporte');
+      abrirPasaporte('pase');
+    });
+    window.addEventListener('hashchange', () => { if (location.hash === '#wifi') abrirWifi(); });
+    if (location.hash === '#wifi') abrirWifi();
+    cargarConfig();
+  }
+
+  // ── App instalable (invitación solo para socios) ───────────────────────────
+  function modoApp() {
+    const mm = (q) => { try { return window.matchMedia(q).matches; } catch (e) { return false; } };
+    return mm('(display-mode: standalone)') || mm('(display-mode: fullscreen)') || mm('(display-mode: minimal-ui)') || navigator.standalone === true;
+  }
+
+  /** Cómo se instala en este dispositivo: 'prompt' | 'ios' | 'mac-safari' | 'firefox' | 'firefox-android' | null */
+  function plataformaInstalar() {
+    if (state.promptInstalar) return 'prompt';
+    const ua = navigator.userAgent || '';
+    const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    if (ios) return /FxiOS/.test(ua) ? null : 'ios';
+    if (/Firefox\//.test(ua)) return /Android/.test(ua) ? 'firefox-android' : 'firefox';
+    const safari = /Macintosh/.test(ua) && /Safari\//.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua);
+    const ver = Number((ua.match(/Version\/(\d+)/) || [])[1] || 0);
+    if (safari && ver >= 17) return 'mac-safari';
+    return null;
+  }
+
+  function pintarInstalar() {
+    const card = $('#instalar');
+    if (!card) return;
+    const descartado = Number(safeGet(INSTALAR_KEY) || 0);
+    const pausa = descartado > 0 && Date.now() - descartado < INSTALAR_PAUSA;
+    const plat = plataformaInstalar();
+    const mostrar = !!state.socio && !state.instalada && !modoApp() && !pausa && !!plat;
+    card.hidden = !mostrar;
+    card.dataset.plataforma = plat || '';
+    if (!mostrar) return;
+    $('#instalar-btn').hidden = plat !== 'prompt';
+    $('#instalar-ios').hidden = plat !== 'ios';
+    const textos = {
+      'mac-safari': ['En la barra de menús de Safari elige ', h('b', { text: 'Archivo → «Agregar al Dock»' }), '.'],
+      firefox: ['Guárdalo en favoritos para volver rápido (', h('kbd', { text: 'Ctrl' }), ' o ', h('kbd', { text: '⌘' }), ' + ', h('kbd', { text: 'D' }), ').'],
+      'firefox-android': ['Toca el menú ', h('b', { text: '⋮' }), ' y elige ', h('b', { text: '«Agregar a la pantalla de inicio»' }), '.'],
+    };
+    const tx = $('#instalar-texto');
+    tx.hidden = !textos[plat];
+    tx.replaceChildren(...(textos[plat] || []));
+  }
+
+  function iniciarInstalar() {
+    $('#instalar-btn').addEventListener('click', async () => {
+      const ev = state.promptInstalar;
+      if (!ev) return;
+      try {
+        await ev.prompt();
+        const r = await ev.userChoice;
+        if (r && r.outcome === 'accepted') state.instalada = true;
+      } catch (e) { /* el navegador ya no permite mostrarlo */ }
+      state.promptInstalar = null;   // la invitación nativa solo se puede usar una vez
+      pintarInstalar();
+    });
+    $('#instalar-no').addEventListener('click', () => {
+      safeSet(INSTALAR_KEY, String(Date.now()));
+      pintarInstalar();
+      $('#pase-t').setAttribute('tabindex', '-1');
+      $('#pase-t').focus();
+    });
+    try { window.matchMedia('(display-mode: standalone)').addEventListener('change', pintarInstalar); } catch (e) { /* navegadores viejos */ }
   }
 
   // ── API del club ───────────────────────────────────────────────────────────
@@ -437,6 +1022,11 @@
     if (location.hash === '#pasaporte' || location.hash === '#ranking') history.replaceState(null, '', location.pathname + location.search);
     msg(''); err('');
     $('#abrir-pasaporte').focus({ preventScroll: true });
+    // Si vino del Wi-Fi "solo socios" y ya entró, vuelve al Wi-Fi.
+    if (state.wifiTrasLogin) {
+      state.wifiTrasLogin = false;
+      if (state.socio) abrirWifi();
+    }
   }
 
   // Pestañas del diálogo: Mi Pasaporte · Ranking
@@ -475,14 +1065,22 @@
     safeSet(SALIR_KEY, null);
   }
   function actualizarSocio(socio) {
+    const antes = !!state.socio;
     state.socio = socio;
     guardarCache(socio);
     state.ranking = {};   // la posición del socio cambió o puede cambiar
+    if (antes !== !!socio) alCambiarSesion();
   }
   function cerrarSesionLocal() {
+    const antes = !!state.socio;
     state.token = null; safeSet(TOKEN_KEY, null);
     state.socio = null; state.visitaId = null; guardarCache(null);
     state.ranking = {};
+    if (antes) alCambiarSesion();
+  }
+  /** Entró o salió un socio: el Wi-Fi "solo socios" depende de la sesión (cookie). */
+  function alCambiarSesion() {
+    cargarConfig();   // la respuesta más reciente gana (state.configPidiendo)
   }
   function sesionVencida() {
     cerrarSesionLocal();
@@ -512,6 +1110,7 @@
   function pintarBoton() {
     const c = $('#pase-sellos');
     const btn = $('#abrir-pasaporte');
+    btn.classList.toggle('mbar__pass--socio', !!state.socio);
     if (state.socio) {
       c.hidden = false;
       c.textContent = `${state.socio.sellos_ciclo}/${state.socio.ciclo}`;
@@ -525,6 +1124,7 @@
   function pintarPasaporte(opts = {}) {
     pintarBoton();
     pintarPreferencia();
+    pintarInstalar();
     const s = state.socio;
     const esperando = !s && state.comprobando;
     $('#pase-cargando').hidden = !esperando;
@@ -1031,6 +1631,10 @@
   // ── Arranque ───────────────────────────────────────────────────────────────
   async function init() {
     iniciarPasaporte();
+    iniciarWifi();
+    iniciarInstalar();
+    iniciarAgregar();
+    iniciarPedido();
     try {
       state.data = await cargarMenu();
     } catch (e) {
@@ -1047,12 +1651,14 @@
     renderSinAlcohol();
     renderPie();
     anclasMaridaje();
+    cargarPedido();
+    pintarBarra();
     $('#cargando').remove();
     $$('main > .msec, #pie').forEach((s) => { s.hidden = false; });
     scrollSpy();
     // Si se llegó con un ancla a una sección o platillo, recoloca la vista ya con contenido.
     const hash = location.hash.slice(1);
-    if (hash && hash !== 'pasaporte') { const t = document.getElementById(hash); if (t) t.scrollIntoView(); }
+    if (hash && hash !== 'pasaporte' && hash !== 'wifi') { const t = document.getElementById(hash); if (t) t.scrollIntoView(); }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

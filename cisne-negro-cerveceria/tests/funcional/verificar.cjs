@@ -1,4 +1,4 @@
-/* Batería funcional del menú, Pasaporte, NPS, ranking y panel (Playwright + Chromium).
+/* Batería funcional del menú, Pasaporte, NPS, ranking, panel, Mi pedido, Wi-Fi y app instalable (Playwright + Chromium).
  * No la corras contra producción: crea socios, visitas y NPS.
  * Uso recomendado: tests/funcional/correr.sh  (levanta un servidor con base desechable).
  * Variables: BASE_URL (default http://127.0.0.1:8095), QA_DIR (capturas; default sitio/qa/funcional/).
@@ -269,6 +269,292 @@ const socioVisible = async (p) => (await p.isVisible('#pase-socio')) && !(await 
     await pg.goto(BASE + '/admin/#miembros'); await pg.waitForTimeout(600);
     await pg.click('#socios-tabla tbody tr button.btn'); await pg.waitForSelector('#ficha[open] .fi-sec'); await pg.waitForTimeout(300);
     await pg.screenshot({ path: QA + `v2-admin-${nom}-ficha.png` });
+  }
+
+  // ── 5. Mi pedido, Wi-Fi y app instalable (v2) ──────────────────────────
+  const QA2 = path.join(QA, '..') + '/';   // capturas v2-menu-*.png en sitio/qa/
+  const menu = await (await admin.request.get(BASE + '/data/menu.json')).json();
+  const b4 = (id) => menu.barril.find((x) => x.id === id).precios.find((x) => x.medida === '4 oz').precio;
+  const dinero = (n) => '$' + Number(n).toLocaleString('es-MX');
+  const STUB_WAKELOCK = () => {
+    window.__wl = 0; window.__wlRel = 0;
+    Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: {
+      request: async () => { window.__wl++; const l = new EventTarget(); l.release = async () => { window.__wlRel++; }; return l; },
+    } });
+  };
+  const textoAviso = async (p) => { await p.waitForFunction(() => document.querySelector('#pedido-aviso').textContent.length > 0); return (await p.textContent('#pedido-aviso')).trim(); };
+  {
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    await ctx.addInitScript(STUB_WAKELOCK);
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#barril:not([hidden])');
+    ok('5  Sin pedido no hay barra flotante', !(await p.isVisible('#pedido-barra')));
+    const alarma = menu.barril.find((x) => x.id === 'alarma');
+    const grande = alarma.precios[0];
+    await p.click('#barril-alarma [data-agregar]');
+    ok('5  Barril: aviso "Agregado: ¡Alarma! 12 oz" (aria-live)', (await textoAviso(p)) === `Agregado: ¡Alarma! ${grande.medida}` && (await p.getAttribute('#pedido-aviso', 'aria-live')) === 'polite', await p.textContent('#pedido-aviso'));
+    await p.click('#barril-alarma .opc-chip[data-opcion="4 oz"]');
+    ok('5  Chip de medida 4 oz seleccionado', (await p.getAttribute('#barril-alarma .opc-chip[data-opcion="4 oz"]', 'aria-pressed')) === 'true');
+    await p.click('#barril-alarma [data-agregar]');
+    await p.evaluate(() => document.querySelector('#barril-alarma .tap__pedir').scrollIntoView({ block: 'center' })); await p.waitForTimeout(3400);
+    await p.screenshot({ path: QA2 + 'v2-menu-390-agregar.png' });
+    const lata = menu.latas.find((x) => x.id === 'lata-loba-negra');
+    await p.click('[data-agregar="lata"][data-id="lata-loba-negra"]');
+    await p.click('#plato-chips-camote .opc-chip[data-opcion="110g"]');
+    await p.click('#plato-chips-camote [data-agregar]');
+    ok('5  Platillo con variante: "Chips de Camote 110 g"', (await textoAviso(p)) === 'Agregado: Chips de Camote 110 g');
+    const vuelo = menu.barril.filter((x) => x.precios.some((y) => y.medida === '4 oz')).slice(0, 4).map((x) => x.id);
+    ok('5  "Agregar vuelo al pedido" inactivo sin 4 cervezas', await p.isDisabled('#vuelo-agregar'));
+    for (const id of vuelo) await p.click(`#vuelo-opciones [data-vuelo="${id}"]`);
+    ok('5  …activo con 4 cervezas (y "Muéstraselo a tu mesero" se conserva)', !(await p.isDisabled('#vuelo-agregar')) && !(await p.isDisabled('#vuelo-mostrar')));
+    await p.click('#vuelo-agregar');
+    const totVuelo = vuelo.reduce((s, id) => s + b4(id), 0);
+    const total1 = grande.precio + b4('alarma') + lata.precio + 135 + totVuelo;
+    await p.waitForTimeout(200);
+    const barra = (await p.textContent('#abrir-pedido')).replace(/\s+/g, ' ').trim();
+    ok('5  Barra "Mi pedido · 5 · $total"', barra.includes('Mi pedido') && (await p.textContent('#pbar-n')) === '5' && (await p.textContent('#pbar-total')) === dinero(total1), barra);
+    await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); await p.waitForTimeout(400);
+    const tapa = await p.evaluate(() => {
+      const bar = document.querySelector('.pbar__btn').getBoundingClientRect();
+      const legal = document.querySelector('.mfoot__legal').getBoundingClientRect();
+      return legal.bottom <= bar.top;
+    });
+    ok('5  La barra no tapa el final de la página', tapa);
+    await p.screenshot({ path: QA2 + 'v2-menu-390-barra.png' });
+    // Drawer
+    await p.click('#abrir-pedido'); await p.waitForSelector('#pedido[open]');
+    ok('5  Drawer: 5 líneas y foco en el título', (await p.$$('#pedido-lineas > li')).length === 5 && (await p.evaluate(() => document.activeElement.id)) === 'pedido-t');
+    await p.click('#pedido-lineas > li:nth-child(1) [data-acc="mas"]');
+    ok('5  ＋ sube la cantidad (y conserva el foco)', (await p.textContent('#pedido-lineas > li:nth-child(1) .cant__v')) === '2' && (await p.evaluate(() => document.activeElement.dataset.acc)) === 'mas');
+    await p.click('#pedido-lineas > li:nth-child(1) [data-acc="mas"]');
+    await p.click('#pedido-lineas > li:nth-child(1) [data-acc="menos"]');
+    const chipsLi = p.locator('#pedido-lineas > li', { hasText: 'Chips de Camote' });
+    await chipsLi.locator('[data-acc="nota"]').fill('Salsa aparte');
+    await chipsLi.locator('[data-acc="nota"]').press('Enter');
+    await p.fill('#pedido-mesa', '7');
+    const total2 = total1 + grande.precio;
+    ok('5  Total estimado del drawer', (await p.textContent('#pedido-total')) === dinero(total2), await p.textContent('#pedido-total'));
+    await p.keyboard.press('Tab');
+    await p.screenshot({ path: QA2 + 'v2-menu-390-drawer.png' });
+    // Foco atrapado: Mayús+Tab desde el primer elemento va al último
+    await p.focus('#pedido [data-cerrar]'); await p.keyboard.press('Shift+Tab');
+    ok('5  Foco atrapado en el drawer', await p.evaluate(() => document.querySelector('#pedido').contains(document.activeElement)));
+    await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+    ok('5  Esc cierra el drawer', !(await p.isVisible('#pedido')));
+    // Recargar: persiste
+    await p.reload(); await p.waitForSelector('#pedido-barra:not([hidden])');
+    await p.click('#abrir-pedido'); await p.waitForSelector('#pedido[open]');
+    const persist = await p.evaluate(() => ({
+      n: document.querySelectorAll('#pedido-lineas > li').length,
+      c: document.querySelector('#pedido-lineas > li .cant__v').textContent,
+      nota: [...document.querySelectorAll('[data-acc="nota"]')].map((i) => i.value).filter(Boolean),
+      mesa: document.querySelector('#pedido-mesa').value,
+    }));
+    ok('5  Recargar: pedido, cantidad, nota y mesa persisten', persist.n === 5 && persist.c === '2' && persist.nota.join() === 'Salsa aparte' && persist.mesa === '7', JSON.stringify(persist));
+    // Mostrar al mesero
+    await p.click('#pedido-mostrar'); await p.waitForSelector('#pedido-tarjeta[open]');
+    const tarjeta = await p.evaluate(() => ({
+      mesa: document.querySelector('#ptar-mesa').textContent,
+      secciones: [...document.querySelectorAll('.ptar__sec')].map((s) => ({
+        t: s.querySelector('.ptar__h').textContent,
+        l: [...s.querySelectorAll('.ptar__lista > li')].map((li) => li.querySelector('.ptar__c').textContent + ' ' + li.querySelector('.vcard__n').textContent + ' ' + (li.querySelector('.vcard__e') ? li.querySelector('.vcard__e').textContent : '') + (li.querySelector('.ptar__nota') ? ' | ' + li.querySelector('.ptar__nota').textContent : '')),
+      })),
+      total: document.querySelector('#ptar-total').textContent,
+      fine: document.querySelector('.ptar__fine').textContent,
+      vuelo: [...document.querySelectorAll('.ptar__vuelo li')].length,
+      ancho: document.querySelector('#pedido-tarjeta').getBoundingClientRect().width,
+    }));
+    const esperadoT = [
+      { t: 'Bebidas', l: [`2× ¡Alarma! ${grande.medida}`, '1× ¡Alarma! 4 oz', '1× Vuelo del Cisne 4 × 4 oz', `1× ${lata.nombre} `] },
+      { t: 'Comida', l: ['1× Chips de Camote 110 g | Nota: Salsa aparte'] },
+    ];
+    ok('5  Tarjeta: mesa, Bebidas (barril, vuelo, latas) y Comida con nota', tarjeta.mesa === 'Mesa 7' && JSON.stringify(tarjeta.secciones) === JSON.stringify(esperadoT) && tarjeta.vuelo === 4, JSON.stringify(tarjeta.secciones));
+    ok('5  Tarjeta: total estimado y "El total final lo confirma tu mesero"', tarjeta.total === dinero(total2) && tarjeta.fine === 'El total final lo confirma tu mesero.');
+    ok('5  Tarjeta a pantalla completa', tarjeta.ancho >= 389);
+    ok('5  Wake Lock pedido al mostrar la tarjeta', (await p.evaluate(() => window.__wl)) === 1);
+    await p.screenshot({ path: QA2 + 'v2-menu-390-tarjeta-mesero.png' });
+    await p.click('#pedido-tarjeta [data-cerrar]'); await p.waitForTimeout(150);
+    ok('5  "Volver" cierra la tarjeta, libera el Wake Lock y regresa al drawer', !(await p.isVisible('#pedido-tarjeta')) && (await p.evaluate(() => window.__wlRel)) === 1 && (await p.isVisible('#pedido')));
+    await p.click('#pedido-mostrar'); await p.waitForSelector('#pedido-tarjeta[open]');
+    await p.click('#ptar-listo'); await p.waitForTimeout(250);
+    const vacio = await p.evaluate(() => { try { return JSON.parse(localStorage.getItem('cisne-pedido-v1') || '{"lineas":[]}').lineas.length; } catch (e) { return -1; } });
+    ok('5  "Ya lo pedí" vacía el pedido y oculta la barra', vacio === 0 && !(await p.isVisible('#pedido-barra')) && !(await p.isVisible('#pedido')) && /Vaciamos tu pedido/.test(await textoAviso(p)));
+    // Vaciar con confirmación
+    await p.click('[data-agregar="lata"][data-id="lata-loba-negra"]');
+    await p.click('#abrir-pedido'); await p.click('#pedido-vaciar');
+    ok('5  "Vaciar" pide confirmación', (await p.isVisible('#pedido-confirma')) && (await p.$$('#pedido-lineas > li')).length === 1);
+    await p.click('#pedido-confirma-si'); await p.waitForTimeout(150);
+    ok('5  …y al confirmar vacía', (await p.isVisible('#pedido-vacio')) && !(await p.isVisible('#pedido-pie')));
+    ok('—  Sin errores JS (Mi pedido)', p.errores.length === 0, p.errores.join(' / '));
+    await ctx.close();
+  }
+  // Revalidación
+  {
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#barril:not([hidden])');
+    await p.evaluate(() => localStorage.setItem('cisne-pedido-v1', JSON.stringify({ creado_at: new Date().toISOString(), mesa: '', lineas: [
+      { tipo: 'barril', id: 'barril-que-roto', variante: '12 oz', cantidad: 1, nota: '', precio: 100, nombre: 'Barril de temporada', huella: '' },
+      { tipo: 'lata', id: 'lata-loba-negra', variante: null, cantidad: 2, nota: '', precio: 1, nombre: 'Loba Negra', huella: '' },
+      { tipo: 'comida', id: 'papas-cisne', variante: null, cantidad: 1, nota: '', precio: 75, nombre: 'Papas Cisne Negro', huella: '' },
+    ] })));
+    await p.reload(); await p.waitForSelector('#pedido-barra:not([hidden])');
+    ok('5  Revalidación: la barra avisa que hay algo por revisar', /revisa/i.test(await p.getAttribute('#abrir-pedido', 'aria-label')));
+    await p.click('#abrir-pedido'); await p.waitForSelector('#pedido[open]');
+    const avisos = await p.$$eval('.pl__aviso p', (els) => els.map((e) => e.textContent.trim()));
+    ok('5  Revalidación: "Ya no está en barril" y "Cambió el precio: $110"', avisos.length === 2 && avisos[0] === 'Ya no está en barril.' && avisos[1].startsWith('Cambió el precio: $110'), avisos.join(' | '));
+    await p.screenshot({ path: QA2 + 'v2-menu-390-revalidacion.png' });
+    await p.click('#pedido-mostrar');
+    ok('5  Con avisos sin revisar no se muestra la tarjeta', !(await p.isVisible('#pedido-tarjeta')) && /Revisa los avisos/.test(await p.textContent('#pedido-err')));
+    await p.click('.pl--aviso [data-acc="aceptar"]');
+    await p.click('.pl--aviso [data-acc="quitar-aviso"]');
+    ok('5  Aceptar precio y quitar lo agotado', (await p.$$('.pl--aviso')).length === 0 && (await p.textContent('#pedido-total')) === dinero(110 * 2 + 75));
+    await p.click('#pedido-mostrar');
+    ok('5  …después sí se muestra la tarjeta', await p.isVisible('#pedido-tarjeta'));
+    ok('—  Sin errores JS (revalidación)', p.errores.length === 0, p.errores.join(' / '));
+    await ctx.close();
+  }
+  // Escritorio 1440 con barra
+  {
+    const { ctx, p } = await nuevaPagina(b, { viewport: { width: 1440, height: 900 } });
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#barril:not([hidden])');
+    await p.click('#barril-alarma [data-agregar]'); await p.click('#barril-henry-ix [data-agregar]');
+    await p.click('#plato-papas-cisne [data-agregar]');
+    await p.evaluate(() => document.querySelector('#barril-henry-ix').scrollIntoView({ block: 'center' })); await p.waitForTimeout(3500);
+    ok('5  1440: botón Wi-Fi con texto visible', (await p.textContent('#abrir-wifi')).trim() === 'Wi-Fi' && (await p.$eval('.mbar__wifi-t', (e) => e.getBoundingClientRect().width > 20)));
+    await p.screenshot({ path: QA2 + 'v2-menu-1440-barra.png' });
+    await ctx.close();
+  }
+
+  // Wi-Fi público
+  {
+    const { ctx, p } = await nuevaPagina(b, { ...MOV, permissions: ['clipboard-read', 'clipboard-write'] });
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#abrir-wifi:not([hidden])');
+    ok('5  Wi-Fi: botón en la barra (solo ícono con aria-label en 390 px)', (await p.getAttribute('#abrir-wifi', 'aria-label')) === 'Wi-Fi' && (await p.$eval('.mbar__wifi-t', (e) => e.getBoundingClientRect().width <= 1)));
+    ok('5  Wi-Fi: enlace en el pie', !(await p.$eval('#pie-wifi', (e) => e.hidden)));
+    await p.click('#abrir-wifi'); await p.waitForSelector('#wifi-qr svg path');
+    ok('5  Wi-Fi público: red y contraseña', (await p.textContent('#wifi-ssid')) === 'CisneNegro-Invitados' && (await p.textContent('#wifi-pass')) === 'CuentaloEnElCisne');
+    const qr = await p.evaluate(() => ({ d: document.querySelector('#wifi-qr path').getAttribute('d').length, cadena: document.querySelector('#wifi-qr').dataset.cadena, fondo: document.querySelector('#wifi-qr rect').getAttribute('fill') }));
+    ok('5  Wi-Fi público: QR en SVG (negro sobre crema) con la cadena WIFI:', qr.d > 500 && qr.cadena === 'WIFI:T:WPA;S:CisneNegro-Invitados;P:CuentaloEnElCisne;;' && qr.fondo === '#F3EDE2', qr.cadena);
+    await p.click('[data-copiar="password"]'); await p.waitForTimeout(200);
+    const clip = await p.evaluate(() => navigator.clipboard.readText().catch(() => null));
+    ok('5  Wi-Fi público: "Copiar" copia la contraseña', (await p.textContent('#wifi-copiado')) === 'Copiamos la contraseña.' && (clip === null || clip === 'CuentaloEnElCisne'), `portapapeles=${clip}`);
+    await p.screenshot({ path: QA2 + 'v2-menu-390-wifi.png' });
+    await p.keyboard.press('Escape');
+    ok('5  Wi-Fi: Esc cierra', !(await p.isVisible('#wifi-dlg')));
+    await p.goto(BASE + '/menu/?app=1#wifi'); await p.waitForSelector('#wifi-dlg[open] #wifi-qr svg');
+    ok('5  #wifi en la URL abre el diálogo (acceso directo del manifest)', await p.isVisible('#wifi-ssid'));
+    ok('—  Sin errores JS (Wi-Fi público)', p.errores.length === 0, p.errores.join(' / '));
+    await ctx.close();
+  }
+  // Wi-Fi sin red: mensaje discreto
+  {
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    await p.route('**/api/config', (r) => r.abort('internetdisconnected'));
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#abrir-wifi:not([hidden])');
+    await p.click('#abrir-wifi'); await p.waitForSelector('#wifi-error:not([hidden])');
+    ok('5  Wi-Fi sin red: mensaje discreto y "Reintentar"', /Pregunta la contraseña en la barra/.test(await p.textContent('#wifi-error')) && (await p.isVisible('#wifi-reintentar')) && !(await p.isVisible('#wifi-datos')));
+    await p.unroute('**/api/config');
+    await p.click('#wifi-reintentar'); await p.waitForSelector('#wifi-qr svg path');
+    ok('5  Wi-Fi: "Reintentar" recupera los datos', (await p.textContent('#wifi-ssid')) === 'CisneNegro-Invitados');
+    await ctx.close();
+  }
+  // Wi-Fi solo socios
+  const ajustar = (visibilidad, extra = {}) => admin.request.put(BASE + '/api/admin/ajustes', { data: { wifi: { ssid: 'CisneNegro-Invitados', password: 'CuentaloEnElCisne', seguridad: 'WPA', visibilidad, ...extra } } });
+  {
+    ok('5  PUT /api/admin/ajustes → solo socios', (await ajustar('socios')).ok());
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    await p.goto(BASE + '/menu/#wifi'); await p.waitForSelector('#wifi-socios:not([hidden])');
+    ok('5  Wi-Fi socios: el invitado ve el aviso y no la contraseña', /La contraseña del Wi-Fi es para socios del Pasaporte/.test(await p.textContent('#wifi-socios')) && !(await p.isVisible('#wifi-datos')) && !(await p.content()).includes('CuentaloEnElCisne'));
+    await p.screenshot({ path: QA2 + 'v2-menu-390-wifi-socios.png' });
+    await p.click('#wifi-pasaporte'); await p.waitForSelector('#pasaporte[open] #pase-invitado:not([hidden])');
+    await p.fill('#r-nombre', 'Wendy Wifi'); await p.fill('#r-tel', '7716000001'); await p.fill('#r-pin', '2468'); await p.check('#r-priv');
+    await p.click('#form-registro button[type=submit]'); await p.waitForSelector('#pase-socio:not([hidden])');
+    await p.click('#pasaporte .pase__top [data-cerrar]');
+    await p.waitForSelector('#wifi-dlg[open] #wifi-datos:not([hidden])', { timeout: 5000 }).catch(() => {});
+    ok('5  Wi-Fi socios: al entrar al Pasaporte vuelve al Wi-Fi y ve la contraseña', (await p.isVisible('#wifi-pass')) && (await p.textContent('#wifi-pass')) === 'CuentaloEnElCisne');
+    await p.screenshot({ path: QA2 + 'v2-menu-390-wifi-socio-con-sesion.png' });
+    ok('—  Sin errores JS (Wi-Fi socios)', p.errores.length === 0, p.errores.join(' / '));
+    await ctx.close();
+    await ajustar('oculta');
+    const g = await nuevaPagina(b, MOV);
+    await g.p.goto(BASE + '/menu/'); await g.p.waitForSelector('#barril:not([hidden])'); await g.p.waitForTimeout(300);
+    ok('5  Wi-Fi oculto: sin botón ni enlace', !(await g.p.isVisible('#abrir-wifi')) && (await g.p.$eval('#pie-wifi', (e) => e.hidden)));
+    await g.ctx.close();
+    await ajustar('publica');
+  }
+
+  // Tarjeta "Lleva el Cisne en tu inicio"
+  {
+    const IPHONE = { ...MOV, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1' };
+    const conSesion = async (opts, tel, init) => {
+      const r = await nuevaPagina(b, opts);
+      if (init) await r.ctx.addInitScript(init);
+      await r.ctx.request.post(BASE + '/api/registro', { data: { nombre: 'Iris Instala', telefono: tel, pin: '1357', acepta_privacidad: true } });
+      await r.ctx.request.post(BASE + '/api/login', { data: { telefono: tel, pin: '1357' } });
+      await r.p.goto(BASE + '/menu/#pasaporte'); await r.p.waitForSelector('#pase-socio:not([hidden])'); await r.p.waitForTimeout(300);
+      return r;
+    };
+    const ip = await conSesion(IPHONE, '7716000002');
+    ok('5  Instalar: aparece con sesión (iPhone: pasos de Compartir + nota del PIN)', (await ip.p.isVisible('#instalar')) && (await ip.p.isVisible('#instalar-ios')) && /entra una vez con tu teléfono y PIN/.test(await ip.p.textContent('#instalar-ios')));
+    await ip.p.locator('#instalar').scrollIntoViewIfNeeded();
+    await ip.p.screenshot({ path: QA2 + 'v2-menu-390-instalar-iphone.png' });
+    await ip.p.click('#instalar-no');
+    ok('5  Instalar: "Ahora no" la oculta', !(await ip.p.isVisible('#instalar')));
+    await ip.p.reload(); await ip.p.waitForSelector('#pase-socio:not([hidden])'); await ip.p.waitForTimeout(300);
+    ok('5  Instalar: sigue oculta al recargar (30 días)', !(await ip.p.isVisible('#instalar')));
+    ok('—  Sin errores JS (instalar iPhone)', ip.p.errores.length === 0, ip.p.errores.join(' / '));
+    await ip.ctx.close();
+    const inv = await nuevaPagina(b, IPHONE);
+    await inv.p.goto(BASE + '/menu/#pasaporte'); await inv.p.waitForSelector('#pase-invitado:not([hidden])');
+    ok('5  Instalar: no aparece sin sesión', !(await inv.p.isVisible('#instalar')));
+    await inv.ctx.close();
+    const app = await conSesion(IPHONE, '7716000003', () => {
+      const mm = window.matchMedia.bind(window);
+      window.matchMedia = (q) => (/display-mode:\s*standalone/.test(q) ? { matches: true, media: q, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent() { return false; } } : mm(q));
+    });
+    ok('5  Instalar: no aparece en display-mode standalone (emulado)', (await app.p.isVisible('#pase-socio')) && !(await app.p.isVisible('#instalar')));
+    await app.ctx.close();
+    const esc = await conSesion({ viewport: { width: 1280, height: 900 } }, '7716000004');
+    ok('5  Instalar: Chrome de escritorio sin invitación nativa → no aparece', !(await esc.p.isVisible('#instalar')));
+    await esc.p.evaluate(() => {
+      const ev = new Event('beforeinstallprompt', { cancelable: true });
+      ev.prompt = async () => { window.__prompt = true; };
+      ev.userChoice = Promise.resolve({ outcome: 'accepted', platform: 'web' });
+      window.dispatchEvent(ev);
+    });
+    ok('5  Instalar: con beforeinstallprompt muestra "Instalar app"', (await esc.p.isVisible('#instalar-btn')) && !(await esc.p.isVisible('#instalar-ios')));
+    await esc.p.click('#instalar-btn'); await esc.p.waitForTimeout(200);
+    ok('5  Instalar: "Instalar app" llama prompt() y oculta la tarjeta al aceptar', (await esc.p.evaluate(() => window.__prompt === true)) && !(await esc.p.isVisible('#instalar')));
+    ok('—  Sin errores JS (instalar escritorio)', esc.p.errores.length === 0, esc.p.errores.join(' / '));
+    await esc.ctx.close();
+  }
+
+  // Manifest y service worker
+  {
+    const r = await admin.request.get(BASE + '/manifest.webmanifest');
+    let m = null; try { m = JSON.parse(await r.text()); } catch (e) { /* inválido */ }
+    ok('5  /manifest.webmanifest 200 y JSON válido', r.status() === 200 && !!m && m.start_url === '/menu/?app=1#pasaporte' && m.scope === '/' && m.display === 'standalone' && m.icons.length === 3, r.headers()['content-type']);
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    for (const ruta of ['/', '/privacidad/', '/menu/']) {
+      await p.goto(BASE + ruta);
+      const head = await p.evaluate(() => ({
+        manifest: !!document.querySelector('link[rel="manifest"][href="/manifest.webmanifest"]'),
+        apple: document.querySelector('meta[name="apple-mobile-web-app-title"]')?.content,
+        icono: document.querySelector('link[rel="apple-touch-icon"]')?.getAttribute('href'),
+        tema: document.querySelector('meta[name="theme-color"]')?.content,
+      }));
+      ok(`5  ${ruta}: manifest, theme-color y metas de Apple`, head.manifest && head.apple === 'Cisne Negro' && head.icono === '/assets/img/marca/icono-192.png' && head.tema === '#0E0D0B', JSON.stringify(head));
+    }
+    const sw = await p.evaluate(async () => {
+      const reg = await Promise.race([navigator.serviceWorker.ready, new Promise((r) => setTimeout(() => r(null), 8000))]);
+      return reg ? { scope: reg.scope, url: (reg.active || reg.installing || reg.waiting).scriptURL } : null;
+    });
+    ok('5  Service worker registrado en localhost (scope /)', !!sw && sw.scope === BASE + '/' && sw.url === BASE + '/sw.js', JSON.stringify(sw));
+    await p.reload(); await p.waitForTimeout(500);
+    const conSw = await p.evaluate(async () => ({ controlado: !!navigator.serviceWorker.controller, api: (await fetch('/api/config', { cache: 'no-store' })).status }));
+    const cacheApi = await p.evaluate(async () => { for (const k of await caches.keys()) { const c = await caches.open(k); if ((await c.keys()).some((r) => r.url.includes('/api/'))) return true; } return false; });
+    ok('5  Con el SW activo /api/ responde y nunca se guarda en caché', conSw.controlado && conSw.api === 200 && !cacheApi, JSON.stringify(conSw));
+    ok('—  Sin errores JS (manifest/SW)', p.errores.length === 0, p.errores.join(' / '));
+    await ctx.close();
   }
   await b.close();
   const f = res.filter((r) => r[0] === 'FAIL');

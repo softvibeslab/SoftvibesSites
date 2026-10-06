@@ -9,13 +9,25 @@
   <meta name="theme-color" content="#0E0D0B">
 
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/marca/favicon-192.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/marca/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/img/marca/icono-192.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cisne Negro">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap">
-  <link rel="stylesheet" href="/assets/css/menu.css?v=20261006b">
-  <script src="/assets/js/menu.js?v=20261006b" defer></script>
+  <link rel="stylesheet" href="/assets/css/menu.css?v=20261006c">
+  <script src="/assets/js/pedido.js?v=20261006c" defer></script>
+  <script src="/assets/js/menu.js?v=20261006c" defer></script>
+  <script>
+    /* App instalable: service worker solo en https o localhost (ver /sw.js). */
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))) {
+      window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {}); });
+    }
+  </script>
 </head>
 <body>
   <a class="skip" href="#barril">Saltar al menú</a>
@@ -31,6 +43,10 @@
         <span class="sticker mbar__sticker"><img src="/assets/img/marca/favicon-192.png" alt="" width="192" height="192"></span>
         <span class="mbar__title">Menú</span>
       </a>
+      <button type="button" class="btn btn--ghost btn--sm mbar__wifi" id="abrir-wifi" aria-haspopup="dialog" aria-label="Wi-Fi" hidden>
+        <svg class="mbar__wifi-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 9a14 14 0 0 1 19 0M5.8 12.6a9.2 9.2 0 0 1 12.4 0M9.2 16.1a4.4 4.4 0 0 1 5.6 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="19.4" r="1.7" fill="currentColor"/></svg>
+        <span class="mbar__wifi-t">Wi-Fi</span>
+      </button>
       <a class="btn btn--primary btn--sm mbar__pass" href="#pasaporte" id="abrir-pasaporte" aria-haspopup="dialog">
         <svg class="mbar__pass-ico" aria-hidden="true" focusable="false"><use href="#pluma"/></svg>
         <span>Pasaporte</span>
@@ -76,6 +92,7 @@
           <p class="vuelo__total"><span class="mono">Total</span> <b id="vuelo-total">$0</b></p>
           <div class="vuelo__acciones">
             <button type="button" class="btn btn--ghost btn--sm" id="vuelo-vaciar" disabled>Vaciar</button>
+            <button type="button" class="btn btn--ghost" id="vuelo-agregar" disabled>＋ Agregar vuelo al pedido</button>
             <button type="button" class="btn btn--primary" id="vuelo-mostrar" disabled>Muéstraselo a tu mesero</button>
           </div>
         </div>
@@ -121,11 +138,110 @@
       <div class="mfoot__ctas">
         <a class="btn btn--primary" id="pie-wa" target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn btn--ghost" id="pie-mapa" target="_blank" rel="noopener">Cómo llegar</a>
+        <a class="btn btn--ghost" id="pie-wifi" href="#wifi" aria-haspopup="dialog" hidden>Wi-Fi</a>
         <a class="btn btn--ghost" href="/">Ver sitio</a>
       </div>
       <p class="mfoot__legal">Cervecería Cisne Negro · Disfruta con moderación. <a href="/privacidad/">Aviso de privacidad</a></p>
     </div>
   </footer>
+
+  <!-- MI PEDIDO: barra flotante y avisos -->
+  <div class="pbar" id="pedido-barra" hidden>
+    <button type="button" class="pbar__btn" id="abrir-pedido" aria-haspopup="dialog">
+      <span class="pbar__t">Mi pedido</span>
+      <span class="pbar__n mono" id="pbar-n" aria-hidden="true">0</span>
+      <span class="pbar__total mono" id="pbar-total" aria-hidden="true">$0</span>
+    </button>
+  </div>
+  <p class="toast" id="pedido-aviso" role="status" aria-live="polite"></p>
+
+  <!-- MI PEDIDO: panel -->
+  <dialog class="pase pedido" id="pedido" aria-labelledby="pedido-t">
+    <div class="pase__top">
+      <h2 class="pase__t" id="pedido-t" tabindex="-1">Mi pedido</h2>
+      <button type="button" class="icon-btn" data-cerrar aria-label="Cerrar Mi pedido">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="pase__body">
+      <p class="fine pedido__intro">Arma tu pedido y muéstraselo a tu mesero. No se envía a ningún lado: se queda en tu teléfono.</p>
+      <p class="sr-only" id="pedido-estado" role="status" aria-live="polite"></p>
+      <p class="pase__err" id="pedido-err" role="alert"></p>
+      <p class="pedido__vacio" id="pedido-vacio">Tu pedido está vacío. Toca «＋ Agregar» en cualquier producto del menú.</p>
+      <ul class="plineas" id="pedido-lineas" aria-label="Productos de tu pedido"></ul>
+      <div class="pedido__pie" id="pedido-pie">
+        <div class="field pedido__mesa">
+          <label for="pedido-mesa">Número de mesa <span class="opc">(opcional)</span></label>
+          <input id="pedido-mesa" name="mesa" maxlength="10" autocomplete="off" enterkeyhint="done">
+        </div>
+        <p class="pedido__total"><span class="mono">Total estimado</span> <b class="mono" id="pedido-total">$0</b></p>
+        <p class="fine">El total final lo confirma tu mesero.</p>
+        <button type="button" class="btn btn--primary btn--block btn--lg" id="pedido-mostrar">Mostrar al mesero</button>
+        <button type="button" class="btn btn--ghost btn--block pedido__vaciar" id="pedido-vaciar">Vaciar pedido</button>
+        <div class="confirma" id="pedido-confirma" role="group" aria-labelledby="pedido-confirma-t" hidden>
+          <p id="pedido-confirma-t"><b>¿Vaciar tu pedido?</b> Se quitan todos los productos.</p>
+          <div class="fila">
+            <button type="button" class="btn btn--ghost" id="pedido-confirma-no">Cancelar</button>
+            <button type="button" class="btn btn--primary" id="pedido-confirma-si">Sí, vaciar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MI PEDIDO: tarjeta para el mesero (pantalla completa) -->
+  <dialog class="vcard vcard--pedido" id="pedido-tarjeta" aria-labelledby="ptar-t">
+    <div class="vcard__in">
+      <p class="eyebrow">Para tu mesero</p>
+      <div class="ptar__cab">
+        <h2 class="vcard__t" id="ptar-t">Mi pedido</h2>
+        <p class="ptar__mesa" id="ptar-mesa" hidden></p>
+      </div>
+      <div id="ptar-secciones"></div>
+      <p class="vcard__total"><span class="mono">Total estimado</span> <b id="ptar-total"></b></p>
+      <p class="ptar__fine">El total final lo confirma tu mesero.</p>
+      <div class="ptar__acc">
+        <button type="button" class="btn btn--ghost vcard__cerrar" data-cerrar>Volver</button>
+        <button type="button" class="btn btn--primary" id="ptar-listo">Ya lo pedí</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- WI-FI -->
+  <dialog class="vcard wifi" id="wifi-dlg" aria-labelledby="wifi-t">
+    <div class="vcard__in">
+      <p class="eyebrow">Wi-Fi del Cisne</p>
+      <h2 class="vcard__t" id="wifi-t">Conéctate</h2>
+      <p class="wifi__estado" id="wifi-cargando">Buscando los datos del Wi-Fi…</p>
+      <div id="wifi-datos" hidden>
+        <dl class="wifi__dl">
+          <div class="wifi__fila">
+            <dt>Red</dt>
+            <dd><span class="wifi__v mono" id="wifi-ssid"></span><button type="button" class="btn btn--ink btn--sm" data-copiar="ssid" aria-label="Copiar nombre de la red">Copiar</button></dd>
+          </div>
+          <div class="wifi__fila" id="wifi-fila-pass">
+            <dt>Contraseña</dt>
+            <dd><span class="wifi__v mono" id="wifi-pass"></span><button type="button" class="btn btn--ink btn--sm" data-copiar="password" aria-label="Copiar contraseña">Copiar</button></dd>
+          </div>
+        </dl>
+        <p class="wifi__abierta" id="wifi-abierta" hidden>Red abierta: no necesita contraseña.</p>
+        <figure class="wifi__qr">
+          <div class="wifi__qr-img" id="wifi-qr"></div>
+          <figcaption>Abre la cámara de tu celular y apunta al código para conectarte.</figcaption>
+        </figure>
+      </div>
+      <div class="wifi__socios" id="wifi-socios" hidden>
+        <p><b>La contraseña del Wi-Fi es para socios del Pasaporte.</b> Crea el tuyo gratis o entra con tu teléfono y PIN.</p>
+        <button type="button" class="btn btn--primary btn--block" id="wifi-pasaporte">Abrir mi Pasaporte</button>
+      </div>
+      <div class="wifi__error" id="wifi-error" hidden>
+        <p>No pudimos revisar los datos del Wi-Fi. Pregunta la contraseña en la barra.</p>
+        <button type="button" class="linkbtn" id="wifi-reintentar">Reintentar</button>
+      </div>
+      <p class="wifi__copiado" id="wifi-copiado" role="status" aria-live="polite"></p>
+      <button type="button" class="btn btn--ghost vcard__cerrar" data-cerrar>Cerrar</button>
+    </div>
+  </dialog>
 
   <!-- VUELO: tarjeta para el mesero -->
   <dialog class="vcard" id="vuelo-tarjeta" aria-labelledby="vcard-t">
@@ -289,6 +405,27 @@
         <div class="bloque" id="cortesias-bloque" hidden>
           <h3 class="bloque__h">Tus cortesías vigentes</h3>
           <ul class="cortesias" id="cortesias"></ul>
+        </div>
+
+        <!-- App instalable: solo para socios con sesión que no la tienen ya abierta como app -->
+        <div class="bloque instalar" id="instalar" hidden>
+          <div class="instalar__cab">
+            <img src="/assets/img/marca/icono-192.png" alt="" width="56" height="56">
+            <div>
+              <h3 class="bloque__h" id="instalar-t">Lleva el Cisne en tu inicio</h3>
+              <p>Tu Pasaporte, el menú y el Wi-Fi a un toque, a pantalla completa.</p>
+            </div>
+          </div>
+          <button type="button" class="btn btn--primary btn--block" id="instalar-btn" hidden>Instalar app</button>
+          <div id="instalar-ios" hidden>
+            <ol class="pasos">
+              <li>Toca <span class="pasos__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5M6 11H5v10h14V11h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <b>Compartir</b> en la barra de tu navegador.</li>
+              <li>Elige <b>«Agregar a inicio»</b>.</li>
+            </ol>
+            <p class="fine">Al abrir la app, entra una vez con tu teléfono y PIN.</p>
+          </div>
+          <p class="instalar__texto" id="instalar-texto" hidden></p>
+          <button type="button" class="linkbtn" id="instalar-no">Ahora no</button>
         </div>
 
         <button type="button" class="btn btn--ghost btn--block salir" id="salir">Salir</button>

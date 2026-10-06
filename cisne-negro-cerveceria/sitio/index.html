@@ -24,13 +24,24 @@
   <meta name="twitter:image" content="https://cisnenegro.softvibes.art/assets/img/lugar/neon.jpg">
 
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/marca/favicon-192.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/marca/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/img/marca/icono-192.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cisne Negro">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap">
   <link rel="preload" as="image" href="/assets/img/lugar/neon.jpg">
   <link rel="stylesheet" href="/assets/css/landing.css?v=20261006b">
+  <script>
+    /* App instalable: service worker solo en https o localhost (ver /sw.js). */
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))) {
+      window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {}); });
+    }
+  </script>
 
   <script type="application/ld+json">
   {

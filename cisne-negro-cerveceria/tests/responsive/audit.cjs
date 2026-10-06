@@ -50,6 +50,9 @@ const VISTAS = [
   { id: 'menu-pasaporte-invitado', url: '/menu/#pasaporte' },
   { id: 'menu-pasaporte-socio', url: '/menu/#pasaporte', socio: true },
   { id: 'menu-ranking', url: '/menu/#ranking', socio: true },
+  // v2: drawer "Mi pedido" con 3 productos (sembrados en localStorage antes de cargar) y diálogo del Wi-Fi
+  { id: 'menu-pedido', url: '/menu/', pedido: true, accion: async (page) => { await page.click('#abrir-pedido'); await page.waitForSelector('#pedido[open]'); } },
+  { id: 'menu-wifi', url: '/menu/#wifi', accion: async (page) => { await page.waitForSelector('#wifi-dlg[open] #wifi-qr svg', { timeout: 8000 }); } },
   { id: 'admin-hoy', url: '/admin/#hoy' },
   { id: 'admin-estadisticas', url: '/admin/#estadisticas' },
   { id: 'admin-nps', url: '/admin/#nps' },
@@ -59,6 +62,16 @@ const VISTAS = [
   { id: 'proyecto', url: '/proyecto/' },
   { id: 'privacidad', url: '/privacidad/' },
 ];
+
+/* Pedido de 3 productos para la vista menu-pedido (se ejecuta antes de los scripts de la página). */
+function sembrarPedido() {
+  if (location.pathname !== '/menu/') return;
+  localStorage.setItem('cisne-pedido-v1', JSON.stringify({ creado_at: new Date().toISOString(), mesa: '12', lineas: [
+    { tipo: 'barril', id: 'alarma', variante: '12 oz', cantidad: 2, nota: 'Una sin espuma', precio: 100, nombre: '¡Alarma!', huella: '' },
+    { tipo: 'lata', id: 'lata-loba-negra', variante: null, cantidad: 1, nota: '', precio: 110, nombre: 'Negra', huella: '' },
+    { tipo: 'comida', id: 'chips-camote', variante: '110g', cantidad: 1, nota: '', precio: 135, nombre: 'Chips de Camote', huella: '' },
+  ] }));
+}
 
 /* Se ejecuta dentro de la página. */
 function medir(esTactil) {
@@ -134,6 +147,7 @@ async function main() {
       for (const vista of VISTAS) {
         const ctx = await browser.newContext({ ...d, baseURL: BASE, locale: 'es-MX', timezoneId: 'America/Mexico_City' });
         if (vista.socio) await ctx.request.post('/api/login', { data: { telefono: '7711000000', pin: '1111' } });
+        if (vista.pedido) await ctx.addInitScript(sembrarPedido);
         const page = await ctx.newPage();
         const errores = [];
         page.on('pageerror', (e) => errores.push(String(e.message).slice(0, 120)));
@@ -142,6 +156,7 @@ async function main() {
           await page.goto(vista.url, { waitUntil: 'networkidle', timeout: 30000 });
         } catch (e) { errores.push('carga: ' + e.message.slice(0, 80)); }
         await page.waitForTimeout(700);
+        if (vista.accion) await vista.accion(page).catch((e) => errores.push('acción: ' + e.message.slice(0, 80)));
         const m = await page.evaluate(medir, !!d.hasTouch).catch((e) => ({ error: e.message }));
         const archivo = `${perfil.id}__${vista.id}.png`;
         await page.screenshot({ path: path.join(OUT, archivo) }).catch(() => {});

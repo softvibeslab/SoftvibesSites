@@ -7,6 +7,18 @@
 <meta name="theme-color" content="#0E0D0B">
 <title>Aviso de privacidad · Pasaporte Cisne</title>
 <link rel="icon" href="/assets/img/marca/favicon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/img/marca/icono-192.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cisne Negro">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+  /* App instalable: service worker solo en https o localhost (ver /sw.js). */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {}); });
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -25,7 +37,7 @@ main>a:first-child{display:inline-flex;align-items:center;min-height:44px}
 <main>
   <a href="/menu/#pasaporte">← Volver al Pasaporte</a>
   <h1>Aviso de privacidad</h1>
-  <p class="nota">Versión preliminar del 6 de octubre de 2026 (actualizada con la cookie de sesión y el ranking), pendiente de revisión y aprobación por Cervecería Cisne Negro.</p>
+  <p class="nota">Versión preliminar del 6 de octubre de 2026 (actualizada con la cookie de sesión, el ranking, la app, «Mi pedido» y el Wi-Fi), pendiente de revisión y aprobación por Cervecería Cisne Negro.</p>
 
   <h2>Responsable</h2>
   <p>Cervecería Cisne Negro, con domicilio en Rafael Vega Sánchez 110, Col. Periodistas, Pachuca de Soto, Hidalgo, CP 42060, es responsable del uso y protección de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.</p>
@@ -38,6 +50,11 @@ main>a:first-child{display:inline-flex;align-items:center;min-height:44px}
   </ul>
   <p>No recabamos datos sensibles ni financieros.</p>
   <p>Para que no tengas que volver a entrar en cada visita, guardamos en tu navegador una <strong>cookie de sesión</strong> que dura hasta 180 días o hasta que toques «Salir».</p>
+
+  <h2>App, «Mi pedido» y Wi-Fi</h2>
+  <p><strong>App en tu inicio:</strong> si agregas el Cisne a la pantalla de inicio de tu teléfono o computadora, la app es este mismo sitio; no instala nada más ni tiene acceso a tus contactos, fotos o ubicación. Guarda en tu dispositivo una copia del menú y de la página «Sin conexión» para abrir más rápido. Tu Pasaporte, tus visitas y tus respuestas nunca se guardan en esa copia.</p>
+  <p><strong>«Mi pedido»:</strong> la lista que armas para mostrarle a tu mesero se queda solo en tu teléfono (en el almacenamiento de tu navegador). No nos la envía ni la vemos, no está ligada a tu Pasaporte y se borra sola a las 12 horas, al tocar «Ya lo pedí» o «Vaciar».</p>
+  <p><strong>Wi-Fi:</strong> para mostrarte la red y su contraseña solo revisamos si tienes sesión en tu Pasaporte; consultarla no suma ni guarda nada en tu Pasaporte.</p>
 
   <h2>Para qué los usamos</h2>
   <p><strong>Finalidades necesarias:</strong> operar tu Pasaporte Cisne (registrar visitas y emitir y canjear cortesías), conocer tu opinión para mejorar el servicio y, si nos contaste que algo salió mal, contactarte para resolverlo.</p>
