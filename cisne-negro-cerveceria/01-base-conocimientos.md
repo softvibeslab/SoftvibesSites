@@ -63,6 +63,13 @@
 
 **Faltan en el menú:** IBU, notas de cata, color, origen del nombre, propia vs. invitada y disponibilidad en growler o lata.
 
+### Material oficial de las cervezas (encontrado en Instagram, revisión del 2026-10-06)
+- **Arte de etiqueta:** ¡Alarma! (IG 2026-09-22), ¿A poco sí pa'? (IG 2025-04-30, ilustración de "Rick") y Barrilete Cósmico (IG 2024-05-20, con papalotes: "barrilete" = papalote). También existe arte de Mil Risas, Carabela (Tropical Stout), Joyas Ayala (American Lager), Karnaval (Festbier), Ejercicio #1 (Milkshake Hazy IPA) y Matador HDZ.
+- **Notas oficiales de ¿A poco sí pa'?:** "IPA, 6.8% ABV, 62 IBU. Intensa y aromática, con un perfil tropical y cítrico. Destacan notas de piña, mango, papaya, melón y un ligero toque resinoso." **[POR CONFIRMAR]** el ABV: el menú dice 6.9%.
+- **Maridajes oficiales** (serie "Cisne Negro te sugiere…", IG 2026-01-20): Agua Puerca + Tlayuda de picaña adobada · ¿A poco sí pa'? + Palomitas de coliflor · Kiwi Plis (NZ Pils) + Taco de pescado · Boca Negra + Sándwich de suadero · Tropkiller + Camarones piedra.
+- **Estilos según el árbol de cervezas (IG 2025-12-06):** ¿A poco sí pa'? American IPA · Karnaval Festbier · Kiwi Plis New Zealand Pils · Matador HDZ DDH Hazy IPA · Colorados JRS Red Ale · Agua Puerca Imperial Stout · Bluc Demon American Stout · Mal Bicho Berliner Weisse (guayaba, jamaica y canela) · Ejercicio 1 Hazy IPA Lucky Charms · **Henry IX Munich Helles**. **[POR CONFIRMAR]** el menú actual dice que Henry IX es IPA.
+- **Vaso de la casa:** pinta cónica tipo shaker con "CISNE ⚡ NEGRO / Cervecería Mexicana Independiente" impreso en negro (foto Google Maps 022). Es la base de las ilustraciones de `/menu/` (`herramientas/ilustrar-cervezas.cjs`).
+
 ## 5. Producto — comida
 
 | Categoría | Platillos (precio) |
@@ -120,5 +127,6 @@ Latas y botellas: 18 referencias de $80 a $170 (listado completo en cisnenegro.m
 3. ¿Qué cervezas son propias y cuáles invitadas? ¿Cuál es la rotación de barriles?
 4. ¿Tienen WhatsApp de negocio? ¿Aceptan reservaciones o eventos privados y catering?
 5. ¿Venden growlers o latas para llevar? ¿Distribuyen hoy fuera del taproom?
+8. ¿Henry IX es IPA o Munich Helles? ¿El ABV de ¿A poco sí pa'? es 6.8% o 6.9%? ¿Nos comparten el arte en alta resolución de todas las etiquetas?
 6. ¿Tienen acceso a Meta Business Suite y al perfil de Google (para exportar métricas reales)?
 7. ¿Hay manual de marca, logo vectorial y fotos profesionales?

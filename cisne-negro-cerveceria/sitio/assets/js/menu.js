@@ -115,12 +115,18 @@
     lista.replaceChildren();
     barril.forEach((b, i) => {
       const pairs = (b.marida_con || []).map((id) => state.dishes[id]).filter(Boolean);
+      const oficial = b.marida_oficial || [];
       const card = h('article', { class: 'tap', id: 'barril-' + b.id, 'data-perfil': b.perfil, 'aria-labelledby': 'tn-' + b.id },
+        b.img && h('figure', { class: 'tap__fig' },
+          h('img', { class: 'tap__img', src: '/assets/img/cervezas/' + b.img, alt: 'Ilustración de ' + b.nombre + ' (' + b.estilo + ') servida en el vaso de Cisne Negro', width: 900, height: 900, loading: i < 2 ? 'eager' : 'lazy', decoding: 'async' }),
+          b.etiqueta && h('button', { type: 'button', class: 'tap__etq', 'data-etiqueta': b.etiqueta, 'data-nombre': b.nombre },
+            h('img', { src: '/assets/img/cervezas/' + b.etiqueta, alt: '', width: 44, height: 44, loading: 'lazy', decoding: 'async' }),
+            h('span', { text: 'Ver etiqueta' }))),
         h('div', { class: 'tap__top' },
           h('span', { class: 'tap__num', text: String(i + 1).padStart(2, '0') }),
           b.perfil && h('span', { class: 'chip chip--' + b.perfil }, h('span', { class: 'dot dot--' + b.perfil }), PERFIL_LABEL[b.perfil] || b.perfil)),
         h('h3', { class: 'tap__name', id: 'tn-' + b.id, text: b.nombre }),
-        h('p', { class: 'tap__meta', text: [b.estilo, abv(b.abv)].filter(Boolean).join(' · ') }),
+        h('p', { class: 'tap__meta', text: [b.estilo, abv(b.abv), b.ibu && b.ibu + ' IBU'].filter(Boolean).join(' · ') }),
         b.cerveceria && h('p', { class: 'tap__guest', text: 'Invitada de ' + b.cerveceria }),
         b.notas && h('p', { class: 'tap__notes', text: b.notas }),
         b.perfil && perfiles[b.perfil] && h('p', { class: 'tap__profile', text: 'Perfil: ' + perfiles[b.perfil] }),
@@ -134,7 +140,7 @@
           h('ul', { class: 'marida__lista' }, pairs.map((d) => h('li', null,
             h('a', { class: 'mini', href: '#plato-' + d.id },
               d.img && h('img', { src: '/assets/img/menu/' + d.img, alt: '', width: 112, height: 112, loading: 'lazy', decoding: 'async' }),
-              h('span', { class: 'mini__n', text: dishLabel(d) }),
+              h('span', { class: 'mini__n' }, dishLabel(d), oficial.includes(d.id) && h('span', { class: 'mini__casa', text: 'De la casa' })),
               h('span', { class: 'mini__p', text: money(d.precio) })))))));
       lista.append(card);
     });
@@ -224,7 +230,8 @@
             con.length > 0 && h('p', { class: 'pidelo' },
               h('span', { class: 'pidelo__t', text: 'Pídelo con…' }),
               con.map((b) => h('a', { href: '#barril-' + b.id, 'data-barril': b.id },
-                h('span', { class: 'dot dot--' + b.perfil }), b.nombre))));
+                b.img ? h('img', { class: 'pidelo__img', src: '/assets/img/cervezas/' + b.img, alt: '', width: 32, height: 32, loading: 'lazy', decoding: 'async' })
+                  : h('span', { class: 'dot dot--' + b.perfil }), b.nombre))));
         }))));
     });
   }
@@ -316,6 +323,18 @@
     });
     $('#vuelo-vaciar').addEventListener('click', () => { state.vuelo = []; pintarVuelo(); });
     $('#vuelo-mostrar').addEventListener('click', mostrarVuelo);
+    const etq = $('#etiqueta');
+    $('#lista-barril').addEventListener('click', (e) => {
+      const btn = e.target.closest('.tap__etq');
+      if (!btn) return;
+      $('#etq-t').textContent = btn.dataset.nombre;
+      const img = $('#etq-img');
+      img.src = '/assets/img/cervezas/' + btn.dataset.etiqueta;
+      img.alt = 'Arte oficial de la etiqueta de ' + btn.dataset.nombre;
+      etq.showModal();
+    });
+    $$('#etiqueta [data-cerrar]').forEach((b) => b.addEventListener('click', () => etq.close()));
+    etq.addEventListener('click', (e) => { if (e.target === e.currentTarget) etq.close(); });
     $$('#vuelo-tarjeta [data-cerrar]').forEach((b) => b.addEventListener('click', () => $('#vuelo-tarjeta').close()));
     $('#vuelo-tarjeta').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.close(); });
     pintarVuelo(true);
