@@ -1,5 +1,5 @@
 /* Cervecería Cisne Negro · Panel del equipo (v2)
- * Pestañas: Hoy · Estadísticas · NPS · Miembros · Ranking (con hash en la URL).
+ * Pestañas: Hoy · Estadísticas · NPS · Miembros · Ranking · Ajustes (con hash en la URL).
  * En producción nginx protege /admin y /api/admin con usuario y contraseña (basic auth):
  * el navegador reenvía las credenciales solo, así que aquí no se maneja ningún token.
  * Todo texto que viene de la API se inserta con textContent (nunca innerHTML).
@@ -10,7 +10,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const SEGUIMIENTO = { nuevo: 'Nuevo', contactado: 'Contactado', resuelto: 'Resuelto', cerrado: 'Cerrado' };
-  const TABS = ['hoy', 'estadisticas', 'nps', 'miembros', 'ranking'];
+  const TABS = ['hoy', 'estadisticas', 'nps', 'miembros', 'ranking', 'ajustes'];
   const LIMITE = 20;
   const TZ = 'America/Mexico_City';
   const PERIODO_TXT = { semana: 'esta semana', mes: 'este mes', total: 'en total' };
@@ -29,6 +29,7 @@
     rankPeriodo: 'mes',
     fichaId: null, ficha: null,
     dn: { modo: 'crear', id: null, socioId: null, volverA: null },
+    wifi: null, wifiSucio: false, wifiPassPrevio: '',
   };
 
   // ── Utilidades ─────────────────────────────────────────────────────────────
@@ -118,7 +119,7 @@
     cargarTab(tab);
   }
   function cargarTab(tab) {
-    ({ hoy: cargarResumen, estadisticas: cargarEstadisticas, nps: cargarNps, miembros: cargarSocios, ranking: cargarRanking })[tab]();
+    ({ hoy: cargarResumen, estadisticas: cargarEstadisticas, nps: cargarNps, miembros: cargarSocios, ranking: cargarRanking, ajustes: cargarAjustes })[tab]();
   }
   function iniciarTabs() {
     window.addEventListener('hashchange', () => irA(location.hash.slice(1)));
@@ -908,11 +909,196 @@
     } finally { $('#rank-tabla').classList.remove('recargando'); }
   }
 
+  // ── AJUSTES: Wi-Fi del menú ────────────────────────────────────────────────
+  const WIFI_PASS_AYUDA = {
+    WPA: 'WPA/WPA2: de 8 a 63 caracteres.',
+    WEP: 'WEP: 5 o 13 caracteres de texto, o 10 o 26 hexadecimales.',
+    nopass: 'Las redes abiertas no llevan contraseña.',
+  };
+  const WIFI_SEG_TXT = { WPA: 'WPA/WPA2', WEP: 'WEP', nopass: 'Abierta' };
+  const WIFI_VIS_TXT = {
+    publica: 'Pública: el menú muestra este QR a cualquiera.',
+    socios: 'Solo socios: el menú lo muestra a quien entra con su Pasaporte.',
+    oculta: 'Oculta: este QR no aparece en el menú.',
+  };
+  const WIFI_CAMPOS = { ssid: 'w-ssid', password: 'w-pass', seguridad: 'w-seg', visibilidad: 'w-vis' };
+
+  /** Cadena estándar para que la cámara se conecte sola: WIFI:T:WPA;S:red;P:clave;; */
+  const wifiEsc = (t) => String(t).replace(/([\\;,:"])/g, '\\$1');
+  function wifiCadena({ ssid, password, seguridad }) {
+    return `WIFI:T:${seguridad};S:${wifiEsc(ssid)};${seguridad === 'nopass' ? '' : `P:${wifiEsc(password)};`};`;
+  }
+
+  /** QR en SVG (negro sobre crema), construido con nodos: nada de innerHTML. */
+  function qrSvg(texto) {
+    if (typeof qrcode !== 'function') return null;
+    if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+    const qr = qrcode(0, 'M');
+    qr.addData(texto, 'Byte');
+    qr.make();
+    const n = qr.getModuleCount();
+    const margen = 4;   // zona silenciosa estándar de 4 módulos
+    const lado = n + margen * 2;
+    let d = '';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c + margen},${r + margen}h1v1h-1z`;
+    return s('svg', { viewBox: `0 0 ${lado} ${lado}`, class: 'wifi__qr-svg', 'shape-rendering': 'crispEdges', 'aria-hidden': 'true', focusable: 'false' },
+      s('rect', { width: lado, height: lado, fill: '#F3EDE2' }),
+      s('path', { d, fill: '#0E0D0B' }));
+  }
+
+  function wifiForm() {
+    const f = $('#wifi-form');
+    return {
+      ssid: f.ssid.value.trim(),
+      password: f.seguridad.value === 'nopass' ? '' : f.password.value,
+      seguridad: f.seguridad.value,
+      visibilidad: (f.querySelector('input[name="visibilidad"]:checked') || {}).value || 'publica',
+    };
+  }
+
+  function wifiPintarQr() {
+    const w = wifiForm();
+    const lienzo = $('#wifi-qr');
+    const red = $('#wifi-qr-red');
+    let svg = null;
+    if (w.ssid) { try { svg = qrSvg(wifiCadena(w)); } catch (e) { svg = null; } }
+    if (svg) {
+      lienzo.replaceChildren(svg);
+      lienzo.setAttribute('role', 'img');
+      lienzo.setAttribute('aria-label', `Código QR para conectarse a la red ${w.ssid}, ${w.seguridad === 'nopass' ? 'abierta, sin contraseña' : 'seguridad ' + WIFI_SEG_TXT[w.seguridad]}.`);
+      red.replaceChildren(h('b', { text: w.ssid }), h('span', { text: w.seguridad === 'nopass' ? 'Abierta, sin contraseña' : WIFI_SEG_TXT[w.seguridad] }));
+    } else {
+      lienzo.removeAttribute('role');
+      lienzo.removeAttribute('aria-label');
+      lienzo.replaceChildren(h('p', { class: 'wifi__qr-vacio', text: w.ssid ? 'No se pudo dibujar el QR.' : 'Escribe el nombre de la red para ver el QR.' }));
+      red.replaceChildren();
+    }
+    $('#wifi-qr-vis').textContent = WIFI_VIS_TXT[w.visibilidad] || '';
+    $('.wifi__qr').classList.toggle('wifi__qr--oculta', w.visibilidad === 'oculta');
+  }
+
+  function wifiSeguridad() {
+    const f = $('#wifi-form');
+    const abierta = f.seguridad.value === 'nopass';
+    const pass = f.password;
+    if (abierta && !pass.disabled) {
+      st.wifiPassPrevio = pass.value;   // por si regresa a WPA/WEP sin guardar
+      pass.value = '';
+    } else if (!abierta && pass.disabled && !pass.value) {
+      pass.value = st.wifiPassPrevio;
+    }
+    pass.disabled = abierta;
+    pass.placeholder = abierta ? 'Sin contraseña' : '';
+    $('#w-ver').disabled = abierta;
+    pass.maxLength = f.seguridad.value === 'WEP' ? 26 : 63;
+    $('#w-pass-h').textContent = WIFI_PASS_AYUDA[f.seguridad.value] || '';
+  }
+
+  function wifiVer(mostrar) {
+    $('#w-pass').type = mostrar ? 'text' : 'password';
+    $('#w-ver').setAttribute('aria-pressed', String(mostrar));
+    $('#w-ver').textContent = mostrar ? 'Ocultar' : 'Mostrar';
+  }
+
+  function wifiLimpiarErrores() {
+    Object.values(WIFI_CAMPOS).forEach((id) => {
+      $('#' + id + '-err').textContent = '';
+      const campo = $('#' + id);
+      if (campo) campo.removeAttribute('aria-invalid');
+    });
+    $$('#wifi-form input[name="visibilidad"]').forEach((i) => i.removeAttribute('aria-invalid'));
+    $('#wifi-err').textContent = '';
+    $('#wifi-vivo').textContent = '';
+  }
+
+  /** Pone el mensaje del servidor junto al campo que corresponde (o abajo, si es general). */
+  function wifiError(msg) {
+    wifiLimpiarErrores();
+    const campo = /nombre de la red/i.test(msg) ? 'ssid' : /contraseña/i.test(msg) ? 'password'
+      : /seguridad/i.test(msg) ? 'seguridad' : /visibilidad/i.test(msg) ? 'visibilidad' : null;
+    if (!campo) { $('#wifi-err').textContent = msg; return; }
+    const id = WIFI_CAMPOS[campo];
+    $('#' + id + '-err').textContent = msg;
+    $('#wifi-vivo').textContent = msg;
+    const el = campo === 'visibilidad' ? $('#wifi-form input[name="visibilidad"]:checked') : $('#' + id);
+    if (campo === 'visibilidad') $$('#wifi-form input[name="visibilidad"]').forEach((i) => i.setAttribute('aria-invalid', 'true'));
+    else el.setAttribute('aria-invalid', 'true');
+    if (el && !el.disabled) el.focus();
+  }
+
+  function wifiActualizado(w) {
+    $('#wifi-actualizado').textContent = 'Última actualización: ' + (w.actualizado_at
+      ? new Date(w.actualizado_at).toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short', timeZone: TZ })
+      : 'Nunca');
+    $('#wifi-ejemplo').hidden = !w.ejemplo;
+  }
+
+  function wifiLlenar(w) {
+    const f = $('#wifi-form');
+    st.wifi = w;
+    st.wifiSucio = false;
+    st.wifiPassPrevio = '';
+    f.ssid.value = w.ssid || '';
+    f.seguridad.value = w.seguridad || 'WPA';
+    f.password.disabled = false;
+    f.password.value = w.password || '';
+    $$('input[name="visibilidad"]', f).forEach((i) => { i.checked = i.value === (w.visibilidad || 'publica'); });
+    wifiVer(false);
+    wifiSeguridad();
+    wifiLimpiarErrores();
+    wifiActualizado(w);
+    wifiPintarQr();
+  }
+
+  async function cargarAjustes(forzar) {
+    const box = $('#wifi');
+    // Si hay cambios sin guardar y solo se volvió a la pestaña, no se pisan.
+    if (st.wifi && st.wifiSucio && forzar !== true) { wifiPintarQr(); return; }
+    box.setAttribute('aria-busy', 'true');
+    try {
+      const r = await api('/ajustes');
+      avisar('');
+      wifiLlenar(r.wifi || {});
+    } catch (ex) {
+      if (ex.status !== 401) $('#wifi-err').textContent = ex.message;
+    } finally {
+      box.setAttribute('aria-busy', 'false');
+    }
+  }
+
+  async function guardarAjustes(e) {
+    e.preventDefault();
+    wifiLimpiarErrores();
+    const btn = $('#w-guardar');
+    btn.disabled = true;
+    try {
+      const r = await api('/ajustes', { method: 'PUT', body: { wifi: wifiForm() } });
+      wifiLlenar(r.wifi);
+      anunciar(r.wifi.visibilidad === 'oculta' ? 'Wi-Fi guardado. Está oculto en el menú.'
+        : r.wifi.visibilidad === 'socios' ? 'Wi-Fi guardado. Lo verán los socios del Pasaporte.'
+          : 'Wi-Fi guardado. Ya aparece en el menú.');
+    } catch (ex) {
+      if (ex.status !== 401) wifiError(ex.message);
+    } finally { btn.disabled = false; }
+  }
+
+  function iniciarAjustes() {
+    const f = $('#wifi-form');
+    const cambio = () => { st.wifiSucio = true; wifiPintarQr(); };
+    f.addEventListener('submit', guardarAjustes);
+    f.ssid.addEventListener('input', () => { f.ssid.removeAttribute('aria-invalid'); $('#w-ssid-err').textContent = ''; cambio(); });
+    f.password.addEventListener('input', () => { f.password.removeAttribute('aria-invalid'); $('#w-pass-err').textContent = ''; cambio(); });
+    f.seguridad.addEventListener('change', () => { wifiSeguridad(); $('#w-pass-err').textContent = ''; f.password.removeAttribute('aria-invalid'); cambio(); });
+    $$('input[name="visibilidad"]', f).forEach((i) => i.addEventListener('change', cambio));
+    $('#w-ver').addEventListener('click', () => wifiVer($('#w-ver').getAttribute('aria-pressed') !== 'true'));
+    wifiSeguridad();
+  }
+
   // ── Arranque ───────────────────────────────────────────────────────────────
   function init() {
     $('#canje').addEventListener('submit', canjear);
     $('#canje-codigo').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase(); });
-    $('#actualizar').addEventListener('click', () => { cargarTab(st.tab); if (st.fichaId && $('#ficha').open) recargarFicha(); anunciar('Datos actualizados.'); });
+    $('#actualizar').addEventListener('click', () => { if (st.tab === 'ajustes') cargarAjustes(true); else cargarTab(st.tab); if (st.fichaId && $('#ficha').open) recargarFicha(); anunciar('Datos actualizados.'); });
 
     $$('[data-semanas]').forEach((b) => b.addEventListener('click', () => { st.semanas = Number(b.dataset.semanas); cargarEstadisticas(); }));
     $$('[data-nps-filtro]').forEach((b) => b.addEventListener('click', () => { st.npsFiltro = b.dataset.npsFiltro; st.npsPagina = 1; cargarNps(); }));
@@ -934,6 +1120,7 @@
     ficha.addEventListener('click', (e) => { if (e.target === ficha) ficha.close(); });
     ficha.addEventListener('close', () => { st.fichaId = null; if (st.fichaVolver && st.fichaVolver.isConnected) st.fichaVolver.focus(); });
 
+    iniciarAjustes();
     iniciarTabs();
     // El código cambia a medianoche y las métricas se mueven durante el servicio.
     setInterval(() => { if (!document.hidden && st.tab === 'hoy') cargarResumen(); }, 60000);

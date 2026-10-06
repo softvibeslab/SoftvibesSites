@@ -30,7 +30,8 @@ $SSH "set -e; D=/var/backups/cisnenegro-web/$TS; mkdir -p \$D; chmod 700 /var/ba
   chmod 600 \$D/club.db; (cd \$D && sha256sum web.tar.gz club_server.py club.db > SHA256SUMS)
   echo \"  respaldo: \$D\""
 
-EXCLUIR=(--exclude 'qa/' --exclude 'DESIGN.md' --exclude '*.py' --exclude 'analisis/data.json' --exclude '.DS_Store')
+# 'v2/' es el entorno /v2 (deploy/publicar-v2.sh): la publicación de producción no debe borrarlo.
+EXCLUIR=(--exclude 'qa/' --exclude 'DESIGN.md' --exclude '*.py' --exclude 'analisis/data.json' --exclude '.DS_Store' --exclude '/v2/')
 [[ "$INCLUIR_EXPERIENCIA" == "1" ]] || EXCLUIR+=(--exclude 'experiencia/')
 
 echo "→ Sitio"

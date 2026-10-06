@@ -329,3 +329,76 @@ select.ainput { appearance: auto; }
   .tabla tbody { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .tabla tr { margin-bottom: 0; }
 }
+
+/* =====================================================================
+   Ajustes · Wi-Fi del menú
+   ===================================================================== */
+.wifi__intro { margin: -4px 0 12px; }
+.wifi-ejemplo {
+  margin: 0 0 16px; padding: 14px 16px 14px 44px; border-radius: 14px; position: relative;
+  background: rgba(242,201,125,.1); border: 1.5px solid var(--neon); color: var(--hueso);
+}
+.wifi-ejemplo::before {
+  content: "!"; position: absolute; left: 14px; top: 13px; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--neon); color: var(--tinta); font-weight: 900; font-size: .8125rem;
+}
+.wifi-ejemplo b { color: var(--neon); }
+.wifi { display: grid; gap: 20px; align-items: start; }
+@media (min-width: 900px) { .wifi { grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; } }
+.wifi[aria-busy="true"] { opacity: .55; }
+.wifi__form { display: grid; gap: 16px; min-width: 0; }
+.wifi__form .afield label { font-size: .9375rem; color: var(--hueso); }
+.wifi__pass { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.wifi__ver { min-width: 104px; min-height: 48px; }
+.ainput:disabled { opacity: .5; cursor: not-allowed; border-style: dashed; }
+.campo-err:empty { display: none; }
+.campo-err { margin: 6px 0 0; font-size: .875rem; font-weight: 700; color: #FF8A5C; }
+.campo-err::before { content: "✗ "; }
+
+.wifi__vis { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 8px; }
+.wifi__vis legend { font-size: .9375rem; font-weight: 700; color: var(--hueso); padding: 0; margin-bottom: 6px; }
+.wifi-op {
+  display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; min-height: 48px; cursor: pointer;
+  background: var(--tinta); border: 1.5px solid var(--borde); border-radius: 14px;
+}
+.wifi-op:hover { border-color: var(--gris); }
+.wifi-op:has(input:checked) { border-color: var(--neon); box-shadow: inset 4px 0 0 var(--neon); }
+.wifi-op input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--neon); }
+.wifi-op input[aria-invalid="true"] { outline: 3px solid var(--pico); outline-offset: 2px; }
+.wifi-op b { display: block; font-weight: 800; }
+.wifi-op small { display: block; color: var(--gris); font-size: .875rem; margin-top: 2px; }
+.wifi__pie { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.wifi__guardar { min-width: 160px; }
+.wifi__nota {
+  margin: 0; padding: 12px 14px; border-radius: 12px; font-size: .875rem; color: var(--gris);
+  border: 1px dashed var(--borde);
+}
+.wifi__nota b { color: var(--hueso); }
+.wifi__form .form-err { margin: 0; }
+
+/* Vista previa del QR: papel crema, módulos en tinta (contraste máximo para la cámara) */
+.wifi__qr { margin: 0; min-width: 0; display: grid; gap: 10px; }
+@media (min-width: 900px) { .wifi__qr { position: sticky; top: calc(var(--bar-h) + 16px); } }
+.wifi__qr-t { font-family: var(--f-body); font-weight: 800; font-size: 1.0625rem; margin-bottom: 2px; }
+.wifi__qr figcaption .fine { margin: 0; }
+.wifi__qr-papel {
+  background: var(--hueso); color: var(--tinta); border: 3px solid var(--tinta); box-shadow: 0 0 0 3px var(--hueso);
+  border-radius: 18px; padding: 14px; text-align: center; max-width: 320px; width: 100%; justify-self: center;
+}
+.wifi__qr-lienzo { aspect-ratio: 1; display: grid; place-items: center; }
+.wifi__qr-svg { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.wifi__qr-vacio { margin: 0; padding: 16px; color: var(--tinta-suave); font-weight: 700; }
+.wifi__qr-red { margin: 8px 0 0; display: grid; gap: 2px; overflow-wrap: anywhere; }
+.wifi__qr-red:empty { display: none; }
+.wifi__qr-red b { font-family: var(--f-mono); font-weight: 500; font-size: 1.0625rem; }
+.wifi__qr-red span { font-size: .8125rem; color: var(--tinta-suave); text-transform: uppercase; letter-spacing: .06em; }
+.wifi__qr-vis { margin: 0; text-align: center; }
+.wifi__qr--oculta .wifi__qr-papel { border-style: dashed; box-shadow: 0 0 0 3px var(--gris); }
+@media (pointer: coarse) {
+  .wifi-op { min-height: 56px; }
+  .wifi__ver, .wifi__guardar { min-height: 52px; }
+}
+@media (max-width: 520px) {
+  .wifi__guardar { width: 100%; }
+}
+.ainput:disabled::placeholder { color: var(--gris); opacity: 1; font-family: var(--f-body); }

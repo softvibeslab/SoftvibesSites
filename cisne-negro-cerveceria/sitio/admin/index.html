@@ -14,8 +14,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="/assets/css/menu.css?v=20261006b">
-  <link rel="stylesheet" href="/assets/css/admin.css?v=20261006b">
-  <script src="/assets/js/admin.js?v=20261006b" defer></script>
+  <link rel="stylesheet" href="/assets/css/admin.css?v=20261006c">
+  <script src="/assets/js/lib/qrcode.js?v=20261006c" defer></script>
+  <script src="/assets/js/admin.js?v=20261006c" defer></script>
 </head>
 <body class="admin">
   <a class="skip" href="#contenido">Saltar al contenido</a>
@@ -35,6 +36,7 @@
         <a role="tab" id="tab-nps" href="#nps" aria-controls="panel-nps" aria-selected="false" tabindex="-1">NPS</a>
         <a role="tab" id="tab-miembros" href="#miembros" aria-controls="panel-miembros" aria-selected="false" tabindex="-1">Miembros</a>
         <a role="tab" id="tab-ranking" href="#ranking" aria-controls="panel-ranking" aria-selected="false" tabindex="-1">Ranking</a>
+        <a role="tab" id="tab-ajustes" href="#ajustes" aria-controls="panel-ajustes" aria-selected="false" tabindex="-1">Ajustes</a>
       </div>
     </nav>
   </header>
@@ -230,6 +232,84 @@
             <thead><tr><th scope="col" class="num">Lugar</th><th scope="col">Nombre</th><th scope="col" class="num">Visitas</th><th scope="col"><span class="sr-only">Acciones</span></th></tr></thead>
             <tbody></tbody>
           </table>
+        </div>
+      </section>
+    </section>
+    <!-- ── AJUSTES ──────────────────────────────────────────── -->
+    <section class="tabpanel" id="panel-ajustes" role="tabpanel" aria-labelledby="tab-ajustes" tabindex="-1" hidden>
+      <section class="card" aria-labelledby="t-wifi" aria-describedby="wifi-intro">
+        <div class="card__fila">
+          <h2 class="card__h" id="t-wifi">Wi-Fi del menú</h2>
+          <p class="fine card__nota" id="wifi-actualizado">Última actualización: …</p>
+        </div>
+        <p class="fine wifi__intro" id="wifi-intro">La red que ven los clientes en el menú, con un QR para conectarse con la cámara.</p>
+        <p class="wifi-ejemplo" id="wifi-ejemplo" hidden><b>Estos son datos de ejemplo.</b> Escribe la red real y guarda.</p>
+
+        <div class="wifi" aria-busy="true" id="wifi">
+          <form class="wifi__form" id="wifi-form" novalidate>
+            <div class="afield">
+              <label for="w-ssid">Nombre de la red (SSID)</label>
+              <input id="w-ssid" name="ssid" class="ainput" maxlength="32" autocomplete="off" autocapitalize="off" spellcheck="false" required aria-describedby="w-ssid-h w-ssid-err">
+              <small id="w-ssid-h">Tal como aparece en el celular al buscar redes. Respeta mayúsculas y espacios.</small>
+              <p class="campo-err" id="w-ssid-err"></p>
+            </div>
+
+            <div class="afield">
+              <label for="w-seg">Tipo de seguridad</label>
+              <select id="w-seg" name="seguridad" class="ainput" aria-describedby="w-seg-err">
+                <option value="WPA">WPA/WPA2 (recomendado)</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Abierta, sin contraseña</option>
+              </select>
+              <p class="campo-err" id="w-seg-err"></p>
+            </div>
+
+            <div class="afield">
+              <label for="w-pass">Contraseña</label>
+              <div class="wifi__pass">
+                <input id="w-pass" name="password" class="ainput mono" type="password" maxlength="63" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="w-pass-h w-pass-err">
+                <button type="button" class="btn btn--ghost btn--sm wifi__ver" id="w-ver" aria-pressed="false" aria-controls="w-pass">Mostrar</button>
+              </div>
+              <small id="w-pass-h"></small>
+              <p class="campo-err" id="w-pass-err"></p>
+            </div>
+
+            <fieldset class="wifi__vis" aria-describedby="w-vis-err">
+              <legend>Visibilidad en el menú</legend>
+              <label class="wifi-op">
+                <input type="radio" name="visibilidad" value="publica">
+                <span><b>Pública</b><small>Cualquiera que abra el menú.</small></span>
+              </label>
+              <label class="wifi-op">
+                <input type="radio" name="visibilidad" value="socios">
+                <span><b>Solo socios del Pasaporte</b><small>Un incentivo para registrarse.</small></span>
+              </label>
+              <label class="wifi-op">
+                <input type="radio" name="visibilidad" value="oculta">
+                <span><b>Oculta</b><small>No aparece en el menú.</small></span>
+              </label>
+              <p class="campo-err" id="w-vis-err"></p>
+            </fieldset>
+
+            <p class="form-err" id="wifi-err" role="alert"></p>
+            <p class="sr-only" id="wifi-vivo" aria-live="assertive"></p>
+            <div class="wifi__pie">
+              <button class="btn btn--primary wifi__guardar" type="submit" id="w-guardar">Guardar</button>
+            </div>
+            <p class="wifi__nota"><b>Seguridad:</b> usa una red de invitados separada de la caja y las cámaras.</p>
+          </form>
+
+          <figure class="wifi__qr" aria-labelledby="wifi-qr-t">
+            <figcaption>
+              <h3 class="wifi__qr-t" id="wifi-qr-t">Vista previa del QR</h3>
+              <p class="fine">Apunta la cámara del celular para probar que conecta. Se actualiza mientras escribes.</p>
+            </figcaption>
+            <div class="wifi__qr-papel">
+              <div class="wifi__qr-lienzo" id="wifi-qr"></div>
+              <p class="wifi__qr-red" id="wifi-qr-red"></p>
+            </div>
+            <p class="fine wifi__qr-vis" id="wifi-qr-vis"></p>
+          </figure>
         </div>
       </section>
     </section>

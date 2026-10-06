@@ -1,0 +1,23 @@
+# /etc/systemd/system/cisnenegro-club-v2.service — backend del entorno /v2 (base separada de producción)
+[Unit]
+Description=Club Cisne Negro v2 (entorno /v2)
+After=network.target
+
+[Service]
+User=cisneclub
+Group=cisneclub
+EnvironmentFile=/etc/cisnenegro-club-v2.env
+Environment=CLUB_DB=/var/lib/cisnenegro-club-v2/club.db
+Environment=CLUB_PORT=8791
+Environment=CLUB_COOKIE_PATH=/v2/api
+ExecStart=/usr/bin/python3 /opt/cisnenegro-club-v2/club_server.py
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/cisnenegro-club-v2
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
