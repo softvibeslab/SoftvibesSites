@@ -49,6 +49,25 @@ Vista previa de la siguiente versión, **separada de producción**: la raíz `/`
 - **Limitación conocida:** en Android/Chrome la tarjeta de instalar aparece solo cuando el navegador ofrece la instalación nativa (`beforeinstallprompt`). No se pudo verificar en un navegador automatizado; probar en un Android real.
 - **Pasar a producción:** cuando el cliente apruebe, fusionar `feat/cisne-negro-v2-pedido` y publicar con `deploy/publicar.sh` (la raíz y `/api` usan el backend de producción; aplicar antes el mismo `club_server.py`).
 
+### Modo mesero en /v2 — QR del pedido, cuentas por mesa, historial, corte y cierre (2026-10-07)
+
+- **Rama:** `feat/cisne-negro-mesero` (sobre `feat/cisne-negro-v2-pedido`). Plan y decisiones: [06-plan-mesero-qr-cortes.md](06-plan-mesero-qr-cortes.md).
+- **Cliente:** «Mostrar al mesero» registra el pedido (`POST /api/pedidos`) y muestra un QR a `/v2/equipo/?p=<código>`; ve «Pedido tomado por …» cuando el mesero lo toma. Sin internet, el QR lleva el pedido dentro (`#d=`, con marca `t` para no duplicarlo).
+- **App del equipo `/v2/equipo/`** (usuario + PIN de 6 dígitos, cookie `cn_equipo` de 12 h):
+  - Escáner (BarcodeDetector o jsQR) o código escrito a mano.
+  - **Cuenta por mesa** con rondas y ajustes con bitácora; el mesero no cambia precios (los recalcula el servidor desde `menu.json`).
+  - Cobro con propina y pagos mixtos (efectivo, tarjeta de crédito y de débito) y cálculo de cambio.
+  - Historial por día, semana, mes o intervalo (con hora) y CSV.
+  - Corte del mesero. **Cierre del día solo para admin**, con día operativo de 05:00 a 05:00, cierre forzado o reapertura con motivo, y alta de meseros.
+- **Cuentas demo** (solo en la base de `/v2`): `admin.demo`, `luis.demo` y `ana.demo`. Los PINs están en `PRIVADO/demo-equipo-v2.txt`, fuera de git.
+- **Pruebas:**
+  - `backend/test_equipo.py` 64, `test_club.py` 67, `pedido.test.cjs` 19, funcional del menú 161 y `tests/funcional/equipo.cjs` 61 (base limpia; uso en su cabecera).
+  - Humo en `/v2` real: 13/13 por API, incluidos tomar, cobro mixto, CSV, corte, cierre, reapertura e importar idempotente, y login en Chromium y WebKit. Los datos de prueba se borraron.
+- **Pendiente con el cliente:**
+  - Integración con su POS (por confirmar).
+  - Qué hacer cuando un mesero toma el pedido de una mesa cuya cuenta es de otro: hoy la ronda se suma a la cuenta existente y la app lo avisa.
+  - Si el recibo se muestra tras cobrar.
+
 ## Último despliegue — 2026-10-06 12:15 UTC · `f63794d` (corrección de caché)
 
 - **Problema:** producción ya era idéntica a la versión local, pero los navegadores mostraban las imágenes, el CSS y el JS anteriores. `/assets/` se cacheaba 7 días (`max-age=604800`) y las imágenes nuevas conservaron su nombre.
