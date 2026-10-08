@@ -19,9 +19,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap">
-  <link rel="stylesheet" href="/assets/css/menu.css?v=20261007a">
-  <script src="/assets/js/pedido.js?v=20261007a" defer></script>
-  <script src="/assets/js/menu.js?v=20261007a" defer></script>
+  <link rel="stylesheet" href="/assets/css/menu.css?v=20261007b">
+  <script src="/assets/js/pedido.js?v=20261007b" defer></script>
+  <script src="/assets/js/menu.js?v=20261007b" defer></script>
   <script>
     /* App instalable: service worker solo en https o localhost (ver /sw.js). */
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))) {
@@ -43,6 +43,11 @@
         <span class="sticker mbar__sticker"><img src="/assets/img/marca/favicon-192.png" alt="" width="192" height="192"></span>
         <span class="mbar__title">Menú</span>
       </a>
+      <!-- Instalar la app: discreto, solo con sesión y fuera de la app instalada -->
+      <button type="button" class="btn btn--ghost btn--sm mbar__app" id="abrir-instalar" aria-haspopup="dialog" aria-label="Instalar app" hidden>
+        <svg class="mbar__app-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="2.5" width="12" height="19" rx="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5v7M9 11.8l3 3 3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="mbar__app-t"><span class="mbar__app-largo">Instalar app</span><span class="mbar__app-corto">App</span></span>
+      </button>
       <button type="button" class="btn btn--ghost btn--sm mbar__wifi" id="abrir-wifi" aria-haspopup="dialog" aria-label="Wi-Fi" hidden>
         <svg class="mbar__wifi-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 9a14 14 0 0 1 19 0M5.8 12.6a9.2 9.2 0 0 1 12.4 0M9.2 16.1a4.4 4.4 0 0 1 5.6 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="19.4" r="1.7" fill="currentColor"/></svg>
         <span class="mbar__wifi-t">Wi-Fi</span>
@@ -261,6 +266,27 @@
     </div>
   </dialog>
 
+  <!-- Instalar la app: guía por dispositivo cuando el navegador no ofrece la instalación nativa -->
+  <dialog class="vcard instalar-dlg" id="instalar-dlg" aria-labelledby="inst-t">
+    <div class="vcard__in">
+      <p class="eyebrow">App del Cisne</p>
+      <h2 class="vcard__t" id="inst-t">Instálala</h2>
+      <div class="instalar__cab">
+        <img src="/assets/img/marca/icono-192.png" alt="" width="56" height="56">
+        <p>Tu Pasaporte, el menú y el Wi-Fi con un toque desde tu pantalla de inicio, a pantalla completa.</p>
+      </div>
+      <p class="inst__disp" id="inst-disp"></p>
+      <ol class="pasos inst__pasos" id="inst-pasos"></ol>
+      <p class="fine inst__nota" id="inst-nota" hidden></p>
+      <details class="inst__otros">
+        <summary>¿Usas otro dispositivo?</summary>
+        <div id="inst-otros"></div>
+      </details>
+      <button type="button" class="btn btn--primary btn--block" data-cerrar>Listo</button>
+      <button type="button" class="linkbtn inst__hecho" id="inst-hecho">Ya la instalé</button>
+    </div>
+  </dialog>
+
   <!-- VUELO: tarjeta para el mesero -->
   <dialog class="vcard" id="vuelo-tarjeta" aria-labelledby="vcard-t">
     <div class="vcard__in">
@@ -434,15 +460,7 @@
               <p>Tu Pasaporte, el menú y el Wi-Fi a un toque, a pantalla completa.</p>
             </div>
           </div>
-          <button type="button" class="btn btn--primary btn--block" id="instalar-btn" hidden>Instalar app</button>
-          <div id="instalar-ios" hidden>
-            <ol class="pasos">
-              <li>Toca <span class="pasos__ico"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5M6 11H5v10h14V11h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <b>Compartir</b> en la barra de tu navegador.</li>
-              <li>Elige <b>«Agregar a inicio»</b>.</li>
-            </ol>
-            <p class="fine">Al abrir la app, entra una vez con tu teléfono y PIN.</p>
-          </div>
-          <p class="instalar__texto" id="instalar-texto" hidden></p>
+          <button type="button" class="btn btn--primary btn--block" id="instalar-btn">Instalar app</button>
           <button type="button" class="linkbtn" id="instalar-no">Ahora no</button>
         </div>
 

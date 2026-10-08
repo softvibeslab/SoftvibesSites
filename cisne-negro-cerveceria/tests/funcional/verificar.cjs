@@ -665,36 +665,58 @@ const socioVisible = async (p) => (await p.isVisible('#pase-socio')) && !(await 
       return r;
     };
     const ip = await conSesion(IPHONE, '7716000002');
-    ok('5  Instalar: aparece con sesión (iPhone: pasos de Compartir + nota del PIN)', (await ip.p.isVisible('#instalar')) && (await ip.p.isVisible('#instalar-ios')) && /entra una vez con tu teléfono y PIN/.test(await ip.p.textContent('#instalar-ios')));
+    ok('5  Instalar: con sesión aparece la tarjeta y el botón discreto de la barra', (await ip.p.isVisible('#instalar')) && (await ip.p.isVisible('#abrir-instalar')));
     await ip.p.locator('#instalar').scrollIntoViewIfNeeded();
     await ip.p.screenshot({ path: QA2 + 'v2-menu-390-instalar-iphone.png' });
+    await ip.p.click('#instalar-btn'); await ip.p.waitForSelector('#instalar-dlg[open]');
+    ok('5  Instalar (iPhone): abre la guía de Safari con Compartir → Agregar a inicio y la nota del PIN',
+      (await ip.p.$eval('#instalar-dlg', (d) => d.dataset.guia)) === 'ios-safari' && /Compartir/.test(await ip.p.textContent('#inst-pasos'))
+      && /Agregar a inicio/.test(await ip.p.textContent('#inst-pasos')) && /entra una vez con tu teléfono y PIN/.test(await ip.p.textContent('#inst-nota')));
+    ok('5  Instalar: la guía trae otros dispositivos (Android, Chrome/Edge, Mac)', (await ip.p.$$('#inst-otros .inst__otro')).length >= 5);
+    await ip.p.screenshot({ path: QA2 + 'v2-menu-390-instalar-guia-iphone.png' });
+    await ip.p.click('#instalar-dlg [data-cerrar]');
+    ok('5  Instalar: "Listo" cierra la guía', !(await ip.p.isVisible('#instalar-dlg')));
     await ip.p.click('#instalar-no');
-    ok('5  Instalar: "Ahora no" la oculta', !(await ip.p.isVisible('#instalar')));
+    ok('5  Instalar: "Ahora no" oculta la tarjeta pero deja el botón discreto', !(await ip.p.isVisible('#instalar')) && (await ip.p.isVisible('#abrir-instalar')));
     await ip.p.reload(); await ip.p.waitForSelector('#pase-socio:not([hidden])'); await ip.p.waitForTimeout(300);
-    ok('5  Instalar: sigue oculta al recargar (30 días)', !(await ip.p.isVisible('#instalar')));
+    ok('5  Instalar: la tarjeta sigue oculta al recargar (30 días)', !(await ip.p.isVisible('#instalar')));
+    await ip.p.click('#pasaporte .pase__top [data-cerrar]');
+    await ip.p.click('#abrir-instalar'); await ip.p.waitForSelector('#instalar-dlg[open]');
+    await ip.p.click('#inst-hecho'); await ip.p.waitForTimeout(150);
+    ok('5  Instalar: "Ya la instalé" oculta el botón', !(await ip.p.isVisible('#abrir-instalar')) && !(await ip.p.isVisible('#instalar-dlg')));
     ok('—  Sin errores JS (instalar iPhone)', ip.p.errores.length === 0, ip.p.errores.join(' / '));
     await ip.ctx.close();
     const inv = await nuevaPagina(b, IPHONE);
     await inv.p.goto(BASE + '/menu/#pasaporte'); await inv.p.waitForSelector('#pase-invitado:not([hidden])');
-    ok('5  Instalar: no aparece sin sesión', !(await inv.p.isVisible('#instalar')));
+    ok('5  Instalar: no aparece sin sesión (ni tarjeta ni botón)', !(await inv.p.isVisible('#instalar')) && !(await inv.p.isVisible('#abrir-instalar')));
     await inv.ctx.close();
     const app = await conSesion(IPHONE, '7716000003', () => {
       const mm = window.matchMedia.bind(window);
       window.matchMedia = (q) => (/display-mode:\s*standalone/.test(q) ? { matches: true, media: q, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent() { return false; } } : mm(q));
     });
-    ok('5  Instalar: no aparece en display-mode standalone (emulado)', (await app.p.isVisible('#pase-socio')) && !(await app.p.isVisible('#instalar')));
+    ok('5  Instalar: no aparece ya instalada (display-mode standalone emulado)', (await app.p.isVisible('#pase-socio')) && !(await app.p.isVisible('#instalar')) && !(await app.p.isVisible('#abrir-instalar')));
     await app.ctx.close();
+    const ANDROID = { ...MOV, userAgent: 'Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36' };
+    const an = await conSesion(ANDROID, '7716000005');
+    await an.p.click('#pasaporte .pase__top [data-cerrar]');
+    await an.p.click('#abrir-instalar'); await an.p.waitForSelector('#instalar-dlg[open]');
+    ok('5  Instalar (Android sin invitación nativa): guía con el menú ⋮ → Instalar app', (await an.p.$eval('#instalar-dlg', (d) => d.dataset.guia)) === 'android' && /Instalar app/.test(await an.p.textContent('#inst-pasos')));
+    await an.ctx.close();
     const esc = await conSesion({ viewport: { width: 1280, height: 900 } }, '7716000004');
-    ok('5  Instalar: Chrome de escritorio sin invitación nativa → no aparece', !(await esc.p.isVisible('#instalar')));
+    ok('5  Instalar: Chrome de escritorio sin invitación nativa → botón visible; abre la guía de Chrome', (await esc.p.isVisible('#instalar-btn')));
+    await esc.p.click('#instalar-btn'); await esc.p.waitForSelector('#instalar-dlg[open]');
+    ok('5  Instalar: guía de Chrome de escritorio', (await esc.p.$eval('#instalar-dlg', (d) => d.dataset.guia)) === 'chrome');
+    await esc.p.click('#instalar-dlg [data-cerrar]');
     await esc.p.evaluate(() => {
       const ev = new Event('beforeinstallprompt', { cancelable: true });
       ev.prompt = async () => { window.__prompt = true; };
       ev.userChoice = Promise.resolve({ outcome: 'accepted', platform: 'web' });
       window.dispatchEvent(ev);
     });
-    ok('5  Instalar: con beforeinstallprompt muestra "Instalar app"', (await esc.p.isVisible('#instalar-btn')) && !(await esc.p.isVisible('#instalar-ios')));
-    await esc.p.click('#instalar-btn'); await esc.p.waitForTimeout(200);
-    ok('5  Instalar: "Instalar app" llama prompt() y oculta la tarjeta al aceptar', (await esc.p.evaluate(() => window.__prompt === true)) && !(await esc.p.isVisible('#instalar')));
+    await esc.p.click('#pasaporte .pase__top [data-cerrar]');
+    await esc.p.click('#abrir-instalar'); await esc.p.waitForTimeout(200);
+    ok('5  Instalar: con beforeinstallprompt el botón de la barra abre la instalación nativa y se oculta al aceptar',
+      (await esc.p.evaluate(() => window.__prompt === true)) && !(await esc.p.isVisible('#instalar-dlg')) && !(await esc.p.isVisible('#abrir-instalar')) && !(await esc.p.isVisible('#instalar')));
     ok('—  Sin errores JS (instalar escritorio)', esc.p.errores.length === 0, esc.p.errores.join(' / '));
     await esc.ctx.close();
   }

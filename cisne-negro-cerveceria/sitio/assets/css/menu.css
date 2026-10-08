@@ -909,3 +909,41 @@ body.con-pedido .toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
 @media (max-width: 719px) { .taps { grid-template-columns: minmax(0, 1fr); } }
 .tap { min-width: 0; }
 .tap__top { flex-wrap: wrap; }
+
+/* Instalar la app: botón discreto en la barra (solo con sesión) + guía por dispositivo */
+.mbar__app { margin-left: auto; padding-left: 12px; padding-right: 14px; gap: 6px; border-color: rgba(242,201,125,.55); }
+.mbar__app:not([hidden]) ~ .mbar__wifi, .mbar__app:not([hidden]) ~ .mbar__pass { margin-left: 0; }
+.mbar__app-ico { width: 20px; height: 20px; flex: none; color: var(--neon); }
+.mbar__app-corto { display: none; }
+.mbar__app:hover .mbar__app-ico, .mbar__app:focus-visible .mbar__app-ico { color: currentColor; }
+/* Un solo destello suave al aparecer, para que se note sin interrumpir */
+@media (prefers-reduced-motion: no-preference) {
+  .mbar__app:not([hidden]) { animation: app-destello 1.6s ease-out .8s 2; }
+  @keyframes app-destello { 0%, 100% { box-shadow: 0 0 0 0 rgba(242,201,125,0); } 40% { box-shadow: 0 0 0 5px rgba(242,201,125,.28); } }
+}
+@media (max-width: 479px) {
+  .mbar__app { padding-left: 10px; padding-right: 12px; }
+  .mbar__app-largo { display: none; }
+  .mbar__app-corto { display: inline; }
+}
+@media (max-width: 359px) {
+  .mbar__app { width: 44px; min-width: 44px; padding: 0; }
+  .mbar__app-t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+.instalar-dlg { overflow-y: auto; }
+.instalar-dlg .vcard__t { font-size: clamp(2.25rem, 11vw, 3rem); margin-bottom: 10px; }
+.instalar-dlg .instalar__cab p { margin: 0; font-size: .9375rem; }
+.inst__disp { font-family: var(--f-mono); font-size: .8125rem; text-transform: uppercase; letter-spacing: .1em; color: var(--tinta-suave); margin: 4px 0 8px; }
+.inst__pasos { gap: 10px; margin-bottom: 10px; }
+.inst__pasos li { line-height: 1.6; padding-top: 1px; }
+.instalar-dlg kbd { font-family: var(--f-mono); font-size: .8125rem; border: 1.5px solid var(--tinta); border-bottom-width: 3px; border-radius: 6px; padding: 0 5px; }
+.inst__nota { margin-bottom: 10px; }
+.inst__otros { border-top: 1.5px solid rgba(14,13,11,.15); margin: 6px 0 14px; padding-top: 8px; }
+.inst__otros summary { cursor: pointer; font-weight: 800; min-height: 44px; display: flex; align-items: center; }
+.inst__otro { margin-top: 10px; }
+.inst__otro-t { font-size: .9375rem; font-weight: 800; margin: 0 0 6px; }
+.pasos--chico li { font-size: .875rem; font-weight: 500; line-height: 1.6; min-height: 26px; padding-left: 32px; }
+.pasos--chico li::before { width: 22px; height: 22px; font-size: .8125rem; }
+.pasos--chico .pasos__ico { width: 24px; height: 24px; }
+.pasos--chico .pasos__ico svg { width: 15px; height: 15px; }
+.inst__hecho { display: block; margin: 10px auto 0; }

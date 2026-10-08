@@ -31,8 +31,9 @@
   const ASK = '¿Por qué se llama así? Pregúntale a tu bartender.';
   const VUELO_N = 4;
   const PREMIOS = { 5: '4 oz', 10: '12 oz' };   // casillas premiadas del Pasaporte (ver club_server.RECOMPENSAS)
-  const VER = '?v=20261007a';                     // versión de caché de los assets (ver /sw.js)
+  const VER = '?v=20261007b';                     // versión de caché de los assets (ver /sw.js)
   const INSTALAR_KEY = 'cisne.instalar.descartado'; // "Ahora no" en la invitación a instalar (30 días)
+  const INSTALADA_KEY = 'cisne.instalar.hecho';      // "Ya la instalé" (iOS/Safari no avisan cuando se instala)
   const INSTALAR_PAUSA = 30 * 24 * 60 * 60 * 1000;
   const P = window.CisnePedido;                   // funciones puras de "Mi pedido" (assets/js/pedido.js)
 
@@ -1092,52 +1093,167 @@
     return mm('(display-mode: standalone)') || mm('(display-mode: fullscreen)') || mm('(display-mode: minimal-ui)') || navigator.standalone === true;
   }
 
-  /** Cómo se instala en este dispositivo: 'prompt' | 'ios' | 'mac-safari' | 'firefox' | 'firefox-android' | null */
-  function plataformaInstalar() {
-    if (state.promptInstalar) return 'prompt';
+  /** Navegador y dispositivo, para elegir la forma de instalar.
+   *  → { guia: 'ios-safari'|'ios-otro'|'android'|'samsung'|'firefox-android'|'chrome'|'edge'|'mac-safari'|'firefox'|'otro', equipo } */
+  function dispositivo() {
     const ua = navigator.userAgent || '';
-    const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-    if (ios) return /FxiOS/.test(ua) ? null : 'ios';
-    if (/Firefox\//.test(ua)) return /Android/.test(ua) ? 'firefox-android' : 'firefox';
-    const safari = /Macintosh/.test(ua) && /Safari\//.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua);
-    const ver = Number((ua.match(/Version\/(\d+)/) || [])[1] || 0);
-    if (safari && ver >= 17) return 'mac-safari';
-    return null;
+    const ipad = /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    if (ipad || /iPhone|iPod/.test(ua)) {
+      return { guia: /CriOS|EdgiOS|FxiOS|OPiOS/.test(ua) ? 'ios-otro' : 'ios-safari', equipo: ipad ? 'iPad' : 'iPhone' };
+    }
+    if (/Android/.test(ua)) {
+      const guia = /SamsungBrowser/.test(ua) ? 'samsung' : /Firefox\//.test(ua) ? 'firefox-android' : 'android';
+      return { guia, equipo: /Mobile/.test(ua) ? 'celular Android' : 'tableta Android' };
+    }
+    const equipo = /Windows/.test(ua) ? 'Windows' : /Macintosh/.test(ua) ? 'Mac' : /CrOS/.test(ua) ? 'Chromebook' : 'computadora';
+    if (/Firefox\//.test(ua)) return { guia: 'firefox', equipo };
+    if (/Edg\//.test(ua)) return { guia: 'edge', equipo };
+    if (/Chrome|Chromium|OPR\//.test(ua)) return { guia: 'chrome', equipo };
+    const safari = /Macintosh/.test(ua) && /Safari\//.test(ua);
+    if (safari && Number((ua.match(/Version\/(\d+)/) || [])[1] || 0) >= 17) return { guia: 'mac-safari', equipo };
+    return { guia: 'otro', equipo };
   }
 
+  // Íconos de los pasos (como se ven en cada navegador)
+  const ICO = {
+    compartir: '<path d="M12 3v12M7.5 7.5L12 3l4.5 4.5M6 11H5v10h14V11h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    agregar: '<rect x="4" y="4" width="16" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8.5v7M8.5 12h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    puntos: '<circle cx="12" cy="5.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="18.5" r="1.8" fill="currentColor"/>',
+    puntosH: '<circle cx="5.5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="18.5" cy="12" r="1.8" fill="currentColor"/>',
+    lineas: '<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    pantalla: '<rect x="3" y="4" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 20h7M12 7v6M9.5 10.5L12 13l2.5-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+  };
+  const ico = (n) => {
+    const sp = h('span', { class: 'pasos__ico' });
+    sp.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICO[n] + '</svg>';
+    return sp;
+  };
+  const b = (t) => h('b', { text: t });
+  const kbd = (t) => h('kbd', { text: t });
+
+  /** Pasos por navegador. Cada paso es una lista de nodos/textos. */
+  const GUIAS = {
+    'ios-safari': { titulo: 'iPhone o iPad (Safari)', pasos: [
+      ['Toca ', ico('compartir'), ' ', b('Compartir'), ' en la barra de Safari (si no lo ves, toca primero ', ico('puntosH'), ').'],
+      ['Desliza hacia abajo y elige ', ico('agregar'), ' ', b('«Agregar a inicio»'), '.'],
+      ['Toca ', b('«Agregar»'), '. El Cisne aparece en tu pantalla de inicio.'],
+    ], nota: 'Al abrir la app desde el ícono, entra una vez con tu teléfono y PIN.' },
+    'ios-otro': { titulo: 'iPhone o iPad (Chrome, Edge o Firefox)', pasos: [
+      ['Toca ', ico('compartir'), ' ', b('Compartir'), ' junto a la barra de direcciones (en Firefox está en el menú ', ico('lineas'), ').'],
+      ['Elige ', ico('agregar'), ' ', b('«Agregar a inicio»'), '.'],
+      ['Toca ', b('«Agregar»'), '.'],
+    ], nota: 'Necesita iOS 16.4 o posterior; si no ves la opción, ábrela en Safari. Al abrir la app, entra una vez con tu teléfono y PIN.' },
+    android: { titulo: 'Android (Chrome)', pasos: [
+      ['Toca el menú ', ico('puntos'), ' arriba a la derecha.'],
+      ['Elige ', b('«Instalar app»'), ' o ', b('«Agregar a la pantalla principal»'), '.'],
+      ['Confirma con ', b('«Instalar»'), '.'],
+    ] },
+    samsung: { titulo: 'Android (Samsung Internet)', pasos: [
+      ['Toca el menú ', ico('lineas'), ' abajo a la derecha.'],
+      ['Elige ', b('«Agregar página a»'), ' y luego ', b('«Pantalla de inicio»'), '.'],
+      ['Confirma con ', b('«Agregar»'), '.'],
+    ] },
+    'firefox-android': { titulo: 'Android (Firefox)', pasos: [
+      ['Toca el menú ', ico('puntos'), '.'],
+      ['Elige ', b('«Agregar a la pantalla de inicio»'), ' o ', b('«Instalar»'), '.'],
+      ['Confirma con ', b('«Agregar»'), '.'],
+    ] },
+    chrome: { titulo: 'Windows, Mac o Chromebook (Chrome)', pasos: [
+      ['Haz clic en ', ico('pantalla'), ' ', b('Instalar'), ' a la derecha de la barra de direcciones.'],
+      ['Si no aparece: menú ', ico('puntos'), ' → ', b('«Transmitir, guardar y compartir»'), ' → ', b('«Instalar página como app»'), '.'],
+      ['Confirma con ', b('«Instalar»'), '. Queda en tu escritorio y en el menú de inicio o el Launchpad.'],
+    ] },
+    edge: { titulo: 'Windows o Mac (Edge)', pasos: [
+      ['Haz clic en ', ico('pantalla'), ' en la barra de direcciones.'],
+      ['Si no aparece: menú ', ico('puntosH'), ' → ', b('«Aplicaciones»'), ' → ', b('«Instalar este sitio como una aplicación»'), '.'],
+      ['Confirma con ', b('«Instalar»'), '.'],
+    ] },
+    'mac-safari': { titulo: 'Mac (Safari)', pasos: [
+      ['En la barra de menús elige ', b('Archivo → «Agregar al Dock»'), ' (o ', ico('compartir'), ' → ', b('«Agregar al Dock»'), ').'],
+      ['Haz clic en ', b('«Agregar»'), '. El Cisne queda en tu Dock.'],
+    ] },
+    firefox: { titulo: 'Computadora (Firefox)', pasos: [
+      ['Firefox no instala apps web: guárdala en favoritos con ', kbd('Ctrl'), ' o ', kbd('⌘'), ' + ', kbd('D'), '.'],
+      ['Para tenerla como app, abre esta página en ', b('Chrome'), ' o ', b('Edge'), ' y toca «Instalar app».'],
+    ] },
+    otro: { titulo: 'Otro navegador', pasos: [
+      ['Busca en el menú del navegador ', b('«Instalar»'), ', ', b('«Agregar a inicio»'), ' o ', b('«Agregar al Dock»'), '.'],
+      ['Si no aparece, guárdala en favoritos o ábrela en Chrome, Edge o Safari.'],
+    ] },
+  };
+  const OTROS = ['ios-safari', 'android', 'samsung', 'chrome', 'edge', 'mac-safari'];
+
+  const instaladaAqui = () => state.instalada || modoApp() || safeGet(INSTALADA_KEY) === '1';
+
   function pintarInstalar() {
+    const socio = !!state.socio;
+    const listo = instaladaAqui();
+    const boton = $('#abrir-instalar');
+    if (boton) boton.hidden = !socio || listo;
     const card = $('#instalar');
     if (!card) return;
     const descartado = Number(safeGet(INSTALAR_KEY) || 0);
     const pausa = descartado > 0 && Date.now() - descartado < INSTALAR_PAUSA;
-    const plat = plataformaInstalar();
-    const mostrar = !!state.socio && !state.instalada && !modoApp() && !pausa && !!plat;
-    card.hidden = !mostrar;
-    card.dataset.plataforma = plat || '';
-    if (!mostrar) return;
-    $('#instalar-btn').hidden = plat !== 'prompt';
-    $('#instalar-ios').hidden = plat !== 'ios';
-    const textos = {
-      'mac-safari': ['En la barra de menús de Safari elige ', h('b', { text: 'Archivo → «Agregar al Dock»' }), '.'],
-      firefox: ['Guárdalo en favoritos para volver rápido (', h('kbd', { text: 'Ctrl' }), ' o ', h('kbd', { text: '⌘' }), ' + ', h('kbd', { text: 'D' }), ').'],
-      'firefox-android': ['Toca el menú ', h('b', { text: '⋮' }), ' y elige ', h('b', { text: '«Agregar a la pantalla de inicio»' }), '.'],
-    };
-    const tx = $('#instalar-texto');
-    tx.hidden = !textos[plat];
-    tx.replaceChildren(...(textos[plat] || []));
+    card.hidden = !socio || listo || pausa;
+    card.dataset.plataforma = state.promptInstalar ? 'prompt' : dispositivo().guia;
+    if (listo && $('#instalar-dlg').open) $('#instalar-dlg').close();
   }
 
-  function iniciarInstalar() {
-    $('#instalar-btn').addEventListener('click', async () => {
-      const ev = state.promptInstalar;
-      if (!ev) return;
+  function pintarGuia(guia, equipo) {
+    const g = GUIAS[guia] || GUIAS.otro;
+    $('#inst-disp').textContent = guia === 'otro' ? 'En tu navegador:' : 'En tu ' + equipo + ':';
+    $('#inst-pasos').replaceChildren(...g.pasos.map((p) => h('li', null, ...p)));
+    $('#inst-nota').hidden = !g.nota;
+    $('#inst-nota').textContent = g.nota || '';
+    $('#inst-otros').replaceChildren(...OTROS.filter((k) => k !== guia).map((k) =>
+      h('div', { class: 'inst__otro' }, h('h3', { class: 'inst__otro-t', text: GUIAS[k].titulo }),
+        h('ol', { class: 'pasos pasos--chico' }, ...GUIAS[k].pasos.map((p) => h('li', null, ...p.map((n) => (n && n.nodeType ? n.cloneNode(true) : n))))))));
+  }
+
+  /** "Instalar app": la invitación nativa si el navegador la ofrece (Android, Chrome/Edge en Windows, Mac,
+   *  Chromebook); si no (iPhone/iPad, Safari, Firefox, Samsung sin invitación), la guía de su dispositivo. */
+  async function instalar(origen) {
+    const ev = state.promptInstalar;
+    if (ev) {
+      state.promptInstalar = null;   // la invitación nativa solo se puede usar una vez
       try {
         await ev.prompt();
         const r = await ev.userChoice;
-        if (r && r.outcome === 'accepted') state.instalada = true;
-      } catch (e) { /* el navegador ya no permite mostrarlo */ }
-      state.promptInstalar = null;   // la invitación nativa solo se puede usar una vez
+        if (r && r.outcome === 'accepted') { state.instalada = true; avisar('¡Listo! El Cisne quedó instalado.'); }
+      } catch (e) { abrirGuia(origen); }
       pintarInstalar();
+      return;
+    }
+    abrirGuia(origen);
+  }
+
+  function abrirGuia(origen) {
+    const d = $('#instalar-dlg');
+    const { guia, equipo } = dispositivo();
+    pintarGuia(guia, equipo);
+    d.querySelector('.inst__otros').open = false;
+    d.dataset.origen = origen || '';
+    d.dataset.guia = guia;
+    if (!d.open) d.showModal();
+    $('#inst-t').setAttribute('tabindex', '-1');
+    $('#inst-t').focus();
+  }
+
+  function iniciarInstalar() {
+    const d = $('#instalar-dlg');
+    atraparFoco(d);
+    $('#abrir-instalar').addEventListener('click', () => instalar('barra'));
+    $('#instalar-btn').addEventListener('click', () => instalar('pasaporte'));
+    $$('[data-cerrar]', d).forEach((x) => x.addEventListener('click', () => d.close()));
+    $('#inst-hecho').addEventListener('click', () => {
+      safeSet(INSTALADA_KEY, '1');
+      d.close();
+      pintarInstalar();
+    });
+    d.addEventListener('close', () => {
+      const vuelta = d.dataset.origen === 'pasaporte' ? $('#instalar-btn') : $('#abrir-instalar');
+      if (vuelta && !vuelta.hidden && vuelta.offsetParent) vuelta.focus({ preventScroll: true });
+      else if ($('#pasaporte').open) { $('#pase-t').setAttribute('tabindex', '-1'); $('#pase-t').focus(); }
     });
     $('#instalar-no').addEventListener('click', () => {
       safeSet(INSTALAR_KEY, String(Date.now()));
