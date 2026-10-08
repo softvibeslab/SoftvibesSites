@@ -19,9 +19,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap">
-  <link rel="stylesheet" href="/assets/css/menu.css?v=20261006c">
-  <script src="/assets/js/pedido.js?v=20261006c" defer></script>
-  <script src="/assets/js/menu.js?v=20261006c" defer></script>
+  <link rel="stylesheet" href="/assets/css/menu.css?v=20261007a">
+  <script src="/assets/js/pedido.js?v=20261007a" defer></script>
+  <script src="/assets/js/menu.js?v=20261007a" defer></script>
   <script>
     /* App instalable: service worker solo en https o localhost (ver /sw.js). */
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname))) {
@@ -197,12 +197,30 @@
         <h2 class="vcard__t" id="ptar-t">Mi pedido</h2>
         <p class="ptar__mesa" id="ptar-mesa" hidden></p>
       </div>
-      <div id="ptar-secciones"></div>
-      <p class="vcard__total"><span class="mono">Total estimado</span> <b id="ptar-total"></b></p>
-      <p class="ptar__fine">El total final lo confirma tu mesero.</p>
+      <div class="ptar__cuerpo">
+        <section class="ptar__qr" id="ptar-qr" data-modo="cargando" aria-labelledby="ptar-qr-t">
+          <h3 class="ptar__qr-t" id="ptar-qr-t">Muéstrale este código a tu mesero</h3>
+          <div class="ptar__qr-img" id="ptar-qr-img"><span class="ptar__qr-msg">Generando código…</span></div>
+          <p class="ptar__codigo mono" id="ptar-codigo" hidden></p>
+          <p class="ptar__qr-nota" id="ptar-qr-nota">Tu mesero lo escanea con la app del equipo.</p>
+          <p class="ptar__qr-aviso" id="ptar-qr-aviso" hidden></p>
+          <button type="button" class="btn btn--ink ptar__nuevo" id="ptar-nuevo" hidden>Generar un código nuevo</button>
+          <div class="ptar__tomado" id="ptar-tomado" tabindex="-1" hidden>
+            <p class="ptar__tomado-t"><span class="ptar__check" aria-hidden="true">✓</span> <span id="ptar-tomado-t">Pedido tomado</span></p>
+            <p class="ptar__tomado-p">Ya no necesitas mostrar esta pantalla.</p>
+          </div>
+          <p class="sr-only" id="ptar-qr-estado" role="status" aria-live="polite"></p>
+        </section>
+        <div class="ptar__pedido">
+          <div id="ptar-secciones"></div>
+          <p class="vcard__total"><span class="mono">Total estimado</span> <b id="ptar-total"></b></p>
+          <p class="ptar__fine">El total final lo confirma tu mesero.</p>
+        </div>
+      </div>
       <div class="ptar__acc">
         <button type="button" class="btn btn--ghost vcard__cerrar" data-cerrar>Volver</button>
         <button type="button" class="btn btn--primary" id="ptar-listo">Ya lo pedí</button>
+        <button type="button" class="btn btn--primary ptar__ok" id="ptar-ok" hidden>Listo</button>
       </div>
     </div>
   </dialog>

@@ -256,8 +256,144 @@ test('cadena del Wi-Fi para el QR', () => {
   assert.equal(P.cadenaWifi({ ssid: 'Abierta', password: 'ignorada', seguridad: 'nopass' }), 'WIFI:T:nopass;S:Abierta;;');
 });
 
+// ── QR del pedido para el mesero ─────────────────────────────────────────────
+/** Pedido realista de 10 líneas con notas largas (acentos, ñ y emoji) contra el menú publicado. */
+function pedidoDiez(menu) {
+  const comida = menu.comida.flatMap((s) => s.items).filter((i) => !i.variantes && i.disponible !== false);
+  const barriles = menu.barril.filter((b) => b.disponible !== false);
+  const vuelo = barriles.filter((b) => b.precios.some((x) => x.medida === '4 oz')).slice(0, 4).map((b) => b.id);
+  let p = P.ponerMesa(P.vacio(T0), 'Terraza 12');
+  const notas = ['Sin cebolla, por favor y bien dorada', 'Una sin espuma 🍺 y otra con poquita', 'Salsa aparte; la piña bien asada',
+    'Para compartir: cortada en cuatro', 'Muy fría, con limón y sal de gusano', 'Sin chile ni cilantro (alergia)', 'La más amarga que tengan, ¡gracias!',
+    'Doble porción de papas, sin mayonesa', 'Al centro de la mesa, con dos platos', 'Término medio y sin pepinillos'];
+  const items = [
+    { tipo: 'barril', id: barriles[0].id, variante: barriles[0].precios[0].medida, cantidad: 2 },
+    { tipo: 'barril', id: barriles[1].id, variante: '4 oz' },
+    { tipo: 'vuelo', cervezas: vuelo },
+    { tipo: 'lata', id: menu.latas[0].id },
+    { tipo: 'bebida', id: 'bebida-agua-mineral', variante: 'rusa', cantidad: 3 },
+    ...comida.slice(0, 5).map((c, i) => ({ tipo: 'comida', id: c.id, cantidad: i + 1 })),
+  ];
+  items.forEach((it, i) => { p = P.agregar(p, { ...it, nota: notas[i] }, menu, T0); });
+  return p;
+}
+
+test('paraQR → desdeQR conserva mesa, líneas, cantidades, variantes, vuelo y notas con acentos', () => {
+  const m = menuBase();
+  let p = P.ponerMesa(P.vacio(T0), 'Barra ñ');
+  p = P.agregar(p, { tipo: 'barril', id: 'alarma', variante: '12 oz', cantidad: 2, nota: 'Una sin espuma, ¿sí?' }, m, T0);
+  p = P.agregar(p, { tipo: 'vuelo', cervezas: ['alarma', 'henry-ix', 'guamaica', 'agua-puerca'] }, m, T0);
+  p = P.agregar(p, { tipo: 'comida', id: 'chips-camote', variante: '110g', nota: 'Piña y jalapeño 🌶️' }, m, T0);
+  const q = P.paraQR(p);
+  assert.match(q.datos, /^[A-Za-z0-9_-]+$/, 'base64url sin + / ni =');
+  assert.equal(q.recortado, false);
+  assert.equal(q.cabe, true);
+  const d = P.desdeQR('https://cisnenegro.softvibes.art/v2/equipo/#d=' + q.datos);
+  assert.deepEqual(d, {
+    t: Math.floor(T0 / 1000).toString(36),
+    mesa: 'Barra ñ',
+    lineas: [
+      { tipo: 'barril', id: 'alarma', variante: '12 oz', cantidad: 2, nota: 'Una sin espuma, ¿sí?' },
+      { tipo: 'vuelo', id: 'vuelo', variante: null, cantidad: 1, nota: '', cervezas: ['alarma', 'henry-ix', 'guamaica', 'agua-puerca'] },
+      { tipo: 'comida', id: 'chips-camote', variante: '110g', cantidad: 1, nota: 'Piña y jalapeño 🌶️' },
+    ],
+  });
+  // Mismas líneas que se envían al servidor
+  assert.deepEqual(d.lineas, P.lineasParaServidor(p));
+  // También acepta "#d=…" o solo los datos
+  assert.deepEqual(P.desdeQR('#d=' + q.datos), d);
+  assert.deepEqual(P.desdeQR(q.datos), d);
+  // Omite los valores por defecto para que el QR sea más ligero
+  const json = Buffer.from(q.datos, 'base64url').toString('utf8');
+  assert.ok(!json.includes('"cantidad":1') && !json.includes('"variante":null') && !json.includes('"nota":""'), json);
+});
+
+test('desdeQR rechaza datos inválidos o manipulados', () => {
+  const b64 = (o) => Buffer.from(JSON.stringify(o), 'utf8').toString('base64url');
+  assert.equal(P.desdeQR(''), null);
+  assert.equal(P.desdeQR('no es base64!'), null);
+  assert.equal(P.desdeQR(b64({ lineas: [] })), null);
+  assert.equal(P.desdeQR(b64({ lineas: [{ tipo: 'pizza', id: 'x' }] })), null);
+  assert.equal(P.desdeQR(b64({ lineas: [{ tipo: 'lata', id: '../../etc' }] })), null);
+  assert.equal(P.desdeQR(b64({ lineas: [{ tipo: 'lata', id: 'lata-x', cantidad: 21 }] })), null);
+  assert.equal(P.desdeQR(b64({ lineas: [{ tipo: 'vuelo', cervezas: ['a', 'b'] }] })), null);
+  assert.equal(P.desdeQR(Buffer.from([0xff, 0xfe, 0x00]).toString('base64url')), null, 'UTF-8 inválido');
+  // Limpia mesa y nota (control y longitud)
+  const d = P.desdeQR(b64({ mesa: '  7\n ', lineas: [{ tipo: 'lata', id: 'lata-x', nota: 'a\u0007b' + 'x'.repeat(80) }] }));
+  assert.equal(d.mesa, '7');
+  assert.equal(d.lineas[0].nota.length, P.MAX_NOTA);
+});
+
+test('un pedido de 10 líneas con notas cabe en un QR legible (< 1,000 caracteres)', () => {
+  const p = pedidoDiez(MENU_REAL);
+  assert.equal(p.lineas.length, 10);
+  const q = P.paraQR(p);
+  const url = 'https://cisnenegro.softvibes.art/v2/equipo/#d=' + q.datos;
+  assert.ok(q.cabe && url.length < 1000, `URL de ${url.length} caracteres`);
+  const d = P.desdeQR(url);
+  assert.equal(d.lineas.length, 10);
+  assert.equal(d.mesa, 'Terraza 12');
+  assert.deepEqual(d.lineas.map((l) => [l.tipo, l.id, l.variante, l.cantidad]), P.lineasParaServidor(p).map((l) => [l.tipo, l.id, l.variante, l.cantidad]));
+  // Las notas pueden venir recortadas, pero siempre son el inicio de la original
+  d.lineas.forEach((l, i) => { const o = p.lineas[i].nota; assert.ok(l.nota === o || o.startsWith(l.nota.replace(/…$/, '')), `${l.nota} / ${o}`); });
+});
+
+test('si no cabe, corta las notas antes que las líneas', () => {
+  const p = pedidoDiez(MENU_REAL);
+  const completo = P.paraQR(p, { max: 5000 });
+  assert.equal(completo.recortado, false);
+  assert.deepEqual(P.desdeQR(completo.datos).lineas.map((l) => l.nota), p.lineas.map((l) => l.nota));
+  const corto = P.paraQR(p, { max: completo.datos.length - 40 });
+  assert.equal(corto.recortado, true);
+  assert.equal(corto.cabe, true);
+  assert.ok(corto.datos.length <= completo.datos.length - 40);
+  assert.ok(P.desdeQR(corto.datos).lineas.some((l) => l.nota.endsWith('…')));
+  const sinNotas = P.paraQR(p, { max: 10 });
+  assert.equal(sinNotas.cabe, false);
+  assert.ok(P.desdeQR(sinNotas.datos).lineas.every((l) => l.nota === ''), 'en el último intento ya no lleva notas');
+  assert.equal(P.desdeQR(sinNotas.datos).lineas.length, 10);
+});
+
+test('huella y código reutilizable: mismo pedido → mismo código; si cambia, uno nuevo', () => {
+  const m = menuBase();
+  let p = P.agregar(P.vacio(T0), { tipo: 'barril', id: 'alarma', variante: '12 oz' }, m, T0);
+  const h1 = P.huellaPedido(p);
+  const g = { huella: h1, codigo: 'K7M2Q9AB', expira_at: new Date(T0 + 3 * H).toISOString() };
+  assert.equal(P.codigoVigente(g, h1, T0), 'K7M2Q9AB');
+  assert.equal(P.codigoVigente(JSON.stringify(g), h1, T0), 'K7M2Q9AB', 'acepta lo guardado en texto');
+  assert.equal(P.huellaPedido(P.revalidar(p, m)), h1, 'revalidar no cambia la huella');
+  assert.notEqual(P.huellaPedido(P.cambiarCantidad(p, 0, 2)), h1);
+  assert.notEqual(P.huellaPedido(P.cambiarNota(p, 0, 'sin espuma')), h1);
+  assert.notEqual(P.huellaPedido(P.ponerMesa(p, '4')), h1);
+  assert.equal(P.codigoVigente(g, P.huellaPedido(P.ponerMesa(p, '4')), T0), null);
+  assert.equal(P.codigoVigente(g, h1, T0 + 3 * H - 60 * 1000), null, 'a punto de caducar → uno nuevo');
+  assert.equal(P.codigoVigente({ ...g, codigo: 'x<script>' }, h1, T0), null);
+  assert.equal(P.codigoVigente('{roto', h1, T0), null);
+  assert.equal(P.codigoVigente(null, h1, T0), null);
+  // Las líneas por revisar no viajan
+  const m2 = menuBase(); m2.barril[0].precios[0].precio = 120;
+  assert.deepEqual(P.lineasParaServidor(P.revalidar(p, m2)), []);
+});
+
+test('código en grupos de 4', () => {
+  assert.equal(P.formatoCodigo('K7M2Q9AB'), 'K7M2-Q9AB');
+  assert.equal(P.formatoCodigo('k7m2-q9ab'), 'K7M2-Q9AB');
+  assert.equal(P.formatoCodigo('ABCDEF'), 'ABCD-EF');
+  assert.equal(P.formatoCodigo(''), '');
+});
+
 test('el módulo funciona sin DOM (patrón UMD)', () => {
   assert.equal(typeof P.agregar, 'function');
   assert.equal(P.CLAVE, 'cisne-pedido-v1');
   assert.ok(path.basename(require.resolve('../sitio/assets/js/pedido.js')) === 'pedido.js');
+});
+
+test('paraQR lleva la marca de creación t: una segunda ronda idéntica da otro QR', () => {
+  const m = menuBase();
+  const p = P.agregar(P.vacio(T0), { tipo: 'barril', id: 'alarma', variante: '12 oz' }, m, T0);
+  const q = P.paraQR(p);
+  assert.equal(P.desdeQR(q.datos).t, Math.floor(T0 / 1000).toString(36));
+  const otra = P.agregar(P.vacio(T0 + 3600e3), { tipo: 'barril', id: 'alarma', variante: '12 oz' }, m, T0 + 3600e3);
+  assert.notEqual(P.paraQR(otra).datos, q.datos);
+  assert.equal(P.desdeQR(Buffer.from(JSON.stringify({ t: 'NO!', lineas: [{ tipo: 'lata', id: 'lata-x' }] })).toString('base64url')).t, undefined, 't inválida se ignora');
 });

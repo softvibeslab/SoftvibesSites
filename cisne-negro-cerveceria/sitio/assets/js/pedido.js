@@ -1,7 +1,9 @@
 /* Cervecería Cisne Negro · "Mi pedido" (funciones puras, sin DOM)
  *
- * El cliente arma su pedido en el teléfono y se lo MUESTRA al mesero: no hay envío, pagos ni backend.
- * Todo vive en localStorage (`cisne-pedido-v1`) y caduca a las 12 h (cada visita al bar empieza limpia).
+ * El cliente arma su pedido en el teléfono y se lo MUESTRA al mesero (sin pagos). El pedido vive en
+ * localStorage (`cisne-pedido-v1`) y caduca a las 12 h (cada visita al bar empieza limpia). Al tocar
+ * "Mostrar al mesero" se envía a /api/pedidos y la tarjeta muestra un QR que el mesero escanea con la
+ * app del equipo; sin conexión, el QR lleva el pedido dentro (`paraQR` / `desdeQR`).
  *
  * Pedido: { creado_at: ISO, mesa: string, lineas: Linea[] }
  * Linea:  { tipo: barril|lata|comida|bebida|vuelo, id, variante, cantidad (1–20), nota (≤40),
@@ -359,11 +361,142 @@
     return 'WIFI:T:' + t + ';S:' + esc(w && w.ssid) + ';' + (t === 'nopass' ? '' : 'P:' + esc(w && w.password) + ';') + ';';
   }
 
+  // ── Pedido para el mesero (QR) ─────────────────────────────────────────────
+  // En línea: el menú envía el pedido a POST /api/pedidos y el QR lleva la URL /equipo/?p=<código>.
+  // Sin conexión: el QR lleva el pedido dentro (/equipo/#d=<base64url de {mesa, lineas}>).
+  const CLAVE_CODIGO = 'cisne-pedido-codigo-v1';
+  const MAX_QR = 900;                       // caracteres del payload #d= (la URL completa queda < ~1000)
+  const MARGEN_CADUCIDAD_MS = 2 * 60 * 1000; // un código que vence en < 2 min ya no se reutiliza
+  const CODIGO_RE = /^[A-Z0-9]{4,16}$/;
+
+  /** Líneas que viajan al servidor: solo lo que el cliente ya revisó, con los campos mínimos
+   *  (el servidor recalcula nombres y precios desde menu.json). */
+  function lineasParaServidor(pedido) {
+    return (pedido && pedido.lineas || [])
+      .filter((l) => !l.no_disponible && !l.precio_cambiado)
+      .map((l) => {
+        const o = { tipo: l.tipo, id: l.id, variante: l.variante == null ? null : l.variante, cantidad: l.cantidad, nota: l.nota || '' };
+        if (l.cervezas) o.cervezas = l.cervezas.slice();
+        return o;
+      });
+  }
+
+  /** Huella de lo que se envió (mesa + líneas): si no cambia, se reutiliza el mismo código. */
+  const huellaPedido = (pedido) => JSON.stringify([limpiarMesa(pedido && pedido.mesa), lineasParaServidor(pedido)]);
+
+  /** Código guardado que aún sirve para esta huella → código, o null. `guardado`: objeto o JSON. */
+  function codigoVigente(guardado, huella, ahora) {
+    let g = guardado;
+    if (typeof g === 'string') { try { g = JSON.parse(g); } catch (e) { return null; } }
+    if (!g || typeof g !== 'object' || g.huella !== huella || typeof g.codigo !== 'string' || !CODIGO_RE.test(g.codigo)) return null;
+    const vence = Date.parse(g.expira_at);
+    if (!Number.isFinite(vence) || vence - ahoraMs(ahora) < MARGEN_CADUCIDAD_MS) return null;
+    return g.codigo;
+  }
+
+  /** "K7M2Q9AB" → "K7M2-Q9AB" (grupos de 4 para dictarlo si la cámara falla). */
+  const formatoCodigo = (c) => (String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '').match(/.{1,4}/g) || []).join('-');
+
+  // base64url sobre UTF-8 (acentos, "ñ" y emojis en las notas viajan intactos).
+  function aBase64url(texto) {
+    const bytes = new TextEncoder().encode(texto);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function deBase64url(s) {
+    if (typeof s !== 'string' || !/^[A-Za-z0-9_-]+$/.test(s)) throw new Error('base64url');
+    let b = s.replace(/-/g, '+').replace(/_/g, '/');
+    while (b.length % 4) b += '=';
+    const bin = atob(b);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  }
+
+  /** Línea compacta para el QR: omite lo que vale por defecto (variante null, cantidad 1, nota vacía). */
+  function lineaCompacta(l, nota) {
+    const o = { tipo: l.tipo, id: l.id };
+    if (l.variante != null && l.variante !== '') o.variante = l.variante;
+    if (l.cantidad !== 1) o.cantidad = l.cantidad;
+    if (nota) o.nota = nota;
+    if (l.cervezas) o.cervezas = l.cervezas.slice();
+    return o;
+  }
+
+  /** Recorta una nota a n caracteres (con "…"); n = 0 la quita. */
+  const recortarNota = (nota, n) => (!nota || nota.length <= n ? nota : n >= 4 ? nota.slice(0, n - 1).trim() + '…' : '');
+
+  /** Pedido dentro del QR (respaldo sin conexión).
+   *  → { datos: base64url de {mesa?, lineas}, recortado: bool (se cortaron notas), cabe: bool (datos ≤ max) }
+   *  Si no cabe en `max` caracteres: 1) recorta todas las notas al mismo largo (hasta 8 caracteres);
+   *  2) si aún no cabe, conserva las primeras notas (hasta 20 caracteres) mientras quepan y quita las demás.
+   *  Las líneas nunca se quitan: en el peor caso el QR va sin notas (cabe: false si ni así cabe). */
+  function paraQR(pedido, opciones) {
+    const max = (opciones && opciones.max) || MAX_QR;
+    const lineas = lineasParaServidor(pedido);
+    const mesa = limpiarMesa(pedido && pedido.mesa);
+    // Marca de creación (segundos en base 36): distingue una segunda ronda idéntica del mismo QR escaneado dos veces.
+    const creado = Date.parse(pedido && pedido.creado_at);
+    const armar = (notas) => {
+      const o = {};
+      if (Number.isFinite(creado)) o.t = Math.floor(creado / 1000).toString(36);
+      if (mesa) o.mesa = mesa;
+      o.lineas = lineas.map((l, i) => lineaCompacta(l, notas[i]));
+      return aBase64url(JSON.stringify(o));
+    };
+    const tope = (n) => lineas.map((l) => recortarNota(l.nota, n));
+    let datos = armar(tope(MAX_NOTA));
+    if (datos.length <= max) return { datos, recortado: false, cabe: true };
+    for (let n = MAX_NOTA - 2; n >= 8; n -= 2) {
+      datos = armar(tope(n));
+      if (datos.length <= max) return { datos, recortado: true, cabe: true };
+    }
+    const notas = lineas.map(() => '');
+    datos = armar(notas);
+    if (datos.length > max) return { datos, recortado: true, cabe: false };
+    for (let i = 0; i < lineas.length; i++) {
+      if (!lineas[i].nota) continue;
+      notas[i] = recortarNota(lineas[i].nota, 20);
+      const prueba = armar(notas);
+      if (prueba.length <= max) datos = prueba; else notas[i] = '';
+    }
+    return { datos, recortado: true, cabe: true };
+  }
+
+  /** Lee el pedido de un QR sin conexión: acepta la URL completa, "#d=…" o solo el base64url.
+   *  → { mesa, lineas: [{ tipo, id, variante, cantidad, nota, cervezas? }] }  o  null si no es válido. */
+  function desdeQR(texto) {
+    if (typeof texto !== 'string') return null;
+    const m = texto.match(/[#?&]d=([A-Za-z0-9_-]+)/);
+    let d;
+    try { d = JSON.parse(deBase64url(m ? m[1] : texto.trim())); } catch (e) { return null; }
+    if (!d || typeof d !== 'object' || !Array.isArray(d.lineas) || !d.lineas.length || d.lineas.length > MAX_LINEAS) return null;
+    const lineas = [];
+    for (const x of d.lineas) {
+      if (!x || typeof x !== 'object' || !TIPOS.includes(x.tipo)) return null;
+      const id = x.tipo === 'vuelo' ? 'vuelo' : x.id;
+      const cantidad = x.cantidad === undefined ? 1 : x.cantidad;
+      if (typeof id !== 'string' || !ID_RE.test(id) || !cantidadValida(cantidad)) return null;
+      if (x.variante != null && (typeof x.variante !== 'string' || x.variante.length > 40)) return null;
+      const l = { tipo: x.tipo, id, variante: x.variante == null || x.variante === '' ? null : x.variante, cantidad, nota: limpiarNota(x.nota) };
+      if (x.tipo === 'vuelo') {
+        if (!Array.isArray(x.cervezas) || x.cervezas.length !== VUELO_N || !x.cervezas.every((c) => typeof c === 'string' && ID_RE.test(c))) return null;
+        l.cervezas = x.cervezas.slice();
+      }
+      lineas.push(l);
+    }
+    const r = { mesa: limpiarMesa(d.mesa), lineas };
+    if (typeof d.t === 'string' && /^[0-9a-z]{1,12}$/.test(d.t)) r.t = d.t;
+    return r;
+  }
+
   return {
-    CLAVE, CADUCIDAD_MS, MAX_CANTIDAD, MAX_LINEAS, MAX_NOTA, VUELO_N,
+    CLAVE, CADUCIDAD_MS, MAX_CANTIDAD, MAX_LINEAS, MAX_NOTA, VUELO_N, CLAVE_CODIGO, MAX_QR,
     vacio, cantidadValida, limpiarNota, nombrePlatillo, resolver,
     agregar, cambiarCantidad, cambiarNota, quitar, ponerMesa, aceptarPrecio,
     serializar, restaurar, caducado, revalidar, pendientes,
     total, contar, tarjeta, detalleLinea, cadenaWifi,
+    lineasParaServidor, huellaPedido, codigoVigente, formatoCodigo, paraQR, desdeQR,
   };
 }));

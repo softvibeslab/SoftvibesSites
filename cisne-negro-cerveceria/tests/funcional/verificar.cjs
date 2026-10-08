@@ -1,4 +1,5 @@
-/* Batería funcional del menú, Pasaporte, NPS, ranking, panel, Mi pedido, Wi-Fi y app instalable (Playwright + Chromium).
+/* Batería funcional del menú, Pasaporte, NPS, ranking, panel, Mi pedido (con QR para el mesero), Wi-Fi y app
+ * instalable (Playwright + Chromium).
  * No la corras contra producción: crea socios, visitas y NPS.
  * Uso recomendado: tests/funcional/correr.sh  (levanta un servidor con base desechable).
  * Variables: BASE_URL (default http://127.0.0.1:8095), QA_DIR (capturas; default sitio/qa/funcional/).
@@ -6,6 +7,9 @@
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
+const { execFileSync } = require('child_process');
+const jsQR = require('../../sitio/assets/js/lib/jsqr.js');
+const RAIZ = path.join(__dirname, '..', '..');
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:8095';
 if (/softvibes\.art|https:/.test(BASE)) { console.error('Esta batería escribe datos: no se corre contra producción.'); process.exit(2); }
 const QA = (process.env.QA_DIR || path.join(__dirname, '..', '..', 'sitio', 'qa', 'funcional')) + '/';
@@ -33,6 +37,17 @@ async function checkin(p, codigo) {
   await p.click('#checkin-form button[type=submit]');
   await p.waitForSelector('#checkin-hecho:not([hidden])');
   if (await p.isVisible('#premio')) await p.click('#premio-seguir');
+}
+/** Lee el QR dibujado en SVG (módulos "Mx yh1v1h-1z") y lo decodifica con jsQR, como la cámara del mesero. */
+async function leerQR(p, sel) {
+  const { lado, d } = await p.$eval(sel, (svg) => ({ lado: Number(svg.getAttribute('viewBox').split(' ')[2]), d: svg.querySelector('path').getAttribute('d') }));
+  const e = 6; const w = lado * e;
+  const px = new Uint8ClampedArray(w * w * 4).fill(255);
+  for (const [, x, y] of d.matchAll(/M(\d+) (\d+)h1v1h-1z/g)) {
+    for (let yy = y * e; yy < (+y + 1) * e; yy++) for (let xx = x * e; xx < (+x + 1) * e; xx++) { const i = (yy * w + xx) * 4; px[i] = px[i + 1] = px[i + 2] = 0; }
+  }
+  const r = jsQR(px, w, w);
+  return r ? r.data : null;
 }
 const socioVisible = async (p) => (await p.isVisible('#pase-socio')) && !(await p.isVisible('#pase-invitado'));
 
@@ -421,6 +436,162 @@ const socioVisible = async (p) => (await p.isVisible('#pase-socio')) && !(await 
     await p.evaluate(() => document.querySelector('#barril-henry-ix').scrollIntoView({ block: 'center' })); await p.waitForTimeout(3500);
     ok('5  1440: botón Wi-Fi con texto visible', (await p.textContent('#abrir-wifi')).trim() === 'Wi-Fi' && (await p.$eval('.mbar__wifi-t', (e) => e.getBoundingClientRect().width > 20)));
     await p.screenshot({ path: QA2 + 'v2-menu-1440-barra.png' });
+    await ctx.close();
+  }
+
+
+  // ── 6. QR del pedido para el mesero ────────────────────────────────────
+  {
+    const PEDIDO_QR = () => {
+      if (location.pathname !== '/menu/' || localStorage.getItem('cisne-pedido-v1') || sessionStorage.getItem('qr-sembrado')) return;
+      sessionStorage.setItem('qr-sembrado', '1');
+      localStorage.setItem('cisne-pedido-v1', JSON.stringify({ creado_at: new Date().toISOString(), mesa: '7', lineas: [
+        { tipo: 'barril', id: 'alarma', variante: '12 oz', cantidad: 2, nota: 'Una sin espuma', precio: 100, nombre: '¡Alarma!', huella: '' },
+        { tipo: 'comida', id: 'chips-camote', variante: '110g', cantidad: 1, nota: 'Salsa aparte, con piña', precio: 135, nombre: 'Chips de Camote', huella: '' },
+      ] }));
+    };
+    const abrirQR = async (p) => {
+      await p.goto(BASE + '/menu/'); await p.waitForSelector('#pedido-barra:not([hidden])');
+      await p.click('#abrir-pedido'); await p.waitForSelector('#pedido[open]');
+    };
+    const contar = (p, re) => { const n = { v: 0 }; p.on('request', (r) => { if (re.test(r.url()) && (re.metodo ? r.method() === re.metodo : true)) n.v++; }); return n; };
+    const PUERTO = new URL(BASE).port;
+    // a) En línea: código real + QR legible con la URL ?p=
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    await ctx.addInitScript(STUB_WAKELOCK); await ctx.addInitScript(PEDIDO_QR);
+    const posts = contar(p, Object.assign(/\/api\/pedidos$/, { metodo: 'POST' }));
+    const consultas = contar(p, /\/api\/pedidos\/[A-Z0-9]+\/estado$/);
+    await abrirQR(p);
+    await p.click('#pedido-mostrar'); await p.waitForSelector('#pedido-tarjeta[open]');
+    const generando = await p.evaluate(() => document.querySelector('#ptar-qr').dataset.modo);
+    await p.waitForSelector('#ptar-qr-img svg path'); await p.waitForSelector('#ptar-codigo:not([hidden])');
+    const visto = (await p.textContent('#ptar-codigo')).trim();
+    const codigoQR = visto.replace('-', '');
+    ok('6  "Mostrar al mesero" genera un código en grupos de 4 (K7M2-Q9AB)', /^[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(visto) && posts.v === 1, `${visto} · modo inicial=${generando}`);
+    const est = await (await admin.request.get(`${BASE}/api/pedidos/${codigoQR}/estado`)).json();
+    ok('6  El código es un pedido real pendiente en /api/pedidos/<c>/estado', est.estado === 'pendiente', JSON.stringify(est));
+    const leido = await leerQR(p, '#ptar-qr-img svg');
+    ok('6  jsQR lee el QR del DOM: URL /equipo/?p=<código>', leido === `${BASE}/equipo/?p=${codigoQR}`, leido);
+    const textos = await p.evaluate(() => ({ t: document.querySelector('#ptar-qr-t').textContent, n: document.querySelector('#ptar-qr-nota').textContent, fondo: document.querySelector('#ptar-qr-img rect').getAttribute('fill'), tinta: document.querySelector('#ptar-qr-img path').getAttribute('fill') }));
+    ok('6  Textos y QR negro sobre crema', textos.t === 'Muéstrale este código a tu mesero' && textos.n === 'Tu mesero lo escanea con la app del equipo.' && textos.fondo === '#F3EDE2' && textos.tinta === '#0E0D0B', JSON.stringify(textos));
+    const geo = await p.evaluate(() => {
+      const r = (s) => document.querySelector(s).getBoundingClientRect();
+      return { cab: r('.ptar__cab').top, qr: r('#ptar-qr-img').bottom, codigo: r('#ptar-codigo').bottom, acc: r('.ptar__acc').top, alto: innerHeight, scroll: document.querySelector('#pedido-tarjeta').scrollTop };
+    });
+    ok('6  390×844: cabecera, QR y código visibles sin scroll (sin tapar con los botones)', geo.scroll === 0 && geo.cab >= 0 && geo.codigo <= geo.acc && geo.acc <= geo.alto, JSON.stringify(geo));
+    ok('6  La tarjeta conserva el pedido y el Wake Lock', (await p.$$('.ptar__lista > li')).length === 2 && (await p.evaluate(() => window.__wl)) === 1);
+    await p.screenshot({ path: QA2 + 'menu-qr-390.png' });
+    // b) Reabrir sin cambios conserva el código; cambiar algo crea uno nuevo
+    for (let k = 0; k < 40 && consultas.v < 1; k++) await p.waitForTimeout(200);   // primera consulta a los 5 s
+    await p.click('#pedido-tarjeta [data-cerrar]'); await p.waitForTimeout(150);
+    const tras = consultas.v; await p.waitForTimeout(6000);
+    ok('6  Al cerrar la tarjeta deja de consultar el estado', consultas.v === tras && tras >= 1, `consultas=${tras}`);
+    await p.click('#pedido-mostrar'); await p.waitForSelector('#ptar-codigo:not([hidden])');
+    ok('6  Reabrir sin cambios conserva el mismo código (sin otro POST)', (await p.textContent('#ptar-codigo')).trim() === visto && posts.v === 1);
+    await p.click('#pedido-tarjeta [data-cerrar]');
+    await p.click('#pedido-lineas > li:nth-child(1) [data-acc="mas"]');
+    await p.click('#pedido-mostrar'); await p.waitForFunction((v) => { const c = document.querySelector('#ptar-codigo'); return !c.hidden && c.textContent && c.textContent !== v; }, visto);
+    const visto2 = (await p.textContent('#ptar-codigo')).trim();
+    ok('6  Si cambió el pedido, crea un código nuevo', visto2 !== visto && posts.v === 2, `${visto} → ${visto2}`);
+    // c) Pestaña oculta: pausa el sondeo; al volver consulta de inmediato
+    await p.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+    await p.waitForTimeout(5600); const ocultas = consultas.v; await p.waitForTimeout(5600);
+    const enPausa = consultas.v === ocultas;
+    await p.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => false }); document.dispatchEvent(new Event('visibilitychange')); });
+    await p.waitForTimeout(400);
+    ok('6  Con la pestaña oculta no consulta; al volver consulta enseguida', enPausa && consultas.v === ocultas + 1, `${ocultas} → ${consultas.v}`);
+    // d) El mesero lo toma desde su app → "Pedido tomado por Luis" y el pedido local se vacía
+    try {
+      execFileSync('python3', ['backend/club_server.py', 'crear-staff', 'luis.demo', 'Luis Demo', 'mesero', '222222'], { cwd: RAIZ, env: { ...process.env, CLUB_DB: `backend/dev-${PUERTO}.db` }, stdio: 'pipe' });
+    } catch (e) { /* ya existe (segunda corrida sobre la misma base) */ }
+    const mesero = await b.newContext();
+    const login = await mesero.request.post(BASE + '/api/equipo/login', { data: { usuario: 'luis.demo', pin: '222222' } });
+    const tomar = await mesero.request.post(`${BASE}/api/equipo/pedidos/${visto2.replace('-', '')}/tomar`, { data: { mesa: '7' } });
+    ok('6  El mesero inicia sesión y toma el pedido (API del equipo)', login.ok() && tomar.ok(), `login=${login.status()} tomar=${tomar.status()}`);
+    await p.waitForSelector('#ptar-tomado:not([hidden])', { timeout: 9000 }).catch(() => {});
+    const tomado = await p.evaluate(() => ({
+      t: document.querySelector('#ptar-tomado-t').textContent,
+      qr: !document.querySelector('#ptar-qr-img').hidden,
+      lineas: JSON.parse(localStorage.getItem('cisne-pedido-v1') || '{"lineas":[]}').lineas.length,
+      listo: !document.querySelector('#ptar-ok').hidden, ya: !document.querySelector('#ptar-listo').hidden, volver: !document.querySelector('#pedido-tarjeta [data-cerrar]').hidden,
+      foco: document.activeElement.id,
+    }));
+    ok('6  La tarjeta muestra "✓ Pedido tomado por Luis" en lugar del QR', tomado.t === 'Pedido tomado por Luis' && !tomado.qr, JSON.stringify(tomado));
+    ok('6  …el pedido local queda vacío y solo queda "Listo" (con el foco)', tomado.lineas === 0 && tomado.listo && !tomado.ya && !tomado.volver && tomado.foco === 'ptar-ok' && !(await p.isVisible('#pedido-barra')));
+    await p.screenshot({ path: QA2 + 'menu-qr-tomado-390.png' });
+    await p.click('#ptar-ok'); await p.waitForTimeout(250);
+    ok('6  "Listo" cierra la tarjeta y el drawer, y suelta el Wake Lock', !(await p.isVisible('#pedido-tarjeta')) && !(await p.isVisible('#pedido')) && (await p.evaluate(() => window.__wlRel)) >= 1 && /tu pedido ya está con el equipo/i.test(await textoAviso(p)));
+    ok('—  Sin errores JS (QR en línea)', p.errores.length === 0, p.errores.join(' / '));
+    await mesero.close(); await ctx.close();
+  }
+  {
+    // e) Sin internet o 5xx: el QR lleva el pedido completo (#d=) y no se consulta el estado
+    for (const [nombre, falla] of [['sin internet', (r) => r.abort('internetdisconnected')], ['503', (r) => r.fulfill({ status: 503, body: '<html>503</html>' })]]) {
+      const { ctx, p } = await nuevaPagina(b, MOV);
+      await ctx.addInitScript(() => {
+        if (location.pathname !== '/menu/' || localStorage.getItem('cisne-pedido-v1')) return;
+        localStorage.setItem('cisne-pedido-v1', JSON.stringify({ creado_at: new Date().toISOString(), mesa: 'Terraza ñ', lineas: [
+          { tipo: 'barril', id: 'alarma', variante: '12 oz', cantidad: 3, nota: 'Una sin espuma, ¿sí?', precio: 100, nombre: '¡Alarma!', huella: '' },
+          { tipo: 'lata', id: 'lata-loba-negra', variante: null, cantidad: 1, nota: '', precio: 110, nombre: 'Negra', huella: '' },
+          { tipo: 'comida', id: 'chips-camote', variante: '110g', cantidad: 1, nota: 'Piña y jalapeño', precio: 135, nombre: 'Chips de Camote', huella: '' },
+        ] }));
+      });
+      let consultas = 0; p.on('request', (r) => { if (/\/estado$/.test(r.url())) consultas++; });
+      await p.route('**/api/pedidos', falla);
+      await p.goto(BASE + '/menu/'); await p.waitForSelector('#pedido-barra:not([hidden])');
+      await p.click('#abrir-pedido'); await p.click('#pedido-mostrar');
+      await p.waitForSelector('#ptar-qr[data-modo="offline"] #ptar-qr-img svg path', { timeout: 12000 });
+      const url = await leerQR(p, '#ptar-qr-img svg');
+      const datos = await p.evaluate((u) => window.CisnePedido.desdeQR(u), url);
+      const aviso = (await p.textContent('#ptar-qr-aviso')).trim();
+      ok(`6  ${nombre}: aviso "Sin conexión: el código lleva tu pedido completo" y sin código en texto`, aviso.startsWith('Sin conexión: el código lleva tu pedido completo') && !(await p.isVisible('#ptar-codigo')), aviso);
+      ok(`6  ${nombre}: el QR offline es /equipo/#d=… (< 1,000 caracteres) y desdeQR recupera mesa y líneas`, !!url && url.startsWith(BASE + '/equipo/#d=') && url.length < 1000 && !!datos && datos.mesa === 'Terraza ñ'
+        && JSON.stringify(datos.lineas) === JSON.stringify([
+          { tipo: 'barril', id: 'alarma', variante: '12 oz', cantidad: 3, nota: 'Una sin espuma, ¿sí?' },
+          { tipo: 'lata', id: 'lata-loba-negra', variante: null, cantidad: 1, nota: '' },
+          { tipo: 'comida', id: 'chips-camote', variante: '110g', cantidad: 1, nota: 'Piña y jalapeño' },
+        ]), `${url && url.length} caracteres · ${JSON.stringify(datos)}`);
+      await p.waitForTimeout(5600);
+      ok(`6  ${nombre}: deja de consultar el estado`, consultas === 0);
+      if (nombre === 'sin internet') await p.screenshot({ path: QA2 + 'menu-qr-offline-390.png' });
+      ok(`—  Sin errores JS (QR ${nombre})`, p.errores.length === 0, p.errores.join(' / '));
+      await ctx.close();
+    }
+  }
+  {
+    // f) Código caducado → "Generar un código nuevo"; error 400 → mensaje del servidor y "Reintentar"
+    const { ctx, p } = await nuevaPagina(b, MOV);
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#barril:not([hidden])');
+    await p.click('#barril-alarma [data-agregar]');
+    await p.route('**/api/pedidos/*/estado', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ estado: 'caducado', mesero: null, tomado_at: null }) }));
+    await p.click('#abrir-pedido'); await p.click('#pedido-mostrar');
+    await p.waitForSelector('#ptar-nuevo:not([hidden])', { timeout: 9000 }).catch(() => {});
+    const antes = (await p.textContent('#ptar-codigo')).trim();
+    ok('6  Caducado: aviso y botón "Generar un código nuevo" (sin QR)', (await p.textContent('#ptar-nuevo')).trim() === 'Generar un código nuevo' && /caducó/.test(await p.textContent('#ptar-qr-aviso')) && !(await p.isVisible('#ptar-qr-img')), (await p.textContent('#ptar-qr-aviso')).trim());
+    await p.unroute('**/api/pedidos/*/estado');
+    await p.click('#ptar-nuevo');
+    await p.waitForFunction((v) => { const c = document.querySelector('#ptar-codigo'); return !c.hidden && c.textContent && c.textContent !== v; }, antes);
+    ok('6  "Generar un código nuevo" crea otro código y vuelve el QR', await p.isVisible('#ptar-qr-img svg'), `${antes} → ${(await p.textContent('#ptar-codigo')).trim()}`);
+    await p.click('#pedido-tarjeta [data-cerrar]');
+    await p.route('**/api/pedidos', (r) => r.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ error: '¡Alarma! está agotado.' }) }));
+    await p.click('#pedido-lineas > li:nth-child(1) [data-acc="mas"]');
+    await p.click('#pedido-mostrar'); await p.waitForSelector('#ptar-qr[data-modo="error"]');
+    ok('6  Error 400: muestra el mensaje del servidor y "Reintentar"', (await p.textContent('#ptar-qr-aviso')).trim() === '¡Alarma! está agotado.' && (await p.textContent('#ptar-nuevo')).trim() === 'Reintentar');
+    ok('—  Sin errores JS (QR caducado/error)', p.errores.length === 0, p.errores.join(' / '));
+    await ctx.close();
+  }
+  {
+    // g) Escritorio: el QR va en su columna junto al pedido
+    const { ctx, p } = await nuevaPagina(b, { viewport: { width: 1440, height: 900 } });
+    await p.goto(BASE + '/menu/'); await p.waitForSelector('#barril:not([hidden])');
+    await p.click('#barril-alarma [data-agregar]'); await p.click('#barril-henry-ix [data-agregar]');
+    await p.click('#plato-papas-cisne [data-agregar]');
+    await p.click('#abrir-pedido'); await p.fill('#pedido-mesa', '12');
+    await p.click('#pedido-mostrar'); await p.waitForSelector('#ptar-qr-img svg path');
+    const col = await p.evaluate(() => { const q = document.querySelector('#ptar-qr').getBoundingClientRect(); const s = document.querySelector('#ptar-secciones').getBoundingClientRect(); const a = document.querySelector('.ptar__acc').getBoundingClientRect(); return { qr: Math.round(q.right), lista: Math.round(s.left), arribaQR: Math.round(q.top), arribaLista: Math.round(s.top), botones: Math.round(a.bottom), alto: innerHeight }; });
+    ok('6  1440: QR en una columna junto al pedido y botones a la vista', col.qr < col.lista && Math.abs(col.arribaQR - col.arribaLista) < 40 && col.botones <= col.alto, JSON.stringify(col));
+    await p.screenshot({ path: QA2 + 'menu-qr-1440.png' });
+    ok('—  Sin errores JS (QR 1440)', p.errores.length === 0, p.errores.join(' / '));
     await ctx.close();
   }
 

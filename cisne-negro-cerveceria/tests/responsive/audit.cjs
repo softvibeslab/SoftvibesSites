@@ -52,6 +52,11 @@ const VISTAS = [
   { id: 'menu-ranking', url: '/menu/#ranking', socio: true },
   // v2: drawer "Mi pedido" con 3 productos (sembrados en localStorage antes de cargar) y diálogo del Wi-Fi
   { id: 'menu-pedido', url: '/menu/', pedido: true, accion: async (page) => { await page.click('#abrir-pedido'); await page.waitForSelector('#pedido[open]'); } },
+  // Tarjeta "Para tu mesero" abierta con el QR del pedido (POST /api/pedidos real contra el club de prueba)
+  { id: 'menu-tarjeta-qr', url: '/menu/', pedido: true, accion: async (page) => {
+    await page.click('#abrir-pedido'); await page.waitForSelector('#pedido[open]');
+    await page.click('#pedido-mostrar'); await page.waitForSelector('#pedido-tarjeta[open] #ptar-qr-img svg', { timeout: 10000 });
+  } },
   { id: 'menu-wifi', url: '/menu/#wifi', accion: async (page) => { await page.waitForSelector('#wifi-dlg[open] #wifi-qr svg', { timeout: 8000 }); } },
   { id: 'admin-hoy', url: '/admin/#hoy' },
   { id: 'admin-estadisticas', url: '/admin/#estadisticas' },

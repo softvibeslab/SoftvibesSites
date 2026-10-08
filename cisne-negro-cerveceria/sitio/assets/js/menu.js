@@ -31,7 +31,7 @@
   const ASK = '¿Por qué se llama así? Pregúntale a tu bartender.';
   const VUELO_N = 4;
   const PREMIOS = { 5: '4 oz', 10: '12 oz' };   // casillas premiadas del Pasaporte (ver club_server.RECOMPENSAS)
-  const VER = '?v=20261006c';                     // versión de caché de los assets (ver /sw.js)
+  const VER = '?v=20261007a';                     // versión de caché de los assets (ver /sw.js)
   const INSTALAR_KEY = 'cisne.instalar.descartado'; // "Ahora no" en la invitación a instalar (30 días)
   const INSTALAR_PAUSA = 30 * 24 * 60 * 60 * 1000;
   const P = window.CisnePedido;                   // funciones puras de "Mi pedido" (assets/js/pedido.js)
@@ -44,7 +44,7 @@
     token: safeGet(TOKEN_KEY), socio: null, visitaId: null, npsScore: null,
     comprobando: false, sinRed: false, reintento: null, espera: 0,
     periodo: 'mes', ranking: {}, tab: 'pase',
-    pedido: null, wakeLock: null, avisoT: null,
+    pedido: null, wakeLock: null, avisoT: null, qr: null, qrT: null,
     wifi: null, wifiEstado: 'cargando', wifiTrasLogin: false, configPidiendo: 0,
     promptInstalar: null, instalada: false,
   };
@@ -531,6 +531,7 @@
     pintarPanel();
     if (!d.open) d.showModal();
     $('#pedido-t').focus();
+    cargarQR().catch(() => {});   // el QR de "Mostrar al mesero" debe poder dibujarse aunque luego falle la red
   }
   function pedidoErr(t) { $('#pedido-err').textContent = t || ''; }
   function pedidoEstado(t) { const s = $('#pedido-estado'); s.textContent = ''; setTimeout(() => { s.textContent = t; }, 30); }
@@ -678,17 +679,30 @@
     $$('[data-cerrar]', t).forEach((b) => b.addEventListener('click', () => t.close()));
     t.addEventListener('close', () => {
       soltarPantalla();
-      if ($('#pedido').open) $('#pedido-mostrar').focus();
+      detenerQR();
+      if ($('#pedido').open) ($('#pedido-pie').hidden ? $('#pedido-t') : $('#pedido-mostrar')).focus();
     });
-    $('#ptar-listo').addEventListener('click', () => {
-      actualizarPedido(P.vacio(Date.now()), false);
+    const terminar = (mensaje) => {
       t.close();
       $('#pedido').close();
-      avisar('¡Salud! Vaciamos tu pedido para la próxima ronda.');
+      avisar(mensaje);
       const m = $('#contenido'); m.setAttribute('tabindex', '-1'); m.focus({ preventScroll: true });
+    };
+    $('#ptar-listo').addEventListener('click', () => {
+      actualizarPedido(P.vacio(Date.now()), false);
+      safeSet(P.CLAVE_CODIGO, null);
+      terminar('¡Salud! Vaciamos tu pedido para la próxima ronda.');
+    });
+    $('#ptar-ok').addEventListener('click', () => terminar('¡Salud! Tu pedido ya está con el equipo.'));
+    $('#ptar-nuevo').addEventListener('click', () => {
+      safeSet(P.CLAVE_CODIGO, null);
+      prepararQR();
+      $('#ptar-qr-t').setAttribute('tabindex', '-1');
+      $('#ptar-qr-t').focus();
     });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) return;
+      if (t.open && state.qr && state.qr.modo === 'codigo') consultarEstado(state.qr.gen);   // reanuda el sondeo
       if (t.open && !state.wakeLock) mantenerPantalla();   // el navegador lo suelta al ocultar la página
       if (state.pedido && state.pedido.lineas.length && P.caducado(state.pedido, Date.now())) actualizarPedido(P.vacio(Date.now()));
     });
@@ -719,12 +733,177 @@
           l.nota && h('span', { class: 'ptar__nota', text: 'Nota: ' + l.nota })),
         h('span', { class: 'vcard__p', text: money(l.importe) })))))));
     $('#ptar-total').textContent = money(t.total);
+    $('#ptar-listo').hidden = false;
+    $('#pedido-tarjeta [data-cerrar]').hidden = false;
+    $('#ptar-ok').hidden = true;
     const d = $('#pedido-tarjeta');
     d.showModal();
     d.scrollTop = 0;
     $('#ptar-t').setAttribute('tabindex', '-1');
     $('#ptar-t').focus({ preventScroll: true });
     mantenerPantalla();
+    prepararQR();
+  }
+
+  // ── QR del pedido para el mesero ───────────────────────────────────────────
+  // En línea: POST /api/pedidos → código → QR con /equipo/?p=<código> y sondeo del estado cada 5 s.
+  // Sin conexión o 5xx: QR con el pedido dentro (/equipo/#d=…) y sin sondeo.
+  const SONDEO_MS = 5000;
+  const ESPERA_ENVIO_MS = 9000;
+  let qrGen = 0;
+
+  /** Pinta el bloque del QR según el modo: cargando | codigo | offline | vencido | error | tomado. */
+  function pintarQR(modo, o = {}) {
+    const caja = $('#ptar-qr');
+    caja.dataset.modo = modo;
+    const tomado = modo === 'tomado';
+    $('#ptar-qr-t').hidden = tomado;
+    $('#ptar-qr-img').hidden = tomado || modo === 'vencido' || modo === 'error';
+    $('#ptar-codigo').hidden = modo !== 'codigo';
+    $('#ptar-qr-nota').hidden = !(modo === 'codigo' || modo === 'offline');
+    $('#ptar-tomado').hidden = !tomado;
+    const aviso = $('#ptar-qr-aviso');
+    aviso.hidden = !o.aviso;
+    aviso.textContent = o.aviso || '';
+    const nuevo = $('#ptar-nuevo');
+    nuevo.hidden = !o.boton;
+    nuevo.textContent = o.boton || '';
+    if (modo === 'cargando') $('#ptar-qr-img').replaceChildren(h('span', { class: 'ptar__qr-msg', text: 'Generando código…' }));
+    if (o.anuncio) { const s = $('#ptar-qr-estado'); s.textContent = ''; setTimeout(() => { s.textContent = o.anuncio; }, 30); }
+  }
+
+  /** Dibuja el QR (carga la librería si hace falta). Si no se puede, deja un mensaje en su lugar. */
+  function dibujarQR(gen, texto, etiqueta, siFalla) {
+    const caja = $('#ptar-qr-img');
+    const nivel = texto.length > 500 ? 'L' : 'M';   // el respaldo sin conexión es largo: menos corrección, módulos más grandes
+    return cargarQR().then(() => {
+      if (gen !== qrGen) return;
+      caja.replaceChildren(qrSvg(texto, etiqueta, 'ptar__svg', nivel));
+      caja.dataset.texto = texto;
+    }).catch(() => {
+      if (gen !== qrGen) return;
+      delete caja.dataset.texto;
+      caja.replaceChildren(h('span', { class: 'ptar__qr-msg', text: siFalla }));
+    });
+  }
+
+  function prepararQR() {
+    const gen = ++qrGen;
+    clearTimeout(state.qrT);
+    const p = state.pedido;
+    const huella = P.huellaPedido(p);
+    state.qr = { gen, huella, codigo: null, modo: 'cargando', consultando: false };
+    const reutilizar = P.codigoVigente(safeGet(P.CLAVE_CODIGO), huella, Date.now());
+    if (reutilizar) {
+      mostrarCodigo(gen, reutilizar);
+      consultarEstado(gen);
+      return;
+    }
+    pintarQR('cargando', { anuncio: 'Generando código…' });
+    crearPedido(gen, p, huella);
+  }
+
+  async function crearPedido(gen, p, huella) {
+    let res = null;
+    let datos = {};
+    const ctrl = 'AbortController' in window ? new AbortController() : null;
+    const espera = ctrl && setTimeout(() => ctrl.abort(), ESPERA_ENVIO_MS);
+    try {
+      res = await fetch('/api/pedidos', {
+        method: 'POST', credentials: 'same-origin', cache: 'no-store', signal: ctrl ? ctrl.signal : undefined,
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ lineas: P.lineasParaServidor(p), mesa: p.mesa || '' }),
+      });
+      datos = await res.json().catch(() => ({}));
+    } catch (e) { res = null; }
+    clearTimeout(espera);
+    if (gen !== qrGen) return;
+    if (res && res.status === 201 && typeof datos.codigo === 'string') {
+      safeSet(P.CLAVE_CODIGO, JSON.stringify({ huella, codigo: datos.codigo, expira_at: datos.expira_at }));
+      mostrarCodigo(gen, datos.codigo);
+      programarSondeo(gen);
+    } else if (!res || res.status >= 500) {
+      mostrarSinConexion(gen, p);
+    } else {
+      state.qr.modo = 'error';
+      pintarQR('error', { aviso: datos.error || 'No pudimos generar el código.', boton: 'Reintentar', anuncio: datos.error || 'No pudimos generar el código.' });
+    }
+  }
+
+  function mostrarCodigo(gen, codigo) {
+    const legible = P.formatoCodigo(codigo);
+    state.qr.codigo = codigo;
+    state.qr.modo = 'codigo';
+    $('#ptar-codigo').textContent = legible;
+    $('#ptar-codigo').setAttribute('aria-label', 'Código ' + legible.split('').join(' '));
+    pintarQR('codigo', { anuncio: 'Código listo: ' + legible });
+    $('#ptar-qr-img').replaceChildren(h('span', { class: 'ptar__qr-msg', text: 'Dibujando el código…' }));
+    dibujarQR(gen, location.origin + '/equipo/?p=' + encodeURIComponent(codigo), 'Código QR del pedido ' + legible,
+      'No pudimos dibujar el QR. Díctale a tu mesero el código de abajo.');
+  }
+
+  function mostrarSinConexion(gen, p) {
+    const base = location.origin + '/equipo/#d=';
+    const q = P.paraQR(p, { max: Math.max(400, 1000 - base.length) });
+    state.qr.modo = 'offline';
+    const aviso = 'Sin conexión: el código lleva tu pedido completo.' + (q.recortado ? ' Las notas van resumidas: que tu mesero las lea en esta pantalla.' : '');
+    pintarQR('offline', { aviso, anuncio: aviso });
+    $('#ptar-qr-img').replaceChildren(h('span', { class: 'ptar__qr-msg', text: 'Dibujando el código…' }));
+    dibujarQR(gen, base + q.datos, 'Código QR con tu pedido completo', 'Sin conexión no pudimos dibujar el código. Muéstrale esta pantalla a tu mesero.');
+  }
+
+  function programarSondeo(gen) {
+    clearTimeout(state.qrT);
+    state.qrT = setTimeout(() => consultarEstado(gen), SONDEO_MS);
+  }
+
+  /** Consulta /api/pedidos/<código>/estado. Se pausa con la pestaña oculta y se detiene al cerrar. */
+  async function consultarEstado(gen) {
+    const qr = state.qr;
+    if (gen !== qrGen || !qr || qr.modo !== 'codigo' || qr.consultando) return;
+    clearTimeout(state.qrT);
+    if (document.hidden) return;   // visibilitychange lo reanuda
+    qr.consultando = true;
+    let res = null;
+    let d = {};
+    try {
+      res = await fetch('/api/pedidos/' + encodeURIComponent(qr.codigo) + '/estado', { cache: 'no-store', credentials: 'same-origin', headers: { Accept: 'application/json' } });
+      d = await res.json().catch(() => ({}));
+    } catch (e) { res = null; }
+    qr.consultando = false;
+    if (gen !== qrGen || qr.modo !== 'codigo') return;
+    if (res && res.ok && d.estado === 'tomado') return pedidoTomado(d.mesero);
+    if (res && ((res.ok && (d.estado === 'caducado' || d.estado === 'cancelado')) || res.status === 404)) return codigoVencido(d.estado === 'cancelado');
+    programarSondeo(gen);   // pendiente, sin red o 5xx: se vuelve a intentar
+  }
+
+  function pedidoTomado(mesero) {
+    clearTimeout(state.qrT);
+    state.qr.modo = 'tomado';
+    safeSet(P.CLAVE_CODIGO, null);
+    actualizarPedido(P.vacio(Date.now()));   // como "Ya lo pedí": el pedido local queda vacío
+    const texto = mesero ? 'Pedido tomado por ' + mesero : 'Tu pedido ya lo tomó el equipo';
+    $('#ptar-tomado-t').textContent = texto;
+    pintarQR('tomado', { anuncio: '✓ ' + texto });
+    $('#ptar-listo').hidden = true;
+    $('#pedido-tarjeta [data-cerrar]').hidden = true;
+    $('#ptar-ok').hidden = false;
+    $('#pedido-tarjeta').scrollTop = 0;
+    $('#ptar-ok').focus({ preventScroll: true });
+  }
+
+  function codigoVencido(cancelado) {
+    clearTimeout(state.qrT);
+    state.qr.modo = 'vencido';
+    safeSet(P.CLAVE_CODIGO, null);
+    const aviso = cancelado ? 'El equipo canceló este código.' : 'Este código caducó: nadie lo tomó a tiempo.';
+    pintarQR('vencido', { aviso, boton: 'Generar un código nuevo', anuncio: aviso });
+  }
+
+  function detenerQR() {
+    qrGen++;
+    clearTimeout(state.qrT);
+    state.qr = null;
   }
 
   /** Pide que la pantalla no se apague mientras el mesero lee la tarjeta (si el navegador lo permite). */
@@ -821,10 +1000,10 @@
   }
 
   /** QR negro sobre crema, en SVG (con margen de 4 módulos para que la cámara lo lea bien). */
-  function qrSvg(texto, etiqueta) {
+  function qrSvg(texto, etiqueta, clase = 'wifi__svg', nivel = 'M') {
     const q = window.qrcode;
     q.stringToBytes = q.stringToBytesFuncs['UTF-8'];
-    const qr = q(0, 'M');
+    const qr = q(0, nivel);
     qr.addData(texto, 'Byte');
     qr.make();
     const n = qr.getModuleCount();
@@ -838,7 +1017,7 @@
     svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label', etiqueta);
     svg.setAttribute('shape-rendering', 'crispEdges');
-    svg.setAttribute('class', 'wifi__svg');
+    svg.setAttribute('class', clase);
     const fondo = document.createElementNS(ns, 'rect');
     fondo.setAttribute('width', lado); fondo.setAttribute('height', lado); fondo.setAttribute('fill', '#F3EDE2');
     const path = document.createElementNS(ns, 'path');
