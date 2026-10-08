@@ -23,6 +23,8 @@ DOCS = [  # (archivo fuente, slug, título, descripción)
      "Plumas, combo «Cuéntalo» (publicación + calificación = 2 visitas), rachas, referidos, niveles e insignias."),
     ("05-plan-pedido-app-wifi.md", "plan-pedido-app-wifi", "Plan: Mi pedido, app instalable y Wi-Fi",
      "Agregar al pedido y mostrar al mesero, Pasaporte instalable en cualquier dispositivo y Wi-Fi administrable."),
+    ("06-plan-mesero-qr-cortes.md", "plan-mesero-qr-cortes", "Plan: QR del pedido, modo mesero y cierre de día",
+     "QR al mostrar al mesero, cuentas y roles del equipo, historial por rangos y corte/cierre del día."),
     ("BACKLOG.md", "backlog", "Backlog del cliente",
      "Lo que necesitamos de Cisne Negro: exportación de Meta, accesos y Threads."),
     ("scraping/README.md", "inventario", "Inventario de contenido (scraping)",
