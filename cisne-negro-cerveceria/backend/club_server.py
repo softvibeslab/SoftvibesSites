@@ -13,6 +13,7 @@ Variables de entorno:
   CLUB_PORT    puerto local                  (default 8790)
   CLUB_REVIEW_URL  enlace de Google al que se invita después del NPS
   CLUB_COOKIE_SECURE  "0" para desarrollo sin HTTPS (default "1")
+  CLUB_MENU           ruta de menu.json publicado (precios de los pedidos)
   CLUB_COOKIE_PATH    ruta de la cookie de sesión (default "/api"; "/v2/api" en el entorno /v2)
 """
 import csv
@@ -24,6 +25,7 @@ import os
 import re
 import secrets
 import sqlite3
+import sys
 import threading
 import time
 from datetime import date, datetime, timedelta, timezone
@@ -104,6 +106,40 @@ create table if not exists ajustes (
   valor text not null,
   actualizado_at text not null
 );
+create table if not exists staff (
+  id integer primary key, usuario text not null unique, nombre text not null, rol text not null,
+  pin_hash text not null, sal text not null, activo integer not null default 1, creado_at text not null, actualizado_at text
+);
+create table if not exists staff_sesiones (
+  token text primary key, staff_id integer not null references staff(id), creado_at text not null, expira_at text not null
+);
+create table if not exists cuentas (
+  id integer primary key, mesa text not null, estado text not null, mesero_id integer not null references staff(id),
+  abierta_at text not null, cerrada_at text, cerrada_por integer, dia_operativo text not null,
+  total_c integer not null default 0, propina_c integer not null default 0, pagos text not null default '[]',
+  motivo text, corte_id integer
+);
+create table if not exists pedidos (
+  id integer primary key, codigo text not null unique, estado text not null, mesa text, lineas text not null,
+  total_c integer not null, socio_id integer, origen text not null default 'qr', creado_at text not null,
+  expira_at text not null, tomado_por integer references staff(id), tomado_at text, cuenta_id integer references cuentas(id)
+);
+create table if not exists eventos (
+  id integer primary key, tipo text not null, staff_id integer, cuenta_id integer, pedido_id integer,
+  detalle text, creado_at text not null
+);
+create table if not exists cortes (
+  id integer primary key, staff_id integer not null references staff(id), dia_operativo text not null,
+  resumen text not null, hash text not null, creado_at text not null, unique (staff_id, dia_operativo)
+);
+create table if not exists cierres (
+  id integer primary key, dia_operativo text not null unique, staff_id integer not null, resumen text not null,
+  hash text not null, forzado integer not null default 0, motivo text, creado_at text not null,
+  reabierto_at text, reabierto_por integer, reabierto_motivo text
+);
+create index if not exists cuentas_dia_idx on cuentas (dia_operativo, mesero_id);
+create index if not exists cuentas_mesa_idx on cuentas (mesa, estado);
+create index if not exists pedidos_estado_idx on pedidos (estado, expira_at);
 create index if not exists visitas_socio_idx on visitas (socio_id, dia);
 create index if not exists nps_creado_idx on nps (creado_at);
 """
@@ -846,6 +882,807 @@ def admin_ajustes_guardar(h, body):
                     (valor, iso()))
         return 200, {"ok": True, "wifi": leer_wifi(con)}
 
+
+# ══════════════════════════════════════════════════════════════════════════
+# Pedidos por QR, cuentas por mesa, equipo (mesero / admin), cortes y cierre
+# ══════════════════════════════════════════════════════════════════════════
+
+MENU_PATH = os.environ.get("CLUB_MENU", os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                     "..", "sitio", "data", "menu.json"))
+COOKIE_EQUIPO = "cn_equipo"
+STAFF_SESION_H = 12
+PEDIDO_TTL_H = 3
+DIA_CORTE_HORA = 5            # el día operativo cambia a las 05:00 (el bar cierra 23:30)
+ROLES = ("mesero", "admin")
+METODOS_PAGO = {"efectivo": "Efectivo", "tarjeta_credito": "Tarjeta de crédito",
+                "tarjeta_debito": "Tarjeta de débito"}
+TIPOS_LINEA = ("barril", "lata", "comida", "bebida", "vuelo")
+VUELO_N, MAX_CANT, MAX_LINEAS_PED, MAX_NOTA, MAX_MESA = 4, 20, 40, 40, 10
+ALFABETO_COD = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+_menu_cache = {"mtime": None, "data": None}
+_bloqueos: dict[str, list[float]] = {}
+
+
+def menu_actual():
+    """menu.json publicado (se recarga solo si cambió). Es la única fuente de precios."""
+    mt = os.path.getmtime(MENU_PATH)
+    if _menu_cache["mtime"] != mt:
+        with open(MENU_PATH, encoding="utf-8") as f:
+            _menu_cache.update(mtime=mt, data=json.load(f))
+    return _menu_cache["data"]
+
+
+def nombre_platillo(item):
+    n = item.get("nombre", "")
+    img = item.get("img") or ""
+    if n.startswith("De ") and img:
+        resto = "de " + n[3:]
+        if img.startswith("hambur"):
+            return "Hamburguesa " + resto
+        if img.startswith("san_"):
+            return "Sándwich " + resto
+    return n
+
+
+def _buscar(menu, tipo, pid):
+    if tipo == "barril":
+        return next((b for b in menu.get("barril", []) if b.get("id") == pid), None)
+    if tipo == "lata":
+        return next((b for b in menu.get("latas", []) if b.get("id") == pid), None)
+    if tipo == "bebida":
+        return next((b for b in menu.get("sin_alcohol", []) if b.get("id") == pid), None)
+    if tipo == "comida":
+        for s in menu.get("comida", []):
+            for it in s.get("items", []):
+                if it.get("id") == pid:
+                    return it
+    return None
+
+
+def resolver_linea(menu, tipo, pid, variante, cervezas):
+    """Misma regla que sitio/assets/js/pedido.js. → (nombre, detalle, precio, variante, cervezas)."""
+    if tipo == "vuelo":
+        if not isinstance(cervezas, list) or len(cervezas) != VUELO_N:
+            raise ValueError(f"Elige {VUELO_N} cervezas de barril para el vuelo.")
+        precio, nombres = 0, []
+        for cid in cervezas:
+            b = _buscar(menu, "barril", cid)
+            if not b or b.get("disponible") is False:
+                raise ValueError("Una cerveza del vuelo ya no está en barril.")
+            p4 = next((p for p in b.get("precios", []) if re.fullmatch(r"4\s*oz", str(p.get("medida")), re.I)), None)
+            if not p4:
+                raise ValueError("Una cerveza del vuelo no tiene medida de 4 oz.")
+            precio += int(p4["precio"])
+            nombres.append(b["nombre"])
+        nombre = (menu.get("vuelo") or {}).get("nombre") or "Vuelo del Cisne"
+        return nombre, f"{VUELO_N} × 4 oz: " + " · ".join(nombres), precio, None, list(cervezas)
+    prod = _buscar(menu, tipo, pid)
+    if not prod:
+        raise ValueError("Un producto ya no está en el menú.")
+    if prod.get("disponible") is False:
+        raise ValueError(f"{prod.get('nombre')} está agotado.")
+    nombre = nombre_platillo(prod) if tipo == "comida" else prod["nombre"]
+    if tipo == "barril":
+        m = next((p for p in prod.get("precios", []) if p.get("medida") == variante), None)
+        if not m:
+            raise ValueError(f"Elige una medida disponible de {nombre}.")
+        return nombre, m["medida"], int(m["precio"]), m["medida"], None
+    variantes = prod.get("variantes") or []
+    if variantes:
+        v = next((x for x in variantes if x.get("id") == variante and x.get("disponible") is not False), None)
+        if not v:
+            raise ValueError(f"Elige una presentación disponible de {nombre}.")
+        precio = int(v["precio"]) if isinstance(v.get("precio"), (int, float)) else int(prod["precio"]) + int(v.get("extra") or 0)
+        return nombre, v.get("nombre", ""), precio, v["id"], None
+    if variante not in (None, ""):
+        raise ValueError(f"{nombre} no tiene esa presentación.")
+    return nombre, "", int(prod["precio"]), None, None
+
+
+def _texto(s, n):
+    return re.sub(r"[\x00-\x1f\x7f]", "", s if isinstance(s, str) else "").strip()[:n]
+
+
+def normalizar_lineas(menu, lineas):
+    """Valida y recalcula precios en el servidor (nunca se confía en los del navegador)."""
+    if not isinstance(lineas, list) or not lineas:
+        raise ValueError("El pedido está vacío.")
+    out = []
+    for l in lineas[:MAX_LINEAS_PED + 1]:
+        if not isinstance(l, dict) or l.get("tipo") not in TIPOS_LINEA:
+            raise ValueError("Hay un producto que no está en el menú.")
+        cant = l.get("cantidad", 1)
+        if not isinstance(cant, int) or isinstance(cant, bool) or not 1 <= cant <= MAX_CANT:
+            raise ValueError(f"La cantidad debe ser de 1 a {MAX_CANT}.")
+        tipo = l["tipo"]
+        pid = "vuelo" if tipo == "vuelo" else str(l.get("id") or "")
+        nombre, detalle, precio, variante, cervezas = resolver_linea(menu, tipo, pid, l.get("variante"), l.get("cervezas"))
+        nota = _texto(l.get("nota"), MAX_NOTA)
+        clave = (tipo, pid, variante or "", "+".join(cervezas or []), nota)
+        igual = next((x for x in out if x["_clave"] == clave), None)
+        if igual:
+            igual["cantidad"] = min(MAX_CANT, igual["cantidad"] + cant)
+            continue
+        if len(out) >= MAX_LINEAS_PED:
+            raise ValueError(f"El pedido admite hasta {MAX_LINEAS_PED} productos distintos.")
+        out.append({"_clave": clave, "tipo": tipo, "id": pid, "variante": variante, "cervezas": cervezas,
+                    "nombre": nombre, "detalle": detalle, "precio": precio, "cantidad": cant, "nota": nota})
+    for x in out:
+        del x["_clave"]
+    return out
+
+
+def total_lineas(lineas):
+    return sum(l["precio"] * l["cantidad"] for l in lineas if l["cantidad"] > 0)
+
+
+def dia_operativo(dt=None):
+    dt = dt or ahora()
+    if isinstance(dt, str):
+        dt = datetime.fromisoformat(dt)
+    return (dt.astimezone(TZ) - timedelta(hours=DIA_CORTE_HORA)).date().isoformat()
+
+
+def nuevo_codigo_pedido(con):
+    while True:
+        c = "".join(secrets.choice(ALFABETO_COD) for _ in range(8))
+        if not con.execute("select 1 from pedidos where codigo = ?", (c,)).fetchone():
+            return c
+
+
+def limpiar_codigo(c):
+    return re.sub(r"[^A-Z0-9]", "", str(c or "").upper())[:12]
+
+
+def evento(con, tipo, staff_id=None, cuenta_id=None, pedido_id=None, detalle=None):
+    con.execute("insert into eventos (tipo, staff_id, cuenta_id, pedido_id, detalle, creado_at) values (?, ?, ?, ?, ?, ?)",
+                (tipo, staff_id, cuenta_id, pedido_id, json.dumps(detalle or {}, ensure_ascii=False), iso()))
+
+
+def caducar_pendientes(con):
+    con.execute("update pedidos set estado = 'caducado' where estado = 'pendiente' and expira_at < ?", (iso(),))
+
+
+def a_pesos(c):
+    return round((c or 0) / 100, 2)
+
+
+# ── API pública del cliente ──────────────────────────────────────────────
+
+def api_pedido_crear(h, body):
+    if not limitar("pedido:" + h.ip(), 120, 3600):
+        return 429, {"error": "Demasiados pedidos seguidos. Pídele ayuda al equipo."}
+    try:
+        lineas = normalizar_lineas(menu_actual(), body.get("lineas"))
+    except ValueError as e:
+        return 400, {"error": str(e)}
+    mesa = _texto(body.get("mesa"), MAX_MESA)
+    with db() as con:
+        codigo = nuevo_codigo_pedido(con)
+        expira = iso(ahora() + timedelta(hours=PEDIDO_TTL_H))
+        con.execute("insert into pedidos (codigo, estado, mesa, lineas, total_c, socio_id, origen, creado_at, expira_at) "
+                    "values (?, 'pendiente', ?, ?, ?, ?, 'qr', ?, ?)",
+                    (codigo, mesa, json.dumps(lineas, ensure_ascii=False), total_lineas(lineas) * 100,
+                     h.socio_id(), iso(), expira))
+    return 201, {"codigo": codigo, "expira_at": expira, "total": total_lineas(lineas), "lineas": lineas}
+
+
+def api_pedido_estado(h, codigo):
+    with db() as con:
+        caducar_pendientes(con)
+        r = con.execute("select p.estado, p.tomado_at, s.nombre from pedidos p left join staff s on s.id = p.tomado_por "
+                        "where p.codigo = ?", (limpiar_codigo(codigo),)).fetchone()
+    if not r:
+        return 404, {"error": "Pedido no encontrado."}
+    mesero = (r["nombre"] or "").split(" ")[0] if r["nombre"] else None
+    return 200, {"estado": r["estado"], "mesero": mesero, "tomado_at": r["tomado_at"]}
+
+
+# ── Sesión del equipo ────────────────────────────────────────────────────
+
+def hash_staff(pin, sal):
+    return hashlib.pbkdf2_hmac("sha256", pin.encode(), sal.encode(), 200_000).hex()
+
+
+def staff_publico(r):
+    return {"id": r["id"], "nombre": r["nombre"], "usuario": r["usuario"], "rol": r["rol"], "activo": bool(r["activo"])}
+
+
+def crear_staff(con, nombre, usuario, rol, pin=None):
+    usuario = re.sub(r"[^a-z0-9._-]", "", str(usuario or "").lower())[:30]
+    nombre = _texto(nombre, 60)
+    if not nombre or len(usuario) < 3:
+        raise ValueError("Nombre y usuario (mínimo 3 letras o números) son obligatorios.")
+    if rol not in ROLES:
+        raise ValueError("Rol inválido.")
+    pin = str(pin or f"{secrets.randbelow(10**6):06d}")
+    if not re.fullmatch(r"\d{6}", pin):
+        raise ValueError("El PIN debe tener 6 números.")
+    if con.execute("select 1 from staff where usuario = ?", (usuario,)).fetchone():
+        raise ValueError("Ese usuario ya existe.")
+    sal = secrets.token_hex(16)
+    cur = con.execute("insert into staff (usuario, nombre, rol, pin_hash, sal, activo, creado_at) values (?, ?, ?, ?, ?, 1, ?)",
+                      (usuario, nombre, rol, hash_staff(pin, sal), sal, iso()))
+    return cur.lastrowid, pin
+
+
+def equipo_login(h, body):
+    usuario = re.sub(r"[^a-z0-9._-]", "", str(body.get("usuario") or "").lower())
+    pin = str(body.get("pin") or "")
+    if not limitar("eq-login:" + h.ip(), 40, 300):
+        return 429, {"error": "Demasiados intentos. Espera unos minutos."}
+    t = time.time()
+    fallos = [x for x in _bloqueos.get(usuario, []) if t - x < 900]
+    if len(fallos) >= 5:
+        return 429, {"error": "Usuario bloqueado 15 minutos por intentos fallidos."}
+    with db() as con:
+        s = con.execute("select * from staff where usuario = ?", (usuario,)).fetchone()
+        if not s or not s["activo"] or not hmac.compare_digest(s["pin_hash"], hash_staff(pin, s["sal"])):
+            _bloqueos[usuario] = fallos + [t]
+            return 401, {"error": "Usuario o PIN incorrectos."}
+        _bloqueos.pop(usuario, None)
+        token = secrets.token_urlsafe(32)
+        con.execute("insert into staff_sesiones (token, staff_id, creado_at, expira_at) values (?, ?, ?, ?)",
+                    (token, s["id"], iso(), iso(ahora() + timedelta(hours=STAFF_SESION_H))))
+        evento(con, "login", s["id"])
+    h.cookie_equipo = token
+    return 200, {"staff": staff_publico(s), "dia_operativo": dia_operativo()}
+
+
+def equipo_logout(h, body, staff):
+    with db() as con:
+        con.execute("delete from staff_sesiones where token = ?", (h.token_equipo(),))
+    h.cookie_equipo = ""
+    return 200, {"ok": True}
+
+
+def equipo_yo(h, q, staff):
+    return 200, {"staff": staff, "dia_operativo": dia_operativo(), "hora_corte": f"{DIA_CORTE_HORA:02d}:00",
+                 "metodos_pago": METODOS_PAGO}
+
+
+# ── Pedidos y cuentas ────────────────────────────────────────────────────
+
+def _socio_resumen(con, socio_id):
+    if not socio_id:
+        return None
+    s = con.execute("select nombre from socios where id = ?", (socio_id,)).fetchone()
+    if not s:
+        return None
+    n = con.execute("select count(*) from visitas where socio_id = ?", (socio_id,)).fetchone()[0]
+    return {"alias": alias_publico(s["nombre"]), "visitas": n}
+
+
+def _pedido_dict(con, r):
+    d = {k: r[k] for k in ("id", "codigo", "estado", "mesa", "origen", "creado_at", "expira_at", "tomado_at", "cuenta_id")}
+    d["lineas"] = json.loads(r["lineas"])
+    d["total"] = a_pesos(r["total_c"])
+    m = con.execute("select nombre from staff where id = ?", (r["tomado_por"],)).fetchone() if r["tomado_por"] else None
+    d["tomado_por"] = m["nombre"] if m else None
+    d["socio"] = _socio_resumen(con, r["socio_id"])
+    return d
+
+
+def _recalcular_cuenta(con, cuenta_id):
+    tot = 0
+    for r in con.execute("select lineas from pedidos where cuenta_id = ? and estado = 'tomado'", (cuenta_id,)):
+        tot += total_lineas(json.loads(r["lineas"]))
+    con.execute("update cuentas set total_c = ? where id = ?", (tot * 100, cuenta_id))
+    return tot
+
+
+def _cuenta_dict(con, c, detalle=False):
+    m = con.execute("select nombre from staff where id = ?", (c["mesero_id"],)).fetchone()
+    d = {k: c[k] for k in ("id", "mesa", "estado", "abierta_at", "cerrada_at", "dia_operativo", "corte_id", "motivo")}
+    d.update(mesero_id=c["mesero_id"], mesero=m["nombre"] if m else None, total=a_pesos(c["total_c"]),
+             propina=a_pesos(c["propina_c"]),
+             pagos=[{"metodo": p["metodo"], "monto": a_pesos(p["monto_c"])} for p in json.loads(c["pagos"] or "[]")])
+    rondas = con.execute("select * from pedidos where cuenta_id = ? order by tomado_at", (c["id"],)).fetchall()
+    d["rondas"] = len(rondas)
+    if detalle:
+        d["pedidos"] = [_pedido_dict(con, r) for r in rondas]
+        d["eventos"] = [dict(e) for e in con.execute(
+            "select e.tipo, e.detalle, e.creado_at, s.nombre staff from eventos e left join staff s on s.id = e.staff_id "
+            "where e.cuenta_id = ? order by e.creado_at", (c["id"],))]
+    return d
+
+
+def _puede(staff, cuenta):
+    return staff["rol"] == "admin" or cuenta["mesero_id"] == staff["id"]
+
+
+def _bloqueada(con, cuenta):
+    if cuenta["corte_id"]:
+        return "Esa cuenta ya entró en un corte."
+    if con.execute("select 1 from cierres where dia_operativo = ? and reabierto_at is null",
+                   (cuenta["dia_operativo"],)).fetchone():
+        return "El día de esa cuenta ya está cerrado."
+    return None
+
+
+def equipo_pedido_ver(h, codigo, staff):
+    with db() as con:
+        caducar_pendientes(con)
+        r = con.execute("select * from pedidos where codigo = ?", (limpiar_codigo(codigo),)).fetchone()
+        if not r:
+            return 404, {"error": "No encontramos ese pedido. Revisa el código."}
+        d = _pedido_dict(con, r)
+        if d["mesa"]:
+            c = con.execute("select * from cuentas where mesa = ? and estado = 'abierta' order by abierta_at desc",
+                            (d["mesa"],)).fetchone()
+            d["cuenta_mesa"] = _cuenta_dict(con, c) if c else None
+        return 200, {"pedido": d}
+
+
+def equipo_pedido_importar(h, body, staff):
+    """Pedido que llegó sin internet (los datos venían dentro del QR)."""
+    datos = body.get("datos") if isinstance(body.get("datos"), dict) else {}
+    try:
+        lineas = normalizar_lineas(menu_actual(), datos.get("lineas"))
+    except ValueError as e:
+        return 400, {"error": str(e)}
+    with db() as con:
+        codigo = nuevo_codigo_pedido(con)
+        con.execute("insert into pedidos (codigo, estado, mesa, lineas, total_c, origen, creado_at, expira_at) "
+                    "values (?, 'pendiente', ?, ?, ?, 'offline', ?, ?)",
+                    (codigo, _texto(datos.get("mesa"), MAX_MESA), json.dumps(lineas, ensure_ascii=False),
+                     total_lineas(lineas) * 100, iso(), iso(ahora() + timedelta(hours=PEDIDO_TTL_H))))
+        r = con.execute("select * from pedidos where codigo = ?", (codigo,)).fetchone()
+        return 201, {"pedido": _pedido_dict(con, r)}
+
+
+def equipo_pedido_tomar(h, body, codigo, staff):
+    with db() as con:
+        caducar_pendientes(con)
+        r = con.execute("select * from pedidos where codigo = ?", (limpiar_codigo(codigo),)).fetchone()
+        if not r:
+            return 404, {"error": "No encontramos ese pedido."}
+        if r["estado"] == "tomado":
+            quien = con.execute("select nombre from staff where id = ?", (r["tomado_por"],)).fetchone()
+            return 409, {"error": f"Ese pedido ya lo tomó {quien['nombre'] if quien else 'otra persona'}."}
+        if r["estado"] != "pendiente":
+            return 410, {"error": "Ese pedido ya no está vigente (caducó o se canceló)."}
+        mesa = _texto(body.get("mesa") or r["mesa"], MAX_MESA)
+        if not mesa:
+            return 400, {"error": "Indica la mesa."}
+        c = con.execute("select * from cuentas where mesa = ? and estado = 'abierta' order by abierta_at desc",
+                        (mesa,)).fetchone()
+        if c and _bloqueada(con, c):
+            c = None
+        if not c:
+            cur = con.execute("insert into cuentas (mesa, estado, mesero_id, abierta_at, dia_operativo, total_c, propina_c, pagos) "
+                              "values (?, 'abierta', ?, ?, ?, 0, 0, '[]')", (mesa, staff["id"], iso(), dia_operativo()))
+            cuenta_id = cur.lastrowid
+            evento(con, "cuenta_abierta", staff["id"], cuenta_id, detalle={"mesa": mesa})
+        else:
+            cuenta_id = c["id"]
+        con.execute("update pedidos set estado = 'tomado', tomado_por = ?, tomado_at = ?, cuenta_id = ?, mesa = ? where id = ?",
+                    (staff["id"], iso(), cuenta_id, mesa, r["id"]))
+        evento(con, "pedido_tomado", staff["id"], cuenta_id, r["id"], {"codigo": r["codigo"], "total": a_pesos(r["total_c"])})
+        _recalcular_cuenta(con, cuenta_id)
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        return 200, {"cuenta": _cuenta_dict(con, c, True)}
+
+
+def equipo_pedido_cancelar(h, body, codigo, staff):
+    motivo = _texto(body.get("motivo"), 200)
+    if not motivo:
+        return 400, {"error": "Escribe el motivo."}
+    with db() as con:
+        r = con.execute("select * from pedidos where codigo = ?", (limpiar_codigo(codigo),)).fetchone()
+        if not r or r["estado"] != "pendiente":
+            return 409, {"error": "Solo se cancelan pedidos pendientes."}
+        con.execute("update pedidos set estado = 'cancelado' where id = ?", (r["id"],))
+        evento(con, "pedido_cancelado", staff["id"], pedido_id=r["id"], detalle={"motivo": motivo})
+    return 200, {"ok": True}
+
+
+def equipo_cuentas(h, q, staff):
+    estado = q.get("estado", ["abierta"])[0]
+    conds, params = [], []
+    if estado in ("abierta", "cerrada", "cancelada"):
+        conds.append("estado = ?"); params.append(estado)
+    if staff["rol"] != "admin" or q.get("mias", ["0"])[0] == "1":
+        conds.append("mesero_id = ?"); params.append(staff["id"])
+    where = ("where " + " and ".join(conds)) if conds else ""
+    with db() as con:
+        rows = con.execute(f"select * from cuentas {where} order by abierta_at desc limit 200", params).fetchall()
+        return 200, {"cuentas": [_cuenta_dict(con, c) for c in rows]}
+
+
+def equipo_cuenta_ver(h, cuenta_id, staff):
+    with db() as con:
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        if not c or not _puede(staff, c):
+            return 404, {"error": "Cuenta no encontrada."}
+        return 200, {"cuenta": _cuenta_dict(con, c, True)}
+
+
+def equipo_cuenta_linea(h, body, cuenta_id, staff):
+    """Ajusta la cantidad de una línea (0 = «no hay»). El precio no se toca."""
+    with db() as con:
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        if not c or not _puede(staff, c):
+            return 404, {"error": "Cuenta no encontrada."}
+        if c["estado"] != "abierta" or _bloqueada(con, c):
+            return 409, {"error": _bloqueada(con, c) or "La cuenta ya no está abierta."}
+        p = con.execute("select * from pedidos where id = ? and cuenta_id = ?", (body.get("pedido_id"), cuenta_id)).fetchone()
+        if not p:
+            return 404, {"error": "Ronda no encontrada."}
+        lineas = json.loads(p["lineas"])
+        i, cant = body.get("indice"), body.get("cantidad")
+        if not isinstance(i, int) or not 0 <= i < len(lineas):
+            return 400, {"error": "Producto no encontrado."}
+        if not isinstance(cant, int) or isinstance(cant, bool) or not 0 <= cant <= MAX_CANT:
+            return 400, {"error": f"La cantidad debe ser de 0 a {MAX_CANT}."}
+        antes = lineas[i]["cantidad"]
+        lineas[i]["cantidad"] = cant
+        con.execute("update pedidos set lineas = ?, total_c = ? where id = ?",
+                    (json.dumps(lineas, ensure_ascii=False), total_lineas(lineas) * 100, p["id"]))
+        evento(con, "linea_ajustada", staff["id"], cuenta_id, p["id"],
+               {"producto": lineas[i]["nombre"], "antes": antes, "despues": cant})
+        _recalcular_cuenta(con, cuenta_id)
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        return 200, {"cuenta": _cuenta_dict(con, c, True)}
+
+
+def _monto_c(v):
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return None
+    if x < 0 or x > 1_000_000:
+        return None
+    return int(round(x * 100))
+
+
+def equipo_cuenta_cerrar(h, body, cuenta_id, staff):
+    with db() as con:
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        if not c or not _puede(staff, c):
+            return 404, {"error": "Cuenta no encontrada."}
+        if c["estado"] != "abierta" or _bloqueada(con, c):
+            return 409, {"error": _bloqueada(con, c) or "La cuenta ya no está abierta."}
+        total_c = _recalcular_cuenta(con, cuenta_id) * 100
+        if total_c <= 0:
+            return 400, {"error": "La cuenta está en $0. Cancélala en lugar de cerrarla."}
+        propina_c = _monto_c(body.get("propina") or 0)
+        if propina_c is None:
+            return 400, {"error": "Propina inválida."}
+        pagos = []
+        for p in body.get("pagos") or []:
+            m = _monto_c(p.get("monto")) if isinstance(p, dict) else None
+            if not isinstance(p, dict) or p.get("metodo") not in METODOS_PAGO or not m:
+                return 400, {"error": "Cada pago necesita forma de pago (efectivo, crédito o débito) y monto."}
+            pagos.append({"metodo": p["metodo"], "monto_c": m})
+        if not pagos:
+            return 400, {"error": "Registra al menos un pago."}
+        if sum(p["monto_c"] for p in pagos) != total_c + propina_c:
+            return 400, {"error": f"Los pagos deben sumar ${a_pesos(total_c + propina_c):,.2f} (cuenta + propina)."}
+        con.execute("update cuentas set estado = 'cerrada', cerrada_at = ?, propina_c = ?, pagos = ?, total_c = ?, "
+                    "cerrada_por = ? where id = ?",
+                    (iso(), propina_c, json.dumps(pagos), total_c, staff["id"], cuenta_id))
+        evento(con, "cuenta_cerrada", staff["id"], cuenta_id, detalle={"total": a_pesos(total_c), "propina": a_pesos(propina_c),
+                                                                       "pagos": [{"metodo": p["metodo"], "monto": a_pesos(p["monto_c"])} for p in pagos]})
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        return 200, {"cuenta": _cuenta_dict(con, c, True)}
+
+
+def equipo_cuenta_cancelar(h, body, cuenta_id, staff):
+    motivo = _texto(body.get("motivo"), 200)
+    if not motivo:
+        return 400, {"error": "Escribe el motivo de la cancelación."}
+    with db() as con:
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        if not c or not _puede(staff, c):
+            return 404, {"error": "Cuenta no encontrada."}
+        if c["estado"] != "abierta" or _bloqueada(con, c):
+            return 409, {"error": _bloqueada(con, c) or "La cuenta ya no está abierta."}
+        con.execute("update cuentas set estado = 'cancelada', cerrada_at = ?, motivo = ?, cerrada_por = ? where id = ?",
+                    (iso(), motivo, staff["id"], cuenta_id))
+        evento(con, "cuenta_cancelada", staff["id"], cuenta_id, detalle={"motivo": motivo})
+    return 200, {"ok": True}
+
+
+def equipo_cuenta_transferir(h, body, cuenta_id, staff):
+    with db() as con:
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        if not c or not _puede(staff, c):
+            return 404, {"error": "Cuenta no encontrada."}
+        if c["estado"] != "abierta":
+            return 409, {"error": "Solo se transfieren cuentas abiertas."}
+        dest = con.execute("select * from staff where id = ? and activo = 1", (body.get("staff_id"),)).fetchone()
+        if not dest:
+            return 400, {"error": "Elige un mesero activo."}
+        con.execute("update cuentas set mesero_id = ? where id = ?", (dest["id"], cuenta_id))
+        evento(con, "cuenta_transferida", staff["id"], cuenta_id, detalle={"a": dest["nombre"]})
+        c = con.execute("select * from cuentas where id = ?", (cuenta_id,)).fetchone()
+        return 200, {"cuenta": _cuenta_dict(con, c)}
+
+
+def equipo_companeros(h, q, staff):
+    with db() as con:
+        rows = con.execute("select id, nombre, rol from staff where activo = 1 order by nombre").fetchall()
+        return 200, {"staff": [dict(r) for r in rows]}
+
+
+# ── Historial e indicadores ──────────────────────────────────────────────
+
+def _rango(q):
+    """rango=hoy|ayer|semana|mes, o desde/hasta (fecha = día operativo, o fecha y hora)."""
+    hoy = date.fromisoformat(dia_operativo())
+    r = q.get("rango", [""])[0]
+    if r == "hoy":
+        return hoy.isoformat(), hoy.isoformat(), None, None
+    if r == "ayer":
+        a = (hoy - timedelta(days=1)).isoformat()
+        return a, a, None, None
+    if r == "semana":
+        return (hoy - timedelta(days=hoy.weekday())).isoformat(), hoy.isoformat(), None, None
+    if r == "mes":
+        return hoy.replace(day=1).isoformat(), hoy.isoformat(), None, None
+    desde = q.get("desde", [""])[0] or hoy.isoformat()
+    hasta = q.get("hasta", [""])[0] or desde
+    if "T" in desde or "T" in hasta:  # intervalo exacto por fecha y hora
+        try:
+            d1 = datetime.fromisoformat(desde).replace(tzinfo=TZ) if "T" in desde else datetime.fromisoformat(desde + "T00:00").replace(tzinfo=TZ)
+            d2 = datetime.fromisoformat(hasta).replace(tzinfo=TZ) if "T" in hasta else datetime.fromisoformat(hasta + "T23:59:59").replace(tzinfo=TZ)
+        except ValueError:
+            raise ValueError("Fechas inválidas.")
+        return None, None, iso(d1), iso(d2)
+    try:
+        date.fromisoformat(desde); date.fromisoformat(hasta)
+    except ValueError:
+        raise ValueError("Fechas inválidas (usa AAAA-MM-DD).")
+    return min(desde, hasta), max(desde, hasta), None, None
+
+
+def _consulta_historial(con, q, staff):
+    d1, d2, t1, t2 = _rango(q)
+    conds, params = [], []
+    if d1:
+        conds.append("c.dia_operativo between ? and ?"); params += [d1, d2]
+    else:
+        conds.append("c.abierta_at between ? and ?"); params += [t1, t2]
+    estado = q.get("estado", ["cerrada"])[0]
+    if estado in ("abierta", "cerrada", "cancelada"):
+        conds.append("c.estado = ?"); params.append(estado)
+    mesero = q.get("mesero", [""])[0]
+    if staff["rol"] != "admin":
+        conds.append("c.mesero_id = ?"); params.append(staff["id"])
+    elif mesero.isdigit():
+        conds.append("c.mesero_id = ?"); params.append(int(mesero))
+    mesa = _texto(q.get("mesa", [""])[0], MAX_MESA)
+    if mesa:
+        conds.append("c.mesa = ?"); params.append(mesa)
+    metodo = q.get("metodo", [""])[0]
+    rows = con.execute(f"select c.* from cuentas c where {' and '.join(conds)} order by c.abierta_at desc", params).fetchall()
+    if metodo in METODOS_PAGO:
+        rows = [r for r in rows if any(p["metodo"] == metodo for p in json.loads(r["pagos"] or "[]"))]
+    return rows, {"desde": d1 or t1, "hasta": d2 or t2, "por_dia": bool(d1)}
+
+
+def _indicadores(con, rows):
+    cerradas = [r for r in rows if r["estado"] == "cerrada"]
+    total = sum(r["total_c"] for r in cerradas)
+    propinas = sum(r["propina_c"] for r in cerradas)
+    por_metodo = {k: 0 for k in METODOS_PAGO}
+    por_hora = {}
+    productos = {}
+    for r in cerradas:
+        for p in json.loads(r["pagos"] or "[]"):
+            por_metodo[p["metodo"]] = por_metodo.get(p["metodo"], 0) + p["monto_c"]
+        hh = datetime.fromisoformat(r["abierta_at"]).astimezone(TZ).hour
+        por_hora[hh] = por_hora.get(hh, 0) + 1
+        for pe in con.execute("select lineas from pedidos where cuenta_id = ? and estado = 'tomado'", (r["id"],)):
+            for l in json.loads(pe["lineas"]):
+                if l["cantidad"] > 0:
+                    k = l["nombre"] + (f" {l['detalle']}" if l.get("detalle") and l["tipo"] != "vuelo" else "")
+                    productos[k] = productos.get(k, 0) + l["cantidad"]
+    return {
+        "cuentas": len(cerradas), "canceladas": sum(1 for r in rows if r["estado"] == "cancelada"),
+        "abiertas": sum(1 for r in rows if r["estado"] == "abierta"),
+        "total": a_pesos(total), "propinas": a_pesos(propinas),
+        "ticket_promedio": a_pesos(total / len(cerradas)) if cerradas else 0,
+        "por_metodo": {k: a_pesos(v) for k, v in por_metodo.items()},
+        "por_hora": [{"hora": f"{k:02d}:00", "cuentas": v} for k, v in sorted(por_hora.items())],
+        "top_productos": [{"producto": k, "cantidad": v} for k, v in sorted(productos.items(), key=lambda x: -x[1])[:10]],
+    }
+
+
+def equipo_historial(h, q, staff):
+    try:
+        with db() as con:
+            rows, rango = _consulta_historial(con, q, staff)
+            lim = entero(q.get("limite", ["50"])[0], 50, 1, 500)
+            pag = entero(q.get("pagina", ["1"])[0], 1, 1, 10000)
+            return 200, {"rango": rango, "indicadores": _indicadores(con, rows), "total_cuentas": len(rows),
+                         "cuentas": [_cuenta_dict(con, c) for c in rows[(pag - 1) * lim: pag * lim]]}
+    except ValueError as e:
+        return 400, {"error": str(e)}
+
+
+def equipo_historial_csv(h, q, staff):
+    try:
+        with db() as con:
+            rows, _ = _consulta_historial(con, q, staff)
+            buf = io.StringIO()
+            w = csv.writer(buf)
+            w.writerow(["cuenta", "dia_operativo", "mesa", "mesero", "estado", "abierta", "cerrada", "total", "propina",
+                        "efectivo", "tarjeta_credito", "tarjeta_debito", "motivo"])
+            for c in rows:
+                d = _cuenta_dict(con, c)
+                pm = {k: 0 for k in METODOS_PAGO}
+                for p in d["pagos"]:
+                    pm[p["metodo"]] += p["monto"]
+                w.writerow([d["id"], d["dia_operativo"], d["mesa"], d["mesero"], d["estado"], d["abierta_at"], d["cerrada_at"] or "",
+                            d["total"], d["propina"], pm["efectivo"], pm["tarjeta_credito"], pm["tarjeta_debito"], d["motivo"] or ""])
+            return 200, buf.getvalue()
+    except ValueError as e:
+        return 400, {"error": str(e)}
+
+
+# ── Corte del mesero y cierre del día ────────────────────────────────────
+
+def _resumen_corte(con, staff_id, dia):
+    rows = con.execute("select * from cuentas where mesero_id = ? and dia_operativo = ?", (staff_id, dia)).fetchall()
+    ind = _indicadores(con, rows)
+    abiertas = [_cuenta_dict(con, c) for c in rows if c["estado"] == "abierta"]
+    return rows, ind, abiertas
+
+
+def equipo_corte_ver(h, q, staff):
+    dia = q.get("dia", [dia_operativo()])[0]
+    with db() as con:
+        rows, ind, abiertas = _resumen_corte(con, staff["id"], dia)
+        hecho = con.execute("select * from cortes where staff_id = ? and dia_operativo = ?", (staff["id"], dia)).fetchone()
+        return 200, {"dia_operativo": dia, "indicadores": ind, "abiertas": abiertas,
+                     "corte": {"id": hecho["id"], "creado_at": hecho["creado_at"], "resumen": json.loads(hecho["resumen"])} if hecho else None}
+
+
+def equipo_corte_hacer(h, body, staff):
+    dia = body.get("dia") or dia_operativo()
+    with db() as con:
+        if con.execute("select 1 from cortes where staff_id = ? and dia_operativo = ?", (staff["id"], dia)).fetchone():
+            return 409, {"error": "Ya hiciste el corte de ese día."}
+        rows, ind, abiertas = _resumen_corte(con, staff["id"], dia)
+        if abiertas:
+            return 409, {"error": f"Tienes {len(abiertas)} cuenta(s) abierta(s). Ciérralas, cancélalas o transfiérelas antes del corte.",
+                         "abiertas": abiertas}
+        resumen = {"staff": staff["nombre"], "dia_operativo": dia, **ind,
+                   "cuentas_ids": [r["id"] for r in rows if r["estado"] in ("cerrada", "cancelada")]}
+        texto = json.dumps(resumen, ensure_ascii=False, sort_keys=True)
+        cur = con.execute("insert into cortes (staff_id, dia_operativo, resumen, hash, creado_at) values (?, ?, ?, ?, ?)",
+                          (staff["id"], dia, texto, hashlib.sha256(texto.encode()).hexdigest(), iso()))
+        con.execute("update cuentas set corte_id = ? where mesero_id = ? and dia_operativo = ? and estado in ('cerrada','cancelada')",
+                    (cur.lastrowid, staff["id"], dia))
+        evento(con, "corte", staff["id"], detalle={"dia": dia, "total": ind["total"]})
+        return 201, {"corte": {"id": cur.lastrowid, "resumen": resumen}}
+
+
+def _estado_dia(con, dia):
+    meseros = con.execute("select distinct c.mesero_id, s.nombre from cuentas c join staff s on s.id = c.mesero_id "
+                          "where c.dia_operativo = ?", (dia,)).fetchall()
+    por_mesero = []
+    for m in meseros:
+        rows = con.execute("select * from cuentas where mesero_id = ? and dia_operativo = ?", (m["mesero_id"], dia)).fetchall()
+        corte = con.execute("select id, creado_at from cortes where staff_id = ? and dia_operativo = ?", (m["mesero_id"], dia)).fetchone()
+        por_mesero.append({"staff_id": m["mesero_id"], "nombre": m["nombre"], "corte": dict(corte) if corte else None,
+                           **_indicadores(con, rows)})
+    rows = con.execute("select * from cuentas where dia_operativo = ?", (dia,)).fetchall()
+    ini = datetime.fromisoformat(dia + "T00:00").replace(tzinfo=TZ) + timedelta(hours=DIA_CORTE_HORA)
+    fin = ini + timedelta(days=1)
+    club = {
+        "visitas": con.execute("select count(*) from visitas where creado_at >= ? and creado_at < ?", (iso(ini), iso(fin))).fetchone()[0],
+        "nps": con.execute("select count(*) from nps where creado_at >= ? and creado_at < ?", (iso(ini), iso(fin))).fetchone()[0],
+        "cortesias_canjeadas": con.execute("select count(*) from recompensas where canjeada_at >= ? and canjeada_at < ?",
+                                           (iso(ini), iso(fin))).fetchone()[0],
+    }
+    pendientes = con.execute("select count(*) from pedidos where estado = 'pendiente'").fetchone()[0]
+    cierre = con.execute("select * from cierres where dia_operativo = ?", (dia,)).fetchone()
+    return {"dia_operativo": dia, "indicadores": _indicadores(con, rows), "por_mesero": por_mesero, "club": club,
+            "pedidos_pendientes": pendientes,
+            "cierre": {k: cierre[k] for k in ("id", "creado_at", "forzado", "motivo", "reabierto_at", "reabierto_motivo")} if cierre else None}
+
+
+def equipo_cierre_ver(h, q, staff):
+    with db() as con:
+        caducar_pendientes(con)
+        return 200, _estado_dia(con, q.get("dia", [dia_operativo()])[0])
+
+
+def equipo_cierre_hacer(h, body, staff):
+    dia = body.get("dia") or dia_operativo()
+    forzar, motivo = bool(body.get("forzar")), _texto(body.get("motivo"), 200)
+    with db() as con:
+        previo = con.execute("select * from cierres where dia_operativo = ?", (dia,)).fetchone()
+        if previo and not previo["reabierto_at"]:
+            return 409, {"error": "Ese día ya está cerrado."}
+        est = _estado_dia(con, dia)
+        sin_corte = [m["nombre"] for m in est["por_mesero"] if not m["corte"]]
+        abiertas = est["indicadores"]["abiertas"]
+        if (sin_corte or abiertas) and not (forzar and motivo):
+            return 409, {"error": "Faltan cortes o hay cuentas abiertas. Para cerrar de todos modos marca «forzar» y escribe el motivo.",
+                         "sin_corte": sin_corte, "cuentas_abiertas": abiertas}
+        con.execute("update pedidos set estado = 'caducado' where estado = 'pendiente'")
+        texto = json.dumps(est, ensure_ascii=False, sort_keys=True)
+        if previo:
+            con.execute("update cierres set staff_id = ?, resumen = ?, hash = ?, forzado = ?, motivo = ?, creado_at = ?, "
+                        "reabierto_at = null where id = ?",
+                        (staff["id"], texto, hashlib.sha256(texto.encode()).hexdigest(), int(forzar), motivo, iso(), previo["id"]))
+        else:
+            con.execute("insert into cierres (dia_operativo, staff_id, resumen, hash, forzado, motivo, creado_at) values (?, ?, ?, ?, ?, ?, ?)",
+                        (dia, staff["id"], texto, hashlib.sha256(texto.encode()).hexdigest(), int(forzar), motivo, iso()))
+        evento(con, "cierre_dia", staff["id"], detalle={"dia": dia, "forzado": forzar, "motivo": motivo,
+                                                        "total": est["indicadores"]["total"]})
+        return 201, _estado_dia(con, dia)
+
+
+def equipo_cierre_reabrir(h, body, staff):
+    dia, motivo = body.get("dia") or dia_operativo(), _texto(body.get("motivo"), 200)
+    if not motivo:
+        return 400, {"error": "Escribe el motivo de la reapertura."}
+    with db() as con:
+        c = con.execute("select * from cierres where dia_operativo = ? and reabierto_at is null", (dia,)).fetchone()
+        if not c:
+            return 404, {"error": "Ese día no está cerrado."}
+        con.execute("update cierres set reabierto_at = ?, reabierto_por = ?, reabierto_motivo = ? where id = ?",
+                    (iso(), staff["id"], motivo, c["id"]))
+        evento(con, "cierre_reabierto", staff["id"], detalle={"dia": dia, "motivo": motivo})
+        return 200, _estado_dia(con, dia)
+
+
+# ── Cuentas del equipo (solo admin) ──────────────────────────────────────
+
+def equipo_staff_lista(h, q, staff):
+    with db() as con:
+        return 200, {"staff": [staff_publico(r) for r in con.execute("select * from staff order by activo desc, nombre")]}
+
+
+def equipo_staff_crear(h, body, staff):
+    with db() as con:
+        try:
+            sid, pin = crear_staff(con, body.get("nombre"), body.get("usuario"), body.get("rol") or "mesero", body.get("pin"))
+        except ValueError as e:
+            return 400, {"error": str(e)}
+        evento(con, "staff_creado", staff["id"], detalle={"staff_id": sid})
+        return 201, {"staff": staff_publico(con.execute("select * from staff where id = ?", (sid,)).fetchone()), "pin": pin}
+
+
+def equipo_staff_editar(h, body, sid, staff):
+    with db() as con:
+        s = con.execute("select * from staff where id = ?", (sid,)).fetchone()
+        if not s:
+            return 404, {"error": "Usuario no encontrado."}
+        campos, params, pin = [], [], None
+        if "nombre" in body:
+            n = _texto(body.get("nombre"), 60)
+            if not n:
+                return 400, {"error": "El nombre no puede quedar vacío."}
+            campos.append("nombre = ?"); params.append(n)
+        if "rol" in body:
+            if body["rol"] not in ROLES:
+                return 400, {"error": "Rol inválido."}
+            campos.append("rol = ?"); params.append(body["rol"])
+        if "activo" in body:
+            if sid == staff["id"] and not body["activo"]:
+                return 400, {"error": "No puedes desactivar tu propia cuenta."}
+            campos.append("activo = ?"); params.append(1 if body["activo"] else 0)
+        if body.get("reset_pin") or body.get("pin"):
+            pin = str(body.get("pin") or f"{secrets.randbelow(10**6):06d}")
+            if not re.fullmatch(r"\d{6}", pin):
+                return 400, {"error": "El PIN debe tener 6 números."}
+            campos.append("pin_hash = ?"); params.append(hash_staff(pin, s["sal"]))
+        if not campos:
+            return 400, {"error": "Nada que actualizar."}
+        con.execute(f"update staff set {', '.join(campos)}, actualizado_at = ? where id = ?", params + [iso(), sid])
+        if pin or body.get("activo") is False:
+            con.execute("delete from staff_sesiones where staff_id = ?", (sid,))
+        evento(con, "staff_editado", staff["id"], detalle={"staff_id": sid, "campos": [c.split(" ")[0] for c in campos]})
+        return 200, {"staff": staff_publico(con.execute("select * from staff where id = ?", (sid,)).fetchone()),
+                     **({"pin": pin} if pin else {})}
+
+
 # ── Servidor ────────────────────────────────────────────────────────────────
 
 RUTAS = [  # (método, patrón, handler, tipo) — tipo: publica | socio | admin
@@ -878,6 +1715,32 @@ RUTAS = [  # (método, patrón, handler, tipo) — tipo: publica | socio | admin
     ("POST", r"/api/admin/socios/(\d+)/visitas", admin_socio_visita, "admin"),
     ("DELETE", r"/api/admin/visitas/(\d+)", admin_visita_borrar, "admin"),
     ("POST", r"/api/admin/canjear", admin_canjear, "admin"),
+    ("POST", r"/api/pedidos", api_pedido_crear, "publica"),
+    ("GET", r"/api/pedidos/([A-Za-z0-9-]{4,16})/estado", api_pedido_estado, "publica"),
+    ("POST", r"/api/equipo/login", equipo_login, "publica"),
+    ("POST", r"/api/equipo/logout", equipo_logout, "equipo"),
+    ("GET", r"/api/equipo/yo", equipo_yo, "equipo"),
+    ("GET", r"/api/equipo/companeros", equipo_companeros, "equipo"),
+    ("POST", r"/api/equipo/pedidos/importar", equipo_pedido_importar, "equipo"),
+    ("GET", r"/api/equipo/pedidos/([A-Za-z0-9-]{4,16})", equipo_pedido_ver, "equipo"),
+    ("POST", r"/api/equipo/pedidos/([A-Za-z0-9-]{4,16})/tomar", equipo_pedido_tomar, "equipo"),
+    ("POST", r"/api/equipo/pedidos/([A-Za-z0-9-]{4,16})/cancelar", equipo_pedido_cancelar, "equipo"),
+    ("GET", r"/api/equipo/cuentas", equipo_cuentas, "equipo"),
+    ("GET", r"/api/equipo/cuentas/(\d+)", equipo_cuenta_ver, "equipo"),
+    ("POST", r"/api/equipo/cuentas/(\d+)/linea", equipo_cuenta_linea, "equipo"),
+    ("POST", r"/api/equipo/cuentas/(\d+)/cerrar", equipo_cuenta_cerrar, "equipo"),
+    ("POST", r"/api/equipo/cuentas/(\d+)/cancelar", equipo_cuenta_cancelar, "equipo"),
+    ("POST", r"/api/equipo/cuentas/(\d+)/transferir", equipo_cuenta_transferir, "equipo"),
+    ("GET", r"/api/equipo/historial", equipo_historial, "equipo"),
+    ("GET", r"/api/equipo/historial\.csv", equipo_historial_csv, "equipo"),
+    ("GET", r"/api/equipo/corte", equipo_corte_ver, "equipo"),
+    ("POST", r"/api/equipo/corte", equipo_corte_hacer, "equipo"),
+    ("GET", r"/api/equipo/cierre", equipo_cierre_ver, "equipo_admin"),
+    ("POST", r"/api/equipo/cierre", equipo_cierre_hacer, "equipo_admin"),
+    ("POST", r"/api/equipo/cierre/reabrir", equipo_cierre_reabrir, "equipo_admin"),
+    ("GET", r"/api/equipo/staff", equipo_staff_lista, "equipo_admin"),
+    ("POST", r"/api/equipo/staff", equipo_staff_crear, "equipo_admin"),
+    ("PUT", r"/api/equipo/staff/(\d+)", equipo_staff_editar, "equipo_admin"),
     ("GET", r"/api/admin/ajustes", admin_ajustes, "admin"),
     ("PUT", r"/api/admin/ajustes", admin_ajustes_guardar, "admin"),
 ]
@@ -886,6 +1749,21 @@ RUTAS = [  # (método, patrón, handler, tipo) — tipo: publica | socio | admin
 class Handler(BaseHTTPRequestHandler):
     server_version = "ClubCisne/2.0"
     cookie_sesion = None  # None = no tocar; "" = borrar; token = poner
+    cookie_equipo = None
+
+    def token_equipo(self):
+        galleta = SimpleCookie(self.headers.get("Cookie", ""))
+        return galleta[COOKIE_EQUIPO].value if COOKIE_EQUIPO in galleta else ""
+
+    def staff_actual(self):
+        tok = self.token_equipo()
+        if not tok:
+            return None
+        with db() as con:
+            con.execute("delete from staff_sesiones where expira_at < ?", (iso(),))
+            r = con.execute("select s.* from staff_sesiones x join staff s on s.id = x.staff_id "
+                            "where x.token = ? and s.activo = 1", (tok,)).fetchone()
+            return staff_publico(r) if r else None
 
     def log_message(self, fmt, *args):  # sin datos personales en logs
         pass
@@ -926,6 +1804,11 @@ class Handler(BaseHTTPRequestHandler):
             seguro = "; Secure" if COOKIE_SECURE else ""
             self.send_header("Set-Cookie", f"{COOKIE}={self.cookie_sesion}; Path={COOKIE_PATH}; Max-Age={vida}; "
                                            f"HttpOnly; SameSite=Lax{seguro}")
+        if self.cookie_equipo is not None:
+            vida = STAFF_SESION_H * 3600 if self.cookie_equipo else 0
+            seguro = "; Secure" if COOKIE_SECURE else ""
+            self.send_header("Set-Cookie", f"{COOKIE_EQUIPO}={self.cookie_equipo}; Path={COOKIE_PATH}; Max-Age={vida}; "
+                                           f"HttpOnly; SameSite=Strict{seguro}")
         self.end_headers()
         self.wfile.write(payload)
 
@@ -946,7 +1829,7 @@ class Handler(BaseHTTPRequestHandler):
             coincide = re.fullmatch(patron, url.path)
             if m != metodo or not coincide:
                 continue
-            args = [int(g) for g in coincide.groups()]
+            args = [int(g) if g.isdigit() else g for g in coincide.groups()]
             try:
                 if metodo in ("POST", "PUT"):
                     body = self.body()
@@ -955,6 +1838,14 @@ class Handler(BaseHTTPRequestHandler):
                     entrada = [body]
                 else:
                     entrada = [] if args else [q]
+                if tipo in ("equipo", "equipo_admin"):
+                    st = self.staff_actual()
+                    if not st:
+                        self.cookie_equipo = "" if self.token_equipo() else None
+                        return self.responder(401, {"error": "Inicia sesión con tu usuario del equipo."})
+                    if tipo == "equipo_admin" and st["rol"] != "admin":
+                        return self.responder(403, {"error": "Solo un administrador puede hacer esto."})
+                    return self.responder(*fn(self, *entrada, *args, st))
                 if tipo == "socio":
                     sid = self.socio_id()
                     if not sid:
@@ -981,6 +1872,13 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     init_db()
+    if len(sys.argv) > 1 and sys.argv[1] == "crear-staff":
+        # python3 club_server.py crear-staff <usuario> "<Nombre>" <mesero|admin> [pin6]
+        _, _, usuario, nombre, rol, *resto = sys.argv
+        with db() as con:
+            sid, pin = crear_staff(con, nombre, usuario, rol, resto[0] if resto else None)
+        print(json.dumps({"id": sid, "usuario": usuario, "rol": rol, "pin": pin}, ensure_ascii=False))
+        return
     srv = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     print(f"Club Cisne Negro escuchando en 127.0.0.1:{PORT} (db={DB_PATH})", flush=True)
     srv.serve_forever()
