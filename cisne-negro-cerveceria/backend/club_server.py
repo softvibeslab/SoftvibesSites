@@ -150,6 +150,7 @@ MIGRACIONES = {
                ("actualizado_at", "text")],
     "visitas": [("origen", "text not null default 'menu'")],
     "nps": [("origen", "text not null default 'menu'")],
+    "pedidos": [("huella", "text")],
 }
 
 _lock = threading.Lock()
@@ -1221,12 +1222,18 @@ def equipo_pedido_importar(h, body, staff):
         lineas = normalizar_lineas(menu_actual(), datos.get("lineas"))
     except ValueError as e:
         return 400, {"error": str(e)}
+    # Huella del QR (incluye su marca de creación `t`): si dos meseros escanean el mismo QR, es el mismo pedido.
+    huella = hashlib.sha256(json.dumps(datos, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     with db() as con:
+        previo = con.execute("select * from pedidos where origen = 'offline' and huella = ? and creado_at >= ? "
+                             "order by id desc", (huella, iso(ahora() - timedelta(hours=PEDIDO_TTL_H)))).fetchone()
+        if previo:
+            return 200, {"pedido": _pedido_dict(con, previo), "repetido": True}
         codigo = nuevo_codigo_pedido(con)
-        con.execute("insert into pedidos (codigo, estado, mesa, lineas, total_c, origen, creado_at, expira_at) "
-                    "values (?, 'pendiente', ?, ?, ?, 'offline', ?, ?)",
+        con.execute("insert into pedidos (codigo, estado, mesa, lineas, total_c, origen, creado_at, expira_at, huella) "
+                    "values (?, 'pendiente', ?, ?, ?, 'offline', ?, ?, ?)",
                     (codigo, _texto(datos.get("mesa"), MAX_MESA), json.dumps(lineas, ensure_ascii=False),
-                     total_lineas(lineas) * 100, iso(), iso(ahora() + timedelta(hours=PEDIDO_TTL_H))))
+                     total_lineas(lineas) * 100, iso(), iso(ahora() + timedelta(hours=PEDIDO_TTL_H)), huella))
         r = con.execute("select * from pedidos where codigo = ?", (codigo,)).fetchone()
         return 201, {"pedido": _pedido_dict(con, r)}
 
@@ -1561,8 +1568,10 @@ def equipo_corte_hacer(h, body, staff):
 
 
 def _estado_dia(con, dia):
-    meseros = con.execute("select distinct c.mesero_id, s.nombre from cuentas c join staff s on s.id = c.mesero_id "
-                          "where c.dia_operativo = ?", (dia,)).fetchall()
+    # Quien tuvo cuentas ese día o hizo su corte (aunque haya quedado vacío por transferir todo).
+    meseros = con.execute("select s.id as mesero_id, s.nombre from staff s where s.id in "
+                          "(select mesero_id from cuentas where dia_operativo = ? union "
+                          " select staff_id from cortes where dia_operativo = ?) order by s.nombre", (dia, dia)).fetchall()
     por_mesero = []
     for m in meseros:
         rows = con.execute("select * from cuentas where mesero_id = ? and dia_operativo = ?", (m["mesero_id"], dia)).fetchall()
@@ -1578,7 +1587,8 @@ def _estado_dia(con, dia):
         "cortesias_canjeadas": con.execute("select count(*) from recompensas where canjeada_at >= ? and canjeada_at < ?",
                                            (iso(ini), iso(fin))).fetchone()[0],
     }
-    pendientes = con.execute("select count(*) from pedidos where estado = 'pendiente'").fetchone()[0]
+    pendientes = con.execute("select count(*) from pedidos where estado = 'pendiente' and creado_at >= ? and creado_at < ?",
+                             (iso(ini), iso(fin))).fetchone()[0]
     cierre = con.execute("select * from cierres where dia_operativo = ?", (dia,)).fetchone()
     return {"dia_operativo": dia, "indicadores": _indicadores(con, rows), "por_mesero": por_mesero, "club": club,
             "pedidos_pendientes": pendientes,

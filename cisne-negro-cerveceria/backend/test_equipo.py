@@ -138,7 +138,14 @@ def main():
         check(s == 410, "pedido caducado no se toma")
         s, r = luis.call("POST", "/api/equipo/pedidos/importar", {"datos": {"mesa": "3", "lineas": [{"tipo": "lata", "id": "lata-loba-negra", "precio": 1}]}})
         check(s == 201 and r["pedido"]["origen"] == "offline" and r["pedido"]["total"] == 110, "pedido sin internet importado con precio del servidor")
-        s, r = ana.call("POST", f"/api/equipo/pedidos/{r['pedido']['codigo']}/tomar", {})
+        imp = r["pedido"]["codigo"]
+        datos_imp = {"mesa": "3", "lineas": [{"tipo": "lata", "id": "lata-loba-negra", "precio": 1}]}
+        s, r = ana.call("POST", "/api/equipo/pedidos/importar", {"datos": datos_imp})
+        check(s == 200 and r.get("repetido") and r["pedido"]["codigo"] == imp, "el mismo QR sin internet no se duplica")
+        s, r = luis.call("POST", "/api/equipo/pedidos/importar", {"datos": {**datos_imp, "t": "k1x9"}})
+        check(s == 201 and r["pedido"]["codigo"] != imp, "otra ronda idéntica (otra marca t) sí es un pedido nuevo")
+        luis.call("POST", f"/api/equipo/pedidos/{r['pedido']['codigo']}/cancelar", {"motivo": "prueba"})
+        s, r = ana.call("POST", f"/api/equipo/pedidos/{imp}/tomar", {})
         cuenta3 = r["cuenta"]["id"]
 
         # ── Ajustes (sin cambiar precios) ──
@@ -176,6 +183,10 @@ def main():
         check(s == 201 and r["corte"]["resumen"]["cuentas"] == 0, "corte de Ana (sin cuentas propias)")
         s, _ = ana.call("POST", "/api/equipo/corte", {})
         check(s == 409, "un corte por día")
+        s, r = admin.call("GET", "/api/equipo/cierre")
+        check(any(m["nombre"] == "Ana Demo" and m["corte"] for m in r["por_mesero"]), "el cierre lista a quien hizo un corte vacío")
+        s, r = admin.call("GET", "/api/equipo/cierre?dia=2020-01-01")
+        check(s == 200 and r["pedidos_pendientes"] == 0, "pedidos pendientes contados por día")
         s, r = luis.call("POST", "/api/equipo/corte", {})
         check(s == 409, "Luis no corta con la cuenta transferida abierta")
         luis.call("POST", f"/api/equipo/cuentas/{cuenta3}/cerrar", {"pagos": [{"metodo": "tarjeta_credito", "monto": 110}]})
