@@ -10,6 +10,7 @@ EnvironmentFile=/etc/cisnenegro-club-v2.env
 Environment=CLUB_DB=/var/lib/cisnenegro-club-v2/club.db
 Environment=CLUB_PORT=8791
 Environment=CLUB_COOKIE_PATH=/v2/api
+Environment=CLUB_MENU=/var/www/cisnenegro/v2/data/menu.json
 ExecStart=/usr/bin/python3 /opt/cisnenegro-club-v2/club_server.py
 Restart=always
 RestartSec=3

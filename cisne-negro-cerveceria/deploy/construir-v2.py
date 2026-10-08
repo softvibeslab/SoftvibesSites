@@ -16,7 +16,7 @@ SITIO = RAIZ / "sitio"
 SALIDA = pathlib.Path(sys.argv[1]).resolve()
 PREFIJO = (sys.argv[2] if len(sys.argv) > 2 else "/v2").rstrip("/")
 EXCLUIR = {"qa", "experiencia", "DESIGN.md", ".DS_Store"}
-SEGMENTOS = ("assets", "data", "menu", "api", "admin", "privacidad", "proyecto", "analisis",
+SEGMENTOS = ("assets", "data", "menu", "api", "admin", "equipo", "privacidad", "proyecto", "analisis",
              "sw.js", "manifest.webmanifest", "offline.html")
 SEG = "|".join(re.escape(s) for s in SEGMENTOS)
 # Ruta raíz dentro de comillas, paréntesis (url()) o atributos: "/assets/…", '/api', (/assets/…), `/api…`
