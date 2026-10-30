@@ -105,3 +105,19 @@ README actualizado, ficha en el `index.html` raíz del workspace y memoria del p
 
 ## Lo que no cambia
 El método de 4 pasos, la FAQ, la honestidad sobre lo que la IA no hace, el WhatsApp de diagnóstico como conversión principal y el `noindex` mientras no haya un dominio definitivo.
+
+## Estado — 2026-10-29 (v2 construida, sin publicar)
+
+Decisiones tomadas con las recomendaciones: plano industrial nocturno con lima, scroll CSS/JS, demo en closefactory.softvibes.art, formulario que arma el WhatsApp y ningún caso real citado.
+
+| Fase | Estado |
+|---|---|
+| 1 Captura | Hecha la parte visual (capturas de Vercel en `analisis/img/`). No se bajaron logos de los socios: van como texto |
+| 2 Benchmark | `docs/benchmark.md` (8 referentes). Ninguno tiene calculadora ni publica un piloto con criterio de salida |
+| 3 Diseño | `docs/DESIGN.md`. Se saltó la lámina previa: se revisó directo sobre la página |
+| 4 Landing | Hecha |
+| 4b Imágenes | **Cambio:** el diorama del hero y los iconos se hicieron en SVG. Comfy local no tiene modelos y bajar Z-Image bf16 son ~20.6 GB con el disco al 96%; Canva genera, pero solo deja bajar una miniatura de 199 px. Pendiente de tu visto bueno para la descarga |
+| 5 Análisis | Hecho: estado por fuga, antes/ahora e iframe por dispositivo |
+| 6 Kit | `docs/kit-lanzamiento.md` (borradores, nada enviado) |
+| 7 QA | 7 pruebas unitarias y 8 de interacción en verde; capturas en escritorio, móvil y movimiento reducido; contraste AA en todos los pares (mín. 4.98:1); sin errores de consola |
+| 8 Publicar | **Pendiente de tu sí** |

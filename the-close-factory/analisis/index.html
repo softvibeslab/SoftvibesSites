@@ -8,20 +8,22 @@
   <meta name="description" content="Análisis del 2026-10-29 de theclosefactory.vercel.app: lo que ya sostiene la oferta y ocho fugas verificadas en la página pública.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #08111f;
-      --paper: #f2f6fb;
-      --white: #fff;
-      --line: #d5e0ea;
-      --muted: #5c6d7e;
-      --lime: #c4fc70;
-      --blue: #91bbff;
+      --ink: #0b1726;
+      --paper: #e8eef2;
+      --white: #f8fbfc;
+      --line: #c9d6df;
+      --muted: #465a6c;
+      --lime: #c6f24e;
+      --ok: #2f6b12;
+      --warn: #8a5a00;
+      --oxide: #a8321f;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 Manrope, "Segoe UI", sans-serif; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 "IBM Plex Sans", "Segoe UI", sans-serif; }
     a { color: inherit; }
     :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
     .skip { position: absolute; left: 1rem; top: -4rem; background: var(--lime); padding: .4rem .7rem; }
@@ -29,12 +31,12 @@
     header, main, footer { width: min(880px, calc(100% - 2rem)); margin-inline: auto; }
     header { padding: 1.4rem 0 0; }
     .toplinks { display: flex; flex-wrap: wrap; gap: .8rem 1.2rem; font-size: .92rem; }
-    h1, h2 { font-family: Fraunces, Georgia, serif; font-weight: 560; letter-spacing: -.03em; line-height: 1.08; }
-    h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); margin: .4rem 0 .8rem; }
-    h1 em, h2 em { font-style: italic; }
-    h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); margin: 0 0 .6rem; }
-    .eyebrow { margin: 0; letter-spacing: .14em; text-transform: uppercase; font-size: .75rem; color: var(--muted); font-weight: 700; }
-    .verdict { background: var(--ink); color: var(--paper); border-radius: 1.2rem; padding: 1.3rem 1.4rem; margin: 1.4rem 0; }
+    h1, h2 { font-family: "Big Shoulders Display", "Arial Narrow", sans-serif; font-weight: 900; letter-spacing: 0; line-height: .95; }
+    h1 { font-size: clamp(2.8rem, 6vw, 4.6rem); margin: .4rem 0 .8rem; }
+    h1 em, h2 em { font-style: normal; color: var(--oxide); }
+    h2 { font-size: clamp(2rem, 4vw, 2.9rem); margin: 0 0 .8rem; }
+    .eyebrow { margin: 0; letter-spacing: .14em; text-transform: uppercase; font: 500 .75rem/1.3 "IBM Plex Mono", monospace; color: var(--oxide); }
+    .verdict { background: var(--ink); color: var(--paper); border-left: 6px solid var(--lime); border-radius: 1.2rem; padding: 1.3rem 1.4rem; margin: 1.4rem 0; }
     .verdict p { margin: 0; }
     nav { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 2rem; }
     nav a { text-decoration: none; border: 1px solid var(--line); background: var(--white); border-radius: 999px; padding: .35rem .7rem; font-size: .88rem; }
@@ -47,7 +49,24 @@
     details summary { cursor: pointer; font-weight: 700; }
     details p { margin: .7rem 0 0; color: #1c2c3d; }
     details p strong { color: var(--ink); }
-    .num { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; color: #3f5a18; margin-right: .35rem; }
+    .num { font-family: "IBM Plex Mono", monospace; color: var(--oxide); margin-right: .35rem; }
+    .estado { margin: .8rem 0 0; padding: .6rem .75rem; border-radius: .5rem; font-size: .95rem; }
+    .estado b { font: 600 .72rem/1 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; margin-right: .4rem; }
+    .estado.ok { background: #e6f4d4; color: #1f3d0c; } .estado.ok b { color: var(--ok); }
+    .estado.parcial { background: #f8ecd2; color: #3f2c06; } .estado.parcial b { color: var(--warn); }
+    .tag { float: right; font: 600 .68rem/1.6 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; padding: 0 .5rem; border-radius: 999px; }
+    .tag.ok { background: #e6f4d4; color: var(--ok); } .tag.parcial { background: #f8ecd2; color: var(--warn); }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0; }
+    .compare figure { margin: 0; background: var(--white); border: 1px solid var(--line); border-radius: .8rem; overflow: hidden; }
+    .compare img { display: block; width: 100%; height: auto; }
+    .compare figcaption { padding: .7rem .9rem; font-size: .9rem; color: var(--muted); }
+    .compare figcaption b { display: block; color: var(--ink); font: 600 .75rem/1.4 "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .devices { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.4rem 0 .8rem; }
+    .devices button { font: 600 .9rem/1 "IBM Plex Sans", sans-serif; padding: .55rem .9rem; border-radius: 999px; border: 1px solid var(--line); background: var(--white); cursor: pointer; }
+    .devices button[aria-pressed="true"] { background: var(--ink); color: var(--lime); border-color: var(--ink); }
+    .frame { display: grid; place-items: center; background: var(--ink); border-radius: 1rem; padding: 1rem; overflow: hidden; }
+    .frame iframe { width: 100%; height: 640px; border: 0; border-radius: .6rem; background: #0b1726; transition: width .3s ease; }
+    @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } .frame iframe { height: 560px; } }
     footer { padding: 0 0 2.5rem; color: var(--muted); font-size: .92rem; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
@@ -56,9 +75,8 @@
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <header>
     <p class="toplinks">
-      <a href="../index.html">Copia local</a>
-      <a href="https://theclosefactory.vercel.app/">Página pública</a>
-      <a href="../docs/analisis.md">Misma lectura en Markdown</a>
+      <a href="../">Ver la v2 «La Línea»</a>
+      <a href="https://theclosefactory.vercel.app/" target="_blank" rel="noopener noreferrer">Página pública (Vercel)</a>
     </p>
     <p class="eyebrow">Análisis · 29 de octubre de 2026</p>
     <h1>La oferta está clara. <em>El diagnóstico todavía no se puede atribuir.</em></h1>
@@ -71,7 +89,7 @@
       <a href="#sostiene">Lo que sostiene</a>
       <a href="#hechos">Hechos</a>
       <a href="#fugas">Ocho fugas</a>
-      <a href="#copia">Copia local</a>
+      <a href="#antes-ahora">Antes / Ahora</a>
       <a href="#limites">Límites</a>
     </nav>
 
@@ -109,53 +127,71 @@
       <p class="eyebrow">Ordenadas por lo que impiden</p>
       <h2>Ocho fugas</h2>
       <details open>
-        <summary><span class="num">01</span> No puede aparecer en buscadores</summary>
+        <summary><span class="num">01</span> No puede aparecer en buscadores <span class="tag parcial">Preparada · falta dominio</span></summary>
         <p><strong>Evidencia.</strong> La página incluye <code>noindex, nofollow</code>. No declara canonical ni og:url. robots.txt y sitemap.xml responden 404; el primero devuelve HTML, no un archivo de reglas.</p>
         <p><strong>Efecto.</strong> Si esta URL de Vercel es la que debe atraer demanda, los buscadores no deben indexarla. Si es un borrador hasta tener dominio, el noindex es la decisión correcta y conviene tratarla así.</p>
+        <p class="estado parcial"><b>En la v2</b>La v2 declara canonical, og:url y JSON-LD (Organization, ProfessionalService y FAQPage). El noindex se queda a propósito mientras no haya dominio definitivo; robots.txt ya responde reglas, no HTML.</p>
       </details>
       <details>
-        <summary><span class="num">02</span> Al reenviar el enlace no hay imagen</summary>
+        <summary><span class="num">02</span> Al reenviar el enlace no hay imagen <span class="tag ok">Resuelta</span></summary>
         <p><strong>Evidencia.</strong> No hay og:image ni favicon. La tarjeta de Twitter es summary, no una vista grande.</p>
         <p><strong>Efecto.</strong> El cierre es WhatsApp, así que el enlace se va a reenviar. Quien lo reciba ve título y un texto corto, sin el panel de seguimiento.</p>
+        <p class="estado ok"><b>En la v2</b>Imagen para compartir de 1200×630, tarjeta summary_large_image y favicon.</p>
       </details>
       <details>
-        <summary><span class="num">03</span> No se sabe qué botón originó la conversación</summary>
+        <summary><span class="num">03</span> No se sabe qué botón originó la conversación <span class="tag ok">Resuelta</span></summary>
         <p><strong>Evidencia.</strong> Solicitar diagnóstico (navegación y hero), Evaluar mi operación, Quiero medir mi conversión, Hablemos de tu caso y Agendar diagnóstico por WhatsApp usan el mismo enlace y el mismo texto: solicitar un diagnóstico comercial. El número no está escrito en la página.</p>
         <p><strong>Efecto.</strong> El equipo no distingue el hero del cierre. Quien no pueda abrir WhatsApp no tiene el contacto en texto.</p>
+        <p class="estado ok"><b>En la v2</b>Nueve enlaces de WhatsApp, cada uno con su origen («Vengo de: calculadora», «… redes de brokers»). Si la visita llega con utm_campaign o utm_source, la campaña se agrega al mensaje. El número está escrito en el hero, el cierre y el formulario.</p>
       </details>
       <details>
-        <summary><span class="num">04</span> Pide medición y no muestra ninguna</summary>
+        <summary><span class="num">04</span> Pide medición y no muestra ninguna <span class="tag parcial">Parcial · falta un caso real</span></summary>
         <p><strong>Evidencia.</strong> «Lo que no se mide, se pierde» enlista primera respuesta, prospectos calificados, citas, propuestas y costo de atención. No hay un número, un caso ni un nombre. No hay fotos. El panel avisa que no es el producto real.</p>
         <p><strong>Efecto.</strong> La cautela evita una promesa falsa. También deja la oferta sin una evidencia que el visitante pueda comprobar.</p>
+        <p class="estado parcial"><b>En la v2</b>La calculadora de fuga usa los números del visitante y la hoja de control del piloto lleva un criterio de salida por escrito. Sigue faltando un caso o cifra real: requiere permiso de los socios.</p>
       </details>
       <details>
-        <summary><span class="num">05</span> «Conocer el sistema» no lleva al sistema</summary>
+        <summary><span class="num">05</span> «Conocer el sistema» no lleva al sistema <span class="tag ok">Resuelta</span></summary>
         <p><strong>Evidencia.</strong> Ese botón apunta a #como-funciona, el método de cuatro pasos. El panel que muestra una oportunidad está en el hero y su título es un h3, antes del primer h2.</p>
         <p><strong>Efecto.</strong> Quien pide ver el sistema baja al proceso de contratación, no a la orden de seguimiento.</p>
+        <p class="estado ok"><b>En la v2</b>«Ver la línea» baja a la línea interactiva; la orden es un h3 bajo su propio h2.</p>
       </details>
       <details>
-        <summary><span class="num">06</span> Si ese WhatsApp no contesta, el recorrido se corta</summary>
+        <summary><span class="num">06</span> Si ese WhatsApp no contesta, el recorrido se corta <span class="tag parcial">Parcial</span></summary>
         <p><strong>Evidencia.</strong> No hay formulario, correo, agenda ni horario. No medí si el número responde.</p>
         <p><strong>Efecto.</strong> El diagnóstico sin compromiso depende de una respuesta humana que la página no demuestra.</p>
+        <p class="estado parcial"><b>En la v2</b>Formulario de tres campos que arma el mensaje, botón «Copiar mensaje» y teléfono a la vista. Aún no guarda la solicitud en un CRM ni publica un horario de respuesta.</p>
       </details>
       <details>
-        <summary><span class="num">07</span> El texto para compartir omite a una audiencia</summary>
+        <summary><span class="num">07</span> El texto para compartir omite a una audiencia <span class="tag ok">Resuelta</span></summary>
         <p><strong>Evidencia.</strong> La meta description conecta prospectos, IA, brokers y seguimiento. Open Graph y Twitter dicen «Inteligencia comercial para desarrolladores e inmobiliarias».</p>
         <p><strong>Efecto.</strong> Las redes de brokers son la tercera audiencia de la página y no aparecen cuando alguien comparte el enlace.</p>
+        <p class="estado ok"><b>En la v2</b>Description, Open Graph y Twitter nombran a desarrolladores, inmobiliarias y redes de brokers.</p>
       </details>
       <details>
-        <summary><span class="num">08</span> Los socios son respaldo y también una salida</summary>
+        <summary><span class="num">08</span> Los socios son respaldo y también una salida <span class="tag parcial">Mitigada</span></summary>
         <p><strong>Evidencia.</strong> Grupo Zamna y ROVI CRM enlazan a sus sitios. Esos sitios respondieron 200. No hay analítica para contar cuántos se van.</p>
         <p><strong>Efecto.</strong> El respaldo está disponible. También hay una salida antes de pedir el diagnóstico.</p>
+        <p class="estado parcial"><b>En la v2</b>Los socios abren en otra pestaña, así que el visitante no pierde la página. Sin analítica todavía no se puede medir cuántos salen.</p>
       </details>
     </section>
 
-    <section id="copia">
-      <p class="eyebrow">No confundir las dos páginas</p>
-      <h2>La copia local no es el HTML de Vercel</h2>
-      <ul class="goods">
-        <li>Las dos llevan noindex. La copia, porque esta carpeta no está publicada.</li>
-        <li>Después de este análisis, la copia local se rediseñó. «Conocer el sistema» abre la línea, cada WhatsApp indica de qué sección viene y Grupo Zamna y ROVI CRM enlazan a sus sitios. En la página pública, «Conocer el sistema» sigue bajando al método y los seis llamados comparten un solo mensaje.</li>
+    <section id="antes-ahora">
+      <p class="eyebrow">Antes / Ahora</p>
+      <h2>De plantilla SaaS a línea de producción</h2>
+      <div class="compare">
+        <figure><img src="img/antes.jpg" width="1200" height="750" alt="Hero de theclosefactory.vercel.app: fondo oscuro, titular verde lima y panel de ejemplo" loading="lazy"><figcaption><b>Antes · Vercel</b>Panel de ejemplo, seis llamados con un solo mensaje, sin imagen para compartir.</figcaption></figure>
+        <figure><img src="img/ahora.jpg" width="1200" height="750" alt="Hero de la v2: titular, diorama isométrico de la línea y mensaje de WhatsApp sin responder" loading="lazy"><figcaption><b>Ahora · v2 «La Línea»</b>Diorama animado, línea con sellos por estación, calculadora de fuga y formulario.</figcaption></figure>
+      </div>
+      <div class="devices" role="group" aria-label="Tamaño de la vista previa">
+        <button type="button" data-w="100%" aria-pressed="true">Laptop</button>
+        <button type="button" data-w="820px" aria-pressed="false">Tablet</button>
+        <button type="button" data-w="390px" aria-pressed="false">iPhone</button>
+      </div>
+      <div class="frame"><iframe src="../" title="Vista previa de la v2 de THE CLOSE FACTORY" loading="lazy"></iframe></div>
+      <ul class="goods" style="margin-top:1rem">
+        <li>La página pública de Vercel no cambió: las fugas se describen sobre ella y el estado «En la v2» se refiere a esta demo.</li>
+        <li>Las dos llevan noindex. Esta demo, porque todavía no tiene dominio definitivo.</li>
       </ul>
     </section>
 
@@ -170,7 +206,14 @@
     </section>
   </main>
   <footer>
-    <p>Consulta del 29 de octubre de 2026. Fuentes: HTML y cabeceras de theclosefactory.vercel.app, más la respuesta HTTP de grupozamna.com y rovicrm.com. Sin datos de otros clientes.</p>
+    <p>Consulta del 29 de octubre de 2026; estado de la v2 actualizado el mismo día. Fuentes: HTML y cabeceras de theclosefactory.vercel.app, más la respuesta HTTP de grupozamna.com y rovicrm.com. Sin datos de otros clientes.</p>
   </footer>
+  <script>
+    const frame = document.querySelector(".frame iframe");
+    document.querySelectorAll(".devices button").forEach((b) => b.addEventListener("click", () => {
+      document.querySelectorAll(".devices button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      frame.style.width = b.dataset.w;
+    }));
+  </script>
 </body>
 </html>
