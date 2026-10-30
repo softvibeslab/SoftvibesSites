@@ -121,3 +121,9 @@ Decisiones tomadas con las recomendaciones: plano industrial nocturno con lima, 
 | 6 Kit | `docs/kit-lanzamiento.md` (borradores, nada enviado) |
 | 7 QA | 7 pruebas unitarias y 8 de interacción en verde; capturas en escritorio, móvil y movimiento reducido; contraste AA en todos los pares (mín. 4.98:1); sin errores de consola |
 | 8 Publicar | **Pendiente de tu sí** |
+
+## Decisiones del 2026-10-29 (noche)
+- Dominio definitivo: closefactory.softvibes.art. La landing se indexa; `/analisis/` no.
+- Grupo Zamna autorizó mostrar su caso: foto real del equipo en Prana Towers y datos públicos (25-oct). Con eso ya no hace falta descargar el modelo de imágenes.
+- Primero se publica lo visual; la conexión del formulario con ROVI CRM va después.
+- Sigue pendiente el horario de respuesta del WhatsApp: no se publica hasta tenerlo.

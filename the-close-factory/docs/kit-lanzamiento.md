@@ -1,6 +1,6 @@
 # Kit de lanzamiento — THE CLOSE FACTORY v2
 
-Borradores. **Nada de esto se ha enviado ni publicado.** Antes de usarlos, confirmar el dominio definitivo: los enlaces apuntan a la demo `closefactory.softvibes.art`, que lleva `noindex`.
+Borradores. **Nada de esto se ha enviado ni publicado.** Los enlaces apuntan al dominio definitivo `closefactory.softvibes.art`.
 
 ## Enlaces con campaña
 Cada enlace lleva su UTM; la página agrega la campaña al mensaje de WhatsApp («Campaña: lanzamiento / linkedin»), así se sabe de dónde llegó cada diagnóstico.
@@ -43,6 +43,7 @@ Cada enlace lleva su UTM; la página agrega la campaña al mensaje de WhatsApp (
 Pie: *Inteligencia comercial para desarrolladores, inmobiliarias y redes de brokers. Diagnóstico sin compromiso.*
 
 ## Antes de publicar
-- [ ] Dominio definitivo y quitar `noindex` (HTML + cabecera `X-Robots-Tag` del vhost).
+- [x] Dominio definitivo (closefactory.softvibes.art) y `noindex` retirado de la landing.
 - [ ] Confirmar quién contesta el +52 984 136 2816 y en qué horario.
-- [ ] Permiso de los socios si se quiere citar un caso o una cifra real.
+- [x] Permiso de Grupo Zamna para mostrar su caso (foto y datos públicos).
+- [ ] Dar de alta el sitemap en Google Search Console.

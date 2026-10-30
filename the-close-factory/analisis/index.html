@@ -127,10 +127,10 @@
       <p class="eyebrow">Ordenadas por lo que impiden</p>
       <h2>Ocho fugas</h2>
       <details open>
-        <summary><span class="num">01</span> No puede aparecer en buscadores <span class="tag parcial">Preparada · falta dominio</span></summary>
+        <summary><span class="num">01</span> No puede aparecer en buscadores <span class="tag ok">Resuelta</span></summary>
         <p><strong>Evidencia.</strong> La página incluye <code>noindex, nofollow</code>. No declara canonical ni og:url. robots.txt y sitemap.xml responden 404; el primero devuelve HTML, no un archivo de reglas.</p>
         <p><strong>Efecto.</strong> Si esta URL de Vercel es la que debe atraer demanda, los buscadores no deben indexarla. Si es un borrador hasta tener dominio, el noindex es la decisión correcta y conviene tratarla así.</p>
-        <p class="estado parcial"><b>En la v2</b>La v2 declara canonical, og:url y JSON-LD (Organization, ProfessionalService y FAQPage). El noindex se queda a propósito mientras no haya dominio definitivo; robots.txt ya responde reglas, no HTML.</p>
+        <p class="estado ok"><b>En la v2</b>closefactory.softvibes.art es el dominio definitivo: la landing se puede indexar, declara canonical, og:url y JSON-LD (Organization, ProfessionalService y FAQPage), y publica robots.txt y sitemap.xml. Este análisis queda fuera del índice.</p>
       </details>
       <details>
         <summary><span class="num">02</span> Al reenviar el enlace no hay imagen <span class="tag ok">Resuelta</span></summary>
@@ -145,10 +145,10 @@
         <p class="estado ok"><b>En la v2</b>Nueve enlaces de WhatsApp, cada uno con su origen («Vengo de: calculadora», «… redes de brokers»). Si la visita llega con utm_campaign o utm_source, la campaña se agrega al mensaje. El número está escrito en el hero, el cierre y el formulario.</p>
       </details>
       <details>
-        <summary><span class="num">04</span> Pide medición y no muestra ninguna <span class="tag parcial">Parcial · falta un caso real</span></summary>
+        <summary><span class="num">04</span> Pide medición y no muestra ninguna <span class="tag parcial">Parcial · faltan métricas del piloto</span></summary>
         <p><strong>Evidencia.</strong> «Lo que no se mide, se pierde» enlista primera respuesta, prospectos calificados, citas, propuestas y costo de atención. No hay un número, un caso ni un nombre. No hay fotos. El panel avisa que no es el producto real.</p>
         <p><strong>Efecto.</strong> La cautela evita una promesa falsa. También deja la oferta sin una evidencia que el visitante pueda comprobar.</p>
-        <p class="estado parcial"><b>En la v2</b>La calculadora de fuga usa los números del visitante y la hoja de control del piloto lleva un criterio de salida por escrito. Sigue faltando un caso o cifra real: requiere permiso de los socios.</p>
+        <p class="estado parcial"><b>En la v2</b>La calculadora de fuga usa los números del visitante y la hoja de control del piloto lleva un criterio de salida por escrito. Con permiso de Grupo Zamna, la sección de respaldo muestra a su equipo frente a Prana Towers y datos públicos verificables (69 propiedades, 10 unidades en Prana, 245 opiniones al 100%). Faltan las métricas de un piloto, que se publican cuando haya evidencia.</p>
       </details>
       <details>
         <summary><span class="num">05</span> «Conocer el sistema» no lleva al sistema <span class="tag ok">Resuelta</span></summary>
@@ -191,7 +191,7 @@
       <div class="frame"><iframe src="../" title="Vista previa de la v2 de THE CLOSE FACTORY" loading="lazy"></iframe></div>
       <ul class="goods" style="margin-top:1rem">
         <li>La página pública de Vercel no cambió: las fugas se describen sobre ella y el estado «En la v2» se refiere a esta demo.</li>
-        <li>Las dos llevan noindex. Esta demo, porque todavía no tiene dominio definitivo.</li>
+        <li>La v2 vive en su dominio definitivo y se puede indexar; la página de Vercel sigue con noindex.</li>
       </ul>
     </section>
 
