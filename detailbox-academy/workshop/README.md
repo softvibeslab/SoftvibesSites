@@ -79,7 +79,7 @@ En vivo desde el 13-nov-2026 en **https://detailbox.softvibes.art** (VPS rovicrm
 - Respaldo diario a las 04:15 UTC (`/etc/cron.d/detailbox-workshop`) en `/var/backups/detailbox-workshop/`, guarda 14 días.
 - Admin: `admin@detailbox.softvibes.art`; la contraseña solo está en el VPS: `/root/PRIVADO/detailbox-workshop-admin.txt`.
 - Volver a publicar: `sh deploy/publicar.sh` (toma el código del commit de la rama, no de la copia de trabajo, y registra en `deploy/DESPLIEGUES.log`).
-- **Copiloto:** sin conectar en producción. Los alumnos ven «No conectado» y pueden copiar el prompt con su contexto. Para conectarlo hay que instalar el perfil `detailbox-pad` con una llave del modelo (D4) en `/var/lib/detailbox-workshop/hermes/profiles/detailbox-pad`, propiedad de `detailboxws`.
+- **Copiloto:** conectado desde el 13-nov-2026 con el perfil Hermes `detailbox-pad` (gpt-6-astra, openai-codex) en `/var/lib/detailbox-workshop/hermes/profiles/detailbox-pad`. La credencial OAuth vive en la **raíz** `/var/lib/detailbox-workshop/hermes/auth.json`, no en el perfil: Hermes borra las credenciales de Codex guardadas dentro de un perfil por considerarlas copias. Para cambiarla (p. ej., a la cuenta de Detailbox, D4): `systemd-run --uid=detailboxws --gid=detailboxws -E HOME=/var/lib/detailbox-workshop -E HERMES_HOME=/var/lib/detailbox-workshop/hermes -E PYTHONUNBUFFERED=1 /usr/local/lib/hermes-agent/venv/bin/hermes auth add openai-codex --type oauth --no-browser` y leer el código con `journalctl -u <unidad>`.
 
 ## Pendientes del cliente
 
