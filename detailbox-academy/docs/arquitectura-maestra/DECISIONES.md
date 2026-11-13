@@ -20,3 +20,4 @@ Las decisiones nacen como **pendiente**. Solo una persona autorizada de Detailbo
 
 - 2026-11-13 · Se crean dos perfiles Hermes: **A** `detailbox-arquitecto` (interno, sigue el masterprompt) y **B** `detailbox-pad` (alumnos; se construye después de D1–D4). Lo pidió el usuario.
 - 2026-11-13 · Se crean dos landings: `/pad/` (curso Método PAD) y `/ecosistema/` (3 niveles, presentado como acceso anticipado y sin precios). Lo pidió el usuario.
+- 2026-11-13 · Se construye el **Workshop PAD** (`workshop/`): workbook del alumno con login por usuario, CMS de contenido y usuarios, registro por QR y Copiloto PAD (perfil Hermes B `detailbox-pad`). Lo pidió el usuario y se adelanta a D1–D4 **solo para el alcance del taller**. Usa SQLite por instancia, sin varios negocios ni sucursales, así que no condiciona D3. En local, el copiloto usa la autenticación de Softvibes; en producción requiere D4.

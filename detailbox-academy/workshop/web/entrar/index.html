@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Entrar · Workbook PAD · Detailbox Academy</title>
+  <link rel="icon" href="/assets/detailbox-logo.webp">
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/entrar/entrar.css">
+  <script type="module" src="/entrar/entrar.js"></script>
+</head>
+<body>
+  <div class="auth">
+    <aside class="auth__brand">
+      <a class="logo" href="/entrar/"><img src="/assets/detailbox-logo.webp" width="44" height="44" alt=""><span><b>DETAILBOX</b><small>WORKBOOK PAD</small></span></a>
+      <div class="auth__pitch">
+        <h1>Tu espacio de trabajo PAD</h1>
+        <p>Construye, guarda y mejora las decisiones de tu negocio de detailing. Cada avance queda registrado.</p>
+      </div>
+      <div class="route" aria-label="Ruta del método"><span><b>P</b> PREPARA</span><span><b>A</b> APUNTA</span><span><b>D</b> DISPARA</span></div>
+    </aside>
+    <main class="auth__panel" id="contenido">
+      <section class="auth__card" id="login-view">
+        <h2>Entrar</h2>
+        <p>Usa el correo y la contraseña con los que te registraste en el taller.</p>
+        <form class="stack" id="login-form" novalidate>
+          <label class="field"><span>Correo</span><input class="input" type="email" name="email" autocomplete="email" required></label>
+          <label class="field"><span>Contraseña</span>
+            <span class="password-row"><input class="input" type="password" name="password" autocomplete="current-password" required><button type="button" data-toggle>Mostrar</button></span>
+          </label>
+          <p class="error-text" role="alert" data-error></p>
+          <button class="btn btn--block" type="submit">Entrar</button>
+        </form>
+        <p class="foot">¿Aún no tienes cuenta? Escanea el código QR de tu taller.<br>¿Olvidaste tu contraseña? Pide al equipo de Detailbox que la restablezca.</p>
+      </section>
+
+      <section class="auth__card" id="password-view" hidden>
+        <h2>Crea tu contraseña</h2>
+        <p>Tu cuenta tiene una contraseña temporal. Elige una nueva para continuar.</p>
+        <form class="stack" id="password-form" novalidate>
+          <label class="field"><span>Contraseña temporal</span><input class="input" type="password" name="actual" autocomplete="current-password" required></label>
+          <label class="field"><span>Nueva contraseña</span><input class="input" type="password" name="nueva" autocomplete="new-password" minlength="8" required><small class="hint">Mínimo 8 caracteres.</small></label>
+          <label class="field"><span>Confirma la nueva contraseña</span><input class="input" type="password" name="confirmar" autocomplete="new-password" required></label>
+          <p class="error-text" role="alert" data-error></p>
+          <button class="btn btn--block" type="submit">Guardar y continuar</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

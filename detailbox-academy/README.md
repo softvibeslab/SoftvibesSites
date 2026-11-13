@@ -18,7 +18,15 @@ Detailbox Academy.
 - `ecosistema/`: landing de **Detailbox AI Ecosystem** con los niveles PAD Starter, Growth y Business Intelligence. Se presenta como acceso anticipado y sin precios.
 - `docs/arquitectura-maestra/`: Diagnóstico y Arquitectura Maestra (masterprompt §17) y `DECISIONES.md` (D1–D11, todas pendientes de aprobación por Detailbox).
 - `docs/inventario-previo.md`: inventario de landings y bases elegidas.
-- `agentes/arquitecto/hermes/`: perfil Hermes `detailbox-arquitecto` (perfil A, interno), con instalador y pruebas. El perfil B `detailbox-pad` (alumnos) se construye después de aprobar D1–D4.
+- `agentes/arquitecto/hermes/`: perfil Hermes `detailbox-arquitecto` (perfil A, interno), con instalador y pruebas.
+- `agentes/pad/hermes/`: perfil Hermes `detailbox-pad` (perfil B, Copiloto PAD de los alumnos).
+- `workshop/`: **Workshop PAD**, la plataforma del `curso/workbook.pdf`:
+  - login por usuario;
+  - app del alumno con las 10 herramientas del workbook;
+  - CMS de contenido, usuarios y talleres, con **registro por QR**;
+  - popup del Copiloto PAD conectado a Hermes.
+
+  Flask + SQLite; no se publica en el Hostinger estático. Ver `workshop/README.md`.
 
 ## Vista local
 

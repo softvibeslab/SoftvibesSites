@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>CMS · Workshop PAD · Detailbox Academy</title>
+  <link rel="icon" href="/assets/detailbox-logo.webp">
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/cms/cms.css">
+  <script type="module" src="/cms/cms.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#vista">Saltar al contenido</a>
+  <header class="cms-header">
+    <div class="cms-header__inner">
+      <a class="cms-brand" href="#resumen">
+        <img src="/assets/detailbox-logo.webp" width="40" height="40" alt="">
+        <span><b>Detailbox Academy</b><small>CMS · Workshop PAD</small></span>
+      </a>
+      <div class="cms-user" id="cms-user" hidden>
+        <span class="cms-user__name" id="cms-user-name"></span>
+        <a class="btn btn--small btn--ghost-dark" href="/app/">Ver app</a>
+        <button class="btn btn--small btn--ghost-dark" type="button" id="logout">Cerrar sesión</button>
+      </div>
+    </div>
+    <nav class="cms-nav" id="cms-nav" aria-label="Secciones del CMS" hidden>
+      <a href="#resumen" data-section="resumen">Resumen</a>
+      <a href="#talleres" data-section="talleres">Talleres y QR</a>
+      <a href="#usuarios" data-section="usuarios">Usuarios</a>
+      <a href="#contenido" data-section="contenido">Contenido</a>
+      <a href="#actividad" data-section="actividad">Actividad</a>
+    </nav>
+  </header>
+
+  <main id="vista" class="cms-main" tabindex="-1">
+    <p class="cms-loading" role="status">Cargando…</p>
+  </main>
+
+  <dialog id="dialogo" class="cms-dialog" aria-labelledby="dialogo-titulo"></dialog>
+  <div id="proyeccion" class="projection" hidden role="dialog" aria-modal="true" aria-labelledby="proyeccion-titulo"></div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Registro al taller · Workbook PAD · Detailbox Academy</title>
+  <link rel="icon" href="/assets/detailbox-logo.webp">
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/entrar/entrar.css">
+  <script type="module" src="/registro/registro.js"></script>
+</head>
+<body>
+  <div class="auth">
+    <aside class="auth__brand">
+      <a class="logo" href="/entrar/"><img src="/assets/detailbox-logo.webp" width="44" height="44" alt=""><span><b>DETAILBOX</b><small>WORKBOOK PAD</small></span></a>
+      <div class="auth__pitch">
+        <h1>Bienvenido al Workshop PAD</h1>
+        <p>Crea tu cuenta para guardar tu diagnóstico, tus paquetes, tu sistema de ventas y tu plan de 30 días. Tu copiloto de IA te acompaña en cada paso.</p>
+      </div>
+      <div class="route" aria-label="Ruta del método"><span><b>P</b> PREPARA</span><span><b>A</b> APUNTA</span><span><b>D</b> DISPARA</span></div>
+    </aside>
+    <main class="auth__panel" id="contenido">
+      <section class="auth__card" aria-live="polite">
+        <div id="loading"><p class="hint">Revisando tu código de registro…</p></div>
+
+        <div id="invalid" class="stack" hidden>
+          <h2>Código no disponible</h2>
+          <p class="notice notice--error" data-message></p>
+          <p class="foot">Si ya tienes cuenta, <a href="/entrar/">entra aquí</a>.</p>
+        </div>
+
+        <div id="register" class="stack" hidden>
+          <h2>Crea tu cuenta</h2>
+          <div class="taller"><small>Tu taller</small><b data-taller-nombre></b><span data-taller-detalle></span></div>
+          <form class="stack" id="register-form" novalidate>
+            <label class="field"><span>Tu nombre</span><input class="input" name="nombre" autocomplete="name" maxlength="120" required></label>
+            <label class="field"><span>Nombre de tu negocio <small class="hint">(opcional)</small></span><input class="input" name="negocio" autocomplete="organization" maxlength="120"></label>
+            <label class="field"><span>Correo</span><input class="input" type="email" name="email" autocomplete="email" required></label>
+            <label class="field"><span>Contraseña</span><input class="input" type="password" name="password" autocomplete="new-password" minlength="8" required><small class="hint">Mínimo 8 caracteres. La usarás para volver a entrar.</small></label>
+            <label class="check"><input type="checkbox" name="acepta" required><span data-aviso></span></label>
+            <p class="error-text" role="alert" data-error></p>
+            <button class="btn btn--block" type="submit">Crear mi cuenta y empezar</button>
+          </form>
+          <p class="foot">¿Ya tienes cuenta? <a href="/entrar/">Entra aquí</a>.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0a0f1c">
+  <title>Workbook PAD · Detailbox Academy</title>
+  <link rel="icon" href="/assets/detailbox-logo.webp">
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/app/app.css">
+  <script type="module" src="/app/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#vista">Saltar al contenido</a>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Workbook PAD, ir a Inicio">
+      <img src="/assets/detailbox-logo.webp" width="38" height="38" alt="">
+      <span><b>DETAILBOX</b><small>WORKBOOK PAD</small></span>
+    </a>
+    <div class="topbar__progress" aria-hidden="true"><span data-progress-label>0%</span><div class="progress"><span data-progress-bar style="width:0%"></span></div></div>
+    <div class="topbar__actions">
+      <a class="btn btn--ghost btn--small" href="/cms/" data-admin-link hidden>CMS</a>
+      <button class="btn btn--ghost btn--small" type="button" data-logout>Salir</button>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Secciones del workbook">
+    <a href="#inicio" data-nav="inicio"><i aria-hidden="true">⌂</i><span>Inicio</span></a>
+    <a href="#prepara" data-nav="prepara"><i aria-hidden="true">P</i><span>Prepara</span><em data-nav-state="P"></em></a>
+    <a href="#apunta" data-nav="apunta"><i aria-hidden="true">A</i><span>Apunta</span><em data-nav-state="A"></em></a>
+    <a href="#dispara" data-nav="dispara"><i aria-hidden="true">D</i><span>Dispara</span><em data-nav-state="D"></em></a>
+    <div class="nav__progress">
+      <span>Mi avance</span>
+      <b data-progress-label>0%</b>
+      <div class="progress"><span data-progress-bar style="width:0%"></span></div>
+      <small data-progress-detail></small>
+    </div>
+  </nav>
+
+  <main id="vista" class="main" tabindex="-1" aria-live="polite">
+    <div class="loading">Cargando tu workbook…</div>
+  </main>
+
+  <button class="copilot-launcher" type="button" data-copilot-open aria-haspopup="dialog">
+    <span class="copilot-launcher__dot" aria-hidden="true"></span>
+    <span>Copiloto PAD</span>
+  </button>
+
+  <dialog class="copilot" aria-labelledby="copilot-title">
+    <div class="copilot__head">
+      <div>
+        <h2 id="copilot-title">Copiloto PAD <small>· IA</small></h2>
+        <p class="copilot__status" data-copilot-status>Comprobando conexión…</p>
+      </div>
+      <button class="icon-btn" type="button" data-copilot-close aria-label="Cerrar copiloto">✕</button>
+    </div>
+    <div class="copilot__body" data-copilot-messages tabindex="0" aria-label="Conversación con el copiloto"></div>
+    <div class="copilot__shortcuts" data-copilot-shortcuts aria-label="Accesos de trabajo"></div>
+    <form class="copilot__form" data-copilot-form>
+      <label class="sr-only" for="copilot-input">Escribe tu pregunta</label>
+      <textarea id="copilot-input" class="textarea" rows="2" maxlength="4000" placeholder="Pregunta sobre tu negocio…"></textarea>
+      <button class="btn" type="submit">Enviar</button>
+    </form>
+    <div class="copilot__foot">
+      <p data-copilot-aviso></p>
+      <button class="link-btn" type="button" data-copilot-clear>Borrar conversación</button>
+    </div>
+  </dialog>
+</body>
+</html>
