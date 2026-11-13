@@ -35,4 +35,39 @@ for (const claim of prohibitedClaims) {
   assert(!landing.toLowerCase().includes(claim.toLowerCase()), `La landing no debe afirmar: ${claim}`);
 }
 
+// Landings nuevas: curso Método PAD y Detailbox AI Ecosystem.
+const pad = await readFile(new URL('pad/index.html', root), 'utf8');
+const padScript = await readFile(new URL('pad/pad.js', root), 'utf8');
+const eco = await readFile(new URL('ecosistema/index.html', root), 'utf8');
+const ecoScript = await readFile(new URL('ecosistema/ecosistema.js', root), 'utf8');
+
+const strictClaims = [...prohibitedClaims, 'garantizamos', 'resultados garantizados', 'aval de la STPS', 'avalado por la STPS'];
+const pricePattern = /\$\s?\d|\bMXN\b|\d+\s?pesos/i;
+
+for (const [name, html, js] of [['PAD', pad, padScript], ['Ecosistema', eco, ecoScript]]) {
+  assert(html.includes('noindex, nofollow'), `${name}: no debe indexarse antes de publicar.`);
+  assert(html.includes('529841799401') || js.includes('529841799401'), `${name}: debe usar el contacto principal.`);
+  assert(js.includes('encodeURIComponent(message)'), `${name}: el mensaje de WhatsApp debe codificarse.`);
+  assert(html.includes('href="../"'), `${name}: debe enlazar a la landing de cursos técnicos.`);
+  // La maqueta <figure class="mock"> lleva cifras ficticias rotuladas; el resto de la página no puede tener precios.
+  const publicCopy = html.replace(/<figure class="mock">[\s\S]*?<\/figure>/g, '');
+  assert(!pricePattern.test(publicCopy), `${name}: no debe publicar precios sin confirmar.`);
+  for (const claim of strictClaims) {
+    assert(!html.toLowerCase().includes(claim.toLowerCase()), `${name}: no debe afirmar «${claim}».`);
+  }
+}
+
+assert(pad.includes('no garantiza ventas ni rentabilidad'), 'PAD: debe aclarar que el curso no garantiza ventas (Base PAD §1).');
+assert(pad.includes('href="../ecosistema/"'), 'PAD: debe enlazar al ecosistema.');
+for (const stage of ['Prepara', 'Apunta', 'Dispara']) {
+  assert(pad.toLowerCase().includes(stage.toLowerCase()), `PAD: debe explicar la etapa ${stage}.`);
+}
+assert(eco.includes('href="../pad/"'), 'Ecosistema: debe enlazar al curso PAD.');
+for (const tier of ['PAD Starter', 'PAD Growth', 'PAD Business Intelligence']) {
+  assert(eco.includes(tier), `Ecosistema: debe presentar el nivel ${tier}.`);
+}
+assert(/acceso anticipado/i.test(eco), 'Ecosistema: debe presentarse como acceso anticipado, no como producto terminado.');
+assert(/<figure class="mock">[\s\S]*datos ficticios[\s\S]*?<\/figure>/.test(eco), 'Ecosistema: la maqueta debe rotularse como datos ficticios.');
+
 console.log('OK: landing, análisis social, imágenes reales, contactos, WhatsApp y límites verificados.');
+console.log('OK: landings PAD y Ecosistema sin precios ni promesas, con WhatsApp codificado y enlaces cruzados.');

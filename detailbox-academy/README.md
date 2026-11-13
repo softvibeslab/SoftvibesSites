@@ -9,7 +9,16 @@ Detailbox Academy.
 - `analisis/index.html`: diagnóstico público, comparativo y prioridades.
 - `docs/RESEARCH.md`: evidencia, límites y decisiones de contenido.
 - `docs/SOCIAL-SOURCES.md`: trazabilidad de las imágenes tomadas de redes oficiales.
-- `tests/check-site.mjs`: verificación mínima de estructura y afirmaciones sensibles.
+- `tests/check-site.mjs`: verificación mínima de estructura y afirmaciones sensibles (incluye `/pad/` y `/ecosistema/`).
+
+### Detailbox AI Ecosystem (desde 13-nov-2026)
+
+- `curso/`: fuentes del cliente. `masterprompt.md` es el encargo, `skill.md` el rol y la Base de Conocimiento Método PAD la metodología.
+- `pad/`: landing del curso **Método PAD**, con diagnóstico rápido de 3 preguntas que arma un mensaje de WhatsApp.
+- `ecosistema/`: landing de **Detailbox AI Ecosystem** con los niveles PAD Starter, Growth y Business Intelligence. Se presenta como acceso anticipado y sin precios.
+- `docs/arquitectura-maestra/`: Diagnóstico y Arquitectura Maestra (masterprompt §17) y `DECISIONES.md` (D1–D11, todas pendientes de aprobación por Detailbox).
+- `docs/inventario-previo.md`: inventario de landings y bases elegidas.
+- `agentes/arquitecto/hermes/`: perfil Hermes `detailbox-arquitecto` (perfil A, interno), con instalador y pruebas. El perfil B `detailbox-pad` (alumnos) se construye después de aprobar D1–D4.
 
 ## Vista local
 
