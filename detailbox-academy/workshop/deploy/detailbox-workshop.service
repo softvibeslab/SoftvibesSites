@@ -1,0 +1,27 @@
+# /etc/systemd/system/detailbox-workshop.service — Workshop PAD (Detailbox Academy)
+# Un solo proceso con hilos: el límite de intentos de login vive en memoria.
+[Unit]
+Description=Workshop PAD · Detailbox Academy (Flask + gunicorn)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=detailboxws
+Group=detailboxws
+WorkingDirectory=/opt/detailbox-workshop/backend
+EnvironmentFile=/etc/detailbox-workshop.env
+ExecStart=/opt/detailbox-workshop/.venv/bin/gunicorn app:create_app() --bind 127.0.0.1:8796 --workers 1 --threads 8 --timeout 90 --access-logfile -
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/detailbox-workshop
+UMask=0077
+MemoryMax=700M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
