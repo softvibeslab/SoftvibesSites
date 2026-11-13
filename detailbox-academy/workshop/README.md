@@ -70,17 +70,16 @@ cd workshop/backend && ../.venv/bin/python -m unittest discover -s tests -v
 | `WORKSHOP_TRUST_PROXY=1` | Detrás de nginx |
 | `DETAILBOX_HERMES_ROOT` / `DETAILBOX_HERMES_PROFILE_DIR` | Instalación de Hermes y carpeta del perfil, si no están en `~/.hermes` |
 
-## Producción (pendiente de autorización)
+## Producción
 
-Necesita un servidor con Python, es decir, el VPS; no sirve el Hostinger estático actual. Los pasos:
+En vivo desde el 13-nov-2026 en **https://detailbox.softvibes.art** (VPS rovicrm 31.220.63.211; A record `detailbox` en la zona softvibes.art de Hostinger; HTTPS con certbot; `noindex`).
 
-1. `gunicorn 'app:create_app()' --workers 2 --threads 4 --timeout 90` (el copiloto tarda hasta ~60 s).
-2. nginx con HTTPS y `client_max_body_size 9m`.
-3. Las variables de arriba.
-4. Respaldo diario de `WORKSHOP_DATA_DIR`.
-5. El perfil Hermes con **llave propia de Detailbox (D4)**.
-
-No se ha desplegado.
+- Servicio `detailbox-workshop` (systemd, usuario `detailboxws`): gunicorn en 127.0.0.1:8796, un proceso con 8 hilos (el límite de intentos de login vive en memoria).
+- Código en `/opt/detailbox-workshop/{backend,web}`; datos en `/var/lib/detailbox-workshop/data`; variables en `/etc/detailbox-workshop.env` (sin secretos).
+- Respaldo diario a las 04:15 UTC (`/etc/cron.d/detailbox-workshop`) en `/var/backups/detailbox-workshop/`, guarda 14 días.
+- Admin: `admin@detailbox.softvibes.art`; la contraseña solo está en el VPS: `/root/PRIVADO/detailbox-workshop-admin.txt`.
+- Volver a publicar: `sh deploy/publicar.sh` (toma el código del commit de la rama, no de la copia de trabajo, y registra en `deploy/DESPLIEGUES.log`).
+- **Copiloto:** sin conectar en producción. Los alumnos ven «No conectado» y pueden copiar el prompt con su contexto. Para conectarlo hay que instalar el perfil `detailbox-pad` con una llave del modelo (D4) en `/var/lib/detailbox-workshop/hermes/profiles/detailbox-pad`, propiedad de `detailboxws`.
 
 ## Pendientes del cliente
 
