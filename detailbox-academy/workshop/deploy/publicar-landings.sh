@@ -15,5 +15,6 @@ cp "$S/index.html" "$S/styles.css" "$S/script.js" "$SITE/"
 cp -R "$S/analisis" "$S/pad" "$S/ecosistema" "$SITE/"
 cp "$S"/assets/*.webp "$SITE/assets/"
 ssh -i "$KEY" "$VPS" 'TS=$(date +%Y%m%d-%H%M%S); if [ -d /var/www/detailbox ]; then mkdir -p /var/backups/detailbox-web && cp -a /var/www/detailbox /var/backups/detailbox-web/$TS; fi; mkdir -p /var/www/detailbox'
-rsync -rlt --delete --chmod=D755,F644 -e "ssh -i $KEY" "$SITE/" "$VPS:/var/www/detailbox/"
+chmod -R u=rwX,go=rX "$SITE"
+rsync -rlpt --delete -e "ssh -i $KEY" "$SITE/" "$VPS:/var/www/detailbox/"
 echo "$(date -u +%FT%TZ) landings $(git -C "$REPO" rev-parse --short "$REF") $REF" >> "$(dirname "$0")/DESPLIEGUES.log"
