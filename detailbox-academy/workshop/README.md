@@ -72,7 +72,7 @@ cd workshop/backend && ../.venv/bin/python -m unittest discover -s tests -v
 
 ## Producción
 
-En vivo desde el 13-nov-2026 en **https://detailbox.softvibes.art** (VPS rovicrm 31.220.63.211; A record `detailbox` en la zona softvibes.art de Hostinger; HTTPS con certbot; `noindex`).
+En vivo desde el 13-nov-2026 en **https://detailbox.softvibes.art**, que también sirve las landings de Detailbox (`/`, `/pad/`, `/ecosistema/`, `/analisis/`) como estáticos desde `/var/www/detailbox` (`deploy/publicar-landings.sh`). nginx manda a la app solo `/api/`, `/app/`, `/cms/`, `/entrar/` y `/registro/`; `/assets/` busca primero en la landing y después en la app. VPS rovicrm 31.220.63.211; A record `detailbox` en la zona softvibes.art de Hostinger; HTTPS con certbot; `noindex`.
 
 - Servicio `detailbox-workshop` (systemd, usuario `detailboxws`): gunicorn en 127.0.0.1:8796, un proceso con 8 hilos (el límite de intentos de login vive en memoria).
 - Código en `/opt/detailbox-workshop/{backend,web}`; datos en `/var/lib/detailbox-workshop/data`; variables en `/etc/detailbox-workshop.env` (sin secretos).
