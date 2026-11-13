@@ -1,12 +1,21 @@
-# /etc/nginx/sites-available/detailbox.softvibes.art — Workshop PAD (proxy a gunicorn :8796)
-# certbot --nginx -d detailbox.softvibes.art agrega el bloque 443 y la redirección.
+# /etc/nginx/sites-available/detailbox.softvibes.art
+# Landings estáticas de Detailbox (/, /pad/, /ecosistema/, /analisis/) desde /var/www/detailbox
+# + Workshop PAD (gunicorn :8796) en /api/, /app/, /cms/, /entrar/, /registro/.
+# /assets/ sirve primero la landing y, si no existe, el workshop.
+# Primer despliegue sin certificado: quitar el bloque 443 y correr certbot --nginx -d detailbox.softvibes.art.
 server {
-    listen 80;
     server_name detailbox.softvibes.art;
+    root /var/www/detailbox;
+    index index.html;
 
     client_max_body_size 9m;
     gzip on;
     gzip_types text/css application/javascript application/json image/svg+xml;
+
+    # Demo: no indexar hasta que Detailbox apruebe y tenga dominio propio
+    add_header X-Robots-Tag "noindex, nofollow" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     location = /robots.txt {
         add_header Content-Type text/plain;
@@ -14,6 +23,21 @@ server {
     }
 
     location / {
+        try_files $uri $uri/ =404;
+        add_header Cache-Control "no-cache" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    }
+
+    location ^~ /assets/ {
+        try_files $uri @workshop;
+        add_header Cache-Control "public, max-age=86400" always;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    location ~ ^/(api|app|cms|entrar|registro)(/|$) {
         proxy_pass http://127.0.0.1:8796;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -24,4 +48,27 @@ server {
         add_header X-Content-Type-Options "nosniff" always;
         add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     }
+
+    location @workshop {
+        proxy_pass http://127.0.0.1:8796;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/detailbox.softvibes.art/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/detailbox.softvibes.art/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = detailbox.softvibes.art) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    server_name detailbox.softvibes.art;
+    return 404; # managed by Certbot
 }
