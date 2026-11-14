@@ -21,11 +21,21 @@ class FakeCopilot:
         return 'Respuesta de prueba'
 
 
+class FakeSales(FakeCopilot):
+    reply = ('¡Mucho gusto, Ana! El curso integral es la ruta de entrada.\n'
+             '<ficha>{"etapa":"listo","opciones":["Martes en la tarde","<b>x</b>","Enviar por WhatsApp"],'
+             '"campos":{"nombre":"Ana","interes":"Detailing integral","cita":"martes 5 pm","inventado":"no","ciudad":null}}</ficha>')
+
+    def respond(self, instructions, messages):
+        self.calls.append((instructions, messages))
+        return self.reply
+
+
 class WorkshopTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
-        self.copilot = FakeCopilot()
-        self.app = workshop.create_app({'DATA_DIR': self.tmp.name, 'COPILOT_PROVIDER': self.copilot,
+        self.copilot, self.sales = FakeCopilot(), FakeSales()
+        self.app = workshop.create_app({'DATA_DIR': self.tmp.name, 'COPILOT_PROVIDER': self.copilot, 'SALES_PROVIDER': self.sales,
                                         'PUBLIC_URL': 'https://workshop.example'})
         with workshop.connect(os.path.join(self.tmp.name, 'workshop.db')) as db:
             db.execute("INSERT INTO usuarios (email, nombre, rol, password, creado) VALUES ('admin@x.mx', 'Admin', 'admin', ?, 'now')",
@@ -152,6 +162,49 @@ class WorkshopTest(unittest.TestCase):
         response = self.send(ana, 'post', '/api/copiloto', json={'mensaje': 'Hola'})
         self.assertEqual(response.status_code, 503)
         self.assertIn('Mi información', response.get_json()['prompt_con_contexto'])
+
+    def test_asesor_ventas_arma_ficha_y_whatsapp_sin_guardar(self):
+        client = self.app.test_client()
+        response = client.post('/api/ventas', json={
+            'origen': 'pad', 'ficha': {'ciudad': 'Puebla', 'dudas': '<script>x</script>', 'otro': 'fuera'},
+            'mensajes': [{'rol': 'assistant', 'texto': 'Hola, soy el asesor'}, {'rol': 'user', 'texto': 'Soy Ana, quiero aprender'}]})
+        self.assertEqual(response.status_code, 200)
+        data = response.get_json()
+        instructions, messages = self.sales.calls[-1]
+        self.assertIn('Curso Método PAD', instructions)
+        self.assertIn('Puebla', instructions)
+        self.assertNotIn('<script>', instructions)
+        self.assertEqual([m['role'] for m in messages], ['user'])  # el saludo local no viaja al modelo
+        self.assertNotIn('<ficha>', data['respuesta'])
+        self.assertEqual(data['etapa'], 'listo')
+        self.assertEqual(data['opciones'], ['Martes en la tarde', 'b x /b'])
+        self.assertEqual(data['ficha'], {'nombre': 'Ana', 'ciudad': 'Puebla', 'interes': 'Detailing integral',
+                                         'cita': 'martes 5 pm', 'dudas': 'script x /script'})
+        self.assertTrue(data['whatsapp']['listo'])
+        self.assertTrue(data['whatsapp']['url'].startswith('https://wa.me/529841799401?text='))
+        self.assertIn('• Preferencia de cita: martes 5 pm', data['whatsapp']['texto'])
+        self.assertIn('Curso Método PAD', data['whatsapp']['texto'])
+        with workshop.connect(os.path.join(self.tmp.name, 'workshop.db')) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM copiloto').fetchone()[0], 0)
+
+    def test_asesor_ventas_valida_y_ofrece_whatsapp_si_falla(self):
+        client = self.app.test_client()
+        self.assertEqual(client.post('/api/ventas', json={'mensajes': []}).status_code, 400)
+        self.assertEqual(client.post('/api/ventas', json={'mensajes': [{'rol': 'system', 'texto': 'x'}]}).status_code, 400)
+        self.sales.reply = 'Sin bloque de ficha'
+        ok = client.post('/api/ventas', json={'mensajes': [{'rol': 'user', 'texto': 'hola'}]}).get_json()
+        self.assertEqual((ok['respuesta'], ok['etapa'], ok['whatsapp']['listo']), ('Sin bloque de ficha', 'conocer', False))
+        eco = client.post('/api/ventas', json={'origen': 'ecosistema', 'mensajes': [{'rol': 'user', 'texto': 'hola'}]}).get_json()
+        self.assertEqual(eco['ficha'], {'interes': 'Detailbox AI Ecosystem'})
+        self.sales.configured = False
+        down = client.post('/api/ventas', json={'ficha': {'nombre': 'Luis'}, 'mensajes': [{'rol': 'user', 'texto': 'hola'}]})
+        self.assertEqual(down.status_code, 503)
+        self.assertIn('Nombre: Luis', down.get_json()['whatsapp']['texto'])
+
+    def test_asesor_ventas_funciona_con_sesion_abierta_sin_csrf(self):
+        admin = self.admin()
+        response = admin.post('/api/ventas', json={'mensajes': [{'rol': 'user', 'texto': 'hola'}]})
+        self.assertEqual(response.status_code, 200)
 
     def test_cms_crea_usuario_con_password_temporal_y_contenido_validado(self):
         admin = self.admin()

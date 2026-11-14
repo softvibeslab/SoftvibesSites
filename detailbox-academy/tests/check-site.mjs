@@ -71,3 +71,14 @@ assert(/<figure class="mock">[\s\S]*datos ficticios[\s\S]*?<\/figure>/.test(eco)
 
 console.log('OK: landing, análisis social, imágenes reales, contactos, WhatsApp y límites verificados.');
 console.log('OK: landings PAD y Ecosistema sin precios ni promesas, con WhatsApp codificado y enlaces cruzados.');
+
+// Asesor de admisiones (agente de ventas Hermes): botón flotante en las tres landings.
+const agentScript = await readFile(new URL('agente/agente.js', root), 'utf8');
+for (const [name, html, origin] of [['Landing', landing, 'inicio'], ['PAD', pad, 'pad'], ['Ecosistema', eco, 'ecosistema']]) {
+  assert(html.includes(`agente/agente.js" data-origen="${origin}"`), `${name}: debe cargar el asesor con su origen.`);
+  assert(html.includes('agente/agente.css'), `${name}: debe cargar los estilos del asesor.`);
+}
+assert(agentScript.includes("'/api/ventas'"), 'El asesor debe hablar con /api/ventas.');
+assert(agentScript.includes("credentials: 'omit'"), 'El asesor no debe enviar la cookie de sesión.');
+assert(agentScript.includes('encodeURIComponent(message)'), 'El respaldo a WhatsApp debe codificar el mensaje.');
+assert(!pricePattern.test(agentScript.replaceAll('$1', '')), 'El asesor no debe publicar precios.');

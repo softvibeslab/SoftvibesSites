@@ -8,6 +8,7 @@ Plataforma del **Workbook PAD | Dashboard del Alumno** (especificación: `../cur
 | `/entrar/` | Todos | Inicio de sesión; obliga a cambiar la contraseña temporal |
 | `/app/` | Alumno | Workbook: 10 herramientas, progreso, evidencias y copiloto |
 | `/cms/` | Equipo Detailbox (rol admin) | Talleres y QR (con modo proyección), usuarios, workbook de cada alumno, contenido y bitácora |
+| `/api/ventas` | Visitantes de las landings (anónimo) | Asesor de admisiones: botón «Asesor IA» → perfil Hermes `detailbox-ventas` → ficha y enlace de WhatsApp. No guarda la conversación. Ver `../agentes/ventas/hermes/README.md` |
 
 ## Arquitectura
 
@@ -69,6 +70,7 @@ cd workshop/backend && ../.venv/bin/python -m unittest discover -s tests -v
 | `WORKSHOP_SECURE_COOKIES=1` | Obligatoria con HTTPS |
 | `WORKSHOP_TRUST_PROXY=1` | Detrás de nginx |
 | `DETAILBOX_HERMES_ROOT` / `DETAILBOX_HERMES_PROFILE_DIR` | Instalación de Hermes y carpeta del perfil, si no están en `~/.hermes` |
+| `DETAILBOX_VENTAS_PROFILE_DIR` | Opcional. Carpeta del perfil `detailbox-ventas`; por defecto, junto al perfil del copiloto |
 
 ## Producción
 

@@ -20,6 +20,8 @@ Detailbox Academy.
 - `docs/inventario-previo.md`: inventario de landings y bases elegidas.
 - `agentes/arquitecto/hermes/`: perfil Hermes `detailbox-arquitecto` (perfil A, interno), con instalador y pruebas.
 - `agentes/pad/hermes/`: perfil Hermes `detailbox-pad` (perfil B, Copiloto PAD de los alumnos).
+- `agentes/ventas/hermes/`: perfil Hermes `detailbox-ventas` (Asesor de admisiones). Embudo de ventas de las landings: conocer, nutrir, cualificar, agendar y WhatsApp con la ficha.
+- `agente/`: botón flotante «Asesor IA» y chat del asesor. Lo cargan `/`, `/pad/` y `/ecosistema/`, y habla con `/api/ventas` del workshop.
 - `workshop/`: **Workshop PAD**, la plataforma del `curso/workbook.pdf`:
   - login por usuario;
   - app del alumno con las 10 herramientas del workbook;

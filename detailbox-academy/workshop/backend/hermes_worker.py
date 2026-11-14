@@ -1,8 +1,10 @@
-"""Una inferencia del perfil Hermes `detailbox-pad`, sin herramientas ni bucle.
+"""Una inferencia de un perfil Hermes de Detailbox, sin herramientas ni bucle.
 
+Perfiles admitidos: `detailbox-pad` (Copiloto PAD de los alumnos) y
+`detailbox-ventas` (asesor de admisiones de las landings).
 Lo inicia el backend del workshop con el Python de Hermes. El perfil aporta
 identidad (SOUL.md), modelo y autenticación; el backend aporta reglas y el
-contexto del alumno. No ejecuta terminal, archivos, memoria ni herramientas.
+contexto de la conversación. No ejecuta terminal, archivos, memoria ni herramientas.
 Protocolo: un JSON por stdin, un JSON por stdout; nunca devuelve credenciales
 ni trazas internas. Basado en el worker de Agente Cisne (Softvibes).
 """
@@ -16,10 +18,15 @@ import os
 from pathlib import Path
 import sys
 
-PROFILE = 'detailbox-pad'
+PROFILE = 'detailbox-pad'  # perfil por omisión (copiloto)
+# Perfil → (descripción del canal para el modelo, plataforma reportada a Hermes, máximo de tokens).
+PROFILES = {
+    'detailbox-pad': ('Workbook PAD (web del alumno)', 'detailbox_workshop', 2500),
+    'detailbox-ventas': ('chat público de las landings de Detailbox Academy (prospectos anónimos)', 'detailbox_web', 1200),
+}
 MAX_INPUT = 2 * 1024 * 1024
 MAX_REPLY = 60_000
-SAFE_ERROR = 'El copiloto no pudo completar la solicitud. Revisa el perfil Hermes y su autenticación.'
+SAFE_ERROR = 'El asistente no pudo completar la solicitud. Revisa el perfil Hermes y su autenticación.'
 
 
 class WorkerError(ValueError):
@@ -29,7 +36,7 @@ class WorkerError(ValueError):
 def validate_request(request):
     if not isinstance(request, dict) or request.get('action') not in ('status', 'respond'):
         raise WorkerError('action')
-    if request.get('expected_profile', PROFILE) != PROFILE:
+    if request.get('expected_profile', PROFILE) not in PROFILES:
         raise WorkerError('profile mismatch')
     if request['action'] == 'status':
         return
@@ -46,11 +53,13 @@ def validate_request(request):
         raise WorkerError('last message')
 
 
-def profile_paths():
+def profile_paths(expected=None):
     root = Path(os.environ.get('DETAILBOX_HERMES_ROOT', '')).expanduser().resolve()
     profile = Path(os.environ.get('DETAILBOX_HERMES_PROFILE_DIR', '')).expanduser().resolve()
-    if profile.name != PROFILE or profile.parent.name != 'profiles':
+    if profile.name not in PROFILES or profile.parent.name != 'profiles':
         raise WorkerError('profile')
+    if expected is not None and profile.name != expected:
+        raise WorkerError('profile mismatch')
     if not (root / 'run_agent.py').is_file() or not (profile / 'config.yaml').is_file() or not (profile / 'SOUL.md').is_file():
         raise WorkerError('installation')
     os.environ['HERMES_HOME'] = str(profile)  # antes de importar Hermes: cachea rutas
@@ -60,8 +69,8 @@ def profile_paths():
     return root, profile
 
 
-def load_runtime():
-    root, profile = profile_paths()
+def load_runtime(expected=None):
+    root, profile = profile_paths(expected)
     sys.path.insert(0, str(root))
     from hermes_cli.config import load_config
     from hermes_cli.runtime_provider import resolve_runtime_provider
@@ -78,7 +87,7 @@ def load_runtime():
     soul = (profile / 'SOUL.md').read_text(encoding='utf-8')
     if not soul.strip() or len(soul) > 32_000:
         raise WorkerError('identity')
-    return model, runtime, soul, AIAgent
+    return model, runtime, soul, AIAgent, profile.name
 
 
 def _plain(value):
@@ -110,9 +119,10 @@ def reply_text(response):
 
 def handle(request, runtime_loader=load_runtime):
     validate_request(request)
-    model, runtime, soul, agent_class = runtime_loader()
+    model, runtime, soul, agent_class, profile = runtime_loader(request.get('expected_profile', PROFILE))
+    channel, platform, max_tokens = PROFILES[profile]
     if request['action'] == 'status':
-        return {'configured': True, 'model': model, 'profile': PROFILE}
+        return {'configured': True, 'model': model, 'profile': profile}
     agent = agent_class(
         model=model, provider=runtime['provider'], api_key=runtime['api_key'],
         base_url=runtime.get('base_url'), api_mode=runtime['api_mode'],
@@ -120,15 +130,15 @@ def handle(request, runtime_loader=load_runtime):
         enabled_toolsets=[], disabled_toolsets=[], skip_memory=True,
         skip_context_files=True, load_soul_identity=False, session_db=None,
         save_trajectories=False, verbose_logging=False, quiet_mode=True,
-        max_iterations=1, max_tokens=2500, platform='detailbox_workshop',
+        max_iterations=1, max_tokens=max_tokens, platform=platform,
         reasoning_config={'effort': 'low'}, checkpoints_enabled=False,
     )
     agent.tools, agent.valid_tool_names, agent.request_overrides = [], set(), {}
     agent.suppress_status_output, agent.stream_delta_callback, agent.tool_gen_callback = True, None, None
-    instructions = (soul + '\n\nCANAL: Workbook PAD (web del alumno). Sin herramientas, archivos, terminal ni memoria; '
+    instructions = (soul + f'\n\nCANAL: {channel}. Sin herramientas, archivos, terminal ni memoria; '
                     'responde solo con texto.\n\n' + request['instructions'])
     kwargs = agent._build_api_kwargs([{'role': 'system', 'content': instructions},
-                                      {'role': 'user', 'content': 'Consulta del alumno.'}])
+                                      {'role': 'user', 'content': 'Consulta.'}])
     kwargs.update(instructions=instructions, input=[{'role': m['role'], 'content': m['content']} for m in request['messages']],
                   store=False, timeout=50)
     kwargs.pop('tools', None)
